@@ -1,0 +1,21 @@
+*{
+    font-weight: 100;
+    font-family: "Lato", sans-serif;
+    padding: 0;
+    margin: 0;
+}
+
+.online{
+    width: 42px; height: 42px; border-radius: 50%; margin: 5px;
+    border: 4px #00c851 solid;
+}
+
+.offline{
+    width: 42px; height: 42px; border-radius: 50%; margin: 5px;
+    border: 4px #ff453d solid;
+}
+
+.header-crumb{
+    margin: 5px;
+    padding: 0px;
+}

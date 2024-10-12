@@ -1,0 +1,24 @@
+.login-logo{
+    margin-top: 20%;
+}
+
+.titulo{
+    font-size: 40px;
+}
+
+#intro-login{
+    height: 100%;
+}
+
+.bg-image{
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: url("/logo/img/bg-2.png")no-repeat;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    filter: blur(5px);
+}
