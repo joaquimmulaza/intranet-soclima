@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Cargo;
 use App\Comment;
-use App\Endereco;
 use App\Exports\PedidosExport;
 use App\Exports\UsersExport;
 use App\Mail\notificationMail;
@@ -118,8 +117,19 @@ class UserController extends Controller
     {
         try{
             $user = new User();
+            $user->numero_mecanografico = $request->numero_mecanografico;
             $user->name = $request->name;
+            $user->numero_bi = $request->numero_bi;
+            $user->numero_beneficiario = $request->numero_beneficiario;
+            $user->numero_contribuinte = $request->numero_contribuinte;
+            $user->data_admissao = $request->data_admissao;
+            $user->nascimento = $request->nascimento; // Utilizando 'nascimento'
+            $user->cargo_id = $request->funcao;
+            $user->unidade_id = $request->departamento;
             $user->email = $request->email;
+            $user->data_emissao_bi = $request->data_emissao_bi;
+            $user->data_validade_bi = $request->data_validade_bi;
+            $user->fone = $request->fone;
             $user->password = Hash::make($request->password);
             $user->status = 'ativo';
 
@@ -135,31 +145,21 @@ class UserController extends Controller
 
             $user->nascimento = $request->nascimento;
 
-            $user->state_civil = $request->stateCivil;
-            $user->formacao = $request->formacao;
-            $user->fone = $request->fone;
-            $user->ramal = $request->ramal;
-            $user->descricao = $request->descricao;
+            // $user->state_civil = $request->stateCivil;
+            // $user->formacao = $request->formacao;
+            // $user->fone = $request->fone;
+            // $user->ramal = $request->ramal;
+            // $user->descricao = $request->descricao;
 
-
-            $end = new Endereco();
-            $end->street = $request->street;
-            $end->number = $request->number;
-            $end->city = $request->city;
-            $end->state = $request->state;
-            $end->cep = $request->cep;
-            $end->bairro = $request->bairro;
-
-            if($request->hasFile('avatar')) {
+            if ($request->hasFile('avatar')) {
                 $avatar = $request->file('avatar');
-                $filename = $user->id . "_" . time() . '.' . $avatar->getClientOriginalExtension();
+                $filename = time() . '.' . $avatar->getClientOriginalExtension();
                 Image::make($avatar)->resize(300, 300)->save(public_path('public/avatar_users/' . $filename));
                 $user->avatar = $filename;
             }
 
             $user->save();
-            //dd('SALVO USER');
-            $user->endereco()->save($end);
+            // dd('SALVO USER');
 
 
             notify()->success("Usuário criado com sucesso!","Success","bottomRight");
@@ -213,6 +213,15 @@ class UserController extends Controller
 
             $user->name = $request->name;
             $user->email = $request->email;
+            $user->numero_mecanografico = $request->numero_mecanografico;
+            $user->numero_bi = $request->numero_bi;
+            $user->numero_beneficiario = $request->numero_beneficiario;
+            $user->numero_contribuinte = $request->numero_contribuinte;
+            $user->data_admissao = $request->data_admissao;
+            
+            $user->data_emissao_bi = $request->data_emissao_bi;
+            $user->data_validade_bi = $request->data_validade_bi;
+            $user->fone = $request->fone;
             if(!empty($request->password)){
                 $user->password = Hash::make($request->password);
             }
@@ -230,21 +239,16 @@ class UserController extends Controller
                 $role = Role::find($request->role);
                 $user->role_id = $role->id;
             }
-
             $user->nascimento = $request->nascimento;
-            $user->state_civil = $request->stateCivil;
-            $user->formacao = $request->formacao;
-            $user->fone = $request->fone;
-            $user->ramal = $request->ramal;
-            $user->descricao = $request->descricao;
+            
+            // $user->state_civil = $request->stateCivil;
+            // $user->formacao = $request->formacao;
+            // $user->fone = $request->fone;
+            // $user->ramal = $request->ramal;
+            // $user->descricao = $request->descricao;
 
 
-            $user->endereco->street = $request->street;
-            $user->endereco->number = $request->number;
-            $user->endereco->bairro = $request->bairro;
-            $user->endereco->city = $request->city;
-            $user->endereco->state = $request->state;
-            $user->endereco->cep = $request->cep;
+            
 
             //dd($user);
 
@@ -260,7 +264,6 @@ class UserController extends Controller
             }
 
             $user->save();
-            $user->endereco()->save($user->endereco);
 
             notify()->success("Usuário editado com sucesso!","Success","bottomRight");
             return redirect()->route('user.show', compact('user'));

@@ -41,10 +41,10 @@
 
                                 <ul class="list-group list-group-unbordered mb-3 text-justify">
                                     <li class="list-group-item">
-                                        <b>Status</b> <a class="float-right">{{$user->state_civil}}</a>
+                                        <b>Não sei</b> <a class="float-right">{{$user->state_civil}}</a>
                                     </li>
                                     <li class="list-group-item">
-                                        <b>Ramal</b> <a class="float-right">{{$user->ramal}}</a>
+                                        <b>Não sei</b> <a class="float-right">{{$user->ramal}}</a>
                                     </li>
                                     <li class="list-group-item">
                                         <b>Aniversário em</b>
@@ -76,8 +76,8 @@
                             <ul class="nav nav-pills">
                                 <li class="nav-item"><a class="nav-link active" href="#sobre" data-toggle="tab"><i class="fas fa-address-card mr-1" style="font-size: 20px;"></i>Sobre</a></li>
                                 @if($user->status == 'ativo')
-                                    <li class="nav-item"><a class="nav-link" href="#endereco" data-toggle="tab"><i class="fas fa-map-marked-alt mr-1" style="font-size: 20px;"></i>Endereço</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="#questionarios" data-toggle="tab"><i class="fas fa-paste mr-1" style="font-size: 20px;"></i>Questionários</a></li>
+                                    <!-- <li class="nav-item"><a class="nav-link" href="#endereco" data-toggle="tab"><i class="fas fa-map-marked-alt mr-1" style="font-size: 20px;"></i>Endereço</a></li> -->
+                                    <!-- <li class="nav-item"><a class="nav-link" href="#questionarios" data-toggle="tab"><i class="fas fa-paste mr-1" style="font-size: 20px;"></i>Questionários</a></li> -->
                                     @can('app.dashboard')
                                         <li class="nav-item"><a class="nav-link" href="#postagens" data-toggle="tab"><i class="fas fa-newspaper mr-1" style="font-size: 20px;"></i>Postagens</a></li>
                                     @endcan
@@ -130,24 +130,24 @@
 
                                                     <div class="clearfix col-sm-12 col-md-6 col-lg-6 col-xl-6">
                                                         <div class="d-flex m-2 ml-3">
-                                                            <i class="fas fa-user-graduate align-middle" style="color: #0000cc;"></i><h6 class="text-black-50 font-weight-bold align-text-top ml-2">
-                                                                Formação {{$user->formacao}}</h6>
+                                                            <i class="fa-regular fa-user align-middle" style="color: #0000cc;"></i><h6 class="text-black-50 font-weight-bold align-text-top ml-2">
+                                                                Nº Mecanográfico: {{$user->numero_mecanografico}}</h6>
                                                         </div>
                                                         <div class="d-flex m-2 ml-3">
-                                                            <i class="fas fa-male align-middle" style="color: #0000cc;"></i><h6 class="text-black-50 font-weight-bold align-text-top ml-2">
-                                                                Estado civil {{$user->state_civil}}</h6>
+                                                            <i class="fa-regular fa-id-card align-middle" style="color: #0000cc;"></i><h6 class="text-black-50 font-weight-bold align-text-top ml-2">
+                                                                Nº do Bilhete: {{$user->numero_bi}}</h6>
                                                         </div>
                                                         <div class="d-flex m-2 ml-3">
                                                             <i class="fas fa-phone align-middle" style="color: #0000cc;"></i><h6 class="text-black-50 font-weight-bold align-text-top ml-2">
-                                                                Fone {{$user->fone}}</h6>
+                                                                Telefone: {{$user->fone}}</h6>
                                                         </div>
                                                     </div>
                                                 </div>
 
-                                                <blockquote>
+                                                <!-- <blockquote>
                                                     <small>Minha descrição</small>
                                                     <p>{{$user->descricao}}</p>
-                                                </blockquote>
+                                                </blockquote> -->
 
                                                 <div class="callout callout-info mt-3 p-3 ml-2">
                                                     <div class="d-flex ml-2">

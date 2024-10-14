@@ -17,7 +17,6 @@
         </div>
     </div>
 
-
     <section class="content">
         <div class="container-fluid">
             <form action="{{isset($user) ? route('user.update', $user->id) : route('user.store')}}"
@@ -30,16 +29,16 @@
                     {{--USUÁRIO --}}
                     <section class="col-sm-12 col-md-3 col-lg-3 col-xl-3">
                         <div class="card testimonial-card">
-                                <div class="card-up aqua-gradient lighten-1"></div>
+                            <div class="card-up aqua-gradient lighten-1"></div>
 
-                                {{--MOSTRA AVATAR --}}
-                                <div id="upload" class="text-center avatar mx-auto white file-upload-wrapper">
-                                    <img class="profile-user-img img-fluid img-circle" id="output"
-                                         src="{{URL::to('/')}}/public/avatar_users/{{isset($user) ? $user->avatar : 'default.jpg'}}"
-                                         alt="imagem do usuario">
-                                </div>
+                            {{--MOSTRA AVATAR --}}
+                            <div id="upload" class="text-center avatar mx-auto white file-upload-wrapper">
+                                <img class="profile-user-img img-fluid img-circle" id="output"
+                                     src="{{URL::to('/')}}/public/avatar_users/{{isset($user) ? $user->avatar : 'default.jpg'}}"
+                                     alt="imagem do usuario">
+                            </div>
 
-                                <div class="card-body box-profile">
+                            <div class="card-body box-profile">
                                 {{-- NAME--}}
                                 <div class="md-form form-sm mt-0">
                                     <input id="titulo" name="name" type="text" class="form-control form-control-sm campotext @error('name') is-invalid @enderror"
@@ -47,8 +46,8 @@
                                     <label class="text-black-50 font-weight-bold text-md-left" for="titulo">Nome</label>
                                     @error('name')
                                     <span class="invalid-feedback" role="alert">
-                                            <strong>{{$message}}</strong>
-                                        </span>
+                                        <strong>{{$message}}</strong>
+                                    </span>
                                     @enderror
                                 </div>
 
@@ -56,7 +55,7 @@
                                 <div class="md-form form-sm">
                                     <input id="inputValidationEx" name="email" type="email" class="form-control form-control-sm validate @error('email') is-invalid @enderror"
                                            value="{{$user->email ?? old('email')}}"/>
-                                    <label class="text-black-50 font-weight-bold text-md-left" for="inputValidationEx" data-error="incorreto">Email</label>
+                                    <label class="text-black-50 font-weight-bold text-md-left" for="inputValidationEx">Email</label>
                                     @error('email')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{$message}}</strong>
@@ -68,7 +67,7 @@
                                 <div class="md-form form-sm">
                                     <input id="inputPassword5MD" min="8" max="20" name="password" type="password"
                                            class="form-control form-control-sm validate @error('password') is-invalid @enderror"/>
-                                    <label class="text-black-50 font-weight-bold text-md-left" for="inputPassword5MD" data-error="incorreto">{{isset($user) ? 'Redefinir sua senha aqui' : 'Senha'}}</label>
+                                    <label class="text-black-50 font-weight-bold text-md-left" for="inputPassword5MD">{{isset($user) ? 'Redefinir sua senha aqui' : 'Senha'}}</label>
                                     @error('password')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{$message}}</strong>
@@ -87,36 +86,26 @@
                                 @can('app.dashboard')
                                     {{-- CARGO--}}
                                     <div class="form-group">
-                                        <select id="card_id" class="form-control form-control-sm" style="width: 100%;" name="cargo" placeholder="Escolha cargo">
-                                            <option disabled selected>Selecione um  cargo</option>
+                                        <select id="cargo_id" class="form-control form-control-sm" style="width: 100%;" name="cargo" placeholder="Escolha o cargo">
+                                            <option disabled selected>Selecione o cargo</option>
                                             @foreach($cargos as $cargo)
                                                 <option value="{{$cargo->id}}"
-                                                 @if(isset($user))
-                                                    @if(!$user->cargo == null)
-                                                        @if($user->cargo->id == $cargo->id)
-                                                            selected="selected"
-                                                        @endif
-                                                    @endif
-                                                 @endif
-                                                   >{{$cargo->titulo}}</option>
+                                                 @if(isset($user) && $user->cargo && $user->cargo->id == $cargo->id) selected="selected" @endif>
+                                                   {{$cargo->titulo}}
+                                                </option>
                                             @endforeach
                                         </select>
                                     </div>
 
-                                    {{-- UNIDAE--}}
+                                    {{-- UNIDADE (Departamento)--}}
                                     <div class="form-group">
                                         <select id="unidade" class="js-basic-multiple form-control form-control-sm" style="width: 100%;" name="unidade">
-                                            <option disabled selected>Selecione uma unidade</option>
+                                            <option disabled selected>Selecione o departamento</option>
                                             @foreach($unidades as $unidade)
                                                 <option value="{{$unidade->id}}"
-                                                @if(isset($user))
-                                                    @if(!$user->unidade == null)
-                                                        @if($user->unidade->id == $unidade->id)
-                                                           selected="selected"
-                                                        @endif
-                                                    @endif
-                                                @endif
-                                                >{{$unidade->titulo}}</option>
+                                                @if(isset($user) && $user->unidade && $user->unidade->id == $unidade->id) selected="selected" @endif>
+                                                   {{$unidade->titulo}}
+                                                </option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -124,17 +113,12 @@
                                     {{-- FUNÇÃO--}}
                                     <div class="form-group">
                                         <select id="role" class="js-basic-multiple form-control form-control-sm" style="width: 100%;" name="role">
-                                            <option disabled selected>Selecione função</option>
+                                            <option disabled selected>Permissões no sistema</option>
                                             @foreach($funcoes as $funcao)
                                                 <option value="{{$funcao->id}}"
-                                                @if(isset($user))
-                                                    @if(!$user->role == null)
-                                                        @if($user->role->id == $funcao->id)
-                                                           selected="selected"
-                                                        @endif
-                                                    @endif
-                                                @endif
-                                                >{{$funcao->name}}</option>
+                                                @if(isset($user) && $user->role && $user->role->id == $funcao->id) selected="selected" @endif>
+                                                   {{$funcao->name}}
+                                                </option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -144,127 +128,88 @@
                         </div>
                     </section>
 
-                    {{-- DADOS COMPLEMENTARES--}}
-                    <section class="col-sm-12 col-md-9 col-lg-9 col-xl-9">
-                        <div class="row card card-primary card-outline" style="width: 100%;">
-                            <div class="row">
-                                {{--ENDEREÇO --}}
-                                <section class="col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                    <div class="card-body box-profile">
-                                        <p class="text-black-50 font-weight-bold text-md-left">Endereço</p>
-                                         <div class="form-row">
+                    {{-- CAMPOS ADICIONAIS --}}
+                    <section class="col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                        <div class="card-body box-profile">
+                            <p class="text-black-50 font-weight-bold text-md-left">Dados de Identificação</p>
+                            <div class="form-row">
 
-                                            {{-- STREET--}}
-                                            <div class="md-form form-sm col-sm-12 col-md-9 col-lg-9 col-xl-9">
-                                                <input id="street" name="street" type="text" required="required"
-                                                       class="form-control form-control-sm campotext @error('street') is-invalid @enderror"
-                                                       value="{{$user->endereco->street ?? old('street')}}"/>
-                                                <label class="text-black-50 font-weight-bold text-md-left" for="street">Rua</label>
-                                            </div>
+                                {{-- Número Mecanográfico --}}
+                                <div class="md-form form-sm col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                    <input id="numero_mecanografico" name="numero_mecanografico" type="text"
+                                        class="form-control form-control-sm @error('numero_mecanografico') is-invalid @enderror"
+                                        value="{{ $user->numero_mecanografico ?? old('numero_mecanografico') }}" />
+                                    <label for="numero_mecanografico">Número Mecanográfico</label>
+                                </div>
 
-                                             {{-- NUMBER--}}
-                                            <div class="md-form form-sm col-sm-12 col-md-3 col-lg-3 col-xl-3">
-                                                <input id="number" name="number" type="number" required="required"
-                                                       class="form-control form-control-sm @error('number') is-invalid @enderror"
-                                                        value="{{$user->endereco->number ?? old('number')}}"/>
-                                                <label class="text-black-50 font-weight-bold text-md-left" for="number">número</label>
-                                            </div>
+                                {{-- Nº do BI --}}
+                                <div class="md-form form-sm col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                    <input id="numero_bi" name="numero_bi" type="text" 
+                                        class="form-control form-control-sm @error('numero_bi') is-invalid @enderror"
+                                        value="{{ $user->numero_bi ?? old('numero_bi') }}" />
+                                    <label for="numero_bi">Nº do BI</label>
+                                </div>
 
-                                             {{-- CEP--}}
-                                            <div class="md-form form-sm col-sm-12 col-md-4 col-lg-4 col-xl-4">
-                                                <input type="text" class="form-control form-control-sm @error('cep') is-invalid @enderror" name="cep" id="cep"
-                                                       required="required" value="{{$user->endereco->cep ?? old('cep')}}">
-                                                <label class="text-black-50 font-weight-bold text-md-left" for="cep">Cep</label>
-                                            </div>
+                                {{-- Nº de Beneficiário --}}
+                                <div class="md-form form-sm col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                    <input id="numero_beneficiario" name="numero_beneficiario" type="text"
+                                        class="form-control form-control-sm @error('numero_beneficiario') is-invalid @enderror"
+                                        value="{{ $user->numero_beneficiario ?? old('numero_beneficiario') }}" />
+                                    <label for="numero_beneficiario">Nº de Beneficiário</label>
+                                </div>
 
-                                             {{-- BAIRRO--}}
-                                            <div class="md-form form-sm col-sm-12 col-md-8 col-lg-8 col-xl-8">
-                                                <input type="text" class="form-control form-control-sm campotext @error('bairro') is-invalid @enderror"
-                                                       name="bairro" id="bairro" required="required"  value="{{$user->endereco->bairro ?? old('bairro')}}">
-                                                <label class="text-black-50 font-weight-bold text-md-left" for="bairro">Bairro</label>
-                                            </div>
+                                {{-- Nº de Contribuinte --}}
+                                <div class="md-form form-sm col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                    <input id="numero_contribuinte" name="numero_contribuinte" type="text"
+                                        class="form-control form-control-sm @error('numero_contribuinte') is-invalid @enderror"
+                                        value="{{ $user->numero_contribuinte ?? old('numero_contribuinte') }}" />
+                                    <label for="numero_contribuinte">Nº de Contribuinte</label>
+                                </div>
 
-                                             {{-- CITY--}}
-                                            <div class="md-form form-sm col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                                <input type="text" class="form-control form-control-sm campotext @error('city') is-invalid @enderror"
-                                                       name="city" id="city" required="required" value="{{$user->endereco->city ?? old('city')}}">
-                                                <label class="text-black-50 font-weight-bold text-md-left" for="city">Cidade</label>
-                                            </div>
+                                {{-- Data de Admissão --}}
+                                <div class="md-form form-sm col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                    <label for="data_admissao">Data de Admissão</label>
+                                    <input id="data_admissao" name="data_admissao" type="date"
+                                        class="form-control form-control-sm @error('data_admissao') is-invalid @enderror"
+                                        value="{{ $user->data_admissao ?? old('data_admissao') }}" />
+                                </div>
 
-                                             {{-- STATE--}}
-                                            <div class="md-form form-sm col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                                <input type="text" class="form-control form-control-sm campotext @error('state') is-invalid @enderror"
-                                                       name="state" id="state" required="required" value="{{$user->endereco->state ?? old('state')}}">
-                                                <label class="text-black-50 font-weight-bold text-md-left" for="state">Estado</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </section>
+                                {{-- Data de Emissão e Validade do BI --}}
+                                <div class="md-form form-sm col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                    <label for="data_emissao_bi">Data de Emissão do BI</label>
+                                    <input id="data_emissao_bi" name="data_emissao_bi" type="date"
+                                        class="form-control form-control-sm @error('data_emissao_bi') is-invalid @enderror"
+                                        value="{{ $user->data_emissao_bi ?? old('data_emissao_bi') }}" />
+                                </div>
 
-                                {{--DADOS PESSOAIS --}}
-                                <section class="col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                    <div class="card-body box-profile">
-                                        <p class="text-black-50 font-weight-bold text-md-left">Dados complementares</p>
-                                        <div class="form-row">
+                                <div class="md-form form-sm col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                    <label for="data_validade_bi">Data de Validade do BI</label>
+                                    <input id="data_validade_bi" name="data_validade_bi" type="date"
+                                        class="form-control form-control-sm @error('data_validade_bi') is-invalid @enderror"
+                                        value="{{ $user->data_validade_bi ?? old('data_validade_bi') }}" />
+                                </div>
 
-                                            {{-- DATA NASCIMENTO--}}
-                                            <div class="md-form form-sm col-sm-12 col-md-4 col-lg-4 col-xl-4">
-                                                <label class="text-small">Data nascimento</label>
-                                                <input type="date"
-                                                       id="nascimento"
-                                                       class="form-control form-control-sm datepicker"
-                                                       name="nascimento"
-                                                       value="{{isset($user) ? $user->nascimento : '' ?? old('nascimento')}}"
-                                                       required="required">
+                                {{-- Data de Nascimento --}}
+                                <div class="md-form form-sm col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                    <label for="nascimento">Data de Nascimento</label>
+                                    <input id="nascimento" name="nascimento" type="date"
+                                        class="form-control form-control-sm @error('nascimento') is-invalid @enderror"
+                                        value="{{ $user->nascimento ?? old('nascimento') }}" />
+                                </div>
 
-                                            </div>
+                                {{-- Nº de Telefone --}}
+                                <div class="md-form form-sm col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                                    <input id="fone" name="fone" type="text"
+                                        class="form-control form-control-sm @error('fone') is-invalid @enderror"
+                                        value="{{ $user->fone ?? old('fone') }}" />
+                                    <label for="numero_contribuinte">Nº de Telefone</label>
+                                </div>
 
-                                            {{-- FORMAÇÃO--}}
-                                            <div class="md-form form-sm col-sm-12 col-md-8 col-lg-8 col-xl-8">
-                                                <input type="text" class="form-control form-control-sm campotext
-                                                @error('formacao') is-invalid @enderror"
-                                                       name="formacao" id="formacao"
-                                                       value="{{$user->formacao ?? old('formacao')}}">
-                                                <label for="formacao">Formação academica</label>
-                                            </div>
-
-                                            {{-- ESTADO CIVIL--}}
-                                            <div class="md-form form-sm col-sm-12 col-md-5 col-lg-5 col-xl-5">
-                                                <input type="text" class="form-control form-control-sm @error('stateCivil') is-invalid @enderror"
-                                                       name="stateCivil" id="statecivil"
-                                                       value="{{$user->state_civil ?? old('stateCivil')}}">
-                                                <label for="stateCivil">Estado civil</label>
-                                            </div>
-
-                                            {{-- TELEFONE--}}
-                                            <div class="md-form form-sm col-sm-6 col-md-5 col-lg-5 col-xl-5">
-                                                <input type="text" class="form-control form-control-sm @error('fone') is-invalid @enderror"
-                                                       name="fone" id="fone" value="{{$user->fone ?? old('fone')}}">
-                                                <label for="fone">Telefone</label>
-                                            </div>
-
-                                            {{-- RAMAL--}}
-                                            <div class="md-form form-sm col-sm-6 col-md-2 col-lg-2 col-xl-2">
-                                                <input type="text" class="form-control form-control-sm @error('fone') is-invalid @enderror"
-                                                       name="ramal" id="ramal" value="{{$user->ramal ?? old('ramal')}}">
-                                                <label for="ramal">Ramal</label>
-                                            </div>
-
-                                            {{-- DESCRIÇÃO--}}
-                                            <div class="md-form form-sm md-outline purple-border col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                                                <textarea class="md-textarea form-control form-control-sm" id="textarea-char-counter"
-                                                          name="descricao" rows="5" cols="20">{{isset($user) ? $user->descricao ?? old('descricao') : ''}}</textarea>
-                                                <label class="text-black-50 font-weight-bold text-md-left" for="textarea-char-counter">Descrição</label>
-                                            </div>
-
-
-                                        </div>
-                                    </div>
-                                </section>
                             </div>
                         </div>
                     </section>
                 </div>
+                
                 {{-- BOTÕES--}}
                 <div class="row">
                     <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
@@ -304,35 +249,21 @@
     </section>
 
     <script>
-        $(document).ready(function(){
-            $("#cep").inputmask("99999-999",{ "placeholder": "*", "clearIncomplete": true });
-            $("#number").inputmask("/[0-9]/g");
-            $("#fone").inputmask("(99)-99999-9999",{ "placeholder": "*", "clearIncomplete": true });
-            $("#ramal").inputmask("9999",{ "placeholder": "*", "clearIncomplete": true });
-            $("#nascimento").inputmask("99/99/9999",{ "placeholder": "dd/mm/yyyy", "clearIncomplete": true});
-
-
-            $('.campotext').on('keypress', function(e) {
-                var regex = new RegExp("^[a-zA-Z ÀÁÂÃÄÅàáâãäåÒÓÔÕÖØòóôõöøÈÉÊËèéêëÇçÌÍÎÏìíîïÙÚÛÜùúûüÿÑñ]*$");
-                var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
-                if (regex.test(str)) {
-                    return true;
-                }
-                e.preventDefault();
-                return false;
-            });
-
-
-        });
-
         var loadfile = function(event){
             var output = document.getElementById('output');
             output.src = URL.createObjectURL(event.target.files[0]);
         }
-    </script>
-    <script src="{{ asset('js/scriptTextarea.js') }}"></script>
-@endsection
 
-@section('partialspost_js')
-    <script src="{{asset('frontend/utilities/clearforms.js')}}"></script>
+        document.getElementById('roleFrom').addEventListener('submit', function(event) {
+    event.preventDefault(); // Impede o envio do formulário para verificar os dados
+    const formData = new FormData(this); // Cria um objeto FormData
+    for (let [name, value] of formData.entries()) {
+        console.log(name, value); // Exibe o nome do campo e o valor
+    }
+    
+    // Opcionalmente, remova o preventDefault() para deixar o formulário enviar os dados após a inspeção
+    this.submit(); // Envia o formulário após o debug (pode remover se não quiser que envie imediatamente)
+});
+
+    </script>
 @endsection

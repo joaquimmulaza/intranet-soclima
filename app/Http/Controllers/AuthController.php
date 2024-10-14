@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 
-use App\Endereco;
 use App\Post;
 use App\Questionaire;
 use App\User;
@@ -141,10 +140,8 @@ class AuthController extends Controller
             $user->role_id = 2;
             $user->cargo_id = 2;
             $user->unidade_id = 1;
-            $end = new Endereco();
 
             $user->save();
-            $user->endereco()->save($end);
 
             return redirect()->route('user.pedido');
 

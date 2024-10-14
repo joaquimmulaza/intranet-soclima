@@ -119,7 +119,7 @@
                 @endcan
 
                 {{--CATEGORIAS --}}
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-archive"></i>
                         <p>
@@ -143,7 +143,7 @@
                             </li>
                         @endcan
                     </ul>
-                </li>
+                </li> -->
 
                 {{--CARGO --}}
                 <li class="nav-item">
@@ -177,7 +177,7 @@
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-building"></i>
                         <p>
-                            Unidades
+                            Departamentos
                             <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
@@ -185,14 +185,14 @@
                         <li class="nav-item {{Route::current()->getName() === 'unidade.index' ? 'menu-open' : ''}}">
                             <a class="nav-link {{Route::current()->getName() === 'unidade.index' ? 'active menu-open' : ''}}" href="{{route('unidade.index')}}">
                                 <i class="fas fa-caret-right nav-icon"></i>
-                                <p>Listar de unidades</p>
+                                <p>Listar de Departamentos</p>
                             </a>
                         </li>
                         @can('app.users.create')
                             <li class="nav-item {{Route::current()->getName() === 'unidade.create' ? 'menu-open' : ''}}">
                                 <a class="nav-link {{Route::current()->getName() === 'unidade.create' ? 'active menu-open' : ''}}" href="{{route('unidade.create')}}">
                                     <i class="fas fa-caret-right nav-icon"></i>
-                                    <p>Cadastro unidade</p>
+                                    <p>Cadastrar Departamentos</p>
                                 </a>
                             </li>
                         @endcan
@@ -200,7 +200,7 @@
                 </li>
 
                 {{--QUESTIONARIO --}}
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-clipboard-check"></i>
                         <p>
@@ -232,7 +232,7 @@
                             </li>
                         @endcan
                     </ul>
-                </li>
+                </li> -->
 
                 @can('app.roles.index')
                 {{--ROLES --}}

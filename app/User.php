@@ -12,10 +12,6 @@ class User extends Authenticatable
 
     protected  $guarded = ['id'];
 
-    public function endereco(){
-        return $this->hasOne(Endereco::class);
-    }
-
     public function cargo(){
         return $this->belongsTo(Cargo::class);
     }

@@ -58,7 +58,7 @@
                                                 </div>
 
                                                 {{-- DATA VALIDADE--}}
-                                                <div class="md-form form-sm col-sm-12 col-md-3 col-lg-3 col-xl-3">
+                                                <!-- <div class="md-form form-sm col-sm-12 col-md-3 col-lg-3 col-xl-3">
                                                     <label class="text-small">Validade da notícia</label>
                                                     <input type="date"
                                                            id="nascimento"
@@ -67,19 +67,23 @@
                                                            value="{{isset($post) ? $post->validate_at : '' ?? old('nascimento')}}"
                                                            required="required">
 
-                                                </div>
+                                                </div> -->
 
 
                                                 {{--CARREGAR IMAGEM--}}
                                                 <div class="col-sm-12 col-md-4 col-lg-6 col-xl-6">
                                                     <div class="custom-file">
-                                                        <input type="file" class="custom-file-input" id="avatar" name="arquivo" onchange="loadfile(event)">
-                                                        <label class="custom-file-label" for="avatar">Selecione uma imagem</label>
+                                                        <input type="file" class="custom-file-input" id="arquivo_imagem" name="arquivo_imagem" onchange="loadfile(event)">
+                                                        <label class="custom-file-label" for="avatar">Anexar foto</label>
+                                                    </div>
+                                                    <div class="custom-file">
+                                                        <input type="file" class="custom-file-input" id="arquivo_pdf" name="arquivo_pdf" onchange="loadfile(event)">
+                                                        <label class="custom-file-label" for="avatar">Anexar PDF</label>
                                                     </div>
                                                 </div>
 
                                                 {{-- CATEGORIA--}}
-                                                <div class="col-sm-12 col-md-8 col-lg-6 col-xl-6">
+                                                <!-- <div class="col-sm-12 col-md-8 col-lg-6 col-xl-6">
                                                     <div class="form-group">
                                                         <select id="card_id" class="js-basic-multiple form-control form-control-sm"
                                                             style="width: 100%;" name="cat[]" multiple="multiple" placeholder="Escolha quais categorias">
@@ -96,25 +100,25 @@
                                                             @endforeach
                                                         </select>
                                                     </div>
-                                                </div>
+                                                </div> -->
 
                                                 {{-- SUBTITULO -RESUMO--}}
-                                                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                                <!-- <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
                                                     <div class="md-form md-outline">
                                                         <textarea class="md-textarea form-control" id="conteudo" name="subtitle" required="required">{{isset($post) ? $post->subtitle : ''}}</textarea>
                                                         <label class="text-black-50 font-weight-bold text-md-left" for="conteudo">Resumo de sua notícia</label>
                                                     </div>
-                                                </div>
+                                                </div> -->
                                             </div>
                                         </div>
                                         {{--IMAGEM PREVIEW --}}
-                                        <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4">
+                                        <!-- <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4">
                                             <figure id="upload" class="figure file-upload-wrapper">
                                                 <img class="figure-img img-fluid z-depth-1 rounded" id="output"
                                                      src="{{URL::to('/')}}/storage/{{isset($post) ? $post->capa : 'capa_posts/capa_default.jpg'}}"
                                                      alt="capa de noticias">
                                             </figure>
-                                        </div>
+                                        </div> -->
 
                                         {{-- DESCRIÇÃO--}}
                                         <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
@@ -124,11 +128,11 @@
                                                 </textarea>
                                             </div>
 
-                                            <div class="form-group">
+                                            <!-- <div class="form-group">
                                                 <label class="text-black-50 font-weight-bold text-md-left" for="conteudo">Conclusão final</label>
                                                 <textarea class="form-control summer" id="resumo" name="resumo">{{isset($post) ? $post->resumo : ''}}
                                                 </textarea>
-                                            </div>
+                                            </div> -->
                                         <div>
 
                                         <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
@@ -142,7 +146,7 @@
                                                     <span class="btn-icon-wrapper pr-2 opacity-7">
                                                         <i class="far fa-save fa-w-20"></i>
                                                     </span>
-                                                    Salvar nova notícia
+                                                    Publicar
                                                 @endisset
                                             </button>
 
@@ -154,12 +158,12 @@
                                                     Cancelar
                                                 </a>
                                             @else
-                                                <button type="reset" class="btn btn-danger rounded">
+                                                <!-- <button type="reset" class="btn btn-danger rounded">
                                                     <span class="btn-icon-wrapper pr-2 opacity-7">
                                                         <i class="fas fa-eraser fa-w-20"></i>
                                                     </span>
                                                     Limpar
-                                                </button>
+                                                </button> -->
                                             @endisset
                                         </div>
                                     </div>

@@ -92,10 +92,10 @@ class PostController extends Controller
             $noticia = new Post();
             $noticia->title = $request->title;
             $noticia->content = $request->conteudo;
-            $noticia->subtitle = $request->subtitle;
-            $noticia->resumo = $request->resumo;
+            // $noticia->subtitle = $request->subtitle;
+            // $noticia->resumo = $request->resumo;
             $noticia->slug = Str::slug($request->title, '-');
-            $noticia->validate_at = $request->validate;
+            // $noticia->validate_at = $request->validate;
             $noticia->ativo = 1;
 
 
@@ -160,8 +160,8 @@ class PostController extends Controller
         try{
             $post->title = $request->title;
             $post->content = $request->conteudo;
-            $post->subtitle = $request->subtitle;
-            $post->resumo = $request->resumo;
+            // $post->subtitle = $request->subtitle;
+            // $post->resumo = $request->resumo;
             $post->slug = Str::slug($request->title, '-');
             $post->ativo = 1;
             $post->validate_at = $request->validate;
