@@ -44,19 +44,19 @@ class AuthController extends Controller
             $dataHoje = Carbon::now();
     
             // Se houver pelo menos um post, busca os outros posts com base nas condições
-            if ($post) {
-                $posts = Post::where('id', '!=', $post->id)
-                    ->where('validate_at', '>=', $dataHoje->toDateString())
-                    ->orderBy('id', 'DESC')
-                    ->paginate(8);
-            } else {
-                // Se não houver posts, retorna uma coleção vazia
-                $posts = collect();
-            }
+            // if ($post) {
+            //     $posts = Post::where('id', '!=', $post->id)
+            //         ->where('validate_at', '>=', $dataHoje->toDateString())
+            //         ->orderBy('id', 'DESC')
+            //         ->paginate(8);
+            // } else {
+            //     // Se não houver posts, retorna uma coleção vazia
+            //     $posts = collect();
+            // }
     
             // Busca os questionários
             $questionarios = Questionaire::where('status', '=', 'Finalizado')
-                ->where('validate_at', '>=', $dataHoje->toDateString())
+                // ->where('validate_at', '>=', $dataHoje->toDateString())
                 ->orderBy('id', 'DESC')
                 ->paginate(10);
     

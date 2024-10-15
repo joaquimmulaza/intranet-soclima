@@ -49,7 +49,7 @@
                                         @endcan
                                     </th>
                                     <th class="col">
-                                        <span class="badge bg-primary p-2 rounded"><i class="fas fa-caret-down mr-1"></i> {{date('d/m/Y', strtotime($post->validate_at))}}</span>
+                                        <!-- <span class="badge bg-primary p-2 rounded"><i class="fas fa-caret-down mr-1"></i> {{date('d/m/Y', strtotime($post->validate_at))}}</span> -->
                                     </th>
                                     <th class="col">
                                         {{ $post->view }}

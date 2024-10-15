@@ -43,7 +43,7 @@ class QuestionaireController extends Controller
     public function questionariosFinalizados(){
         $dataHoje = Carbon::now();
         $questionarios = Questionaire::where('status', '=', 'Finalizado')
-            ->where('validate_at', '>=', $dataHoje->toDateString())
+            // ->where('validate_at', '>=', $dataHoje->toDateString())
             ->get();
         $questionarios->load('questions.answers');
         return view('public.questionario', compact('questionarios'));

@@ -7,6 +7,8 @@
     <script src="{{ asset('js/formMask/jquery.inputmask.min.js') }}"></script>
     <link rel="stylesheet" href="{{asset('public/plugins/select2/css/estiloSelect2.css')}}">
     <link href="{{asset('summernote/summernote-lite.min.css')}}" type="text/css" rel="stylesheet">
+    
+
 
     {{-- CABEÇALHO BREADCRUMB--}}
     <div class="content-header p-1">
@@ -37,9 +39,9 @@
                                 @endif
                                 <div class="card-body">
                                     <div class="row">
-                                        {{-- DADOS NOTICIA --}}
+                                        {{-- DADOS COMUNICADO --}}
                                         <div class="col-sm-12 col-md-8 col-lg-8 col-xl-8">
-                                            <h3 class="text-black-50 font-weight-bold text-md-left">{{isset($post) ? 'Editar' : 'Criar nova'}} notícia</h3>
+                                            <h3 class="text-black-50 font-weight-bold text-md-left">{{isset($post) ? 'Editar' : 'Criar novo'}} comunicado</h3>
                                             <div class="row">
                                                 {{-- TITULO--}}
                                                 <div class="md-form form-sm col-sm-12 col-md-9 col-lg-9 col-xl-9">
@@ -57,83 +59,36 @@
                                                     @enderror
                                                 </div>
 
-                                                {{-- DATA VALIDADE--}}
-                                                <!-- <div class="md-form form-sm col-sm-12 col-md-3 col-lg-3 col-xl-3">
-                                                    <label class="text-small">Validade da notícia</label>
-                                                    <input type="date"
-                                                           id="nascimento"
-                                                           class="form-control form-control-sm datepicker"
-                                                           name="validate"
-                                                           value="{{isset($post) ? $post->validate_at : '' ?? old('nascimento')}}"
-                                                           required="required">
-
-                                                </div> -->
-
-
-                                                {{--CARREGAR IMAGEM--}}
-                                                <div class="col-sm-12 col-md-4 col-lg-6 col-xl-6">
-                                                    <div class="custom-file">
-                                                        <input type="file" class="custom-file-input" id="arquivo_imagem" name="arquivo_imagem" onchange="loadfile(event)">
-                                                        <label class="custom-file-label" for="avatar">Anexar foto</label>
-                                                    </div>
-                                                    <div class="custom-file">
-                                                        <input type="file" class="custom-file-input" id="arquivo_pdf" name="arquivo_pdf" onchange="loadfile(event)">
-                                                        <label class="custom-file-label" for="avatar">Anexar PDF</label>
-                                                    </div>
-                                                </div>
-
-                                                {{-- CATEGORIA--}}
-                                                <!-- <div class="col-sm-12 col-md-8 col-lg-6 col-xl-6">
-                                                    <div class="form-group">
-                                                        <select id="card_id" class="js-basic-multiple form-control form-control-sm"
-                                                            style="width: 100%;" name="cat[]" multiple="multiple" placeholder="Escolha quais categorias">
-                                                            @foreach($categorias as $categoria)
-                                                                <option value="{{$categoria->id}}"
-                                                                @if(isset($post))
-                                                                    @foreach($post->categorias as $cat)
-                                                                        @if($categoria->id == $cat->id)
-                                                                             selected="selected"
-                                                                        @endif
-                                                                     @endforeach
-                                                                @endif
-                                                                        >{{$categoria->titulo}}</option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                </div> -->
-
-                                                {{-- SUBTITULO -RESUMO--}}
-                                                <!-- <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                                                    <div class="md-form md-outline">
-                                                        <textarea class="md-textarea form-control" id="conteudo" name="subtitle" required="required">{{isset($post) ? $post->subtitle : ''}}</textarea>
-                                                        <label class="text-black-50 font-weight-bold text-md-left" for="conteudo">Resumo de sua notícia</label>
-                                                    </div>
-                                                </div> -->
+                                                
                                             </div>
                                         </div>
-                                        {{--IMAGEM PREVIEW --}}
-                                        <!-- <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4">
-                                            <figure id="upload" class="figure file-upload-wrapper">
-                                                <img class="figure-img img-fluid z-depth-1 rounded" id="output"
-                                                     src="{{URL::to('/')}}/storage/{{isset($post) ? $post->capa : 'capa_posts/capa_default.jpg'}}"
-                                                     alt="capa de noticias">
-                                            </figure>
-                                        </div> -->
+                                       
 
                                         {{-- DESCRIÇÃO--}}
                                         <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
                                             <div class="form-group">
-                                                <label class="text-black-50 font-weight-bold text-md-left" for="conteudo">Descrição inicial da notícia</label>
-                                                <textarea class="form-control summer" id="conteudo" name="conteudo" required="required">{{isset($post) ? $post->content : ''}}
+                                                <label class="text-black-50 font-weight-bold text-md-left" for="content">Descrição do comunicado</label>
+                                                <textarea class="form-control summer" id="content" name="content" required="required">{{isset($post) ? $post->content : ''}}
                                                 </textarea>
                                             </div>
 
-                                            <!-- <div class="form-group">
-                                                <label class="text-black-50 font-weight-bold text-md-left" for="conteudo">Conclusão final</label>
-                                                <textarea class="form-control summer" id="resumo" name="resumo">{{isset($post) ? $post->resumo : ''}}
-                                                </textarea>
-                                            </div> -->
                                         <div>
+
+                                        {{--CARREGAR IMAGEM--}}
+                                        <div class="col-sm-12 col-md-4 col-lg-6 col-xl-6">
+                                            <div class="custom-file">
+                                                <input type="file" class="custom-file-input" id="arquivo_imagem" name="arquivo_imagem" accept=".jpg, .jpeg, .png" onchange="loadfile(event)">
+                                                <label class="custom-file-label" for="avatar">Anexar foto</label>
+                                            </div>
+                                            <div class="custom-file">
+                                                <input type="file" class="custom-file-input" id="arquivo_pdf" name="arquivo_pdf" accept=".pdf" onchange="loadfile(event)">
+                                                <label class="custom-file-label" for="avatar">Anexar PDF</label>
+                                            </div>
+                                        </div>
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createEventModal">
+                                            Criar Evento
+                                        </button>
+
 
                                         <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
                                             <button type="submit" class="btn btn-success rounded">
@@ -176,6 +131,71 @@
                 </div>
             </div>
         </div>
+        <!-- Modal Criar Evento -->
+        <!-- Modal para Criar Evento -->
+<div class="modal fade" id="createEventModal" tabindex="-1" aria-labelledby="createEventModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="createEventModalLabel">Criar Novo Evento</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="{{ route('event.store') }}" method="POST" enctype="multipart/form-data">
+          @csrf
+          <!-- Título do Evento -->
+          <div class="form-group">
+            <label for="eventTitle">Título do Evento</label>
+            <input type="text" class="form-control" id="eventTitle" name="title" required>
+          </div>
+
+          <!-- Descrição do Evento -->
+          <div class="form-group">
+            <label for="eventDescription">Descrição</label>
+            <textarea class="form-control" id="eventDescription" name="description" rows="3" required></textarea>
+          </div>
+
+          <!-- Data de Início -->
+          <div class="form-group">
+            <label for="eventStartDate">Data de Início</label>
+            <input type="date" class="form-control" id="eventStartDate" name="start_date" required>
+          </div>
+
+          <!-- Data de Fim -->
+          <div class="form-group">
+            <label for="eventEndDate">Data de Fim</label>
+            <input type="date" class="form-control" id="eventEndDate" name="end_date" required>
+          </div>
+
+          <!-- Hora de Início -->
+          <div class="form-group">
+            <label for="eventStartTime">Hora de Início</label>
+            <input type="time" class="form-control" id="eventStartTime" name="start_time" required>
+          </div>
+
+          <!-- Hora de Fim -->
+          <div class="form-group">
+            <label for="eventEndTime">Hora de Fim</label>
+            <input type="time" class="form-control" id="eventEndTime" name="end_time" required>
+          </div>
+
+          <!-- Imagem de Capa -->
+          <div class="form-group">
+            <label for="eventCoverImage">Imagem de Capa</label>
+            <input type="file" class="form-control-file" id="eventCoverImage" name="cover_image">
+          </div>
+
+          <!-- Botão para Submeter o Formulário -->
+          <button type="submit" class="btn btn-primary">Criar Evento</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
     </section>
 @endsection
 
@@ -198,7 +218,7 @@
                     ['table', ['table']]
                 ],
                 height: 150,
-                placeholder:'Escreva sua noticia aqui...',
+                placeholder:'Escreva seu comunicado aqui...',
                 lang: 'pt-BR'
             });
             $("#nascimento").inputmask("99/99/9999",{ "placeholder": "dd/mm/yyyy", "clearIncomplete": true});
@@ -210,4 +230,7 @@
             output.src = URL.createObjectURL(event.target.files[0]);
         }
     </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 @endsection

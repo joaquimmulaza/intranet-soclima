@@ -40,15 +40,15 @@ if(!function_exists('total_posts')){
     }
 }
 
-if(!function_exists('invalid_posts')){
-    function invalid_posts(){
-        $dataHoje = Carbon::now();
-        $postsInvalids = Post::where('validate_at', '<', $dataHoje->toDateString())
-            ->get();
+// if(!function_exists('invalid_posts')){
+//     function invalid_posts(){
+//         $dataHoje = Carbon::now();
+//         $postsInvalids = Post::where('validate_at', '<', $dataHoje->toDateString())
+//             ->get();
 
-        return $postsInvalids->count();
-    }
-}
+//         return $postsInvalids->count();
+//     }
+// }
 
 if(!function_exists('user_on')){
     function user_on(){
@@ -241,7 +241,7 @@ if(!function_exists('respond_survey')){
 
         $filtro = $pesquisa->whereIn('email', Auth::user()->email);
 
-        //USUÁRIO JÁ RESPONDEU
+        //USUï¿½RIO Jï¿½ RESPONDEU
         if($filtro->count() == 0){
             return true;
         }

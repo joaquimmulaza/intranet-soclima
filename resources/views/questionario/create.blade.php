@@ -50,12 +50,12 @@
                                                 {{-- DATA VALIDADE--}}
                                                 <div class="md-form form-sm col-sm-12 col-md-3 col-lg-3 col-xl-3">
                                                     <label class="text-black-50 font-weight-bold text-md-left">Termino do questionário</label>
-                                                    <input type="date"
+                                                    <!-- <input type="date"
                                                            id="validate"
                                                            class="form-control form-control-sm datepicker"
                                                            name="validate"
                                                            value="{{isset($questionario) ? $questionario->validate_at : '' ?? old('validate')}}"
-                                                           required="required">
+                                                           required="required"> -->
                                                 </div>
 
 

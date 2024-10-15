@@ -5,6 +5,7 @@ use \App\Mail\correioMail;
 use \Illuminate\Support\Facades\Mail;
 use \App\Mail\notificationMail;
 use \App\Http\Controllers\TelefoneController;
+use App\Http\Controllers\PostController;
 /*
 |--------------------------------------------------------------------------
 | TESTES UNIDADE - Auth::routes();
@@ -30,6 +31,7 @@ Route::get('/admin', 'AuthController@dashboard')->name('admin');
 Route::get('/admin/login', 'AuthController@loginForm')->name('admin.login');
 Route::get('/admin/logout', 'AuthController@logout')->name('admin.logout');
 Route::post('/admin/login/do', 'AuthController@login')->name('admin.login.do');
+Route::post('/event/store', [EventController::class, 'store'])->name('event.store');
 
 
 

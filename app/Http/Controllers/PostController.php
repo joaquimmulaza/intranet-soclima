@@ -2,39 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Categoria;
 use App\Post;
-use App\PostImage;
-use App\Questionaire;
 use App\User;
-use Carbon\Traits\Date;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
-use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Storage;
-use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\NoticiasExport;
+use Illuminate\Support\Carbon;
 
 class PostController extends Controller
 {
-
-    /*Annotation: --------------------------------------------------------------
-    |1.
-    |2.
-    |3.
-    |4.
-    |5.
-    |6.
-    |7.
-    |8.
-    |9.
-    |10.
-    |--------------------------------------------------------------------------*/
-
     private $post;
 
     public function __construct(Post $post){
@@ -44,187 +21,157 @@ class PostController extends Controller
     public function index(){
         $posts = Post::all();
 
-        //$posts = Post::where('validate_at', '>=', now())->get();
+        // Calcula as visualizações de cada post
+        foreach ($posts as $post) {
+            $post->views_count = \DB::table('post_views')
+                ->where('post_id', $post->id)
+                ->count();
+        }
+
         return view('public.home', compact('posts'));
     }
 
-    public function indexAllPages(Request $request){
-
-        if(Auth::check() === true && Auth::user()->status == "ativo"){
-            $posts = Post::all();
-            $post = collect($posts)->last();
-
-            $dataHoje = Carbon::now();
-
-            $posts = Post::where('id', '!=', $post->id)
-                ->where('validate_at', '>=', $dataHoje->toDateString())
-                ->orderBy('id', 'DESC')
-                ->get();
-
-            $questionarios = Questionaire::where('status', '=', 'Finalizado')
-                ->where('validate_at', '>=', $dataHoje->toDateString())
-                ->orderBy('id', 'DESC')
-                ->get();
-
-
-            return view('public.pageAll', compact('posts', 'post', 'questionarios'));
-        }
-        return redirect()->route('admin.login');
-    }
-
-
-    public function listPosts(){
-        $posts = Post::all();
-        return view('post.index', compact('posts'));
-    }
-
-    public function summernote(){
-        return view('post.summer');
-    }
-
     public function create(){
-        $categorias = Categoria::all();
-        return view('post.create', compact('categorias'));
+        return view('post.create');
     }
 
-    public function store(Request $request){
-        try{
-            $noticia = new Post();
-            $noticia->title = $request->title;
-            $noticia->content = $request->conteudo;
-            // $noticia->subtitle = $request->subtitle;
-            // $noticia->resumo = $request->resumo;
-            $noticia->slug = Str::slug($request->title, '-');
-            // $noticia->validate_at = $request->validate;
-            $noticia->ativo = 1;
+    public function store(Request $request) {
+        try {
+            // Criando comunicado ou evento
+            $post = new Post();
+            $post->title = $request->title;
+            $post->content = $request->content;
+            $post->slug = Str::slug($request->title, '-');
+            $post->ativo = 1;
 
-
-
-            /*if(!$request->file('arquivo') == null){
-                $path = $request->file('arquivo')->store('capa_posts', 'public');
-                dd($path);
-                $noticia->capa = $path;
-            }*/
-
-            if(!$request->file('arquivo') == null){
-                $avatar = $request->file('arquivo');
-                //salva imagem no storage/capa_posts = _97064624624298.JPG
-                $filename = "_" . time() . '.' . $avatar->getClientOriginalExtension();
-                //salva o mesmo arquivo + "capa_posts/" PARA ter o caminho correto no banco = capa_posts/_97064624624298.JPG
-                $savefile = "capa_posts/" . $filename;
-                Image::make($avatar)->resize(781, 521)->save(public_path('storage/capa_posts/' . $filename));
-                //if($noticia->capa !== 'capa_default.jpg'){
-                    //File::delete(public_path('storage/capa_posts/' . $noticia->capa));
-                //}
-                $noticia->capa =  $savefile;
+            // Verificando se há upload de imagem de capa
+            if($request->hasFile('arquivo_imagem')) {
+                $imagem = $request->file('arquivo_imagem');
+                $imagemNome = time() . '.' . $imagem->getClientOriginalExtension();
+                $imagemPath = "uploads/imagens/" . $imagemNome;
+                $imagem->move(public_path('uploads/imagens'), $imagemNome);
+                $post->arquivo_imagem = $imagemPath;
             }
 
-            $user = User::find(Auth::user()->id);
-            $user->posts()->save($noticia);
+            // Verificando se há upload de arquivo PDF
+            if($request->hasFile('arquivo_pdf')) {
+                $pdf = $request->file('arquivo_pdf');
+                $pdfNome = time() . '.' . $pdf->getClientOriginalExtension();
+                $pdfPath = "uploads/pdfs/" . $pdfNome;
+                $pdf->move(public_path('uploads/pdfs'), $pdfNome);
+                $post->arquivo_pdf = $pdfPath;
+            }
 
-            $categorias = Categoria::find($request->cat);
-            $noticia->categorias()->sync($categorias);
+            $user = Auth::user();
+            $user->posts()->save($post);
 
-            notify()->success("Noticia criada com sucesso!","Success","bottomRight");
+            notify()->success("Comunicado ou evento criado com sucesso!", "Success", "bottomRight");
             return redirect()->route('home');
-
-        }catch (\Exception $e){
-            if(env('APP_DEBUG')){
-                flash($e->getMessage())->warning();
-                return redirect()->back();
-            }
-            notify()->error("Ocorreu um erro ao tentar criar uma notícia!","Error","bottomRight");
+        } catch (\Exception $e) {
+            flash($e->getMessage())->warning();
             return redirect()->back();
         }
-    }
-
-    public function show(Post $post){
-        $dataHoje = Carbon::now();
-
-        $posts = Post::where('id', '!=', $post->id)
-            ->where('validate_at', '>=', $dataHoje->toDateString())
-            ->orderBy('id', 'DESC')
-            ->paginate(3);
-
-        $post->view++;
-        $post->save();
-        return view('public.show', ['post'=>$post, 'posts'=>$posts]);
     }
 
     public function edit(Post $post){
-        $categorias = Categoria::all();
-        return view('post.create', compact('post', 'categorias'));
+        return view('post.create', compact('post'));
     }
 
-    public function update(Request $request, Post $post){
-        try{
+    public function update(Request $request, Post $post) {
+        try {
+            // Atualizando evento ou comunicado
             $post->title = $request->title;
-            $post->content = $request->conteudo;
-            // $post->subtitle = $request->subtitle;
-            // $post->resumo = $request->resumo;
+            $post->content = $request->content;
             $post->slug = Str::slug($request->title, '-');
-            $post->ativo = 1;
-            $post->validate_at = $request->validate;
 
-            if(!$request->file('arquivo') == null){
-                $avatar = $request->file('arquivo');
-                $filename = "_" . time() . '.' . $avatar->getClientOriginalExtension();
-                $savefile = "capa_posts/" . $filename;
-
-                if($post->capa != 'capa_posts/capa_default.jpg'){
-                    File::delete(public_path('storage/' . $post->capa));
+            // Atualizando imagem de capa
+            if ($request->hasFile('arquivo_imagem')) {
+                if ($post->arquivo_imagem) {
+                    File::delete(public_path($post->arquivo_imagem));
                 }
-                Image::make($avatar)->resize(781, 521)->save(public_path('storage/capa_posts/' . $filename));
-                $post->capa =  $savefile;
+
+                $imagem = $request->file('arquivo_imagem');
+                $imagemNome = time() . '.' . $imagem->getClientOriginalExtension();
+                $imagemPath = "uploads/imagens/" . $imagemNome;
+                $imagem->move(public_path('uploads/imagens'), $imagemNome);
+                $post->arquivo_imagem = $imagemPath;
             }
 
-            $user = User::find($post->user->id);
-            $user->posts()->save($post);
+            // Atualizando arquivo PDF
+            if ($request->hasFile('arquivo_pdf')) {
+                if ($post->arquivo_pdf) {
+                    File::delete(public_path($post->arquivo_pdf));
+                }
 
-            $categorias = Categoria::find($request->cat);
-            $post->categorias()->sync($categorias);
-
-            notify()->success("Notícia editada com sucesso!","Success","bottomRight");
-            return redirect()->route('post.show', compact('post'));
-
-        }catch (\Exception $e){
-            if(env('APP_DEBUG')){
-                flash($e->getMessage())->warning();
-                return redirect()->back();
+                $pdf = $request->file('arquivo_pdf');
+                $pdfNome = time() . '.' . $pdf->getClientOriginalExtension();
+                $pdfPath = "uploads/pdfs/" . $pdfNome;
+                $pdf->move(public_path('uploads/pdfs'), $pdfNome);
+                $post->arquivo_pdf = $pdfPath;
             }
-            notify()->error("Ocorreu um erro ao tentar editar uma notícia!","Error","bottomRight");
+
+            $post->save();
+
+            notify()->success("Comunicado ou evento atualizado com sucesso!", "Success", "bottomRight");
+            return redirect()->route('post.show', $post);
+        } catch (\Exception $e) {
+            flash($e->getMessage())->warning();
             return redirect()->back();
         }
+
+        
     }
 
-    public function destroy(Post $post){
+    public function show(Post $post)
+    {
+     
 
-        try{
-            $post->load('comments', 'likes');
-            if($post->capa != 'capa_posts/capa_default.jpg'){
-                File::delete(public_path('storage/' . $post->capa));
+        $dataHoje = Carbon::now();
+
+        // Busca posts válidos e exclui o post atual
+        $posts = Post::where('id', '!=', $post->id)
+            // ->where('validate_at', '>=', $dataHoje->toDateString())
+            ->orderBy('id', 'DESC')
+            ->paginate(3);
+
+        // Verifica se o usuário está logado e se já visualizou o post
+        $userId = Auth::id();
+        if ($userId) {
+            $viewExists = \DB::table('post_views')
+                ->where('post_id', $post->id)
+                ->where('user_id', $userId)
+                ->exists();
+
+            if (!$viewExists) {
+                // Se o usuário ainda não visualizou, salva a visualização
+                \DB::table('post_views')->insert([
+                    'post_id' => $post->id,
+                    'user_id' => $userId,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+        }
+        // Retorna a view
+        return view('public.show', ['post' => $post, 'posts' => $posts]);
+    }
+
+
+    public function destroy(Post $post){
+        try {
+            if ($post->arquivo_imagem) {
+                File::delete(public_path($post->arquivo_imagem));
+            }
+            if ($post->arquivo_pdf) {
+                File::delete(public_path($post->arquivo_pdf));
             }
             $post->delete();
 
-            notify()->success("Notícia excluida com sucesso!","Success","bottomRight");
+            notify()->success("Comunicado ou evento excluído com sucesso!", "Success", "bottomRight");
             return redirect()->route('post.all');
-
-        }catch (\Exception $e){
-            if(env('APP_DEBUG')){
-                flash($e->getMessage())->warning();
-                return redirect()->back();
-            }
-            notify()->error("Ocorreu um erro ao tentar excluir uma notícia!","Error","bottomRight");
+        } catch (\Exception $e) {
+            flash($e->getMessage())->warning();
             return redirect()->back();
         }
-    }
-
-    public function download(Post $post){
-        $path = Storage::disk('public')->getDriver()->getAdapter()->applyPathPrefix($post->capa);
-        return response()->download($path);
-    }
-
-    public function export(){
-        return \Maatwebsite\Excel\Facades\Excel::download(new NoticiasExport, 'Lista_noticias.xlsx');
     }
 }

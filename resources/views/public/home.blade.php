@@ -44,8 +44,8 @@
                         <div class="mdb-lightbox">
                             <figure>
                                 @if(isset($post) && is_object($post))
-                                    <a href="/storage/{{$post->capa}}" data-size="{{$post->capa}}" class="lightbox">
-                                        <img src="/storage/{{$post->capa}}" alt="{{$post->title}}" class="img-fluid rounded">
+                                    <a href="/{{$post->arquivo_imagem}}" data-size="{{$post->arquivo_imagem}}" class="lightbox">
+                                        <img src="/{{$post->arquivo_imagem}}" alt="{{$post->title}}" class="img-fluid rounded">
                                     </a>
                                 @else
                                     <p>Imagem não disponível</p>
@@ -78,7 +78,7 @@
                                             <span class="badge badge-warning">{{ likes_post($post->id) }}</span>
                                         </i>
                                         <i class="far fa-eye text-sm-center">
-                                            <span class="badge badge-warning">{{ $post->view }}</span>
+                                            <span class="badge badge-warning">{{ $post->views_count }}</span>
                                         </i>
                                         <i class="far fa-comments text-sm-center">
                                             <span class="badge badge-warning">{{ $post->comments()->count() }}</span>

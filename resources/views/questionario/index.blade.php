@@ -49,11 +49,8 @@
                                             {{$questionario->questions()->count()}}
                                         </th>
                                         <th class="col">
-                                            @if(date('d/m/Y', strtotime($questionario->validate_at)) < \Illuminate\Support\Facades\Date::now()->format('d/m/Y'))
-                                                <span class="badge bg-danger p-2 rounded"><i class="fas fa-caret-down mr-1"></i> {{date('d/m/Y', strtotime($questionario->validate_at))}}</span>
-                                            @else
-                                                <span class="badge bg-success p-2 rounded"><i class="fas fa-check mr-1"></i>{{date('d/m/Y', strtotime($questionario->validate_at))}}</span>
-                                            @endif
+                                           
+                                                
                                         </th>
                                         <th class="col">
                                             @if($questionario->status == 'Finalizado')
