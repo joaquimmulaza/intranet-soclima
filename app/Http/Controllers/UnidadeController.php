@@ -47,10 +47,10 @@ class UnidadeController extends Controller
             $unidade = new Unidade();
             $unidade->titulo = $request->titulo;
             $unidade->descricao = $request->descricao;
-            $unidade->ramal = $request->ramal;
+            // $unidade->ramal = $request->ramal;
             $unidade->save();
 
-            notify()->success("Unidade criada com sucesso!","Success","bottomRight");
+            notify()->success("Departamento criada com sucesso!","Success","bottomRight");
             return redirect()->route('unidade.index');
 
         }catch (\Exception $e){
@@ -85,10 +85,10 @@ class UnidadeController extends Controller
         try{
             $unidade->titulo = $request->titulo;
             $unidade->descricao = $request->descricao;
-            $unidade->ramal = $request->ramal;
+            // $unidade->ramal = $request->ramal;
             $unidade->save();
 
-            notify()->success("Unidade editada com sucesso!","Success","bottomRight");
+            notify()->success("Departamento editada com sucesso!","Success","bottomRight");
             return redirect()->route('unidade.index');
         }catch (\Exception $e){
             if(env('APP_DEBUG')){
@@ -104,7 +104,7 @@ class UnidadeController extends Controller
     {
         try{
             $unidade->delete();
-            notify()->success("Unidade excluida com sucesso!","Success","bottomRight");
+            notify()->success("Departamento excluida com sucesso!","Success","bottomRight");
             return redirect()->route('unidade.index');
         }catch (\Exception $e){
             if(env('APP_DEBUG')){

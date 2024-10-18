@@ -130,6 +130,7 @@ class UserController extends Controller
             $user->data_emissao_bi = $request->data_emissao_bi;
             $user->data_validade_bi = $request->data_validade_bi;
             $user->fone = $request->fone;
+            $user->genero = $request->genero;
             $user->password = Hash::make($request->password);
             $user->status = 'ativo';
 
@@ -222,6 +223,7 @@ class UserController extends Controller
             $user->data_emissao_bi = $request->data_emissao_bi;
             $user->data_validade_bi = $request->data_validade_bi;
             $user->fone = $request->fone;
+            $user->genero = $request->genero;
             if(!empty($request->password)){
                 $user->password = Hash::make($request->password);
             }

@@ -20,7 +20,7 @@
                 {{--NOTÍCIAS --}}
                 <p class="mb-1">
                     <a href="{{route('post.all')}}">
-                        Notícias
+                        Posts
                     </a>
                 </p>
 
@@ -34,11 +34,11 @@
                 @endcan
 
                 {{--CATEGORIAS --}}
-                <p class="mb-1">
+                <!-- <p class="mb-1">
                     <a href="{{route('categoria.index')}}">
                         Categorias
                     </a>
-                </p>
+                </p> -->
 
                 {{--CARGO --}}
                 <p class="mb-1">
@@ -50,16 +50,16 @@
                 {{--UNIDADE --}}
                 <p class="mb-1">
                     <a href="{{route('unidade.index')}}">
-                        Unidades
+                        Departamentos
                     </a>
                 </p>
 
                 {{--QUESTIONARIO --}}
-                <p class="mb-1">
+                <!-- <p class="mb-1">
                     <a href="{{route('quest.do.finaliza')}}">
                         Questionarios
                     </a>
-                </p>
+                </p> -->
 
                 @can('app.dashboard')
                 <p class="mb-1">

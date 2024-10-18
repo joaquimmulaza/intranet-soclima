@@ -46,11 +46,11 @@
                                             @enderror
                                         </div>
 
-                                        <div class="md-form form-sm col-sm-12 col-md-2 col-lg-2 col-xl-2">
+                                        <!-- <div class="md-form form-sm col-sm-12 col-md-2 col-lg-2 col-xl-2">
                                             <input type="text" class="form-control form-control-sm @error('ramal') is-invalid @enderror"
                                                    name="ramal" id="ramal" value="{{$unidade->ramal ?? old('ramal')}}">
                                             <label for="ramal">Ramal</label>
-                                        </div>
+                                        </div> -->
 
                                         <div class="md-form md-outline purple-border col-sm-12 col-md-12 col-lg-12 col-xl-12">
                                             <textarea class="md-textarea form-control" id="descricao" name="descricao" required="required" rows="5" cols="20">{{isset($unidade) ? $unidade->descricao ?? old('descricao') : ''}}</textarea>

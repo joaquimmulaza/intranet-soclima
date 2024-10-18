@@ -144,7 +144,7 @@
             {{-- POSTAGENS LEFT--}}
             <section class="col-sm-12 col-md-8 col-lg-8 col-xl-8 pl-4 pt-2">
 
-                <h5 class="indigo-text text-black-50 font-weight-bold"><strong>Últimas notícias</strong></h5>
+                <h5 class="indigo-text text-black-50 font-weight-bold"><strong>Posts Recente</strong></h5>
 
                 <div class="row">
                     @foreach($posts as $post)
@@ -193,11 +193,11 @@
 
             {{--QUESTIONÁRIOS RIGHT--}}
             <section class="col-sm-12 col-md-4 col-lg-4 col-xl-4 pt-2">
-                <h5 align="center" class="indigo-text text-black-50 font-weight-bold"><strong>Questionários</strong></h5>
+                <h5 align="center" style="display: none;" class="indigo-text text-black-50 font-weight-bold"><strong>Questionários</strong></h5>
 
                 <section class="row features-small">
                     @foreach($questionarios as $questionario)
-                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                        <div style="display: none;"  class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
                             <div class="row">
                                 <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3 text-center">
                                     @if(respond_survey($questionario->id))

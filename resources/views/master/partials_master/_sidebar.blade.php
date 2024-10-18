@@ -63,7 +63,7 @@
                     <a href="#" class="nav-link">
                         <i class="nav-icon far fa-newspaper"></i>
                         <p>
-                            Notícias
+                            Posts
                             <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
@@ -71,14 +71,14 @@
                         <li class="nav-item {{Route::current()->getName() === 'post.all' ? 'menu-open' : ''}}">
                             <a href="{{route('post.all')}}" class="nav-link {{Route::current()->getName() === 'post.all' ? 'active menu-open' : ''}}">
                                 <i class="fas fa-angle-right nav-icon"></i>
-                                <p>Listar notícias</p>
+                                <p>Listar posts</p>
                             </a>
                         </li>
                         @can('app.dashboard')
                             <li class="nav-item {{Route::current()->getName() === 'post.create' ? 'menu-open' : ''}}">
                                 <a href="{{route('post.create')}}" class="nav-link {{Route::current()->getName() === 'post.create' ? 'active menu-open' : ''}}">
                                     <i class="fas fa-angle-right nav-icon"></i>
-                                    <p>Criar notícia</p>
+                                    <p>Criar post</p>
                                 </a>
                             </li>
                         @endcan

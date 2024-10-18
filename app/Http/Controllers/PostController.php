@@ -77,6 +77,11 @@ class PostController extends Controller
         return view('post.create', compact('post'));
     }
 
+    public function listPosts(){
+        $posts = Post::all();
+        return view('post.index', compact('posts'));
+    }
+
     public function update(Request $request, Post $post) {
         try {
             // Atualizando evento ou comunicado

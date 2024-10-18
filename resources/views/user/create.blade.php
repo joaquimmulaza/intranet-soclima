@@ -1,5 +1,10 @@
 @extends('master.layout')
 @section('title', 'Cadastrar usuário')
+<!-- Incluir o CSS do Select2 -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+<!-- Incluir jQuery -->
+
+
 
 @section('content')
     <script src="{{ asset('js/formMask/jquery.inputmask.min.js') }}"></script>
@@ -97,22 +102,25 @@
                                         </select>
                                     </div>
 
-                                    {{-- UNIDADE (Departamento)--}}
+                                    {{-- UNIDADE (Departamento) --}}
                                     <div class="form-group">
-                                        <select id="unidade" class="js-basic-multiple form-control form-control-sm" style="width: 100%;" name="unidade">
-                                            <option disabled selected>Selecione o departamento</option>
+                                        <select id="unidade" class="js-basic-multiple teste form-control form-control-sm" style="width: 100%;" name="unidade">
+                                            <option></option>
                                             @foreach($unidades as $unidade)
                                                 <option value="{{$unidade->id}}"
-                                                @if(isset($user) && $user->unidade && $user->unidade->id == $unidade->id) selected="selected" @endif>
-                                                   {{$unidade->titulo}}
+                                                    @if(isset($user) && $user->unidade && $user->unidade->id == $unidade->id) selected="selected" @endif>
+                                                    {{$unidade->titulo}}
                                                 </option>
                                             @endforeach
                                         </select>
                                     </div>
 
+                                    
+
+
                                     {{-- FUNÇÃO--}}
                                     <div class="form-group">
-                                        <select id="role" class="js-basic-multiple form-control form-control-sm" style="width: 100%;" name="role">
+                                        <select id="role" class="js-basic-multiple teste form-control form-control-sm" style="width: 100%;" name="role">
                                             <option disabled selected>Permissões no sistema</option>
                                             @foreach($funcoes as $funcao)
                                                 <option value="{{$funcao->id}}"
@@ -205,6 +213,36 @@
                                     <label for="numero_contribuinte">Nº de Telefone</label>
                                 </div>
 
+                                {{-- GÊNERO --}}
+                                <div class="md-form form-sm" style="margin-left: 20px;">
+                                    <label class="text-black-50 font-weight-bold text-md-left">Gênero</label><br>
+
+                                    <!-- Rádio Masculino -->
+                                    <div class="custom-control custom-radio custom-control-inline mr-3">
+                                        <input type="radio" id="genero_masculino" name="genero" value="masculino" class="custom-control-input"
+                                            @if(isset($user) && $user->genero == 'masculino') checked="checked" @endif>
+                                        <label class="custom-control-label" for="genero_masculino">Masculino</label>
+                                    </div>
+
+                                    <!-- Rádio Feminino -->
+                                    <div class="custom-control custom-radio custom-control-inline" style="margin-left: 100px;">
+                                        <input type="radio" id="genero_feminino" name="genero" value="feminino" class="custom-control-input"
+                                            @if(isset($user) && $user->genero == 'feminino') checked="checked" @endif>
+                                        <label class="custom-control-label" for="genero_feminino">Feminino</label>
+                                    </div>
+
+                                    
+
+                                    
+
+                                    @error('genero')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+
+
                             </div>
                         </div>
                     </section>
@@ -247,7 +285,11 @@
             </form>
         </div>
     </section>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+
+<!-- Incluir o JS do Select2 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <script>
         var loadfile = function(event){
             var output = document.getElementById('output');
@@ -265,5 +307,23 @@
     this.submit(); // Envia o formulário após o debug (pode remover se não quiser que envie imediatamente)
 });
 
+    $(document).ready(function() {
+            // Inicializando o Select2
+            $('#unidade').select2({
+                placeholder: "Digite para pesquisar o departamento",  // Placeholder de pesquisa
+                allowClear: true,
+                minimumInputLength: 1,
+                tags: false,
+                language: {
+                noResults: function() {
+                    return "Nenhum resultado encontrado"; // Mensagem personalizada
+                    },
+                inputTooShort: function() {
+                    return ""; // Mensagem personalizada quando o usuário digita menos do que o necessário
+                }
+                }  // Permitir limpar a seleção
+            })
+            
+    });
     </script>
 @endsection

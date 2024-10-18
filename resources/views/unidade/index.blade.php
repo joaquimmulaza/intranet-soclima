@@ -28,7 +28,7 @@
                                 <thead>
                                     <tr class="text-center">
                                         <th>Nome</th>
-                                        <th>Ramal</th>
+                                        <!-- <th>Ramal</th> -->
                                         <th>Descrição</th>
                                         @can('app.dashboard')
                                             <th>Ações</th>
@@ -43,9 +43,9 @@
                                                     {{$unidade->titulo}}
                                                 </a>
                                             </th>
-                                            <th>
+                                            <!-- <th>
                                                   {{$unidade->ramal}}
-                                            </th>
+                                            </th> -->
                                             <th>
                                                 {{$unidade->descricao}}
                                             </th>

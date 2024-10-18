@@ -282,3 +282,5 @@ Route::get('excel-cargos', 'CargoController@export')->name('excel.cargos');
 Route::get('excel-unidades', 'UnidadeController@export')->name('excel.unidades');
 Route::get('excel-noticias', 'PostController@export')->name('excel.noticias');
 Route::get('excel-questionarios', 'QuestionaireController@export')->name('excel.questionarios');
+
+/*MARCAR FERIAS*/

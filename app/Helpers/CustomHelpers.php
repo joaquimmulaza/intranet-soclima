@@ -40,15 +40,14 @@ if(!function_exists('total_posts')){
     }
 }
 
-// if(!function_exists('invalid_posts')){
-//     function invalid_posts(){
-//         $dataHoje = Carbon::now();
-//         $postsInvalids = Post::where('validate_at', '<', $dataHoje->toDateString())
-//             ->get();
+if(!function_exists('invalid_posts')){
+    function invalid_posts(){
+        // Supondo que a coluna 'status' controle se o post é inválido
+        $postsInvalids = Post::where('ativo', '=', 'invalid')->get();
+        return $postsInvalids->count();
+    }
+}
 
-//         return $postsInvalids->count();
-//     }
-// }
 
 if(!function_exists('user_on')){
     function user_on(){

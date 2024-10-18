@@ -10,7 +10,7 @@
                 <div class="col-sm-12">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item active"><a href="{{route('home')}}">Home</a></li>
-                        <li class="breadcrumb-item active">Gestão de notícias</li>
+                        <li class="breadcrumb-item active">Gestão de Posts</li>
                     </ol>
                 </div>
             </div>
@@ -19,7 +19,7 @@
 
     <section class="content">
         <div class="container-fluid">
-            <h3 class="text-black-50 font-weight-bold text-md-left animated bounce infinite">Gestão de notícias</h3>
+            <h3 class="text-black-50 font-weight-bold text-md-left animated bounce infinite">Gestão de Posts</h3>
 
             <div class="row">
                 <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
@@ -28,7 +28,7 @@
                             <thead>
                             <tr class="table-light table-responsive-sm text-center dataTables_scrollBody">
                                 <th class="th-sm">Titulo</th>
-                                <th class="th-sm">validade</th>
+                                <th class="th-sm">Validade</th>
                                 <th class="th-sm"><i class="far fa-eye text-sm-center"></i></th>
                                 <th class="th-sm">Descrição</th>
                                 @can('app.dashboard')
