@@ -32,15 +32,15 @@
                 <i class="fas fa-sign-out-alt fa-lg" style="width: 1.25em; font-weight: 600; font-size: 20px; text-align: center;"></i></a>
         </li>
 
-        {{-- HELPER PARA SOLICITAÇÕES DE PEDIDOS--}}
+        {{-- HELPER PARA SOLICITAÇÕES DE PEDIDOS --}}
         @can('app.dashboard')
             @if(solicitacoes() > 0)
             <li class="nav-item">
-                <a class="nav-link" href="{{route('user.pedidos')}}">
+                <a class="nav-link" href="{{route('user.pedidos')}}"> {{-- Redirecionar para a página de pedidos de férias --}}
                     <span class="badge badge-warning navbar-badge">
                         {{solicitacoes()}}
                     </span>
-                  <i class="fas fa-bell" style="font-size: 22px; color: white;"></i>
+                <i class="fas fa-bell" style="font-size: 22px; color: white;"></i>
                 </a>
             </li>
             @else
@@ -54,6 +54,7 @@
             </li>
             @endif
         @endcan
+
     </ul>
 
 </nav>

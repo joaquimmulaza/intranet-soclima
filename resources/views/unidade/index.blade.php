@@ -10,7 +10,7 @@
                 <div class="col-sm-12">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
-                        <li class="breadcrumb-item active">Lista de unidades</li>
+                        <li class="breadcrumb-item active">Lista de departamentos</li>
                     </ol>
                 </div>
             </div>
@@ -19,7 +19,7 @@
 
     <section class="content">
         <div class="container-fluid">
-            <h3 class="text-black-50 font-weight-bold text-md-left">Gestão de unidades</h3>
+            <h3 class="text-black-50 font-weight-bold text-md-left">Gestão de departamentos</h3>
 
             <div class="row">
                 <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
@@ -28,7 +28,7 @@
                                 <thead>
                                     <tr class="text-center">
                                         <th>Nome</th>
-                                        <!-- <th>Ramal</th> -->
+                                        <th>Responsavel do departamento</th>
                                         <th>Descrição</th>
                                         @can('app.dashboard')
                                             <th>Ações</th>
@@ -43,9 +43,17 @@
                                                     {{$unidade->titulo}}
                                                 </a>
                                             </th>
-                                            <!-- <th>
-                                                  {{$unidade->ramal}}
-                                            </th> -->
+                                            <th>
+                                                @if($unidade->responsaveis->isEmpty())
+                                                    <span>Nenhum responsável</span>
+                                                @else
+                                                    <ul>
+                                                        @foreach($unidade->responsaveis as $responsavel)
+                                                            <li>{{ $responsavel->name }}</li>
+                                                        @endforeach
+                                                    </ul>
+                                                @endif
+                                            </th>
                                             <th>
                                                 {{$unidade->descricao}}
                                             </th>

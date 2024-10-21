@@ -38,7 +38,8 @@ class UnidadeController extends Controller
 
     public function create()
     {
-        return view('unidade.create');
+        $users = User::all();
+        return view('unidade.create', compact('users'));
     }
 
     public function store(Request $request)
@@ -49,6 +50,10 @@ class UnidadeController extends Controller
             $unidade->descricao = $request->descricao;
             // $unidade->ramal = $request->ramal;
             $unidade->save();
+
+            if($request->has('responsaveis')){
+                $unidade->responsaveis()->sync($request->responsaveis);
+            }
 
             notify()->success("Departamento criada com sucesso!","Success","bottomRight");
             return redirect()->route('unidade.index');
@@ -68,9 +73,12 @@ class UnidadeController extends Controller
         return view('unidade.show', ['unidade'=> $unidade]);
     }
 
-    public function edit(Unidade $unidade)
+    public function edit($id)
     {
-        return view('unidade.create', ['unidade'=> $unidade]);
+        $unidade = Unidade::with('responsaveis')->findOrFail($id); // Busca a unidade pelo ID
+        $users = User::all(); // Obtém todos os usuários
+
+        return view('unidade.create', compact('unidade', 'users')); 
     }
 
     public function ramais()
@@ -87,6 +95,10 @@ class UnidadeController extends Controller
             $unidade->descricao = $request->descricao;
             // $unidade->ramal = $request->ramal;
             $unidade->save();
+
+            if($request->has('responsaveis')){
+                $unidade->responsaveis()->sync($request->responsaveis);
+            }
 
             notify()->success("Departamento editada com sucesso!","Success","bottomRight");
             return redirect()->route('unidade.index');
@@ -111,7 +123,7 @@ class UnidadeController extends Controller
                 flash($e->getMessage())->warning();
                 return redirect()->back();
             }
-            notify()->error("Ocorreu um erro ao tentar excluir a unidade!","Error","bottomRight");
+            notify()->error("Ocorreu um erro ao tentar excluir o departamento!","Error","bottomRight");
             return redirect()->back();
         }
     }

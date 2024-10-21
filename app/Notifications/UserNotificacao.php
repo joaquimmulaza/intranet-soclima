@@ -35,7 +35,7 @@ class UserNotificacao extends Notification
                     ->line("Senha de acesso: ". $this->usuario->password)
                     ->success()
                     ->action('Entre aqui', url('/'))
-                    ->line('Obrigado por utilizacao CorporaTIX');
+                    ->line('Obrigado por utilizar Soclima System');
     }
 
     public function toDatabase(){

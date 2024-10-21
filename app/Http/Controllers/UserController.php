@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Cargo;
+use App\Feria;
 use App\Comment;
 use App\Exports\PedidosExport;
 use App\Exports\UsersExport;
@@ -67,9 +68,10 @@ class UserController extends Controller
         return redirect()->route('user.index');
     }
 
-    public function pedidos(){
+    public function pedidos() {
         $users = User::where('status', '!=', 'ativo')->get();
-        return view('user.pedidos', compact('users'));
+        $ferias = Feria::where('status', 'pendente')->get(); // Ajuste conforme sua lógica
+        return view('user.pedidos', compact('users', 'ferias'));
     }
 
     public function liberaPedido(User $user){
@@ -107,10 +109,12 @@ class UserController extends Controller
 
     public function create()
     {
+        $responsaveis = User::whereHas('unidade')->get();
+        $unidades = Unidade::all();
         $cargos = Cargo::all();
         $unidades = Unidade::all();
         $funcoes = Role::all();
-        return view('user.create', compact('cargos', 'unidades', 'funcoes'));
+        return view('user.create', compact('cargos', 'unidades', 'funcoes', 'responsaveis'));
     }
 
     public function store(Request $request)
@@ -131,6 +135,7 @@ class UserController extends Controller
             $user->data_validade_bi = $request->data_validade_bi;
             $user->fone = $request->fone;
             $user->genero = $request->genero;
+            $user->responsavel_id = $request->responsavel_id;
             $user->password = Hash::make($request->password);
             $user->status = 'ativo';
 
@@ -188,10 +193,14 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
+        $responsaveis = User::whereHas('unidade')->get();  // Assumindo que os responsáveis têm unidades associadas
+    
+        // Outras variáveis que você já está passando para a view
+        $unidades = Unidade::all(); 
         $cargos = Cargo::all();
         $unidades = Unidade::all();
         $funcoes = Role::all();
-        return view('user.create', compact('user', 'cargos', 'unidades', 'funcoes'));
+        return view('user.create', compact('user', 'cargos', 'unidades', 'funcoes', 'responsaveis'));
     }
 
     //SEM USO - toggle ativa usuario

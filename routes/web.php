@@ -6,6 +6,8 @@ use \Illuminate\Support\Facades\Mail;
 use \App\Mail\notificationMail;
 use \App\Http\Controllers\TelefoneController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\FeriaController;
 /*
 |--------------------------------------------------------------------------
 | TESTES UNIDADE - Auth::routes();
@@ -284,3 +286,26 @@ Route::get('excel-noticias', 'PostController@export')->name('excel.noticias');
 Route::get('excel-questionarios', 'QuestionaireController@export')->name('excel.questionarios');
 
 /*MARCAR FERIAS*/
+// Exibir a view para marcar férias
+Route::get('/ferias/marcar', 'FeriaController@create')->name('ferias.marcar');
+
+// Processar o pedido de férias
+Route::post('/ferias/marcar', 'FeriaController@store')->name('ferias.store');
+
+// Exibir os pedidos de férias (notificações)
+Route::get('/ferias/pedidos', 'FeriaController@pedidos')->name('ferias.pedidos');
+
+// Aprovar pedido de férias
+Route::patch('/ferias/{feria}/aprovar', 'FeriaController@aprovar')->name('ferias.aprovar');
+
+// Rejeitar pedido de férias
+Route::patch('/ferias/{feria}/rejeitar', 'FeriaController@rejeitar')->name('ferias.rejeitar');
+
+/*ATRIBUIR FERIAS*/
+// Atualizar os dias de férias de um usuário
+Route::patch('/usuarios/{userId}/ferias', [FeriaController::class, 'updateDiasFerias'])
+    ->name('users.ferias.update');
+
+// Exibir o formulário de atualização de férias
+Route::get('/usuarios/{userId}/ferias', [FeriaController::class, 'showDiasFeriasForm'])
+    ->name('users.ferias');

@@ -10,9 +10,11 @@
         </div>
 
         <!-- FORM LOGIN -->
+        <p class="login-box-msg" style="position:relative; z-index: 9999; color: #fff; font-size: 48px; font-weight: bold; width: 100%;">SEJA BEM-VINDO(A)</p>
         <div class="card">
+        
             <div class="card-body login-card-body rounded">
-                <p class="login-box-msg">Faça seu login para iniciar a sessão</p>
+                <!-- <p class="login-box-msg">Faça seu login para iniciar a sessão</p> -->
 
                 <form action="{{route('admin.login.do')}}" method="post">
                     @csrf

@@ -48,4 +48,15 @@ class User extends Authenticatable
     public function routeNotificationForMail($notification){
         return $this->email;
     }
+
+    public function responsavel(){
+        return $this->belongsTo(User::class, 'responsavel_id');
+    }
+
+    // No modelo User
+    public function diasFerias()
+    {
+        return $this->hasOne(DiasFerias::class, 'user_id');
+    }
+
 }

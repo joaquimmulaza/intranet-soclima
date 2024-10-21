@@ -31,6 +31,7 @@
                                         <th class="text-center">Avatar</th>
                                         <th class="text-center">Nome</th>
                                         <th class="text-center">Email</th>
+                                        <th class="text-center">Dias de Férias</th>
                                         <th class="text-center">Ações</th>
                                     </tr>
                                 </thead>
@@ -71,6 +72,20 @@
                                             </td>
 
                                             <td class="text-center">
+                                                {{ $user->diasFerias->dias_disponiveis ?? 0 }} dias
+                                            </td>
+
+                                            <td class="text-center">
+                                                @can('app.roles.edit')
+                                                    <a type="button" class="btn btn-md btn-success rounded text-white"
+                                                       href="{{route('users.ferias', ['userId' => $user->id])}}">
+                                                       <span class="btn-icon-wrapper pr-2 opacity-7">
+                                                            <i class="fas fa-edit fa-w-20"></i>
+                                                       </span>
+                                                        Atualizar Férias
+                                                    </a>
+                                                @endcan
+
                                                 @can('app.roles.edit')
                                                     <a type="button" class="btn btn-md btn-success rounded text-white"
                                                        href="{{route('user.edit', ['user' => $user->id])}}">
@@ -123,6 +138,5 @@
     </section>
     <script src="{{ asset('sweetalerta/app-sweetalert.js') }}"></script>
     <script src="{{ asset('sweetalerta/sweetalert2.all.js') }}"></script>
-
 
 @endsection

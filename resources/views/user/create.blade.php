@@ -243,6 +243,19 @@
                                 </div>
 
 
+                                {{-- SELEÇÃO DE RESPONSÁVEIS --}}
+                                <div class="form-group">
+                                    <label for="responsavel_id">Responsável pelo usuário</label>
+                                    <select id="responsavel_id" class="form-control js-multiple-select" name="responsavel_id">
+                                        <option disabled selected>Selecione o responsável</option>
+                                        @foreach($responsaveis as $responsavel)
+                                            <option value="{{ $responsavel->id }}"
+                                                @if(isset($user) && $user->responsavel_id == $responsavel->id) selected="selected" @endif>
+                                                {{ $responsavel->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </section>

@@ -37,6 +37,7 @@ class UserSeeder extends Seeder
             'email'=> 'Rafaelblum_digital@hotmail.com',
             'status'=> 'ativo',
             'password'=> Hash::make('123'),
+            'genero' => 'masculino'
         ]);
 
         User::updateOrCreate([
@@ -47,6 +48,7 @@ class UserSeeder extends Seeder
             'email'=> 'user@hotmail.com',
             'status'=> 'ativo',
             'password'=> Hash::make('123'),
+            'genero' => 'masculino'
         ]);
 
         //CRIAR ENDERE�O AQUI....

@@ -11,7 +11,7 @@
                 <div class="col-sm-12">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item active"><a href="{{route('home')}}">Home</a></li>
-                        <li class="breadcrumb-item active">Unidade</li>
+                        <li class="breadcrumb-item active">Departamento</li>
                     </ol>
                 </div>
             </div>
@@ -24,7 +24,7 @@
                 <div class="col-md-12">
                     <div class="main-card mb-3 card card-primary card-outline">
                         <div class="card-header p-2">
-                            <h2 class="ml-2 text-black-50 font-weight-bold animated bounce infinite">Unidade</h2>
+                            <h2 class="ml-2 text-black-50 font-weight-bold animated bounce infinite">Departamento</h2>
                         </div>
 
                         <div class="card-body">

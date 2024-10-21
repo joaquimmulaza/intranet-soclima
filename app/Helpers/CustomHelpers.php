@@ -8,6 +8,7 @@ use App\Survey;
 use App\Categoria;
 use App\Comment;
 use App\Config;
+use App\Feria;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use \Illuminate\Support\Facades\DB;
@@ -228,8 +229,10 @@ if(!function_exists('calc_idade')){
 
 if(!function_exists('solicitacoes')){
     function solicitacoes(){
-        $users = User::where('status', '=', 'inativo')->get();
-        return $users->count();
+        // Contar pedidos de férias com status "pendente" do responsável
+    return Feria::where('status', 'pendente')
+    ->where('responsavel_id', auth()->id())
+    ->count();
     }
 }
 
