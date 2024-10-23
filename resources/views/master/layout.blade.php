@@ -14,7 +14,7 @@
         @include('master.partials_master._sidebar')
 
         {{-- CONTEÚDO DAS PÁGINAS--}}
-        <div class="content-wrapper white">
+        <div class="content-wrapper bg-home">
             @yield('content')
 
 

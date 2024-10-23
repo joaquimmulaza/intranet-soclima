@@ -1,3 +1,7 @@
+:root {
+    --main-text-color: #555555;
+}
+
 .login-logo{
     margin-top: 20%;
 }
@@ -16,6 +20,7 @@
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
+    background-size: cover;
 }
 
 .borderRadius{
@@ -56,10 +61,16 @@
     width: 175px !important;
     height: 52px !important;
     font-size: 22.4px !important;
-    font-weight: regular;
+    font-weight: normal;
     color: #fff;
     border: none;
     border-radius: 5px;
+    outline-color: #009AC1 !important;
+}
+
+.colorSizeBtn:active{
+    border: none;
+    outline-color: #009AC1 !important;
 }
 
 .login-card-body{
@@ -85,6 +96,7 @@
     height: 38px !important;
     background-color: transparent !important;
     border-color: #ABABAB !important;
+    color: var(--main-text-color) !important;
 }
 
 .input-container {
@@ -103,3 +115,18 @@
     cursor: pointer;
 }
  
+.divSenha a{
+    color: #009AC1;
+    font-size: 14px;
+    position: relative;
+    bottom: 8px;
+}
+
+.labelLogin{
+    font-weight: normal !important;
+    color: #7B7B7B;
+}
+
+.login-card-body, .register-card-body{
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .1);;
+}

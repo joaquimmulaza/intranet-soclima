@@ -1,4 +1,4 @@
-<aside class="main-sidebar control-sidebar-dark elevation-4">
+<aside class="main-sidebar control-sidebar-dark elevation-4" style="display: none;">
     {{-- LOGO--}}
     <a href="#" class="brand-link">
         <img src="{{asset('logo/img/iconLogoCorporatix120x142.png')}}" alt="AdminLTE Logo" style="opacity: .8" width="40">

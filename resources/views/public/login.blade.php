@@ -9,7 +9,7 @@
         
 
         <!-- FORM LOGIN -->
-        <p class="login-box-msg" style="position:relative; z-index: 9999; color: #fff; font-size: 48px; font-weight: bold; width: 100%;">SEJA BEM-VINDO(A)</p>
+        <p class="login-box-msg" style="position:relative; z-index: 9999; color: #fff; font-size: 48px; font-weight: bold; width: 100%; letter-spacing: 1.5px;">SEJA BEM-VINDO(A)</p>
         <div class="card">
         
             <div class="card-body login-card-body borderRadius">
@@ -25,8 +25,8 @@
                     @include('public.partials._errors')
 
                     <div class=" fullContainer">
-                        <label for="email">ID do trabalhador</label>
-                        <input type="email" name="email" class="form-control inputLogin" placeholder="Email">
+                        <label for="email" class="labelLogin">ID do trabalhador</label>
+                        <input type="email" name="email" class="form-control inputLogin" placeholder="ID">
                         {{-- <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-user"></span>
@@ -34,7 +34,7 @@
                         </div> --}}
                     </div>
                     <div class=" fullContainer ">
-                        <label for="password">Palavra-passe</label>
+                        <label for="password" class="labelLogin">Palavra-passe</label>
                         <div class="eyeHidden">
                             <input type="password" name="password" id="password" class="form-control inputLogin" placeholder="Password">
                             <i class="fa-regular fa-eye eye-icon" id="iconNew" onclick="togglePasswordVisibility()"></i>
@@ -44,6 +44,9 @@
                                 <span class="fas fa-lock"></span>
                             </div>
                         </div> --}}
+                    </div>
+                    <div class="divSenha fullContainer">
+                        <a href="#">Esqueceu a sua palavra-passe?</a>
                     </div>
                     <div class="row">
                         <div class="col-12">

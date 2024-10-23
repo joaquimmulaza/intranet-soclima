@@ -1,57 +1,76 @@
-<nav class="main-header navbar navbar-expand navbar-dark justify-content-start">
+<nav class="main-header navbar navbar-expand navbar-white heightNav justify-content-start">
 
     <!-- MENU ESQUERDO ADMINISTRATIVO -->
-    <ul class="navbar-nav">
-        <li class="nav-item">
+    <ul class="navbar-nav widthNav">
+        <!-- <li class="nav-item">
             <a class="nav-link" data-widget="pushmenu" href="#"
                role="button"
                data-toggle="collapse"
-               data-target="#suporteContent"
+               data-targ et="#suporteContent"
                aria-controls="suporteContent"
                aria-expanded="false"
                aria-label="Toggle navigation">
 
                 <i class="fas fa-bars"></i>
             </a>
-        </li>
-
-        {{-- CLASSES QUE SOME ITEM DA LISTA EM TAMANHO SM: d-none d-sm-inline-block--}}
-        <li class="nav-item">
-            <a class="nav-link {{Route::current()->getName() === 'home' ? 'active' : ''}}"
-               href="{{route('home')}}">Home</a>
-        </li>
-        @can('app.dashboard')
+        </li> -->
+        <div class="contentRight">
+            {{-- CLASSES QUE SOME ITEM DA LISTA EM TAMANHO SM: d-none d-sm-inline-block--}}
             <li class="nav-item">
-                <a class="nav-link {{Route::current()->getName() === 'admin' ? 'active' : ''}}"
-                   href="{{route('admin')}}" class="nav-link">Dashboard</a>
+                <a class="nav-link {{Route::current()->getName() === 'home' ? 'active' : ''}}"
+                href="{{route('home')}}"><img style="position: relative; bottom: 10px;" src="logo/img/200x70-logoMain.png" alt=""></a>
             </li>
-        @endcan
-        <li class="nav-item">
-            <a class="nav-link {{Route::current()->getName() === 'admin.logout' ? 'active' : ''}}"
-               data-toggle="tooltip" title="Sair do sistema" href="{{route('admin.logout')}}" class="nav-link">
-                <i class="fas fa-sign-out-alt fa-lg" style="width: 1.25em; font-weight: 600; font-size: 20px; text-align: center;"></i></a>
-        </li>
-
-        {{-- HELPER PARA SOLICITAÇÕES DE PEDIDOS --}}
-        @can('app.dashboard')
+            <li class="nav-item">
+                <input class="nav-link backgroundInput" placeholder="Pesquisar" type="text">
+            </li>
+        </div>
+        <div class="contentLeft">
+            <li class="nav-item">
+                <a class="nav-link {{Route::current()->getName() === 'home' ? 'active' : ''}}"
+                href="{{route('home')}}"><img style="position: relative; bottom: 5px;" src="logo/img/icon/home-button-pressed.svg" alt=""></a>
+            </li>
+            
+            
             @if(solicitacoes() > 0)
-            <li class="nav-item">
-                <a class="nav-link" href="{{route('user.pedidos')}}"> {{-- Redirecionar para a página de pedidos de férias --}}
-                    <span class="badge badge-warning navbar-badge">
-                        {{solicitacoes()}}
-                    </span>
-                <i class="fas fa-bell" style="font-size: 22px; color: white;"></i>
-                </a>
-            </li>
-            @else
                 <li class="nav-item">
-                <a class="nav-link" data-toggle="dropdown">
-                    <span class="badge badge-success navbar-badge">
-                        {{solicitacoes()}}
-                    </span>
-                    <i class="far fa-bell" style="font-size: 22px;"></i>
-                </a>
+                    <a class="nav-link" href="{{route('user.pedidos')}}"> {{-- Redirecionar para a página de pedidos de férias --}}
+                        <span class="badge badge-warning navbar-badge">
+                            {{solicitacoes()}}
+                        </span>
+                    <img style="position: relative; bottom: 5px;" src="logo/img/icon/Notification-button.svg" alt="">
+                    </a>
+                </li>
+                @else
+                    <li class="nav-item">
+                    <a class="nav-link" data-toggle="dropdown">
+                        <span class="badge badge-success navbar-badge">
+                            {{solicitacoes()}}
+                        </span>
+                        <img style="position: relative; bottom: 5px;" src="logo/img/icon/Notification-button.svg" alt="">
+                    </a>
+                </li>
+            @endcan
+            <li class="nav-item">
+                <a class="nav-link"
+                href="#" class="nav-link"><img style="position: relative; bottom: 5px;" src="logo/img/icon/user-avatar.svg" alt=""></a>
             </li>
+            <span style="padding-right: 18px; position: relative; bottom: -2px;"><img src="logo/img/icon/line-1.svg" alt=""></span>
+            @can('app.dashboard')
+            <li class="nav-item btnCadastrar">
+                <a class="nav-link {{Route::current()->getName() === 'admin' ? 'active' : ''}}"
+                href="#" class="nav-link colorLink">Cadastrar</a>
+            </li>
+        
+            <li class="nav-item">
+                <a class="nav-link {{Route::current()->getName() === 'admin.logout' ? 'active' : ''}}"
+                data-toggle="tooltip" title="Sair do sistema" href="{{route('admin.logout')}}" class="nav-link">
+                <img style="position: relative; bottom: 4px;" src="logo/img/icon/Menu.svg" alt=""></a>
+            </li>
+
+            {{-- HELPER PARA SOLICITAÇÕES DE PEDIDOS --}}
+            @can('app.dashboard')
+                
+        </div>
             @endif
         @endcan
 

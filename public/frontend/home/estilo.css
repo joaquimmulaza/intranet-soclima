@@ -1,4 +1,120 @@
+:root {
+    --main-bg: #E7ECEB;
+}
+
 .text-news{
     font-family: "Helvetica Neue Light", "HelveticaNeue-Light", "Helvetica Neue", Calibri, Helvetica, Arial;
     font-size: 22px;
+}
+
+body{
+    background-color: var(--main-bg);
+}
+
+.bg-home{
+    background-color: var(--main-bg);
+}
+
+.heightNav{
+    height: 53px !important;
+}
+
+.widthNav{
+    width: 1080px !important;
+    margin: 0 auto;
+}
+
+.contentRight{
+    width: 441.43px !important;
+    height: 43px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.backgroundInput{
+    background: url('../../logo/img/icon/search.svg');
+    background-repeat: no-repeat;
+    background-position: right 5% center;
+    border-radius: 4px;
+    border: none;
+    background-color: #E7ECEB;
+    outline-color: #E7ECEB;
+    outline: none;
+    color: #555555;
+    width: 248px;
+    height: 28px !important;
+}
+
+.navbar-nav{
+    justify-content: space-between;
+}
+
+.contentLeft{
+    width: 325px;
+  display: flex;
+  justify-content: end;
+  float: right;
+}
+
+.btnCadastrar{
+    background-color: #ABABAB !important;
+    text-align: center;
+    padding: 0.1px 0 0.1px 0;
+    border-radius: 5px;
+    margin-left: 10px;
+}
+
+.btnCadastrar a {
+    color: #fff !important;   
+}
+
+.mainContainer{
+    width: 1080px !important;
+    margin: 0 auto;
+}
+
+.sectionEvents{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border: 1px solid #ddd;
+    width: 326px;
+}
+
+.postContainer{
+    width: 488px;
+   
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.mainPostContainer{
+    width: 488px;
+    background-color: #fff;
+    height: 72.99px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.inputPost input{
+    width: 418px;
+    height: 37.56px;
+    background-color: #f2f2f2;
+    border: none;
+    outline-color: #f2f2f2;
+    color: #ABABAB;
+    outline: none;
+    border-radius: 5px;
+    text-indent: 10px;
+}
+
+.inputPost{
+    display: flex;
+    justify-content: space-between;
+    gap: 1px;
+    width: 458px;
+    margin: 0 auto;
 }
