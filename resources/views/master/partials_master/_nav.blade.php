@@ -1,4 +1,4 @@
-<nav class="main-header navbar navbar-expand navbar-white heightNav justify-content-start">
+<nav class="main-header navbar navbar-expand navbar-white heightNav justify-content-start" style="margin: 0 !important;">
 
     <!-- MENU ESQUERDO ADMINISTRATIVO -->
     <ul class="navbar-nav widthNav">
@@ -18,7 +18,7 @@
             {{-- CLASSES QUE SOME ITEM DA LISTA EM TAMANHO SM: d-none d-sm-inline-block--}}
             <li class="nav-item">
                 <a class="nav-link {{Route::current()->getName() === 'home' ? 'active' : ''}}"
-                href="{{route('home')}}"><img style="position: relative; bottom: 10px;" src="logo/img/200x70-logoMain.png" alt=""></a>
+                href="{{route('home')}}"><img style="position: relative; bottom: 10px;" src="logo/img/200x70.svg" alt=""></a>
             </li>
             <li class="nav-item">
                 <input class="nav-link backgroundInput" placeholder="Pesquisar" type="text">
@@ -62,7 +62,7 @@
             </li>
         
             <li class="nav-item">
-                <a class="nav-link {{Route::current()->getName() === 'admin.logout' ? 'active' : ''}}"
+                <a style="padding-right: 0 !important" class="nav-link {{Route::current()->getName() === 'admin.logout' ? 'active' : ''}}"
                 data-toggle="tooltip" title="Sair do sistema" href="{{route('admin.logout')}}" class="nav-link">
                 <img style="position: relative; bottom: 4px;" src="logo/img/icon/Menu.svg" alt=""></a>
             </li>
