@@ -57,8 +57,8 @@
             <span><img src="logo/img/icon/line-1.svg" alt=""></span>
             @can('app.dashboard')
             <li class="nav-item btnCadastrar">
-                <a style="padding: 0 !important; margin: 0 !important;" class="nav-link {{Route::current()->getName() === 'admin' ? 'active' : ''}}"
-                href="#" class="nav-link colorLink">Cadastrar</a>
+                <a class="linksNav {{Route::current()->getName() === 'user.create' || '' ? 'active menu-open' : ''}}" style="padding: 0 !important; margin: 0 !important;" class="nav-link {{Route::current()->getName() === 'admin' ? 'active' : ''}}"
+                href="{{route('user.create')}}" class="nav-link colorLink">Cadastrar</a>
             </li>
         
             <li class="nav-item">

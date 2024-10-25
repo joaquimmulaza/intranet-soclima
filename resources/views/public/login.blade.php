@@ -19,7 +19,7 @@
 
                 <form action="{{route('admin.login.do')}}" class="centerBox fullContainer" method="post">
                     <div class="login-logo login-box-msg">
-                        <img src="{{asset('logo/img/logo250x62.png')}}" alt="Logo">
+                        <img src="{{asset('logo/img/soclima-horizontal2.svg')}}" alt="Logo">
                     </div>
                     @csrf
                     @include('public.partials._errors')

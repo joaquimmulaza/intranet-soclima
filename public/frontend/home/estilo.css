@@ -139,8 +139,6 @@ body{
 
 .postContainer{
     width: 488px;
-   
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .mainPostContainer{
@@ -152,13 +150,14 @@ body{
     align-items: center;
 }
 
-.inputPost input{
+.inputPost input, button{
     width: 418px;
     height: 37.56px;
-    background-color: #f2f2f2;
+    background-color: #f2f2f2 !important;
     border: none;
     outline-color: #f2f2f2;
-    color: #ABABAB;
+    color: #ABABAB !important;
+    text-align: left;
     outline: none;
     border-radius: 5px;
     text-indent: 21.65px;
@@ -185,7 +184,8 @@ body{
 .postContentHeader{
     display: flex;
     width: 238px;
-    justify-content: space-between;
+    justify-content: start;
+    gap: 16px;
     align-items: center;
 }
 
@@ -213,7 +213,18 @@ body{
 
 .post-body {
     width: 458px;
-    margin: 10px auto;
+    margin: 18px auto;
+}
+
+.post-body h3{
+    color: #555555;
+    font-weight: bold;
+    font-size: 14px !important;
+}
+
+.post-body p {
+    font-size: 14px !important;
+    color: #555555;
 }
 
 .post-footer {
@@ -233,7 +244,7 @@ body{
 
 .items-footer span{
     display: flex;
-    font-size: 9px;
+    font-size: 12px;
     color: #ABABAB;
     gap: 4px;
     justify-content: space-between;
@@ -281,9 +292,109 @@ body{
 
 .eventsContainer{
     display: flex;
-    justify-content: space-between;
+    justify-content: start;
     align-items: center;
     flex-direction: row;
-    width: 248px;
+    width: 100%;
+    gap: 16px;
+}
+
+/* SWIPER SLIDE */
+.swiper {
+    width: 100%;
+    height: 100%;
+  }
+
+  .swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .swiper-slide img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .evento button {
+    width: 100%;
+    height: 19px;
+    background-color: #fff !important;
+    border: 1px solid #009ac1 !important;
+    font-size: 12px;
+    font-weight: normal;
+    border-radius: 5px !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #009ac1;
+  }
+
+  .swiper-pagination{
+    position: relative;
+  }
+
+  .eventBody{
+   
+    flex-direction: column;
+    display: flex;
+    text-align: left;
+    padding-top: 16.73px;
+  }
+
+  .eventBody h3 {
+    color: #009ac1;
+    font-weight: bold;
+    font-size: 14px;
+
+  }
+
+  .eventBody p{
+    color: #009ac1;
+    font-size: 12px;
+  }
+
+  .eventBody .textDescription {
+    color: #555555;
+  }
+
+  #drop-area {
+    border: 2px dashed #ccc;
+    width: 100%;
+    max-width: 600px;
+    height: 200px;
+    border-radius: 10px;
+    flex-direction: column;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
     gap: 10px;
+    color: #888;
+    background-color: #f2f2f2;
+    margin: 20px auto;
+    font-family: Arial, sans-serif;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+#drop-area p {
+    font-size: 14px;
+    color: #ABABAB;
+}
+
+#drop-area img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; /* Garante que a imagem não seja cortada */
+}
+
+.hidden {
+    display: none;
 }

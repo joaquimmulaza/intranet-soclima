@@ -38,7 +38,5 @@
     <script src="{{ asset('js/mdb.js') }}"></script>
 
     <script src="{{ asset('js/dashboard.js') }}"></script>
-
-
 </body>
 </html>
