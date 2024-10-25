@@ -101,21 +101,26 @@ body{
 
 .contentLeft{
     width: 325px;
-  display: flex;
-  justify-content: end;
-  float: right;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
 }
 
-.btnCadastrar{
-    background-color: #ABABAB !important;
-    text-align: center;
-    padding: 0.1px 0 0.1px 0;
-    border-radius: 5px;
-    margin-left: 10px;
+.contentLeft li a{
+    display: flex !important;
+    align-items: center !important;
 }
 
 .btnCadastrar a {
-    color: #fff !important;   
+    color: #fff !important;
+    border-radius: 5px;
+    font-size: 14px;
+    display: flex !important;
+    justify-content: center !important;
+    height: 25px !important;
+    width: 85px; 
+    background-color: #ABABAB !important;
+    align-items: center !important;
 }
 
 .mainContainer{
@@ -270,7 +275,6 @@ body{
     display: flex;
     flex-direction: column;
     gap: 3px;
-    border: 1px solid #000;
     justify-content: center;
     height: 90px;
 }
@@ -280,5 +284,6 @@ body{
     justify-content: space-between;
     align-items: center;
     flex-direction: row;
-    width: 238px;
+    width: 248px;
+    gap: 10px;
 }
