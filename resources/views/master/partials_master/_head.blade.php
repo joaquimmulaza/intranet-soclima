@@ -5,7 +5,7 @@
 
     <!--LOGO ICON -->
     <link rel="icon" href="{{asset('logo/img/iconLogoCorporatix120x142.png')}}">
-
+    <link rel="stylesheet" href="">
 
 
     <!--FONT AWESOME -->

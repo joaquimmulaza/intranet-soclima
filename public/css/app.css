@@ -19,3 +19,466 @@
     margin: 5px;
     padding: 0px;
 }
+
+:root {
+    --main-bg: #E7ECEB;
+}
+
+.text-news{
+    font-family: "Helvetica Neue Light", "HelveticaNeue-Light", "Helvetica Neue", Calibri, Helvetica, Arial;
+    font-size: 22px;
+}
+
+.main-content {
+    display: flex;
+    width: 1080px;
+    margin: 34px auto;
+    justify-content: space-between;
+}
+
+.content-wrapper{
+    margin: 0 !important;
+    margin-left: 0 !important;
+}
+
+.contentRight a{
+    padding-left: 0 !important;
+}
+
+/* Menu Lateral */
+.sidebar-left {
+    width: 130px;
+    text-align: left;
+    min-height: 100vh;
+}
+
+.sidebar-left ul {
+    list-style-type: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    margin: 0;
+    padding: 0;
+}
+
+.sidebar-left ul li{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 4px;
+    height: 23px;
+    margin-bottom: 20px;
+}
+
+.sidebar-left ul li a{
+    font-size: 13px;
+    font-weight: bold;
+    color: #555555;
+}
+
+body{
+    background-color: var(--main-bg);
+}
+
+.bg-home{
+    background-color: var(--main-bg);
+}
+
+.heightNav{
+    height: 53px !important;
+}
+
+.widthNav{
+    width: 1080px !important;
+    margin: 0 auto;
+}
+
+.contentRight{
+    width: 441.43px !important;
+    height: 43px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.backgroundInput{
+    background: url('../../logo/img/icon/search.svg');
+    background-repeat: no-repeat;
+    background-position: right 5% center;
+    border-radius: 4px;
+    border: none;
+    background-color: #E7ECEB;
+    outline-color: #E7ECEB;
+    outline: none;
+    color: #555555;
+    width: 248px;
+    height: 28px !important;
+}
+
+.navbar-nav{
+    justify-content: space-between;
+}
+
+.contentLeft{
+    width: 325px;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+}
+
+.contentLeft li a{
+    display: flex !important;
+    align-items: center !important;
+}
+
+.btnCadastrar a {
+    color: #fff !important;
+    border-radius: 5px;
+    font-size: 14px;
+    display: flex !important;
+    justify-content: center !important;
+    height: 25px !important;
+    width: 85px; 
+    background-color: #ABABAB !important;
+    align-items: center !important;
+}
+
+.mainContainer{
+    width: 1080px !important;
+    margin: 0 auto;
+}
+
+.sectionEvents{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border: 1px solid #ddd;
+    width: 326px;
+}
+
+.postContainer{
+    width: 488px;
+}
+
+.mainPostContainer{
+    width: 488px;
+    background-color: #fff;
+    height: 72.99px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.inputPost input{
+    width: 418px;
+    height: 37.56px;
+    background-color: #f2f2f2 !important;
+    border: none;
+    outline-color: #f2f2f2;
+    color: #ABABAB !important;
+    text-align: left;
+    outline: none;
+    border-radius: 5px;
+    text-indent: 21.65px;
+}
+
+.main-header{
+    margin: 0 !important;
+}
+
+.inputPost{
+    display: flex;
+    justify-content: space-between;
+    gap: 1px;
+    width: 458px;
+    margin: 0 auto;
+}
+
+.AllpostsContainer{
+    background-color: #fff;
+    margin-top: 7px;
+    border-radius: 5px;
+}
+
+.postContentHeader{
+    display: flex;
+    width: 238px;
+    justify-content: start;
+    gap: 16px;
+    align-items: center;
+}
+
+.post-header {
+    display: flex;
+    width: 468px;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 14px;
+    padding-top: 13px;
+    box-sizing: border-box;
+    height: 28px;
+}
+
+.post-header h3{
+    font-size: 11px;
+    font-weight: normal;
+    color: #009ac1;
+}
+
+.post-header p {
+    font-size: 9px;
+    color: #7b7b7b;
+}
+
+.post-body {
+    width: 458px;
+    margin: 18px auto;
+}
+
+.post-body h3{
+    color: #555555;
+    font-weight: bold;
+    font-size: 14px !important;
+}
+
+.post-body p {
+    font-size: 14px !important;
+    color: #555555;
+}
+
+.post-footer {
+    width: 460px;
+    margin: 10px auto;
+    display: flex;
+    justify-content: start;
+    padding-bottom: 7.5px;
+}
+
+.items-footer{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.items-footer span{
+    display: flex;
+    font-size: 12px;
+    color: #ABABAB;
+    gap: 4px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sidebar-right {
+    width: 326px;
+    min-height: 100vh;
+}
+
+.sidebar-right h3{
+    font-size: 14px;
+    color: #555555;
+}
+
+.sidebar-right h2{
+     font-size: 11px;
+     font-weight: bold;
+     color: #555555;
+}
+
+.sidebar-right p{
+    font-size: 11px;
+    color: #555555;
+}
+
+.sidebar-right .eventos-recentes, .aniversarios, .ferias {
+    background-color: #fff;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+
+
+.aniversariosBody{
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    justify-content: center;
+    height: 90px;
+}
+
+.eventsContainer{
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: row;
+    width: 100%;
+    gap: 16px;
+}
+
+/* SWIPER SLIDE */
+.swiper {
+    width: 100%;
+    height: 100%;
+  }
+
+  .swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .swiper-slide img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .evento button {
+    width: 100%;
+    height: 19px;
+    background-color: #fff !important;
+    border: 1px solid #009ac1 !important;
+    font-size: 12px;
+    font-weight: normal;
+    border-radius: 5px !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #009ac1 !important;
+    outline: none !important;
+    outline-color: #009ac1 !important;
+    text-align: center !important;
+  }
+
+  .containerOpt{
+    position: relative;
+  }
+
+  .btnOpt{
+    background-color: #fff !important;
+    outline: none !important;
+    outline-color: #fff !important;
+    border: none;
+  }
+
+  .modal-bodyOpt{
+    padding: 0 !important;
+  }
+
+
+  #modalOpt {
+    position: absolute !important;
+    width: 130px;
+    top: 30px !important;
+    margin: 0 auto !important;
+    left: -90px !important;
+    height: 65px;
+    overflow: hidden !important;
+    background-color: #ffffff00 !important;
+    box-shadow: none !important;
+  }
+
+  #modalOpt .modal-dialog{
+    margin: 0 !important;
+  }
+
+  #modalOpt .modal-content{
+    box-shadow: none !important;
+  }
+    /* CSS para ocultar o backdrop do modal específico */
+    .modal-open-no-backdrop .modal-backdrop {
+        display: none !important; /* Força a ocultação do backdrop */
+    }
+
+  .swiper-pagination{
+    position: relative;
+  }
+
+  .containerBtnOpt{
+    height: 65px !important;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .containerBtnOpt button {
+    height: 32.5px !important;
+    border: 1px solid #ABABAB;
+    border-radius: 5px;
+    outline: none !important;
+    outline-color: #ABABAB !important;
+    font-size: 10px;
+    font-weight: bold;
+    color: #555555 !important;
+    box-shadow: none !important;
+    background-color: #fff !important;
+    border-right-color: #ABABAB !important;
+  }
+
+  .eventBody{
+    flex-direction: column;
+    display: flex;
+    text-align: left;
+    padding-top: 16.73px;
+  }
+
+  .eventBody h3 {
+    color: #009ac1;
+    font-weight: bold;
+    font-size: 14px;
+
+  }
+
+  .eventBody p{
+    color: #009ac1;
+    font-size: 12px;
+  }
+
+  .eventBody .textDescription {
+    color: #555555;
+  }
+
+  #drop-area {
+    border: 2px dashed #ccc;
+    width: 100%;
+    max-width: 600px;
+    height: 200px;
+    border-radius: 10px;
+    flex-direction: column;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: 10px;
+    color: #888;
+    background-color: #f2f2f2;
+    margin: 20px auto;
+    font-family: Arial, sans-serif;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+#drop-area p {
+    font-size: 14px;
+    color: #ABABAB;
+}
+
+#drop-area img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; /* Garante que a imagem não seja cortada */
+}
+
+.hidden {
+    display: none;
+}
