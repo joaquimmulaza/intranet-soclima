@@ -204,7 +204,7 @@
                             </div>
 
                             <!-- Botão para Submeter o Formulário -->
-                            <button type="submit" class="btn btn-primary">Criar Evento</button>
+                            <button type="submit" class="btn btn-primary">Publicar</button>
                         </form>
                     </div>
                     </div>
@@ -219,8 +219,10 @@
 
                     <div class="items-footer" data-postid="{{ $post->id }}">
                         <span class="like-button" style="cursor: pointer;">
-                            <img src="logo/img/icon/Thumbs-up.svg" class="like-icon" alt="">
+                        <span class="like-button" style="cursor: pointer;">
+                            <img src="logo/img/icon/{{ Auth::user()->likes()->where('post_id', $post->id)->exists() && Auth::user()->likes()->where('post_id', $post->id)->first()->like ? 'Thumbs-up.svg' : 'ThumbsUp-unpressed.svg' }}" class="like-icon" alt="">
                             <span class="like-count">{{ likes_post($post->id) }}</span>
+                        </span>
                         </span>
                         
                         <span>
@@ -419,31 +421,31 @@
 
 <!-- Initialize Swiper -->
 <script>
-  var swiper = new Swiper(".mySwiper", {
-    spaceBetween: 30,
-    centeredSlides: true,
-    autoplay: {
-      delay: 2500,
-      disableOnInteraction: false,
-    },
-    pagination: {
-      el: ".swiper-pagination",
-      clickable: true,
-    },
-    navigation: {
-      nextEl: ".swiper-button-next",
-      prevEl: ".swiper-button-prev",
-    },
-  });
+ $(document).ready(function () {
+    // Configuração do Swiper
+    var swiper = new Swiper(".mySwiper", {
+        spaceBetween: 30,
+        centeredSlides: true,
+        autoplay: {
+            delay: 2500,
+            disableOnInteraction: false,
+        },
+        pagination: {
+            el: ".swiper-pagination",
+            clickable: true,
+        },
+        navigation: {
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev",
+        },
+    });
 
-  const dropArea = document.getElementById('drop-area');
+    // Lidar com a área de drop para upload de arquivos
+    const dropArea = document.getElementById('drop-area');
     const fileElem = document.getElementById('fileElem');
 
-    // Permitir clicar na área para selecionar arquivo
     dropArea.addEventListener('click', () => fileElem.click());
-
-    // Evitar comportamento padrão
-    ;['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
         dropArea.addEventListener(eventName, preventDefaults, false);
     });
 
@@ -452,8 +454,7 @@
         e.stopPropagation();
     }
 
-    // Destacar o drop area
-    ;['dragenter', 'dragover'].forEach(eventName => {
+    ['dragenter', 'dragover'].forEach(eventName => {
         dropArea.addEventListener(eventName, () => dropArea.style.backgroundColor = '#e0e0e0', false);
     });
 
@@ -461,7 +462,6 @@
         dropArea.addEventListener(eventName, () => dropArea.style.backgroundColor = '#f9f9f9', false);
     });
 
-    // Lidar com arquivos arrastados
     dropArea.addEventListener('drop', handleDrop, false);
 
     function handleDrop(e) {
@@ -473,105 +473,106 @@
     function handleFiles(files) {
         const file = files[0];
         const reader = new FileReader();
-        
         reader.onload = function(e) {
             const img = document.createElement('img');
             img.src = e.target.result;
             dropArea.innerHTML = ''; // Limpar área
             dropArea.appendChild(img); // Exibir imagem carregada
-        }
-
+        };
         reader.readAsDataURL(file);
     }
 
-   
-    $(document).ready(function () {
-        $('#modalOpt').on('show.bs.modal', function () {
-            $('body').addClass('modal-open-no-backdrop');
-        });
-
-        $('#modalOpt').on('hidden.bs.modal', function () {
-            $('body').removeClass('modal-open-no-backdrop');
-        });
+    // Modal Behavior
+    $('#modalOpt').on('show.bs.modal', function () {
+        $('body').addClass('modal-open-no-backdrop');
     });
 
-    $(document).ready(function () {
-    // Fecha o modal ao clicar fora do conteúdo
+    $('#modalOpt').on('hidden.bs.modal', function () {
+        $('body').removeClass('modal-open-no-backdrop');
+    });
+
     $(document).on('click', function (event) {
         const $modal = $('#modalOpt');
         if ($modal.is(':visible') && !$(event.target).closest('.modal-content').length) {
             $modal.modal('hide');
         }
     });
-});
 
     $('#modalEdit').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget); // Botão que abriu o modal
-            var id = button.data('id'); // Extrai informação do atributo data-id
-            var title = button.data('title'); // Extrai informação do atributo data-title
-            var content = button.data('content'); // Extrai informação do atributo data-content
+        var button = $(event.relatedTarget);
+        var id = button.data('id');
+        var title = button.data('title');
+        var content = button.data('content');
 
-            var modal = $(this);
-            modal.find('#title').val(title); // Preenche o campo de título
-            modal.find('#content').val(content); // Preenche o campo de descrição
-            modal.find('form').attr('action', '/noticias/' + id); // Ajusta a rota de atualização
+        var modal = $(this);
+        modal.find('#title').val(title);
+        modal.find('#content').val(content);
+        modal.find('form').attr('action', '/noticias/' + id);
+    });
+
+    // Envio do formulário via AJAX
+    $('#editForm').on('submit', function (e) {
+        e.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: $(this).attr('action'),
+            data: new FormData(this),
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                $('#modalEdit').modal('hide');
+                alert('Postagem atualizada com sucesso!');
+            },
+            error: function (response) {
+                alert('Ocorreu um erro. Por favor, tente novamente.');
+            }
         });
+    });
 
-        // Envio do formulário via AJAX
-        $('#editForm').on('submit', function (e) {
-            e.preventDefault(); // Previne o envio padrão do formulário
+    // Lógica do botão de curtida
+    let likeInProgress = false; // Flag para controle do envio
 
-            $.ajax({
-                type: 'POST',
-                url: $(this).attr('action'),
-                data: new FormData(this), // Envia os dados do formulário
-                processData: false,
-                contentType: false,
-                success: function (response) {
-                    // Atualize a página ou a interface com os dados retornados
-                    // Exemplo: atualizar a lista de postagens, exibir uma mensagem de sucesso, etc.
-                    $('#modalEdit').modal('hide'); // Fecha o modal
-                    alert('Postagem atualizada com sucesso!'); // Mensagem de sucesso
-                },
-                error: function (response) {
-                    // Trate os erros aqui
-                    alert('Ocorreu um erro. Por favor, tente novamente.');
-                }
-            });
-        });
+    $(document).on('click', '.like-button', function(event) {
+        event.preventDefault();
 
-        $(document).ready(function() {
-    $('.like-button').click(function() {
-        const postId = $(this).closest('.post').data('postid');
+        if (likeInProgress) return; // Impede novas requisições enquanto uma está em andamento
+        likeInProgress = true; // Marca como em progresso
+
+        const footer = $(this).closest('.items-footer');
+        const postId = footer.data('postid');
         const icon = $(this).find('.like-icon');
         const countElement = $(this).find('.like-count');
-        
-        // Verifica se já foi curtido
         const isLiked = icon.hasClass('liked');
 
+        console.log('Like button clicked');
+
         $.ajax({
-            url: '/like', // URL do seu endpoint para curtir
+            url: '/like',
             method: 'POST',
             data: {
-                post_id: postId,
-                like: isLiked ? 0 : 1, // Muda de like para unlike
-                _token: '{{ csrf_token() }}' // Token CSRF
+                postId: postId,
+                isLike: !isLiked,
+                _token: '{{ csrf_token() }}'
             },
             success: function(response) {
-                // Atualiza a contagem de likes
-                countElement.text(response.likes_count);
-
-                // Altera o ícone e a classe de estado
-                if (isLiked) {
-                    icon.attr('src', 'logo/img/icon/ThumbsUp-unpressed.svg'); // Ícone não curtido
-                    icon.removeClass('liked');
+                if (response.success) {
+                    countElement.text(response.likes_count);
+                    if (isLiked) {
+                        icon.attr('src', 'logo/img/icon/ThumbsUp-unpressed.svg');
+                        icon.removeClass('liked');
+                    } else {
+                        icon.attr('src', 'logo/img/icon/Thumbs-up.svg');
+                        icon.addClass('liked');
+                    }
                 } else {
-                    icon.attr('src', 'logo/img/icon/Thumbs-up.svg'); // Ícone curtido
-                    icon.addClass('liked');
+                    alert(response.message || 'Erro ao registrar a curtida.');
                 }
             },
             error: function() {
                 alert('Ocorreu um erro. Tente novamente.');
+            },
+            complete: function() {
+                likeInProgress = false; // Libera a flag no final da requisição
             }
         });
     });

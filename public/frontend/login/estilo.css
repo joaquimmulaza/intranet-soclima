@@ -113,6 +113,7 @@
     position: absolute;
     right: 8%;
     cursor: pointer;
+    z-index: 99999;
 }
  
 .divSenha a{

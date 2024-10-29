@@ -309,3 +309,5 @@ Route::patch('/usuarios/{userId}/ferias', [FeriaController::class, 'updateDiasFe
 // Exibir o formulário de atualização de férias
 Route::get('/usuarios/{userId}/ferias', [FeriaController::class, 'showDiasFeriasForm'])
     ->name('users.ferias');
+
+

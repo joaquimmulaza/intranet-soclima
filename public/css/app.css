@@ -5,6 +5,10 @@
     margin: 0;
 }
 
+:root {
+    --main-bg: #E7ECEB;
+}
+
 .online{
     width: 42px; height: 42px; border-radius: 50%; margin: 5px;
     border: 4px #00c851 solid;
@@ -16,12 +20,97 @@
 }
 
 .header-crumb{
-    margin: 5px;
+    margin: 0 auto;
+    width: 1080px;
     padding: 0px;
 }
 
-:root {
-    --main-bg: #E7ECEB;
+.header-crumb hr{
+    border-width: 2px;
+    background-color: #ABABAB !important;
+}
+
+.header-crumb .col-sm-12{
+    display: flex;
+    flex-direction: row;
+
+}
+
+.contentDatasUser{
+    width: 1080px !important;
+    margin: 0 auto;
+    padding: 0 !important;
+}
+
+.cardDataUser{
+    width: 496px !important;
+    box-shadow: none !important;
+    height: 654px !important;
+}
+
+.cardAvatar{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cardAvatar img{
+    padding-top: 17px;
+}
+
+.box-profile{
+    border-radius: 5px !important;
+    height: 654px !important;            
+}
+
+.cardUserInputs{
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.rightSideDataUser{
+    width: 496px !important;
+    background-color: #fff !important;
+    border-radius: 5px !important;
+}
+
+.doubleInput{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.doubleInput #nascimento{
+    width: 145.942px;
+    height: 38px;
+}
+
+.doubleInput #numero_bi{
+    width: 283.72px;
+    height: 38px;
+}
+
+.containerGender{
+    text-align: left;
+    display: flex;
+    width: 239.14px;
+    justify-content: start;
+    flex-direction: column;
+    border: 1px solid purple;
+    height: 70px;
+}
+
+.containerRadios{
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid purple;
+}
+
+.containerRadios label{
+    padding: 0 !important;
+    font-size: 14px;
 }
 
 .text-news{

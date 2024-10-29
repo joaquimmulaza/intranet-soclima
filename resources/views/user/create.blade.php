@@ -14,12 +14,14 @@
             <div class="row mb-2">
                 <div class="col-sm-12">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item active"><a href="{{route('home')}}">Home</a></li>
-                        <li class="breadcrumb-item active">{{ isset($user) ? 'Editar' : 'Criar novo' }} usuário</li>
+                        <!-- <li class="breadcrumb-item active"><a href="{{route('home')}}">Home</a></li> -->
+                        <li class="breadcrumb-item active">{{ isset($user) ? 'Editar' : 'Cadastrar' }} trabalhador</li>
                     </ol>
+                    
                 </div>
             </div>
         </div>
+        <hr>
     </div>
 
     <section class="content">
@@ -30,25 +32,26 @@
                 @if (isset($user))
                     @method('PUT')
                 @endif
-                <div class="row">
+                <div class="row justify-content-between contentDatasUser">
                     {{--USUÁRIO --}}
-                    <section class="col-sm-12 col-md-3 col-lg-3 col-xl-3">
-                        <div class="card testimonial-card">
-                            <div class="card-up aqua-gradient lighten-1"></div>
+                    <section class="col-sm-12 col-md-3 col-lg-3 col-xl-3 leftSideDataUser">
+                        <div class="card testimonial-card cardDataUser">
+                            <div class=""></div>
 
                             {{--MOSTRA AVATAR --}}
-                            <div id="upload" class="text-center avatar mx-auto white file-upload-wrapper">
-                                <img class="profile-user-img img-fluid img-circle" id="output"
-                                     src="{{URL::to('/')}}/public/avatar_users/{{isset($user) ? $user->avatar : 'default.jpg'}}"
+                            <div id="upload" class="cardAvatar file-upload-wrapper">
+                                <img class="" id="output"
+                                     src="{{URL::to('/')}}/public/avatar_users/{{isset($user) ? $user->avatar : 'cardAvatar.svg'}}"
                                      alt="imagem do usuario">
                             </div>
 
                             <div class="card-body box-profile">
                                 {{-- NAME--}}
-                                <div class="md-form form-sm mt-0">
+                                <div class="cardUserInputs">
+                                <label class="text-black-50 font-weight-bold text-md-left" for="titulo">Nome</label>
                                     <input id="titulo" name="name" type="text" class="form-control form-control-sm campotext @error('name') is-invalid @enderror"
                                            value="{{$user->name ?? old('name')}}" autofocus/>
-                                    <label class="text-black-50 font-weight-bold text-md-left" for="titulo">Nome</label>
+                                    
                                     @error('name')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{$message}}</strong>
@@ -56,8 +59,116 @@
                                     @enderror
                                 </div>
 
-                                {{-- EMAIL--}}
-                                <div class="md-form form-sm">
+                                
+                                <div class="doubleInput">
+                                {{-- Data de Nascimento --}}
+                                <div class="cardUserInputs">
+                                        <label for="nascimento">Data de Nascimento</label>
+                                        <input id="nascimento" name="nascimento" type="date"
+                                            class="form-control form-control-sm @error('nascimento') is-invalid @enderror"
+                                            value="{{ $user->nascimento ?? old('nascimento') }}" />
+                                    </div>
+
+                                    {{-- Nº do BI --}}
+                                    <div class="cardUserInputs">
+                                        <label class="text-md-left" for="numero_bi">Nº do Bilhete de Identidade</label>
+                                        <input id="numero_bi" name="numero_bi" type="text"
+                                            class="form-control form-control-sm @error('numero_bi') is-invalid @enderror"
+                                            value="{{ $user->numero_bi ?? old('numero_bi') }}" />
+                                    </div>
+                                          
+                                </div>
+
+                                
+
+                                
+
+                                {{-- Data de Emissão e Validade do BI --}}
+                                <div class="cardUserInputs">
+                                    <label for="data_emissao_bi">Data de Emissão do BI</label>
+                                    <input id="data_emissao_bi" name="data_emissao_bi" type="date"
+                                        class="form-control form-control-sm @error('data_emissao_bi') is-invalid @enderror"
+                                        value="{{ $user->data_emissao_bi ?? old('data_emissao_bi') }}" />
+                                </div>
+
+                                <div class="cardUserInputs">
+                                    <label for="data_validade_bi">Data de Validade do BI</label>
+                                    <input id="data_validade_bi" name="data_validade_bi" type="date"
+                                        class="form-control form-control-sm @error('data_validade_bi') is-invalid @enderror"
+                                        value="{{ $user->data_validade_bi ?? old('data_validade_bi') }}" />
+                                </div>
+
+                                
+
+                                
+
+                                {{-- UPLOAD AVATAR--}}
+                                <!-- <div class="md-form form-sm">
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="avatar" name="avatar" onchange="loadfile(event)">
+                                        <label class="custom-file-label align-items-start" for="avatar">Sua foto</label>
+                                    </div>
+                                </div> -->
+
+                                @can('app.dashboard')
+                                    
+
+                                    
+
+
+                                    {{-- GÊNERO --}}
+                                <div class="containerGender">
+                                    <label class="">Gênero</label><br>
+
+                                    <div class="containerRadios">
+                                        <!-- Rádio Masculino -->
+                                        <div>
+                                            <label style="margin: 0 !important; padding: 0 !important;" for="genero_masculino">Masculino</label>
+                                            <input type="radio" id="genero_masculino" name="genero" value="masculino"
+                                                @if(isset($user) && $user->genero == 'masculino') checked="checked" @endif>
+                                        
+                                        </div>
+                                        <!-- Rádio Feminino -->
+                                        <div>
+                                            <label style="margin: 0 !important; padding: 0 !important;" for="genero_feminino">Feminino</label>
+                                            <input type="radio" id="genero_feminino" name="genero" value="feminino"
+                                                @if(isset($user) && $user->genero == 'feminino') checked="checked" @endif>
+                                        </div>
+                                    </div>
+                                    @error('genero')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                                @endcan
+
+                                {{-- Nº de Beneficiário --}}
+                                <div class="cardUserInputs">
+                                <label for="numero_beneficiario">Nº de Beneficiário</label>
+                                    <input id="numero_beneficiario" name="numero_beneficiario" type="text"
+                                        class="form-control form-control-sm @error('numero_beneficiario') is-invalid @enderror"
+                                        value="{{ $user->numero_beneficiario ?? old('numero_beneficiario') }}" />
+                                    
+                                </div>
+
+                                {{-- Nº de Contribuinte --}}
+                                <div class="cardUserInputs">
+                                <label for="numero_contribuinte">Nº de Contribuinte</label>
+                                    <input id="numero_contribuinte" name="numero_contribuinte" type="text"
+                                        class="form-control form-control-sm @error('numero_contribuinte') is-invalid @enderror"
+                                        value="{{ $user->numero_contribuinte ?? old('numero_contribuinte') }}" />
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {{-- CAMPOS ADICIONAIS --}}
+                    <section class="col-sm-12 col-md-6 col-lg-6 col-xl-6 rightSideDataUser">
+                        <div class="card-body box-profile">
+                        {{-- EMAIL--}}
+                                <div class="">
                                     <input id="inputValidationEx" name="email" type="email" class="form-control form-control-sm validate @error('email') is-invalid @enderror"
                                            value="{{$user->email ?? old('email')}}"/>
                                     <label class="text-black-50 font-weight-bold text-md-left" for="inputValidationEx">Email</label>
@@ -69,7 +180,7 @@
                                 </div>
 
                                 {{-- PASSWORD--}}
-                                <div class="md-form form-sm">
+                                <div class="">
                                     <input id="inputPassword5MD" min="8" max="20" name="password" type="password"
                                            class="form-control form-control-sm validate @error('password') is-invalid @enderror"/>
                                     <label class="text-black-50 font-weight-bold text-md-left" for="inputPassword5MD">{{isset($user) ? 'Redefinir sua senha aqui' : 'Senha'}}</label>
@@ -79,16 +190,48 @@
                                         </span>
                                     @enderror
                                 </div>
+                            
+                            <div class="form-column">
 
-                                {{-- UPLOAD AVATAR--}}
-                                <div class="md-form form-sm">
-                                    <div class="custom-file">
-                                        <input type="file" class="custom-file-input" id="avatar" name="avatar" onchange="loadfile(event)">
-                                        <label class="custom-file-label align-items-start" for="avatar">Sua foto</label>
-                                    </div>
+                                {{-- Número Mecanográfico --}}
+                                <div class="">
+                                <label for="numero_mecanografico">Número Mecanográfico</label>
+                                    <input id="numero_mecanografico" name="numero_mecanografico" type="text"
+                                        class="form-control form-control-sm @error('numero_mecanografico') is-invalid @enderror"
+                                        value="{{ $user->numero_mecanografico ?? old('numero_mecanografico') }}" />
+                                    
                                 </div>
 
-                                @can('app.dashboard')
+                                
+
+                                {{-- Nº de Telefone --}}
+                                <div class="">
+                                    <label for="numero_contribuinte">Nº de Telefone</label>
+                                    <input id="fone" name="fone" type="text"
+                                        class="form-control form-control-sm @error('fone') is-invalid @enderror"
+                                        value="{{ $user->fone ?? old('fone') }}" />
+                                    
+                                </div>
+                                {{-- Data de Admissão --}}
+                                <div class="">
+                                    <label for="data_admissao">Data de Admissão</label>
+                                    <input id="data_admissao" name="data_admissao" type="date"
+                                        class="form-control form-control-sm @error('data_admissao') is-invalid @enderror"
+                                        value="{{ $user->data_admissao ?? old('data_admissao') }}" />
+                                </div>
+                                {{-- FUNÇÃO--}}
+                                    <div class="form-group">
+                                        <select id="role" class="js-basic-multiple teste form-control form-control-sm" style="width: 100%;" name="role">
+                                            <option disabled selected>Permissões no sistema</option>
+                                            @foreach($funcoes as $funcao)
+                                                <option value="{{$funcao->id}}"
+                                                @if(isset($user) && $user->role && $user->role->id == $funcao->id) selected="selected" @endif>
+                                                   {{$funcao->name}}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
                                     {{-- CARGO--}}
                                     <div class="form-group">
                                         <select id="cargo_id" class="form-control form-control-sm" style="width: 100%;" name="cargo" placeholder="Escolha o cargo">
@@ -114,133 +257,6 @@
                                             @endforeach
                                         </select>
                                     </div>
-
-                                    
-
-
-                                    {{-- FUNÇÃO--}}
-                                    <div class="form-group">
-                                        <select id="role" class="js-basic-multiple teste form-control form-control-sm" style="width: 100%;" name="role">
-                                            <option disabled selected>Permissões no sistema</option>
-                                            @foreach($funcoes as $funcao)
-                                                <option value="{{$funcao->id}}"
-                                                @if(isset($user) && $user->role && $user->role->id == $funcao->id) selected="selected" @endif>
-                                                   {{$funcao->name}}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                @endcan
-
-                            </div>
-                        </div>
-                    </section>
-
-                    {{-- CAMPOS ADICIONAIS --}}
-                    <section class="col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                        <div class="card-body box-profile">
-                            <p class="text-black-50 font-weight-bold text-md-left">Dados de Identificação</p>
-                            <div class="form-row">
-
-                                {{-- Número Mecanográfico --}}
-                                <div class="md-form form-sm col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                    <input id="numero_mecanografico" name="numero_mecanografico" type="text"
-                                        class="form-control form-control-sm @error('numero_mecanografico') is-invalid @enderror"
-                                        value="{{ $user->numero_mecanografico ?? old('numero_mecanografico') }}" />
-                                    <label for="numero_mecanografico">Número Mecanográfico</label>
-                                </div>
-
-                                {{-- Nº do BI --}}
-                                <div class="md-form form-sm col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                    <input id="numero_bi" name="numero_bi" type="text" 
-                                        class="form-control form-control-sm @error('numero_bi') is-invalid @enderror"
-                                        value="{{ $user->numero_bi ?? old('numero_bi') }}" />
-                                    <label for="numero_bi">Nº do BI</label>
-                                </div>
-
-                                {{-- Nº de Beneficiário --}}
-                                <div class="md-form form-sm col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                    <input id="numero_beneficiario" name="numero_beneficiario" type="text"
-                                        class="form-control form-control-sm @error('numero_beneficiario') is-invalid @enderror"
-                                        value="{{ $user->numero_beneficiario ?? old('numero_beneficiario') }}" />
-                                    <label for="numero_beneficiario">Nº de Beneficiário</label>
-                                </div>
-
-                                {{-- Nº de Contribuinte --}}
-                                <div class="md-form form-sm col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                    <input id="numero_contribuinte" name="numero_contribuinte" type="text"
-                                        class="form-control form-control-sm @error('numero_contribuinte') is-invalid @enderror"
-                                        value="{{ $user->numero_contribuinte ?? old('numero_contribuinte') }}" />
-                                    <label for="numero_contribuinte">Nº de Contribuinte</label>
-                                </div>
-
-                                {{-- Data de Admissão --}}
-                                <div class="md-form form-sm col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                    <label for="data_admissao">Data de Admissão</label>
-                                    <input id="data_admissao" name="data_admissao" type="date"
-                                        class="form-control form-control-sm @error('data_admissao') is-invalid @enderror"
-                                        value="{{ $user->data_admissao ?? old('data_admissao') }}" />
-                                </div>
-
-                                {{-- Data de Emissão e Validade do BI --}}
-                                <div class="md-form form-sm col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                    <label for="data_emissao_bi">Data de Emissão do BI</label>
-                                    <input id="data_emissao_bi" name="data_emissao_bi" type="date"
-                                        class="form-control form-control-sm @error('data_emissao_bi') is-invalid @enderror"
-                                        value="{{ $user->data_emissao_bi ?? old('data_emissao_bi') }}" />
-                                </div>
-
-                                <div class="md-form form-sm col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                    <label for="data_validade_bi">Data de Validade do BI</label>
-                                    <input id="data_validade_bi" name="data_validade_bi" type="date"
-                                        class="form-control form-control-sm @error('data_validade_bi') is-invalid @enderror"
-                                        value="{{ $user->data_validade_bi ?? old('data_validade_bi') }}" />
-                                </div>
-
-                                {{-- Data de Nascimento --}}
-                                <div class="md-form form-sm col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                    <label for="nascimento">Data de Nascimento</label>
-                                    <input id="nascimento" name="nascimento" type="date"
-                                        class="form-control form-control-sm @error('nascimento') is-invalid @enderror"
-                                        value="{{ $user->nascimento ?? old('nascimento') }}" />
-                                </div>
-
-                                {{-- Nº de Telefone --}}
-                                <div class="md-form form-sm col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                                    <input id="fone" name="fone" type="text"
-                                        class="form-control form-control-sm @error('fone') is-invalid @enderror"
-                                        value="{{ $user->fone ?? old('fone') }}" />
-                                    <label for="numero_contribuinte">Nº de Telefone</label>
-                                </div>
-
-                                {{-- GÊNERO --}}
-                                <div class="md-form form-sm" style="margin-left: 20px;">
-                                    <label class="text-black-50 font-weight-bold text-md-left">Gênero</label><br>
-
-                                    <!-- Rádio Masculino -->
-                                    <div class="custom-control custom-radio custom-control-inline mr-3">
-                                        <input type="radio" id="genero_masculino" name="genero" value="masculino" class="custom-control-input"
-                                            @if(isset($user) && $user->genero == 'masculino') checked="checked" @endif>
-                                        <label class="custom-control-label" for="genero_masculino">Masculino</label>
-                                    </div>
-
-                                    <!-- Rádio Feminino -->
-                                    <div class="custom-control custom-radio custom-control-inline" style="margin-left: 100px;">
-                                        <input type="radio" id="genero_feminino" name="genero" value="feminino" class="custom-control-input"
-                                            @if(isset($user) && $user->genero == 'feminino') checked="checked" @endif>
-                                        <label class="custom-control-label" for="genero_feminino">Feminino</label>
-                                    </div>
-
-                                    
-
-                                    
-
-                                    @error('genero')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
 
 
                                 {{-- SELEÇÃO DE RESPONSÁVEIS --}}

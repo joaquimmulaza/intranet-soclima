@@ -26,7 +26,7 @@
 
                     <div class=" fullContainer">
                         <label for="email" class="labelLogin">ID do trabalhador</label>
-                        <input type="email" name="email" class="form-control inputLogin" placeholder="ID">
+                        <input type="email" name="email" class="form-control inputLogin" >
                         {{-- <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-user"></span>
@@ -36,7 +36,7 @@
                     <div class=" fullContainer ">
                         <label for="password" class="labelLogin">Palavra-passe</label>
                         <div class="eyeHidden">
-                            <input type="password" name="password" id="password" class="form-control inputLogin" placeholder="Password">
+                            <input type="password" name="password" id="password" class="form-control inputLogin" >
                             <i class="fa-regular fa-eye eye-icon" id="iconNew" onclick="togglePasswordVisibility()"></i>
                         </div>
                         {{-- <div class="input-group-append">

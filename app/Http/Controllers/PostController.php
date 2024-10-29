@@ -26,6 +26,7 @@ class PostController extends Controller
             $post->views_count = \DB::table('post_views')
                 ->where('post_id', $post->id)
                 ->count();
+            
         }
 
         return view('public.home', compact('posts'));
@@ -158,7 +159,12 @@ class PostController extends Controller
             }
         }
         // Retorna a view
-        return view('public.show', ['post' => $post, 'posts' => $posts]);
+        // Obter a contagem de likes
+        $likes_count = likes_post($post->id);
+
+    // Retorna a view
+    return view('public.show', ['post' => $post, 'posts' => $posts, 'likes_count' => $likes_count]);
+
     }
 
 
