@@ -36,21 +36,23 @@
                     {{--USUÁRIO --}}
                     <section class="col-sm-12 col-md-3 col-lg-3 col-xl-3 leftSideDataUser">
                         <div class="card testimonial-card cardDataUser">
-                            <div class=""></div>
 
                             {{--MOSTRA AVATAR --}}
                             <div id="upload" class="cardAvatar file-upload-wrapper">
-                                <img class="" id="output"
-                                     src="{{URL::to('/')}}/public/avatar_users/{{isset($user) ? $user->avatar : 'cardAvatar.svg'}}"
-                                     alt="imagem do usuario">
+                            <img id="output"
+                                src="{{URL::to('/')}}/public/avatar_users/{{isset($user) ? $user->avatar : 'cardAvatar.svg'}}"
+                                alt="imagem do usuario"
+                                onclick="document.getElementById('avatar').click()"
+                                style="cursor: pointer; width: 131px; object-fit: cover;">
+                                <input type="file" id="avatar" name="avatar" style="display: none;" accept="image/*" onchange="loadFile(event)">
                             </div>
 
                             <div class="card-body box-profile">
                                 {{-- NAME--}}
                                 <div class="cardUserInputs">
-                                <label class="text-black-50 font-weight-bold text-md-left" for="titulo">Nome</label>
+                                    <label for="titulo">Nome*</label>
                                     <input id="titulo" name="name" type="text" class="form-control form-control-sm campotext @error('name') is-invalid @enderror"
-                                           value="{{$user->name ?? old('name')}}" autofocus/>
+                                           value="{{$user->name ?? old('name')}}" autofocus required/>
                                     
                                     @error('name')
                                     <span class="invalid-feedback" role="alert">
@@ -62,19 +64,19 @@
                                 
                                 <div class="doubleInput">
                                 {{-- Data de Nascimento --}}
-                                <div class="cardUserInputs">
-                                        <label for="nascimento">Data de Nascimento</label>
+                                <div class="cardUserInputs paddingTop">
+                                        <label for="nascimento">Data de Nascimento*</label>
                                         <input id="nascimento" name="nascimento" type="date"
                                             class="form-control form-control-sm @error('nascimento') is-invalid @enderror"
-                                            value="{{ $user->nascimento ?? old('nascimento') }}" />
+                                            value="{{ $user->nascimento ?? old('nascimento') }}" required/>
                                     </div>
 
                                     {{-- Nº do BI --}}
-                                    <div class="cardUserInputs">
-                                        <label class="text-md-left" for="numero_bi">Nº do Bilhete de Identidade</label>
+                                    <div class="cardUserInputs paddingTop">
+                                        <label class="text-md-left" for="numero_bi">Nº do Bilhete de Identidade*</label>
                                         <input id="numero_bi" name="numero_bi" type="text"
                                             class="form-control form-control-sm @error('numero_bi') is-invalid @enderror"
-                                            value="{{ $user->numero_bi ?? old('numero_bi') }}" />
+                                            value="{{ $user->numero_bi ?? old('numero_bi') }}" required/>
                                     </div>
                                           
                                 </div>
@@ -84,18 +86,18 @@
                                 
 
                                 {{-- Data de Emissão e Validade do BI --}}
-                                <div class="cardUserInputs">
-                                    <label for="data_emissao_bi">Data de Emissão do BI</label>
+                                <div class="cardUserInputs paddingTop">
+                                    <label for="data_emissao_bi">Data de Emissão do BI*</label>
                                     <input id="data_emissao_bi" name="data_emissao_bi" type="date"
                                         class="form-control form-control-sm @error('data_emissao_bi') is-invalid @enderror"
                                         value="{{ $user->data_emissao_bi ?? old('data_emissao_bi') }}" />
                                 </div>
 
-                                <div class="cardUserInputs">
-                                    <label for="data_validade_bi">Data de Validade do BI</label>
+                                <div class="cardUserInputs paddingTop">
+                                    <label for="data_validade_bi">Data de Validade do BI*</label>
                                     <input id="data_validade_bi" name="data_validade_bi" type="date"
                                         class="form-control form-control-sm @error('data_validade_bi') is-invalid @enderror"
-                                        value="{{ $user->data_validade_bi ?? old('data_validade_bi') }}" />
+                                        value="{{ $user->data_validade_bi ?? old('data_validade_bi') }}" required/>
                                 </div>
 
                                 
@@ -117,19 +119,19 @@
 
 
                                     {{-- GÊNERO --}}
-                                <div class="containerGender">
-                                    <label class="">Gênero</label><br>
+                                <div class="containerGender paddingTop">
+                                    <label class="">Gênero*</label>
 
                                     <div class="containerRadios">
                                         <!-- Rádio Masculino -->
-                                        <div>
+                                        <div class="radiosElement">
                                             <label style="margin: 0 !important; padding: 0 !important;" for="genero_masculino">Masculino</label>
                                             <input type="radio" id="genero_masculino" name="genero" value="masculino"
                                                 @if(isset($user) && $user->genero == 'masculino') checked="checked" @endif>
                                         
                                         </div>
                                         <!-- Rádio Feminino -->
-                                        <div>
+                                        <div class="radiosElement">
                                             <label style="margin: 0 !important; padding: 0 !important;" for="genero_feminino">Feminino</label>
                                             <input type="radio" id="genero_feminino" name="genero" value="feminino"
                                                 @if(isset($user) && $user->genero == 'feminino') checked="checked" @endif>
@@ -145,19 +147,19 @@
 
                                 {{-- Nº de Beneficiário --}}
                                 <div class="cardUserInputs">
-                                <label for="numero_beneficiario">Nº de Beneficiário</label>
+                                <label for="numero_beneficiario">Nº de Beneficiário*</label>
                                     <input id="numero_beneficiario" name="numero_beneficiario" type="text"
                                         class="form-control form-control-sm @error('numero_beneficiario') is-invalid @enderror"
-                                        value="{{ $user->numero_beneficiario ?? old('numero_beneficiario') }}" />
+                                        value="{{ $user->numero_beneficiario ?? old('numero_beneficiario') }}" required/>
                                     
                                 </div>
 
                                 {{-- Nº de Contribuinte --}}
-                                <div class="cardUserInputs">
-                                <label for="numero_contribuinte">Nº de Contribuinte</label>
+                                <div class="cardUserInputs paddingTop">
+                                <label for="numero_contribuinte">Nº de Contribuinte* </label>
                                     <input id="numero_contribuinte" name="numero_contribuinte" type="text"
                                         class="form-control form-control-sm @error('numero_contribuinte') is-invalid @enderror"
-                                        value="{{ $user->numero_contribuinte ?? old('numero_contribuinte') }}" />
+                                        value="{{ $user->numero_contribuinte ?? old('numero_contribuinte') }}" required/>
                                     
                                 </div>
                             </div>
@@ -168,34 +170,34 @@
                     <section class="col-sm-12 col-md-6 col-lg-6 col-xl-6 rightSideDataUser">
                         <div class="card-body box-profile">
                         {{-- EMAIL--}}
-                                <div class="">
-                                    <input id="inputValidationEx" name="email" type="email" class="form-control form-control-sm validate @error('email') is-invalid @enderror"
-                                           value="{{$user->email ?? old('email')}}"/>
-                                    <label class="text-black-50 font-weight-bold text-md-left" for="inputValidationEx">Email</label>
-                                    @error('email')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{$message}}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
+                            <div class="cardUserInputs">
+                                <label for="inputValidationEx">Email</label>
+                                <input id="inputValidationEx" name="email" type="email" class="form-control form-control-sm validate @error('email') is-invalid @enderror"
+                                        value="{{$user->email ?? old('email')}}"/>
+                                @error('email')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{$message}}</strong>
+                                    </span>
+                                @enderror
+                            </div>
 
-                                {{-- PASSWORD--}}
-                                <div class="">
-                                    <input id="inputPassword5MD" min="8" max="20" name="password" type="password"
-                                           class="form-control form-control-sm validate @error('password') is-invalid @enderror"/>
-                                    <label class="text-black-50 font-weight-bold text-md-left" for="inputPassword5MD">{{isset($user) ? 'Redefinir sua senha aqui' : 'Senha'}}</label>
-                                    @error('password')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{$message}}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
-                            
-                            <div class="form-column">
+                            {{-- PASSWORD--}}
+                            <!-- <div class="cardUserInputs paddingTop">
+                                <label for="inputPassword5MD">{{isset($user) ? 'Redefinir sua senha aqui' : 'Senha'}}</label>
+                                <input id="inputPassword5MD" min="8" max="20" name="password" type="password"
+                                        class="form-control form-control-sm validate @error('password') is-invalid @enderror"/>
+                                
+                                @error('password')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{$message}}</strong>
+                                    </span>
+                                @enderror
+                            </div> -->
+                      
 
                                 {{-- Número Mecanográfico --}}
-                                <div class="">
-                                <label for="numero_mecanografico">Número Mecanográfico</label>
+                                <div class="cardUserInputs paddingTop">
+                                    <label for="numero_mecanografico">Número Mecanográfico</label>
                                     <input id="numero_mecanografico" name="numero_mecanografico" type="text"
                                         class="form-control form-control-sm @error('numero_mecanografico') is-invalid @enderror"
                                         value="{{ $user->numero_mecanografico ?? old('numero_mecanografico') }}" />
@@ -205,24 +207,25 @@
                                 
 
                                 {{-- Nº de Telefone --}}
-                                <div class="">
-                                    <label for="numero_contribuinte">Nº de Telefone</label>
+                                <div class="cardUserInputs paddingTop">
+                                    <label for="fone">Nº de Telefone</label>
                                     <input id="fone" name="fone" type="text"
                                         class="form-control form-control-sm @error('fone') is-invalid @enderror"
                                         value="{{ $user->fone ?? old('fone') }}" />
                                     
                                 </div>
                                 {{-- Data de Admissão --}}
-                                <div class="">
+                                <div class="cardUserInputs paddingTop">
                                     <label for="data_admissao">Data de Admissão</label>
                                     <input id="data_admissao" name="data_admissao" type="date"
                                         class="form-control form-control-sm @error('data_admissao') is-invalid @enderror"
                                         value="{{ $user->data_admissao ?? old('data_admissao') }}" />
                                 </div>
                                 {{-- FUNÇÃO--}}
-                                    <div class="form-group">
-                                        <select id="role" class="js-basic-multiple teste form-control form-control-sm" style="width: 100%;" name="role">
-                                            <option disabled selected>Permissões no sistema</option>
+                                    <div class="cardUserInputs paddingTop">
+                                        <label for="role">Permissões no sistema</label>
+                                        <select id="role" class="js-basic-multiple teste form-control form-control-sm" style="width: 100%;" name="role" required>
+                                            <option disabled selected>Selecionar Permissão</option>
                                             @foreach($funcoes as $funcao)
                                                 <option value="{{$funcao->id}}"
                                                 @if(isset($user) && $user->role && $user->role->id == $funcao->id) selected="selected" @endif>
@@ -231,11 +234,12 @@
                                             @endforeach
                                         </select>
                                     </div>
-
+                                    <hr>
                                     {{-- CARGO--}}
-                                    <div class="form-group">
-                                        <select id="cargo_id" class="form-control form-control-sm" style="width: 100%;" name="cargo" placeholder="Escolha o cargo">
-                                            <option disabled selected>Selecione o cargo</option>
+                                    <div class="cardUserInputs paddingTop">
+                                        <label for="cargo">Cargo*</label>
+                                        <select id="cargo_id" class="form-control form-control-sm" style="width: 100%;" name="cargo" placeholder="Escolha o cargo" required>
+                                            <option disabled selected>Selecione o cargo*</option>
                                             @foreach($cargos as $cargo)
                                                 <option value="{{$cargo->id}}"
                                                  @if(isset($user) && $user->cargo && $user->cargo->id == $cargo->id) selected="selected" @endif>
@@ -246,7 +250,8 @@
                                     </div>
 
                                     {{-- UNIDADE (Departamento) --}}
-                                    <div class="form-group">
+                                    <div class="cardUserInputs paddingTop">
+                                        <label for="unidade">Departamento</label>
                                         <select id="unidade" class="js-basic-multiple teste form-control form-control-sm" style="width: 100%;" name="unidade">
                                             <option></option>
                                             @foreach($unidades as $unidade)
@@ -260,8 +265,8 @@
 
 
                                 {{-- SELEÇÃO DE RESPONSÁVEIS --}}
-                                <div class="form-group">
-                                    <label for="responsavel_id">Responsável pelo usuário</label>
+                                <div class="cardUserInputs paddingTop">
+                                    <label for="responsavel_id">Responsável do departamento</label>
                                     <select id="responsavel_id" class="form-control js-multiple-select" name="responsavel_id">
                                         <option disabled selected>Selecione o responsável</option>
                                         @foreach($responsaveis as $responsavel)
@@ -272,45 +277,45 @@
                                         @endforeach
                                     </select>
                                 </div>
-                            </div>
+                                {{-- BOTÕES--}}
+                                <div class="row paddingTop">
+                                    <div class="ContainerBtnSaveUser col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                        <button type="submit" class="btn rounded">
+                                            @isset($user)
+                                                <span class="btn-icon-wrapper pr-2 opacity-7">
+                                                    <i class="fas fa-edit fa-w-20"></i>
+                                                </span>
+                                                Atualizar usuário
+                                            @else
+                                                <span class="btn-icon-wrapper pr-2 opacity-7">
+                                                    <i class="far fa-save fa-w-20"></i>
+                                                </span>
+                                                Salvar novo usuário
+                                            @endisset
+                                        </button>
+
+                                        @isset($user)
+                                            <a type="button" class="btn btn-danger rounded" href="{{route('user.index')}}">
+                                                <span class="btn-icon-wrapper pr-2 opacity-7">
+                                                    <i class="fas fa-eraser fa-w-20"></i>
+                                                </span>
+                                                Cancelar
+                                            </a>
+                                        @else
+                                            <button type="reset" class="btn rounded">
+                                                <span class="btn-icon-wrapper pr-2 opacity-7">
+                                                    <i class="fas fa-eraser fa-w-20"></i>
+                                                </span>
+                                                Limpar
+                                            </button>
+                                        @endisset
+                                    </div>
+                                </div>
                         </div>
                     </section>
                 </div>
                 
-                {{-- BOTÕES--}}
-                <div class="row">
-                    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                        <button type="submit" class="btn btn-success rounded">
-                            @isset($user)
-                                <span class="btn-icon-wrapper pr-2 opacity-7">
-                                     <i class="fas fa-edit fa-w-20"></i>
-                                </span>
-                                Atualizar usuário
-                            @else
-                                <span class="btn-icon-wrapper pr-2 opacity-7">
-                                    <i class="far fa-save fa-w-20"></i>
-                                </span>
-                                Salvar novo usuário
-                            @endisset
-                        </button>
-
-                        @isset($user)
-                            <a type="button" class="btn btn-danger rounded" href="{{route('user.index')}}">
-                                <span class="btn-icon-wrapper pr-2 opacity-7">
-                                    <i class="fas fa-eraser fa-w-20"></i>
-                                </span>
-                                Cancelar
-                            </a>
-                        @else
-                            <button type="reset" class="btn btn-danger rounded">
-                                <span class="btn-icon-wrapper pr-2 opacity-7">
-                                    <i class="fas fa-eraser fa-w-20"></i>
-                                </span>
-                                Limpar
-                            </button>
-                         @endisset
-                    </div>
-                </div>
+                
             </form>
         </div>
     </section>
@@ -354,5 +359,14 @@
             })
             
     });
+
+     // Função para carregar a imagem selecionada como prévia
+     function loadFile(event) {
+        var output = document.getElementById('output');
+        output.src = URL.createObjectURL(event.target.files[0]);
+        output.onload = function() {
+            URL.revokeObjectURL(output.src) // libera a memória
+        }
+    }
     </script>
 @endsection

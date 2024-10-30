@@ -9,20 +9,21 @@
             <div class="row mb-2">
                 <div class="col-sm-12">
                     <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item active"><a href="{{route('home')}}">Home</a></li>
+                        <!-- <li class="breadcrumb-item active"><a href="{{route('home')}}">Home</a></li> -->
                         <li class="breadcrumb-item active">Gestão de usuários</li>
                     </ol>
                 </div>
             </div>
         </div>
+        <hr>
     </div>
 
     <section class="content">
         <div class="container-fluid">
-            <h3 class="text-black-50 font-weight-bold text-md-left">Gestão de usuários</h3>
+            
 
-            <div class="row">
-                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+            <div class="row containerPrincipal">
+                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 containerPrincipal">
                     <div class="main-card mb-3 card card-primary card-outline">
                         <div class="table-responsive">
                              <table id="datatable" class="align-middle mb-0 table table-borderless table-striped table-hover">

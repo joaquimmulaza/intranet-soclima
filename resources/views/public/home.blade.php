@@ -93,7 +93,7 @@
                         @if (isset($post))
                             @method('PUT')
                         @endif
-                        <input type="button" value="Comunique algo..." data-toggle="modal" data-target="#createEventModal" placeholder="Comunique algo...">
+                        <input type="button" value="Comunique algo..." data-toggle="modal" data-target="#createPostModal" placeholder="Comunique algo...">
                     </form>
                 </div>
             </div>
@@ -135,80 +135,181 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal fade" id="modalEdit" tabindex="-1" aria-labelledby="modalEditLabel" aria-hidden="true" data-backdrop="true" data-keyboard="true">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                    <div class="modal-header">
-                        <h3 class="modal-title" id="createEventModalLabel">{{$post->user->name}}</h3>
-                        <h4>{{isset($post) ? 'Editar' : 'Criar novo'}} comunicado</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="editForm" action="{{ route('post.update', '') }}" method="POST" enctype="multipart/form-data">
-                            @csrf
-                            @method('PUT')
-                            <!-- Título do Evento -->
-                            
-                            <div class="form-group">
-                                <label for="eventTitle">Título do Evento</label>
-                                <input id="title" name="title" type="text" class="form-control" required autofocus maxlength="130" max="130" required>
-                                @error('title')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{$message}}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-
-                            <!-- Descrição do Evento -->
-                            <div class="form-group">
-                                <label for="eventDescription">Descrição</label>
-                                <textarea class="form-control " id="content" name="content" required="required"> </textarea>
-                            </div>
-
-                            <!-- Data de Início
-                            <div class="form-group">
-                                <label for="eventStartDate">Data de Início</label>
-                                <input type="date" class="form-control" id="eventStartDate" name="start_date" required>
-                            </div> -->
-
-                            <!-- Data de Fim
-                            <div class="form-group">
-                                <label for="eventEndDate">Data de Fim</label>
-                                <input type="date" class="form-control" id="eventEndDate" name="end_date" required>
-                            </div> -->
-
-                            <!-- Hora de Início
-                            <div class="form-group">
-                                <label for="eventStartTime">Hora de Início</label>
-                                <input type="time" class="form-control" id="eventStartTime" name="start_time" required>
-                            </div> -->
-
-                            <!-- Hora de Fim
-                            <div class="form-group">
-                                <label for="eventEndTime">Hora de Fim</label>
-                                <input type="time" class="form-control" id="eventEndTime" name="end_time" required>
-                            </div> -->
-
-                            <!-- Imagem de Capa -->
-                            <div class="form-group">
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="arquivo_imagem" name="arquivo_imagem" accept=".jpg, .jpeg, .png">
-                                    <label class="custom-file-label" for="arquivo_imagem">Anexar foto</label>
+                <div class="modal escurecer fade popUpContainer" id="createPostModal" tabindex="-1" aria-labelledby="createPostModal" aria-hidden="true" data-backdrop="true" data-keyboard="true">
+                    <div class="modal-dialog  modal-dialog-centered popUpContainer">
+                        <div class="modal-content pop-up">
+                            <div class="modal-header">
+                                
+                                <div class="elementsHeader">
+                                    <img src="logo/img/icon/avatar-post.svg" alt="">
+                                    <div class="contentHeaderPost">
+                                        <h3 class="modal-title" id="createEventModalLabel">{{$post->user->name}}</h3>
+                                        <h4>A {{isset($post) ? 'criar' : 'Criar novo'}} comunicado</h4>
+                                    </div>
                                 </div>
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="arquivo_pdf" name="arquivo_pdf" accept=".pdf">
-                                    <label class="custom-file-label" for="arquivo_pdf">Anexar PDF</label>
-                                </div>
+                                
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
                             </div>
+                        <div class="modal-body pop-up">
+                            <form action="{{isset($post) ? route('post.update', $post->id) : route('post.store')}}" id="roleFrom" role="form" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                @if (isset($post))
+                                    @method('PUT')
+                                @endif
+                                <!-- Título do Evento -->
+                                
+                                <div class="containerInputPost">
+                                
+                                    <input id="title" name="title" type="text" class="@error('title') is-invalid @enderror" placeholder="Adiciona um titulo" required autofocus maxlength="130" max="130">
+                                    @error('title')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{$message}}</strong>
+                                        </span>
+                                    @enderror
+                                
+                                    <textarea id="content" name="content" required="required" placeholder="Comece a escrever aqui"> </textarea>
+                                </div>
 
-                            <!-- Botão para Submeter o Formulário -->
-                            <button type="submit" class="btn btn-primary">Publicar</button>
-                        </form>
-                    </div>
+                                <!-- Data de Início
+                                <div class="form-group">
+                                    <label for="eventStartDate">Data de Início</label>
+                                    <input type="date" class="form-control" id="eventStartDate" name="start_date" required>
+                                </div> -->
+
+                                <!-- Data de Fim
+                                <div class="form-group">
+                                    <label for="eventEndDate">Data de Fim</label>
+                                    <input type="date" class="form-control" id="eventEndDate" name="end_date" required>
+                                </div> -->
+
+                                <!-- Hora de Início
+                                <div class="form-group">
+                                    <label for="eventStartTime">Hora de Início</label>
+                                    <input type="time" class="form-control" id="eventStartTime" name="start_time" required>
+                                </div> -->
+
+                                <!-- Hora de Fim
+                                <div class="form-group">
+                                    <label for="eventEndTime">Hora de Fim</label>
+                                    <input type="time" class="form-control" id="eventEndTime" name="end_time" required>
+                                </div> -->
+
+                                <!-- Imagem de Capa -->
+                                <div class="btnContainerPost">
+                                
+                                        <input type="file" class="custom-file-input" id="arquivo_imagem" name="arquivo_imagem" accept=".jpg, .jpeg, .png" style="display: none;">
+                                        <label for="arquivo_imagem" class="custom-file-button">
+                                            <img src="logo/img/icon/photo.svg" alt="Ícone PDF" class="icon"> <!-- Ícone midia -->
+                                            Anexar Mídia
+                                        </label>
+                                    
+                                        <input type="file" class="custom-file-input" id="arquivo_pdf" name="arquivo_pdf" accept=".pdf" style="display: none;">
+                                        <label for="arquivo_pdf" class="custom-file-button">
+                                            <img src="logo/img/icon/icon-pdf.svg" alt="Ícone PDF" class="icon"> <!-- Ícone PDF -->
+                                            Anexar PDF
+                                        </label>
+
+                                        <input type="file" class="custom-file-input" id="arquivo_pdf" name="arquivo_pdf" accept=".pdf" style="display: none;">
+                                        <label for="arquivo_pdf" class="custom-file-button">
+                                            <img src="logo/img/icon/event-icon.svg" alt="Ícone PDF" class="icon"> <!-- Ícone PDF -->
+                                            Criar Evento
+                                        </label>
+                                        
+                                
+                                </div>
+
+                                <!-- Botão para Submeter o Formulário -->
+                                <button type="submit" class="btnPublicar">Publicar</button>
+                            </form>
+                        </div>
+                        </div>
                     </div>
                 </div>
+                <div class="modal escurecer fade popUpContainer" id="modalEdit" tabindex="-1" aria-labelledby="modalEditLabel" aria-hidden="true" data-backdrop="true" data-keyboard="true">
+                    <div class="modal-dialog  modal-dialog-centered popUpContainer">
+                        <div class="modal-content pop-up">
+                            <div class="modal-header">
+                                
+                                <div class="elementsHeader">
+                                    <img src="logo/img/icon/avatar-post.svg" alt="">
+                                    <div class="contentHeaderPost">
+                                        <h3 class="modal-title" id="createEventModalLabel">{{$post->user->name}}</h3>
+                                        <h4>A {{isset($post) ? 'editar' : 'Criar novo'}} comunicado</h4>
+                                    </div>
+                                </div>
+                                
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        <div class="modal-body pop-up">
+                            <form id="editForm" action="{{ route('post.update', '') }}" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                @method('PUT')
+                                <!-- Título do Evento -->
+                                
+                                <div class="containerInputPost">
+                                
+                                    <input id="title" name="title" type="text" placeholder="Adiciona um titulo" required autofocus maxlength="130" max="130" required>
+                                    @error('title')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{$message}}</strong>
+                                        </span>
+                                    @enderror
+                                
+                                    <textarea id="content" name="content" required="required" placeholder="Comece a escrever aqui"> </textarea>
+                                </div>
+
+                                <!-- Data de Início
+                                <div class="form-group">
+                                    <label for="eventStartDate">Data de Início</label>
+                                    <input type="date" class="form-control" id="eventStartDate" name="start_date" required>
+                                </div> -->
+
+                                <!-- Data de Fim
+                                <div class="form-group">
+                                    <label for="eventEndDate">Data de Fim</label>
+                                    <input type="date" class="form-control" id="eventEndDate" name="end_date" required>
+                                </div> -->
+
+                                <!-- Hora de Início
+                                <div class="form-group">
+                                    <label for="eventStartTime">Hora de Início</label>
+                                    <input type="time" class="form-control" id="eventStartTime" name="start_time" required>
+                                </div> -->
+
+                                <!-- Hora de Fim
+                                <div class="form-group">
+                                    <label for="eventEndTime">Hora de Fim</label>
+                                    <input type="time" class="form-control" id="eventEndTime" name="end_time" required>
+                                </div> -->
+
+                                <!-- Imagem de Capa -->
+                                <div class="btnContainerPost">
+                                
+                                        <input type="file" class="custom-file-input" id="arquivo_imagem" name="arquivo_imagem" accept=".jpg, .jpeg, .png" style="display: none;">
+                                        <label for="arquivo_imagem" class="custom-file-button">
+                                            <img src="logo/img/icon/photo.svg" alt="Ícone PDF" class="icon"> <!-- Ícone midia -->
+                                            Anexar Mídia
+                                        </label>
+                                    
+                                        <input type="file" class="custom-file-input" id="arquivo_pdf" name="arquivo_pdf" accept=".pdf" style="display: none;">
+                                        <label for="arquivo_pdf" class="custom-file-button">
+                                            <img src="logo/img/icon/icon-pdf.svg" alt="Ícone PDF" class="icon"> <!-- Ícone PDF -->
+                                            Anexar PDF
+                                        </label>
+                                        
+                                
+                                </div>
+
+                                <!-- Botão para Submeter o Formulário -->
+                                <button type="submit" class="btnPublicar">Publicar</button>
+                            </form>
+                        </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="post-body">
                     <h3>{{Str::limit($post->title, 80)}}</h3>

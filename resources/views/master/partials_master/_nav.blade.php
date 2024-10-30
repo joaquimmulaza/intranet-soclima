@@ -38,7 +38,7 @@
             @if(solicitacoes() > 0)
                 <li class="nav-item">
                     <a style="padding: 0 !important; margin: 0 !important;" class="nav-link" href="{{route('user.pedidos')}}"> {{-- Redirecionar para a página de pedidos de férias --}}
-                        <span class="badge badge-warning navbar-badge">
+                        <span class="badge shapeNotification navbar-badge">
                             {{solicitacoes()}}
                         </span>
                     <img src="{{asset('logo/img/icon/Notification-button.svg')}}" alt="">

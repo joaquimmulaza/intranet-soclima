@@ -14,6 +14,15 @@
     border: 4px #00c851 solid;
 }
 
+.shapeNotification{
+    width: 12px !important;
+    height: 12px !important;
+    background-color: #009ac1;
+    border: 2px solid #fff;
+    border-radius: 100% !important;
+    font-size: 0;
+}
+
 .offline{
     width: 42px; height: 42px; border-radius: 50%; margin: 5px;
     border: 4px #ff453d solid;
@@ -23,6 +32,10 @@
     margin: 0 auto;
     width: 1080px;
     padding: 0px;
+}
+
+.content-header {
+    padding-top: 17px !important;
 }
 
 .header-crumb hr{
@@ -63,16 +76,56 @@
     height: 654px !important;            
 }
 
+.box-profile hr{
+    padding: 0 !important;
+    margin: 8px 0 0 0;
+    background-color: #ABABAB !important;
+}
+
 .cardUserInputs{
     display: flex;
     flex-direction: column;
     text-align: left;
 }
 
+.containerPrincipal{
+    width: 1080px !important;
+    margin: 0 auto;
+    padding: 0 !important;
+}
+
+.cardUserInputs label {
+    font-size: 14px !important;
+    color: #7b7b7b;
+    font-weight: normal !important;
+}
+
+.cardUserInputs input {
+    color: #555555 !important;
+}
+
+.ContainerBtnSaveUser{
+    display: flex;
+    justify-content: end !important;
+}
+
+.ContainerBtnSaveUser .btn{
+    background-color: #009ac1 !important;
+    height: 33px !important;
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+}
+
+.ContainerBtnSaveUser .btn:hover{
+    color: #fff !important;
+}
+
 .rightSideDataUser{
     width: 496px !important;
     background-color: #fff !important;
     border-radius: 5px !important;
+    height: 654px;
 }
 
 .doubleInput{
@@ -98,19 +151,41 @@
     width: 239.14px;
     justify-content: start;
     flex-direction: column;
-    border: 1px solid purple;
     height: 70px;
+}
+
+.containerGender label {
+    color: #7b7b7b;
+    font-weight: normal !important;
+    font-size: 14px;
 }
 
 .containerRadios{
     display: flex;
-    justify-content: space-between;
-    border: 1px solid purple;
+    justify-content: start;
+    width: 100%;
+    gap: 20px;
 }
 
 .containerRadios label{
     padding: 0 !important;
     font-size: 14px;
+    font-weight: normal !important;
+    color: #7b7b7b;
+}
+
+.paddingTop{
+    padding-top: 10px;
+}
+
+.radiosElement{
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+input[type="radio"] {
+    accent-color: #009ac1;
 }
 
 .text-news{
@@ -497,12 +572,12 @@ body{
     height: 65px !important;
     display: flex;
     flex-direction: column;
+    border-radius: 5px !important;
   }
 
   .containerBtnOpt button {
     height: 32.5px !important;
     border: 1px solid #ABABAB;
-    border-radius: 5px;
     outline: none !important;
     outline-color: #ABABAB !important;
     font-size: 10px;
@@ -565,9 +640,136 @@ body{
 #drop-area img {
     max-width: 100%;
     max-height: 100%;
-    object-fit: contain; /* Garante que a imagem não seja cortada */
+    object-fit: cover; /* Garante que a imagem não seja cortada */
 }
 
 .hidden {
     display: none;
+}
+
+
+.pop-up{
+    width: 825px !important;
+    margin: 0 auto !important;
+    border-radius: 5px !important;
+}
+
+.popUpContainer {
+    max-width: 100% !important;
+}
+
+.escurecer{
+    background-color: #0000006b !important;
+}
+
+.elementsHeader{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 11px;
+}
+
+.elementsHeader h3{
+    color: #009ac1;
+    font-size: 16px;
+}
+
+.elementsHeader h4{
+    font-size: 14px;
+    color: #555555;
+}
+
+.contentHeaderPost{
+    display: flex;
+    flex-direction: column;
+}
+
+.containerInputPost{
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    border-radius: 5px;
+    background: rgba(242, 242, 242, 0.80);
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.08);
+    height: 169px;
+    padding: 15px 17px 0 17px;
+}
+
+.containerInputPost input{
+    background-color: transparent;
+    border: none;
+    outline: none;
+    outline-color: transparent;
+    color: #ABABAB;
+    padding-bottom: 12px;
+}
+
+.containerInputPost textarea{
+    background-color: transparent;
+    color: #ABABAB;
+    outline: none;
+    outline-color: transparent;
+    border-bottom: none;
+    border-right: none;
+    border-left: none;
+    border-top-color: #ddd;
+    padding-top: 12px;
+}
+
+.btnContainerPost{
+    padding-top: 21px !important;
+    display: flex;
+    justify-content: space-between;
+    width: 443px !important;
+}
+
+button{
+    outline: none !important;
+    outline-color: #e7e7e700 !important;
+}
+
+button:active{
+    background-color: #e7e7e7;
+    outline: none;
+    outline-color: #e7e7e7;
+    border-top-right-radius: 5px !important;
+}
+
+.custom-file-button {
+    display: inline-flex;
+    align-items: center;
+    width: 120px;
+    height: 31px;
+   border: 1px solid #ABABAB;
+    font-weight: normal !important;
+    padding-left: 4px;
+    border-radius: 5px;
+    font-size: 14px;
+    color: #666;
+    cursor: pointer;
+    background-color: #fff;
+    text-decoration: none;
+}
+
+/* Estilo do ícone */
+.custom-file-button .icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+}
+
+.btnPublicar{
+    background-color: #e7e7e7;
+    color: #7b7b7b;
+    width: 110px;
+    height: 33px;
+    display: flex;
+    justify-content: center;
+    font-size: 14px;
+    align-items: center;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+    outline-color: transparent;
+    float: right;
 }
