@@ -1,6 +1,8 @@
 @extends('master.layout')
 @section('title', 'Listagem de usuários')
 
+
+
 @section('content')
 
     {{-- CABEÇALHO BREADCRUMB--}}
@@ -18,13 +20,13 @@
         <hr>
     </div>
 
-    <section class="content">
+    <section class="content" style="display: none;">
         <div class="container-fluid">
             
 
             <div class="row containerPrincipal">
                 <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 containerPrincipal">
-                    <div class="main-card mb-3 card card-primary card-outline">
+                    <div class="main-card mb-3 card card-primary">
                         <div class="table-responsive">
                              <table id="datatable" class="align-middle mb-0 table table-borderless table-striped table-hover">
                                 <thead>
@@ -137,6 +139,88 @@
             </div>
         </div>
     </section>
+
+
+    <section class="content">
+        <div class="user-management">
+            <div class="search-bar">
+                <input class="nav-link backgroundInput" placeholder="Pesquisar" type="text">
+                <button><img src="logo/img/icon/filter.svg" alt=""></button>
+            </div>
+            <div class="user-grid">
+                @foreach($users as $user)
+                    <div class="user-card ">
+                    @if(Cache::has('is_online' . $user->id))
+                        <img class="online " src="{{URL::to('/')}}/public/avatar_users/{{$user->avatar}}">
+                    @else
+                        <img class="offline" src="{{URL::to('/')}}/public/avatar_users/{{$user->avatar}}">
+                    @endif
+                        <div class="user-info">
+                            <h3>{{ $user->name }}</h3>
+                            <p style="padding: 0 !important; margin: 0 !important;">{{ $user->cargo->titulo}}</p>
+                        </div>
+                        <a class="edit-btn" href="{{route('user.edit', ['user' => $user->id])}}">Editar</a>
+                        <!-- <button class="more-btn" data-toggle="modal" data-target="#modalOpt}">⋮</button> -->
+                        <!-- <button class="more-btn"  data-toggle="modal" data-target="#modalOpt-{{ $user->id }}" style="margin: 0 !important; padding: 0 !important;">⋮</button> -->
+                        <div class="containerOpt" style="">
+                            <button class="btnOpt"  data-toggle="modal" data-target="#modalOpt-{{ $user->id }}" style="margin: 0 !important; padding: 0 !important;">⋮</button>
+                            <div class="modal fade modalOpt" id="modalOpt-{{ $user->id }}" tabindex="-1" aria-labelledby="modalOptLabel" aria-hidden="true" data-backdrop="true" data-keyboard="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-body modal-bodyOpt">
+                                        <div class="containerBtnOpt ">
+                                        @can('app.dashboard')
+                                            <button type="button" class="btnPosts" onClick="deleteData({{ $user->id }})">
+                                                Eliminar
+                                            </button>
+                                            <button type="button" data-toggle="modal" data-target="#modalEdit" style="border-bottom: none;" class="btnPosts"  data-id="{{$user->id}}" data-title="{{$user->title}}" data-content="{{$user->content}}">
+                                                Suspender
+                                            </button>
+                                            <button type="button" data-toggle="modal" data-target="#modalEdit" style="border-bottom: none;" class="btnPosts"  data-id="{{$user->id}}" data-title="{{$user->title}}" data-content="{{$user->content}}">
+                                                Consultar férias
+                                            </button>
+                                            <button type="button" data-toggle="modal" data-target="#modalEdit" style="border-bottom: none;" class="btnPosts"  data-id="{{$user->id}}" data-title="{{$user->title}}" data-content="{{$user->content}}">
+                                            <a href="{{route('user.show', ['user' => $user->id])}}">Ver dados</a>
+                                            </button>
+                                            <form id="delete-form-{{ $user->id }}"
+                                                    action="{{ route('user.destroy', ['user' => $user->id]) }}" method="POST" style="display: none;">
+                                                @csrf()
+                                                @method('DELETE')
+                                            </form>
+                                        @endcan
+                                    </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                @endforeach
+            </div>
+        </div>
+        
+        
+    </section>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $('.modalOpt').on('show.bs.modal', function () {
+        $('body').addClass('modal-open-no-backdrop');
+        });
+
+        $('.modalOpt').on('hidden.bs.modal', function () {
+            $('body').removeClass('modal-open-no-backdrop');
+        });
+
+        $(document).on('click', function (event) {
+            const $modal = $('.modalOpt');
+            if ($modal.is(':visible') && !$(event.target).closest('.modal-content').length) {
+                $modal.modal('hide');
+            }
+        });
+    </script>
+
     <script src="{{ asset('sweetalerta/app-sweetalert.js') }}"></script>
     <script src="{{ asset('sweetalerta/sweetalert2.all.js') }}"></script>
 

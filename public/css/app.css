@@ -362,8 +362,14 @@ body{
 }
 
 .AllpostsContainer{
-    background-color: #fff;
+    
     margin-top: 7px;
+    border-radius: 5px;
+}
+
+.postOnly{
+    background-color: #ffffff;
+    margin-bottom: 7px !important;
     border-radius: 5px;
 }
 
@@ -387,7 +393,7 @@ body{
 }
 
 .post-header h3{
-    font-size: 11px;
+    font-size: 13px;
     font-weight: normal;
     color: #009ac1;
 }
@@ -540,7 +546,7 @@ body{
   }
 
 
-  #modalOpt {
+  .modalOpt {
     position: absolute !important;
     width: 130px;
     top: 30px !important;
@@ -550,13 +556,14 @@ body{
     overflow: hidden !important;
     background-color: #ffffff00 !important;
     box-shadow: none !important;
+    z-index: 1;
   }
 
-  #modalOpt .modal-dialog{
+  .modalOpt .modal-dialog{
     margin: 0 !important;
   }
 
-  #modalOpt .modal-content{
+  .modalOpt .modal-content{
     box-shadow: none !important;
   }
     /* CSS para ocultar o backdrop do modal específico */
@@ -772,4 +779,83 @@ button:active{
     outline: none;
     outline-color: transparent;
     float: right;
+}
+
+.user-management {
+    max-width: 1080px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 30px 24px 24px 24px;
+    border-radius: 5px;
+}
+
+.search-bar {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  
+    justify-content: end;
+}
+
+.search-bar button {
+    background-color: transparent !important;
+    border: none;
+}
+
+.user-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.user-card {
+    border: 1px solid #ABABAB;
+    border-radius: 5px;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.user-card img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+
+
+.user-info {
+    flex-grow: 1;
+}
+
+.user-info h3{
+    font-size: 14px;
+    color: #555;
+}
+
+.user-info  p{
+    font-size: 13px !important;
+    color: #555;
+}
+
+.edit-btn {
+    background-color: #E7ECEB;
+    width: 62px;
+    border: none;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 11px;
+    color: #555555;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.more-btn {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
 }

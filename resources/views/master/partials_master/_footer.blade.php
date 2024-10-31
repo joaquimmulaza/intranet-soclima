@@ -1,6 +1,6 @@
-<footer class="page-footer btn-mdb-color text-center text-md-left">
+<footer class="page-footer btn-mdb-color text-center text-md-left hidden">
     <div class="container">
-        <div class="row text-center text-md-left mt-4 pb-3">
+        <div style="display: none;" class="row text-center text-md-left mt-4 pb-3 justify-content-center">
 
             {{-- SOBRE RODAPÉ--}}
             <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 mx-auto mt-3">
@@ -72,33 +72,35 @@
 
             <hr class="w-100 clearfix d-md-none">
 
-            {{-- CONTATO RODAPÉ--}}
-            <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 mx-auto mt-3">
-                <h6 class="text-uppercase mb-4 font-weight-bold">Contato</h6>
-                <p>
-                    <i class="fas fa-home mr-3"></i>Avenida Samora Machel (Talatona)</p>
-                <p>
-                    <i class="fas fa-envelope mr-3"></i>geral@soclima.com</p>
-                <p>
-                    <i class="fas fa-phone mr-3"></i>+244 923170012</p>
-                <!-- <p>
-                    <i class="fas fa-print mr-3"></i> + (51)33555555</p> -->
-            </div>
+            
 
         </div>
+        
 
         {{-- DOMÍNIO E MIDIAS SOCIAIS RODAPÉ--}}
-        <div class="row py-3 d-flex align-items-center">
-
+        <div class="row py-3 d-flex justify-content-between align-items-center">
+            {{-- CONTATO RODAPÉ--}}
+            
             {{-- DOMÍNIO RODAPÉ--}}
-            <div class="col-md-7 col-lg-8">
+            <div class="">
                 <p class="text-center text-md-left text-white">
                     Copyright &copy; {{date('Y')}} <a href="https://soclima.com/" target="_blank">Soclima</a>
                 </p>
             </div>
 
+            <div class="">
+                <!-- <h6 class="text-uppercase mb-4 font-weight-bold">Contato</h6> -->
+                <p>AV. Samora Machel. S/N. Luanda. Talatona</p>
+                <!-- <p>
+                    <i class="fas fa-envelope mr-3"></i>geral@soclima.com</p>
+                <p> -->
+                    <!-- <i class="fas fa-phone mr-3"></i>+244 923170012</p> -->
+                <!-- <p>
+                    <i class="fas fa-print mr-3"></i> + (51)33555555</p> -->
+            </div>
+
             {{-- MIDIAS SOCIAIS RODAPÉ--}}
-            <div class="col-md-5 col-lg-4 ml-lg-0">
+            <div class="">
                 <div class="social-section text-center text-md-left">
                     <ul class="list-unstyled list-inline">
                         <!-- <li class="list-inline-item mx-0">

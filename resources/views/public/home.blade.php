@@ -88,54 +88,13 @@
             <div class="mainPostContainer">
                 <div class="inputPost">
                     <img src="logo/img/icon/avatar-input.svg" alt="">
-                    <form action="{{isset($post) ? route('post.update', $post->id) : route('post.store')}}" id="roleFrom" role="form" method="POST" enctype="multipart/form-data">
-                        @csrf
-                        @if (isset($post))
-                            @method('PUT')
-                        @endif
+                    
                         <input type="button" value="Comunique algo..." data-toggle="modal" data-target="#createPostModal" placeholder="Comunique algo...">
-                    </form>
+                   
                 </div>
             </div>
 
-            <div class="AllpostsContainer">
-            @foreach($posts as $post)
-                <div class="post-header">
-                    <div class="postContentHeader">
-                        <img src="logo/img/icon/avatar-input.svg" alt="">
-                        <h3 style="padding: 0; margin: 0;">{{$post->user->name}}</h3>
-                        <img src="logo/img/icon/Ellipse3.svg" alt="">
-                        <p style="padding: 0; margin: 0;">{{date('d/m/Y', strtotime($post->created_at))}}</</p>
-                    </div>
-                    <div class="containerOpt">
-                        <button class="btnOpt"  data-toggle="modal" data-target="#modalOpt" style="margin: 0 !important; padding: 0 !important;"><img src="logo/img/icon/frame26.svg" alt="" ></button>
-                        <div class="modal fade" id="modalOpt" tabindex="-1" aria-labelledby="modalOptLabel" aria-hidden="true" data-backdrop="true" data-keyboard="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-body modal-bodyOpt">
-                                    <div class="containerBtnOpt">
-                                    @can('app.dashboard')
-                                        
-                                        <button type="button" data-toggle="modal" data-target="#modalEdit" style="border-bottom: none;" class="btnPosts"  data-id="{{$post->id}}" data-title="{{$post->title}}" data-content="{{$post->content}}">
-                                            Editar
-                                        </button>
-                                        <button type="button" class="btnPosts" onClick="deleteData({{ $post->id }})">
-                                            Eliminar
-                                        </button>
-                                        <form id="delete-form-{{ $post->id }}"
-                                              action="{{ route('post.destroy', ['post' => $post->id]) }}" method="POST" style="display: none;">
-                                            @csrf()
-                                            @method('DELETE')
-                                        </form>
-                                    @endcan
-                                </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal escurecer fade popUpContainer" id="createPostModal" tabindex="-1" aria-labelledby="createPostModal" aria-hidden="true" data-backdrop="true" data-keyboard="true">
+            <div class="modal escurecer fade popUpContainer" id="createPostModal" tabindex="-1" aria-labelledby="createPostModal" aria-hidden="true" data-backdrop="true" data-keyboard="true">
                     <div class="modal-dialog  modal-dialog-centered popUpContainer">
                         <div class="modal-content pop-up">
                             <div class="modal-header">
@@ -153,11 +112,8 @@
                                 </button>
                             </div>
                         <div class="modal-body pop-up">
-                            <form action="{{isset($post) ? route('post.update', $post->id) : route('post.store')}}" id="roleFrom" role="form" method="POST" enctype="multipart/form-data">
+                                <form action="{{ route('post.store') }}" id="roleForm" role="form" method="POST" enctype="multipart/form-data">
                                 @csrf
-                                @if (isset($post))
-                                    @method('PUT')
-                                @endif
                                 <!-- Título do Evento -->
                                 
                                 <div class="containerInputPost">
@@ -311,32 +267,71 @@
                         </div>
                     </div>
                 </div>
-                <div class="post-body">
-                    <h3>{{Str::limit($post->title, 80)}}</h3>
-                    <p>{{Str::limit($post->content, 80)}}</p>
-                </div>
-                <hr style="width: 460px; margin: 0 auto;">
-                <div class="post-footer">
 
-                    <div class="items-footer" data-postid="{{ $post->id }}">
-                        <span class="like-button" style="cursor: pointer;">
-                        <span class="like-button" style="cursor: pointer;">
-                            <img src="logo/img/icon/{{ Auth::user()->likes()->where('post_id', $post->id)->exists() && Auth::user()->likes()->where('post_id', $post->id)->first()->like ? 'Thumbs-up.svg' : 'ThumbsUp-unpressed.svg' }}" class="like-icon" alt="">
-                            <span class="like-count">{{ likes_post($post->id) }}</span>
-                        </span>
-                        </span>
-                        
-                        <span>
-                            <img src="logo/img/icon/Group2.svg" alt="">
-                            {{ $post->views_count }}0
-                        </span>
-
-                        <span>
-                            <img src="logo/img/icon/mode_comment.svg" alt="">
-                            {{ $post->comments()->count() }}
-                        </span>
+            <div class="AllpostsContainer">
+            @foreach($posts as $post)
+             
+                <div class="postOnly">
+                    <div class="post-header">
+                        <div class="postContentHeader">
+                            <img src="logo/img/icon/avatar-input.svg" alt="">
+                            <h3 style="padding: 0; margin: 0;">{{$post->user->name}}</h3>
+                            <img src="logo/img/icon/Ellipse3.svg" alt="">
+                            <p style="padding: 0; margin: 0;">{{date('d/m/Y', strtotime($post->created_at))}}</p>
+                        </div>
+                        <div class="containerOpt">
+                            <button class="btnOpt"  data-toggle="modal" data-target="#modalOpt-{{ $post->id }}" style="margin: 0 !important; padding: 0 !important;"><img src="logo/img/icon/frame26.svg" alt="" ></button>
+                            <div class="modal fade modalOpt" id="modalOpt-{{ $post->id }}" tabindex="-1" aria-labelledby="modalOptLabel" aria-hidden="true" data-backdrop="true" data-keyboard="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-body modal-bodyOpt">
+                                        <div class="containerBtnOpt">
+                                        @can('app.dashboard')
+                    
+                                            <button type="button" data-toggle="modal" data-target="#modalEdit" style="border-bottom: none;" class="btnPosts"  data-id="{{$post->id}}" data-title="{{$post->title}}" data-content="{{$post->content}}">
+                                                Editar
+                                            </button>
+                                            <button type="button" class="btnPosts" onClick="deleteData({{ $post->id }})">
+                                                Eliminar
+                                            </button>
+                                            <form id="delete-form-{{ $post->id }}"
+                                                    action="{{ route('post.destroy', ['post' => $post->id]) }}" method="POST" style="display: none;">
+                                                @csrf()
+                                                @method('DELETE')
+                                            </form>
+                                        @endcan
+                                    </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-
+                    
+                    <div class="post-body">
+                        <h3>{{Str::limit($post->title, 80)}}</h3>
+                        <p>{{Str::limit($post->content, 80)}}</p>
+                    </div>
+                    <hr style="width: 460px; margin: 0 auto;">
+                    <div class="post-footer">
+                        <div class="items-footer" data-postid="{{ $post->id }}">
+                            
+                            <span class="like-button" style="cursor: pointer;">
+                                <img src="logo/img/icon/{{ Auth::user()->likes()->where('post_id', $post->id)->exists() && Auth::user()->likes()->where('post_id', $post->id)->first()->like ? 'Thumbs-up.svg' : 'ThumbsUp-unpressed.svg' }}" class="like-icon" alt="">
+                                <span class="like-count">{{ likes_post($post->id) }}</span>
+                            </span>
+                            </span>
+                    
+                            <span>
+                                <img src="logo/img/icon/Group2.svg" alt="">
+                                {{ $post->views_count }}0
+                            </span>
+                            <span>
+                                <img src="logo/img/icon/mode_comment.svg" alt="">
+                                {{ $post->comments()->count() }}
+                            </span>
+                        </div>
+                    </div>
                 </div>
             @endforeach
             </div>
@@ -439,6 +434,10 @@
                 
                 </div>
             </div>
+        </div>
+        <div class="ferias">
+            <p>AV. Samora Machel. S/N. Luanda. Talatona</p>
+            <p>Copyright &copy; {{date('Y')}} <a href="https://soclima.com/" target="_blank">Soclima</a></p>
         </div>
     </div>
 
@@ -584,16 +583,16 @@
     }
 
     // Modal Behavior
-    $('#modalOpt').on('show.bs.modal', function () {
+    $('.modalOpt').on('show.bs.modal', function () {
         $('body').addClass('modal-open-no-backdrop');
     });
 
-    $('#modalOpt').on('hidden.bs.modal', function () {
+    $('.modalOpt').on('hidden.bs.modal', function () {
         $('body').removeClass('modal-open-no-backdrop');
     });
 
     $(document).on('click', function (event) {
-        const $modal = $('#modalOpt');
+        const $modal = $('.modalOpt');
         if ($modal.is(':visible') && !$(event.target).closest('.modal-content').length) {
             $modal.modal('hide');
         }
