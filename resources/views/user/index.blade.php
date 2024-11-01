@@ -170,7 +170,7 @@
                                         <div class="modal-body modal-bodyOpt">
                                         <div class="containerBtnOpt ">
                                         @can('app.dashboard')
-                                            <button type="button" class="btnPosts" onClick="deleteData({{ $user->id }})">
+                                            <button style="border-top-left-radius: 5px; border-top-right-radius: 5px;" type="button" class="btnPosts" onClick="deleteData({{ $user->id }})">
                                                 Eliminar
                                             </button>
                                             <button type="button" data-toggle="modal" data-target="#modalEdit" style="border-bottom: none;" class="btnPosts"  data-id="{{$user->id}}" data-title="{{$user->title}}" data-content="{{$user->content}}">
@@ -179,8 +179,8 @@
                                             <button type="button" data-toggle="modal" data-target="#modalEdit" style="border-bottom: none;" class="btnPosts"  data-id="{{$user->id}}" data-title="{{$user->title}}" data-content="{{$user->content}}">
                                                 Consultar férias
                                             </button>
-                                            <button type="button" data-toggle="modal" data-target="#modalEdit" style="border-bottom: none;" class="btnPosts"  data-id="{{$user->id}}" data-title="{{$user->title}}" data-content="{{$user->content}}">
-                                            <a href="{{route('user.show', ['user' => $user->id])}}">Ver dados</a>
+                                            <button style="border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;" type="button" data-toggle="modal" data-target="#cardUserView-{{ $user->id }}" class="btnPosts">
+                                                Ver dados
                                             </button>
                                             <form id="delete-form-{{ $user->id }}"
                                                     action="{{ route('user.destroy', ['user' => $user->id]) }}" method="POST" style="display: none;">
@@ -195,10 +195,52 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="modal fade cardUserView escurecer" id="cardUserView-{{ $user->id }}" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                
+                                <div class="modal-body">
+                                <hr>
+                                    <div class="profile d-flex align-items-center mb-3">
+                                        <div class="user-info-left">
+                                        <img src="{{URL::to('/')}}/public/avatar_users/{{$user->avatar}}" alt="Foto do perfil" style="border-radius: 50%; width: 60px; height: 60px; margin-right: 15px;">
+                                            <div>
+                                                <h4 style="padding: 0 !important; margin: 0 !important;">{{ $user->name }}</h4>
+                                                <p  style="padding: 0 !important; margin: 0 !important;">{{ $user->cargo->titulo}}</p>
+                                                <p style="padding: 0 !important; margin: 0 !important;">{{$user->unidade->titulo}}</p>
+                                            </div>
+                                        </div>
+                                            <div>
+                                                <a href="{{route('user.edit', ['user' => $user->id])}}">
+                                                    <img src="logo/img/icon/icon-edit.svg" alt="">
+                                                </a>
+                                            </div>
+                                       
+                                    </div>
+                                <hr>
+                                    <div class="info-section">
+                                        <p>Data de nascimento: <span>{{date('d/m/Y', strtotime($user->nascimento))}}</span></p>
+                                        <p>Gênero:<span>{{ $user->genero }}</span></p>
+                                        <p>Nº mecanográfico: <span>{{ $user->numero_mecanografico }}</span></p>
+                                        <p>Telefone da firma: <span>{{ $user->fone }}</span></p>
+                                        <p>E-mail: <span>{{ $user->email }}</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
                     
                 @endforeach
             </div>
         </div>
+
         
         
     </section>

@@ -823,6 +823,25 @@ button:active{
     border-radius: 50%;
 }
 
+.user-card .containerBtnOpt {
+    height: auto !important;
+    
+}
+
+.user-card .btnPosts{
+    height: 50px !important;
+    font-size: 14px !important;
+    font-weight: bold;
+}
+
+.user-card .btnPosts a {
+    color: #555 !important;
+    font-weight: bold;
+}
+
+.user-card .modalOpt{
+    height: 200px !important;
+}
 
 
 .user-info {
@@ -858,4 +877,70 @@ button:active{
     border: none;
     font-size: 1.2rem;
     cursor: pointer;
+}
+
+
+.cardUserView .modal-header{
+    border-bottom: none !important;
+}
+
+.cardUserView hr{
+    background-color: #ABABAB;
+}
+
+.cardUserView h4{
+    color: #009ac1 !important;
+    font-size: 20px !important;
+    font-weight: bold;
+}
+
+.cardUserView  .profile p{
+    font-size: 14px !important;
+    color: #555;
+    
+}
+
+.cardUserView .modal-dialog{
+    max-width: 537px !important;
+    box-shadow: none !important;
+}
+
+.info-section p{ 
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    color: var(--Text-highlighted, #555);
+}
+
+.info-section span{
+    color: var(--Text-highlighted, #555);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.user-info-left{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.profile{
+    display: flex;
+    justify-content: space-between;
+}
+
+.cardUserView .modal-body{
+    padding-top: 1px !important;
+}
+
+.cardUserView .modal-header{
+    padding-bottom: 0px !important;
+}
+
+.cardUserView .modal-content {
+    border-radius: 5px !important;
+    filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.1));
+    
 }
