@@ -9,15 +9,16 @@
         <div class="row mb-2">
             <div class="col-sm-12">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+                    <!-- <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li> -->
                     <li class="breadcrumb-item active">Lista Telefônica</li>
                 </ol>
             </div>
         </div>
     </div>
+    <hr>
 </div>
 
-<section class="content">
+<section class="content" style="display: none;">
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-12">
@@ -63,5 +64,44 @@
         </div>
     </div>
 </section>
+
+
+    <div class="containerPhones">
+        <header>
+                <button class="add-button">Adicionar</button>
+                <div>
+                    <input type="text" placeholder="Procurar" class="search-input">
+                    <button><img src="logo/img/icon/filter.svg" alt=""></button>
+                </div>
+            </div>
+        </header>
+        <div class="table-container">
+            <table>
+                <!-- <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Departamento</th>
+                        <th>Telefone</th>
+                        <th>Email</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead> -->
+                <tbody>
+                    <tr class="bodyTr">
+                        <div>
+                            <td><span class="avatar">T</span> <span class="name">Inserir nome do usuário</span></td>
+                            <td>Departamento Comercial</td>
+                        </div>
+                        <td>+933000000</td>
+                        <td>username@domain.com</td>
+                        <td><button class="action-button">...</button></td>
+                    </tr>
+                    <!-- Repita as linhas conforme necessário -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
 
 @endsection
