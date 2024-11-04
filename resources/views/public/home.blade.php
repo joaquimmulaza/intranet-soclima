@@ -439,7 +439,7 @@
                 </div>
             </div>
         </div>
-        <div class="ferias">
+        <div class="ferias" style="background: transparent; box-shadow: none;">
             <p>AV. Samora Machel. S/N. Luanda. Talatona</p>
             <p>Copyright &copy; {{date('Y')}} <a href="https://soclima.com/" target="_blank">Soclima</a></p>
         </div>

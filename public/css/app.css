@@ -948,40 +948,131 @@ button:active{
 /*LISTA TELEFONICA*/
 
 .containerPhones{
-    background-color: #fff;
+    background-color: #fff !important;
     width: 1080px;
     margin: 0 auto;
 }
 
-.containerPhones header{
+.containerPhones {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 1030px;
-    margin: 0 auto;
+
 }
 
 .table-container, .table-container table{
     width: 1030px !important;
     margin: 0 auto;
-    border: 1px solid red;
 } 
 
-.table-container th{
-    border: 1px solid red;
+
+
+.card-primary:not(.card-outline)>.card-header{
+    background-color: #fff !important;
 }
 
-/* .table-container tbody tr{
-    border: 0.75px solid #ABABAB;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    
-} */
-
-
-/* .bodyTr{
-    display: flex;
-    justify-content: space-between;
+.cardPhoneHeader{
     width: 1030px;
-} */
+   display: flex;
+   margin: 0 auto;
+   justify-content: space-between;
+   align-items: center;
+   padding-top: 21px;
+}
+
+.card-header{
+    border-bottom: none !important;
+}
+
+.containerTable th{
+    padding-top: 14px;
+}
+
+.containerTable th, .containerTable td{
+    padding-left: 14px;
+    color: var(--Text-highlighted, #555);
+    width: 25%;
+}
+
+.containerTable th{
+    font-size: 14px;
+}
+
+.containerTable td{
+    font-size: 13px;
+}
+
+
+.containerTable{
+    border: 0.75px solid #ABABAB;
+    width: 100%;
+    border-radius: 5px; 
+    border-collapse: separate; 
+    border-spacing: 0;  
+    margin-bottom: 20px;
+}
+
+.add-button{
+    width: 100px;
+    height: 26px;
+    background-color: #009ac1;
+    color: var(--Schemes-On-Primary, #FFF);
+    border-radius: 5px;
+    border: none;
+    outline: none;
+    outline-color: #009ac1;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.1px;
+}
+
+.add-button:active{
+    background-color: #009ac1 !important;
+}
+
+.cardPhoneHeader input{
+    text-indent: 20px;
+}
+
+.cardPhoneHeader .filter{
+    background-color: transparent;
+    border: none;
+    outline: none;
+    outline-color: #fff;
+}
+
+.containerTable .btnOpt{
+    position: relative;
+    bottom: 15px;
+}
+
+.EditContact .modal-header{
+    border-bottom: none ;
+}
+
+.EditContact .modal-content{
+    width: 497px;
+    border-radius: 5px !important;
+}
+
+#EditContactAjax label{
+    font-size: 14px;
+    color: #7B7B7B;
+    font-weight: 400;
+}
+
+.btnAdd{
+    background-color: #e2e2e2;
+    width: 109px;
+    height: 33px;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    border-radius: 5px !important;
+    outline: none;
+    outline-color: #e7e7e7;
+    border: none;
+    color: var(--M3-sys-light-on-primary, var(--Schemes-On-Primary, #FFF));
+    float: right;
+    font-size: var(--Label-Large-Size, 14px);
+}
