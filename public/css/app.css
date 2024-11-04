@@ -961,23 +961,27 @@ button:active{
     margin: 0 auto;
 }
 
-.table-container{
-    width: 1030px;
+.table-container, .table-container table{
+    width: 1030px !important;
     margin: 0 auto;
+    border: 1px solid red;
+} 
+
+.table-container th{
+    border: 1px solid red;
 }
 
-.table-container tbody tr{
+/* .table-container tbody tr{
     border: 0.75px solid #ABABAB;
     display: flex;
     justify-content: space-between;
     align-items: center;
     
-}
+} */
 
 
-.bodyTr{
-    background-color: red;
+/* .bodyTr{
     display: flex;
     justify-content: space-between;
     width: 1030px;
-}
+} */

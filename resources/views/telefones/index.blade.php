@@ -77,24 +77,24 @@
         </header>
         <div class="table-container">
             <table>
-                <!-- <thead>
+                <thead>
                     <tr>
                         <th>Nome</th>
                         <th>Departamento</th>
-                        <th>Telefone</th>
-                        <th>Email</th>
-                        <th>Ações</th>
+                        {{-- <th>Telefone</th>
+                        <th>Email</th> --}}
+                        {{-- <th>Ações</th> --}}
                     </tr>
-                </thead> -->
+                </thead> 
                 <tbody>
                     <tr class="bodyTr">
-                        <div>
+                       
                             <td><span class="avatar">T</span> <span class="name">Inserir nome do usuário</span></td>
                             <td>Departamento Comercial</td>
-                        </div>
+                       
                         <td>+933000000</td>
                         <td>username@domain.com</td>
-                        <td><button class="action-button">...</button></td>
+                        <td style="margin: 0px; padding: 0px;"><button style="margin: 0px; padding: 0px;" class="action-button">...</button></td>
                     </tr>
                     <!-- Repita as linhas conforme necessário -->
                 </tbody>

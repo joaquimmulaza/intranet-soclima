@@ -102,7 +102,9 @@
                                 <div class="elementsHeader">
                                     <img src="logo/img/icon/avatar-post.svg" alt="">
                                     <div class="contentHeaderPost">
-                                        <h3 class="modal-title" id="createEventModalLabel">{{$post->user->name}}</h3>
+                                        <h3 class="modal-title" id="createEventModalLabel">
+                                            {{ isset($post) && $post->user ? $post->user->name : 'Usuário desconhecido' }}
+                                        </h3>
                                         <h4>A {{isset($post) ? 'criar' : 'Criar novo'}} comunicado</h4>
                                     </div>
                                 </div>
@@ -191,7 +193,9 @@
                                 <div class="elementsHeader">
                                     <img src="logo/img/icon/avatar-post.svg" alt="">
                                     <div class="contentHeaderPost">
-                                        <h3 class="modal-title" id="createEventModalLabel">{{$post->user->name}}</h3>
+                                        <h3 class="modal-title" id="createEventModalLabel">
+                                            {{ isset($post) && $post->user ? $post->user->name : 'Usuário desconhecido' }}
+                                        </h3>
                                         <h4>A {{isset($post) ? 'editar' : 'Criar novo'}} comunicado</h4>
                                     </div>
                                 </div>
@@ -201,7 +205,7 @@
                                 </button>
                             </div>
                         <div class="modal-body pop-up">
-                            <form id="editForm" action="{{ route('post.update', '') }}" method="POST" enctype="multipart/form-data">
+                            <form id="editForm" action="{{ route('post.update', '') }}" method="POST" enctype="multipart/form-data">    
                                 @csrf
                                 @method('PUT')
                                 <!-- Título do Evento -->
