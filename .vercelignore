@@ -1,1 +1,7 @@
 /vendor
+/node_modules
+/tests
+*.md
+*.json
+*.log
+*.git
