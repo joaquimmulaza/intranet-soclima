@@ -296,10 +296,10 @@ Route::post('/ferias/marcar', 'FeriaController@store')->name('ferias.store');
 Route::get('/ferias/pedidos', 'FeriaController@pedidos')->name('ferias.pedidos');
 
 // Aprovar pedido de férias
-Route::patch('/ferias/{feria}/aprovar', 'FeriaController@aprovar')->name('ferias.aprovar');
+Route::get('/ferias/{id}/aprovar', [FeriaController::class, 'aprovar'])->name('ferias.aprovar');
 
 // Rejeitar pedido de férias
-Route::patch('/ferias/{feria}/rejeitar', 'FeriaController@rejeitar')->name('ferias.rejeitar');
+Route::get('/ferias/{id}/rejeitar', [FeriaController::class, 'rejeitar'])->name('ferias.rejeitar');
 
 /*ATRIBUIR FERIAS*/
 // Atualizar os dias de férias de um usuário
@@ -309,5 +309,9 @@ Route::patch('/usuarios/{userId}/ferias', [FeriaController::class, 'updateDiasFe
 // Exibir o formulário de atualização de férias
 Route::get('/usuarios/{userId}/ferias', [FeriaController::class, 'showDiasFeriasForm'])
     ->name('users.ferias');
+
+
+
+    
 
 

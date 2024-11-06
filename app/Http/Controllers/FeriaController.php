@@ -26,38 +26,42 @@ class FeriaController extends Controller
     }
 
     public function store(Request $request)
-    {
-        // Validação dos dados
-        $request->validate([
-            'data_inicio' => 'required|date',
-            'data_fim' => 'required|date|after_or_equal:data_inicio',
-        ]);
+{
+    // Validação dos dados
+    $request->validate([
+        'data_inicio' => 'required|date',
+        'data_fim' => 'required|date|after_or_equal:data_inicio',
+    ]);
 
-        // Cálculo de dias de férias solicitados
-        $dataInicio = Carbon::parse($request->data_inicio);
-        $dataFim = Carbon::parse($request->data_fim);
-        $diasSolicitados = $feria->diasSolicitados();
+    // Cálculo de dias de férias solicitados
+    $dataInicio = Carbon::parse($request->data_inicio);
+    $dataFim = Carbon::parse($request->data_fim);
 
-        // Verificar dias úteis disponíveis (implementaremos essa lógica mais adiante)
-        // Aqui você deve implementar a lógica para verificar se o usuário possui dias disponíveis
+    // Instanciar a variável $feria antes de acessar o método
+    $feria = new Feria();
 
-        // Criação do pedido de férias
-        $feria = new Feria();
-        $feria->user_id = Auth::id();
-        $feria->responsavel_id = Auth::user()->responsavel_id; // O responsável atribuído ao usuário
-        $feria->data_inicio = $request->data_inicio;
-        $feria->data_fim = $request->data_fim;
-        $feria->status = 'pendente'; // O status será "pendente" até ser aprovado pelo responsável
+    // Calcular os dias solicitados com o método da instância
+    $diasSolicitados = $feria->diasSolicitados($dataInicio, $dataFim); // Supondo que o método diasSolicitados utilize essas variáveis
 
-        // Implementação da data de retorno prevista
-        $feria->data_retorno_prevista = $feria->calcularDataRetorno($feria->data_inicio, $diasSolicitados);
+    // Verificar dias úteis disponíveis (implementaremos essa lógica mais adiante)
 
-        $feria->save();
+    // Criação do pedido de férias
+    $feria->user_id = Auth::id();
+    $feria->responsavel_id = Auth::user()->responsavel_id; // O responsável atribuído ao usuário
+    $feria->data_inicio = $request->data_inicio;
+    $feria->data_fim = $request->data_fim;
+    $feria->status = 'pendente'; // O status será "pendente" até ser aprovado pelo responsável
 
-        // Aqui você pode implementar a notificação para o responsável
+    // Implementação da data de retorno prevista
+    $feria->data_retorno_prevista = $feria->calcularDataRetorno($feria->data_inicio, $diasSolicitados);
 
-        return redirect()->route('ferias.index')->with('success', 'Pedido de férias solicitado com sucesso!');
-    }
+    // Salvar o pedido de férias no banco de dados
+    $feria->save();
+
+    // Retornar uma resposta ou redirecionamento
+    return redirect()->route('home')->with('success', 'Férias solicitadas com sucesso!');
+}
+
 
     
 
@@ -155,5 +159,34 @@ class FeriaController extends Controller
     
         return $data->format('Y-m-d');
     }
+
+    public function aprovar($id)
+    {
+        $feria = Feria::findOrFail($id);
+
+        // Atualiza o status para aprovado
+        $feria->status = 'aprovado';
+        $feria->save();
+
+        // Remove o registro do banco de dados
+        $feria->delete();
+
+        return redirect()->route('user.pedidos')->with('success', 'Pedido de férias aprovado e excluído com sucesso.');
+    }
+
+    public function rejeitar($id)
+    {
+        $feria = Feria::findOrFail($id);
+
+        // Atualiza o status para rejeitado
+        $feria->status = 'rejeitado';
+        $feria->save();
+
+        // Remove o registro do banco de dados
+        $feria->delete();
+
+        return redirect()->route('user.pedidos')->with('success', 'Pedido de férias rejeitado e excluído com sucesso.');
+}
+
 }
 

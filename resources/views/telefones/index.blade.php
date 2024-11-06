@@ -122,7 +122,7 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form id="EditContactAjax" action="{{ route('telefones.update', ['telefone' => ':id']) }}" method="POST" enctype="multipart/form-data">
+                                <form class="formStyle" id="EditContactAjax-{{ $telefone->id }}" action="{{ route('telefones.update', ['telefone' => ':id']) }}" method="POST" enctype="multipart/form-data">
                                         @csrf
                                         @method('PUT')
                                         <div class="form-group">
@@ -177,9 +177,9 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-      </div>
+      </div>+
       <div class="modal-body">
-        <form action="{{ route('telefones.store') }}" method="POST">
+        <form id="AddContactAjax-{{ $telefone->id }}" class="formStyle" action="{{ route('telefones.store') }}" method="POST">
                 @csrf
                 <div class="form-group">
                     <label for="nome">Nome</label>
@@ -208,7 +208,7 @@
 
                 <div class="row">
                     <div class="col-12">
-                        <button type="submit" class="btn btn-primary btn-block">Adicionar Contato</button>
+                        <button type="submit" class="btnAdd">Adicionar</button>
                     </div>
                 </div>
             </form>
@@ -240,23 +240,26 @@
 
     // Quando o modal é aberto
     $('[data-toggle="modal"]').on('click', function () {
-        var button = $(this);
-        var id = button.data('id');
-        var nome = button.data('nome');
-        var departamento = button.data('departamento');
-        var funcao = button.data('funcao');
-        var telefone = button.data('telefone');
-        var email = button.data('email');
+    var button = $(this);
+    var id = button.data('id');
+    var nome = button.data('nome');
+    var departamento = button.data('departamento');
+    var funcao = button.data('funcao');
+    var telefone = button.data('telefone');
+    var email = button.data('email');
 
-        var modal = $('#EditContact-' + id);
-        
-        modal.find('#nome').val(nome);
-        modal.find('#departamento').val(departamento);
-        modal.find('#funcao').val(funcao);
-        modal.find('#telefone').val(telefone);
-        modal.find('#email').val(email);
-        modal.find('form').attr('action', '{{ url('/telefones') }}/' + id); // Atualiza a ação do formulário com o ID
-    });
+    var modal = $('#EditContact-' + id);
+    
+    modal.find('#nome').val(nome);
+    modal.find('#departamento').val(departamento);
+    modal.find('#funcao').val(funcao);
+    modal.find('#telefone').val(telefone);
+    modal.find('#email').val(email);
+    
+    // Atualiza a ação do formulário com o ID usando Blade para o URL base
+    modal.find('form').attr('action', '{{ url("/telefones") }}/' + id);
+});
+
 
     // Envio do formulário via AJAX
     $('#EditContactAjax').on('submit', function (e) {
@@ -281,6 +284,49 @@
     });
 
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+        // Seleciona todos os formulários (adicionar e editar)
+        const forms = document.querySelectorAll('form[id^="AddContactAjax"], form[id^="EditContactAjax-"]');
+
+        // Função para verificar se todos os campos obrigatórios estão preenchidos
+        function checkFormValidity(form) {
+            const inputs = form.querySelectorAll('input[required]');
+            const button = form.querySelector('.btnAdd');
+            let isValid = true;
+
+            // Verifica se todos os campos obrigatórios estão preenchidos corretamente
+            inputs.forEach(input => {
+                if (!input.value.trim() || !input.checkValidity()) {
+                    isValid = false;
+                }
+            });
+
+            // Se o formulário for válido, habilita o botão e muda a cor
+            if (isValid) {
+                button.disabled = false;
+                button.style.backgroundColor = '#009ac1'; // Cor verde
+            } else {
+                button.disabled = true;
+                button.style.backgroundColor = '#e2e2e2'; // Cor cinza (desabilitado)
+            }
+        }
+
+        // Adiciona eventos de 'input' para cada formulário
+        forms.forEach(form => {
+            // Verifica o estado do formulário ao carregar a página
+            checkFormValidity(form);
+
+            // Adiciona eventos 'input' aos campos obrigatórios de cada formulário
+            const inputs = form.querySelectorAll('input[required]');
+            inputs.forEach(input => {
+                input.addEventListener('input', function () {
+                    checkFormValidity(form);
+                });
+            });
+        });
+    });
+ 
 </script>
 <script src="{{ asset('sweetalerta/app-sweetalert.js') }}"></script>
     <script src="{{ asset('sweetalerta/sweetalert2.all.js') }}"></script>

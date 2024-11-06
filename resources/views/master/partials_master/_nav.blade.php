@@ -21,7 +21,7 @@
                 href="{{route('home')}}"><img style="position: relative; bottom: 10px;" src="{{asset('logo/img/200x70.svg')}}" alt=""></a>
             </li>
             <li class="nav-item">
-                <input class="nav-link backgroundInput" placeholder="Pesquisar" type="text">
+                <input style="position relative; left: 6.5px;" class="nav-link backgroundInput" placeholder="Pesquisar" type="text">
             </li>
         </div>
         <div class="contentLeft">
@@ -47,9 +47,9 @@
                 @else
                     <li class="nav-item">
                     <a style="padding: 0 !important; margin: 0 !important;" class="nav-link" data-toggle="dropdown">
-                        <span class="badge badge-success navbar-badge">
+                        <!-- <span class="  navbar-badge">
                             {{solicitacoes()}}
-                        </span>
+                        </span> -->
                         <img src="{{asset('logo/img/icon/Notification-button.svg')}}" alt="">
                     </a>
                 </li>

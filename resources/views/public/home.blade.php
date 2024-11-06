@@ -292,10 +292,10 @@
                                         <div class="containerBtnOpt">
                                         @can('app.dashboard')
                     
-                                            <button type="button" data-toggle="modal" data-target="#modalEdit" style="border-bottom: none;" class="btnPosts"  data-id="{{$post->id}}" data-title="{{$post->title}}" data-content="{{$post->content}}">
+                                            <button type="button" data-toggle="modal" data-target="#modalEdit" style="border-bottom: none; border-top-left-radius: 5px; border-top-right-radius: 5px;" class="btnPosts"  data-id="{{$post->id}}" data-title="{{$post->title}}" data-content="{{$post->content}}">
                                                 Editar
                                             </button>
-                                            <button type="button" class="btnPosts" onClick="deleteData({{ $post->id }})">
+                                            <button style="border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;" type="button" class="btnPosts" onClick="deleteData({{ $post->id }})">
                                                 Eliminar
                                             </button>
                                             <form id="delete-form-{{ $post->id }}"

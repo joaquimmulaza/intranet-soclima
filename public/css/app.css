@@ -34,19 +34,24 @@
     padding: 0px;
 }
 
+.header-crumb li {
+    height: 0 !important;
+    margin-bottom: 19px !important;
+}
+
 .content-header {
-    padding-top: 17px !important;
+    padding-top: 34px !important;
 }
 
 .header-crumb hr{
-    border-width: 2px;
+    border-width: 1px;
     background-color: #ABABAB !important;
 }
 
 .header-crumb .col-sm-12{
     display: flex;
     flex-direction: row;
-
+    padding-left: 0 !important;
 }
 
 .contentDatasUser{
@@ -281,6 +286,10 @@ body{
     height: 28px !important;
 }
 
+.navbar{
+    box-shadow: 0 2px 5px 0 rgb(0 0 0 / 0%), 0 2px 10px 0 rgb(0 0 0 / 15%) !important;
+}
+
 .navbar-nav{
     justify-content: space-between;
 }
@@ -362,15 +371,16 @@ body{
 }
 
 .AllpostsContainer{
-    
     margin-top: 7px;
     border-radius: 5px;
 }
 
 .postOnly{
     background-color: #ffffff;
-    margin-bottom: 7px !important;
+    margin-bottom: -3.5px;
     border-radius: 5px;
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.08);
+
 }
 
 .postContentHeader{
@@ -707,8 +717,12 @@ body{
     border: none;
     outline: none;
     outline-color: transparent;
-    color: #ABABAB;
+    color: #555;
     padding-bottom: 12px;
+}
+
+::placeholder{
+    color: #ABABAB !important;
 }
 
 .containerInputPost textarea{
@@ -1032,6 +1046,7 @@ button:active{
 
 .cardPhoneHeader input{
     text-indent: 20px;
+    font-size: 14px;
 }
 
 .cardPhoneHeader .filter{
@@ -1055,10 +1070,15 @@ button:active{
     border-radius: 5px !important;
 }
 
-#EditContactAjax label{
+.formStyle label{
     font-size: 14px;
     color: #7B7B7B;
     font-weight: 400;
+}
+
+.formStyle input{
+    font-size: 14px;
+    color: #ABABAB;
 }
 
 .btnAdd{
@@ -1075,4 +1095,101 @@ button:active{
     color: var(--M3-sys-light-on-primary, var(--Schemes-On-Primary, #FFF));
     float: right;
     font-size: var(--Label-Large-Size, 14px);
+}
+
+.ContainerFerias{
+    background-color: #fff;
+    padding: 17px 14px !important;
+    overflow: hidden;
+    border-radius: 5px;
+}
+
+.ContainerFerias .status{
+    background-color: #CDCC00;
+    color: #323200;
+    font-size: 11px !important;
+    font-weight: 600;
+    width: 62px;
+    height: 21px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+}
+
+.boxStatusFerias{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-radius: 5px;
+    border: 1px solid #ABABAB;
+    width: 1029px;
+    margin: 0 auto;
+    padding: 14px;
+}
+
+.buttons button a{
+    color: #fff;
+}
+
+.buttons button{
+    width: 167px;
+    height: 34px;
+    font-size: 14px;
+    color: #fff;
+    border: none;
+    outline: none;
+    outline-color: transparent;
+    border-radius: 5px;
+}
+
+.buttons .reject{
+    background-color: #C11700;
+}
+
+.buttons .approve{
+    background-color: #009ac1;
+    margin-right: 9px;
+}
+
+.contentboxStatus{
+    display: flex;
+    flex-direction: column;
+}
+
+.nameUser{
+    font-size: 14px;
+    font-weight: bold;
+    color: #555555;
+}
+
+.descBoxStatus{
+    font-size: 12px;
+    color: #000;
+}
+
+.imgEmptyPage{
+    padding-top: 20px;
+}
+
+.textEmptyPage{
+    text-align: center; 
+    width: 400px; 
+    margin: 0 auto;
+}
+
+.textEmptyPage{
+    padding-top: 20px;
+}
+
+.textEmptyPage h3{
+    font-size: 20px;
+    font-weight: bold;
+    color: #555;
+}
+
+.textEmptyPage p{
+    font-size: 14px;
+    color: var(--Text-highlighted, #555);
+    
 }

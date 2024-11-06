@@ -3,27 +3,85 @@
 
 @section('content')
 
+
 {{-- CABEÇALHO BREADCRUMB--}}
 <div class="content-header header-crumb">
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-12">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="{{route('home')}}">Home</a></li>
-                    <li class="breadcrumb-item active">Pedidos de férias pendentes</li>
+                  
+                    <li class="breadcrumb-item active">Gerenciar pedidos de férias</li>
                 </ol>
             </div>
         </div>
     </div>
+    <hr>
 </div>
 
-<section class="content">
     <div class="container-fluid">
-        <h3 class="text-black-50 font-weight-bold text-md-left">Gestão de pedidos de férias</h3>
+        <div >
+            <div>
+                <div>
+                    <div>
+                        @if($ferias->count() > 0)
+                            @foreach($ferias as $feria)
+                                <div class="containerPrincipal ContainerFerias">
+                                    <div class="boxStatusFerias">
+                                        <span class="status">Pendente</span>
+                                        <div class="contentboxStatus">
+                                            <span class="nameUser">
+                                                @if ($feria->user)
+                                                    {{ $feria->user->name }}
+                                                @else
+                                                    Usuário não encontrado
+                                                @endif
+                                            </span>
+                                            <span class="descBoxStatus">Solicitou férias | Aguardando resposta do chefe directo</span>
+                                        </div>
 
+                                        @if($feria->status == 'Pendente')
+                                            <div class="buttons">
+                                                {{-- Aprovar ou Rejeitar Pedido --}}
+                                                {{-- Remover o @can para testar --}}
+                                                {{-- @can('app.roles.edit') --}}
+                                                    <button class="button approve" ><a href="{{ route('ferias.aprovar', $feria->id) }}">Aprovar</a></button>
+                                                    <button class="button reject">
+                                                        <a  href="{{ route('ferias.rejeitar', $feria->id) }}">Rejeitar</a>
+                                                    </button>
+                                                {{-- @endcan --}}
+                                            </div>
+                                        @endif
+
+                                    </div>
+                                </div>
+                            @endforeach
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+                        @else
+                            <div style="text-align: center; width: 1080px; margin: 0 auto;">
+                                <div class="imgEmptyPage">
+                                    <img src="logo/img/icon/holiday_icon.svg" alt="">
+                                </div>
+                                <div class="textEmptyPage">
+                                    <h3>De momento não há solicitações de férias</h3>
+                                    <p>As solicitações de férias do departamento que você lidera serão exibidas aqui assim que forem enviadas.</p>
+                                </div>
+                            </div>
+                        @endif
+
+
+
+
+<section class="containerPrincipal" style="display: none;">
+    <div class="container-fluid">
         <div class="row">
             <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                <div class="main-card mb-3 card card-primary card-outline">
+                <div class="main-card mb-3 card card-primary">
                     <div class="table-responsive">
                         @if($ferias->count() > 0)
                             <table id="datatable" class="align-middle mb-0 table table-borderless table-striped table-hover">
@@ -41,7 +99,13 @@
                             <tbody>
                                 @foreach($ferias as $feria)
                                     <tr>
-                                        <th class="text-center">{{ $feria->user->name }}</th>
+                                        <th class="text-center">
+                                            @if ($feria->user)
+                                                {{ $feria->user->name }}
+                                            @else
+                                                Usuário não encontrado
+                                            @endif
+                                        </th>
                                         <th class="text-center">{{ $feria->data_inicio }}</th>
                                         <th class="text-center">{{ $feria->data_fim }}</th>
                                         <th class="text-center">{{ $feria->diasSolicitados() }}</th>
@@ -110,16 +174,7 @@
     </div>
 </section>
 
-<script>
-    function aprovarFeria(id) {
-        event.preventDefault();
-        document.getElementById('aprovar-form-' + id).submit();
-    }
 
-    function rejeitarFeria(id) {
-        event.preventDefault();
-        document.getElementById('rejeitar-form-' + id).submit();
-    }
-</script>
+
 
 @endsection
