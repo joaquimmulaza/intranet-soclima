@@ -5,10 +5,7 @@
         "runtime": "vercel-php@0.3.5"
       },
       "api/**/*.js": {
-        "runtime": "@vercel/node",
-        "config": {
-          "nodeVersion": "18.x"
-        }
+        "runtime": "@vercel/node-18"
       }
     },
     "routes": [
