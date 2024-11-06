@@ -18,4 +18,8 @@
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
+
+    # PHP Settings - Disable Deprecated Warnings
+    php_value error_reporting 32767
+    php_flag display_errors Off
 </IfModule>
