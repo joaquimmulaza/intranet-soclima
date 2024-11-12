@@ -80,7 +80,8 @@
                 <div class="menuOpt">
                     <a href="">Ver Perfil</a>
                     <a href="">Configurações</a>
-                    <a href="">Sair</a>
+                    <a class="{{Route::current()->getName() === 'admin.logout' ? 'active' : ''}}"
+                data-toggle="tooltip" title="Sair do sistema" href="{{route('admin.logout')}}" >Sair</a>
                 </div>
             </div>
 
