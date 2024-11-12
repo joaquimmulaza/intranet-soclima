@@ -1,7 +1,3 @@
-<style>
-    
-</style>
-
 <nav class="main-header navbar navbar-expand navbar-white heightNav justify-content-start" style="margin: 0 !important;">
 
     <!-- MENU ESQUERDO ADMINISTRATIVO -->
