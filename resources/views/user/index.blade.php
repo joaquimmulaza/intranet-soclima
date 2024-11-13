@@ -164,7 +164,7 @@
                         <!-- <button class="more-btn"  data-toggle="modal" data-target="#modalOpt-{{ $user->id }}" style="margin: 0 !important; padding: 0 !important;">⋮</button> -->
                         <div class="containerOpt" style="">
                             <button class="btnOpt"  data-toggle="modal" data-target="#modalOpt-{{ $user->id }}" style="margin: 0 !important; padding: 0 !important;">⋮</button>
-                            <div class="modal fade modalOpt" id="modalOpt-{{ $user->id }}" tabindex="-1" aria-labelledby="modalOptLabel" aria-hidden="true" data-backdrop="true" data-keyboard="true">
+                            <div class="modal fade modalOpt modalOptUsers" id="modalOpt-{{ $user->id }}" tabindex="-1" aria-labelledby="modalOptLabel" aria-hidden="true" data-backdrop="true" data-keyboard="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-body modal-bodyOpt">
@@ -247,20 +247,22 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        $('.modalOpt').on('show.bs.modal', function () {
-        $('body').addClass('modal-open-no-backdrop');
+        $('.modalOptUsers').on('show.bs.modal', function () {
+            $('body').addClass('modal-open-no-backdrop');
         });
 
-        $('.modalOpt').on('hidden.bs.modal', function () {
-            $('body').removeClass('modal-open-no-backdrop');
+        $('.modalOptUsers').on('hidden.bs.modal', function () {
+            // Não remove a classe modal-open-no-backdrop, portanto, o fundo semitransparente não será restaurado
         });
 
         $(document).on('click', function (event) {
-            const $modal = $('.modalOpt');
+            const $modal = $('.modalOptUsers');
             if ($modal.is(':visible') && !$(event.target).closest('.modal-content').length) {
                 $modal.modal('hide');
             }
         });
+
+        
     </script>
 
     <script src="{{ asset('sweetalerta/app-sweetalert.js') }}"></script>

@@ -587,20 +587,22 @@
     }
 
     // Modal Behavior
+    
+
     $('.modalOpt').on('show.bs.modal', function () {
-        $('body').addClass('modal-open-no-backdrop');
-    });
+            $('body').addClass('modal-open-no-backdrop');
+        });
 
-    $('.modalOpt').on('hidden.bs.modal', function () {
-        $('body').removeClass('modal-open-no-backdrop');
-    });
+        $('.modalOpt').on('hidden.bs.modal', function () {
+            // Não remove a classe modal-open-no-backdrop, portanto, o fundo semitransparente não será restaurado
+        });
 
-    $(document).on('click', function (event) {
-        const $modal = $('.modalOpt');
-        if ($modal.is(':visible') && !$(event.target).closest('.modal-content').length) {
-            $modal.modal('hide');
-        }
-    });
+        $(document).on('click', function (event) {
+            const $modal = $('.modalOpt');
+            if ($modal.is(':visible') && !$(event.target).closest('.modal-content').length) {
+                $modal.modal('hide');
+            }
+        });
 
     $('#modalEdit').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget);
@@ -681,6 +683,7 @@
         });
     });
 });
+
 </script>
 
     <script src="{{ asset('sweetalerta/app-sweetalert.js') }}"></script>

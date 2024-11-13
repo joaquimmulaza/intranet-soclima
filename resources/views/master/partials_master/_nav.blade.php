@@ -88,7 +88,7 @@
                         <span>{{ Auth::user()->cargo->titulo }}</span>
                     </div>
                 </div>
-                <a href="#" data-toggle="modal" data-target="#cardUserView-{{ Auth::user()->id }}" class="btn-dropdown-pressed">Meu Perfil</a>
+                <a href="#" data-toggle="modal" data-target="#cardUserViewNav-{{ Auth::user()->id }}" class="btn-dropdown-pressed">Meu Perfil</a>
                 <hr>
                 <div class="menuOpt">
                     <a href="">Configurações e privacidade</a>
@@ -97,7 +97,7 @@
                 data-toggle="tooltip" title="Sair do sistema" href="{{route('admin.logout')}}" >Sair</a>
                 </div>
 
-                <div class="modal fade cardUserView" id="cardUserView-{{ Auth::user()->id }}" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+                <div class="modal fade cardUserView" id="cardUserViewNav-{{ Auth::user()->id }}" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -229,12 +229,14 @@
     toggleDropdown('profileDropdown', 'profileDropdownToggle');
     toggleDropdown('menuDropdown', 'menuDropdownToggle');
 
-    $('.cardUserView').on('show.bs.modal', function () {
-        $('body').addClass('modal-open-no-backdrop');
+    
+
+        $('.cardUserView').on('show.bs.modal', function () {
+            $('body').addClass('modal-open-no-backdrop');
         });
 
         $('.cardUserView').on('hidden.bs.modal', function () {
-            $('body').removeClass('modal-open-no-backdrop');
+            // Não remove a classe modal-open-no-backdrop, portanto, o fundo semitransparente não será restaurado
         });
 
         $(document).on('click', function (event) {

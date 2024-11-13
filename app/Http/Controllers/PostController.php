@@ -179,7 +179,7 @@ class PostController extends Controller
             $post->delete();
 
             notify()->success("Comunicado ou evento excluído com sucesso!", "Success", "bottomRight");
-            return redirect()->route('post.all');
+            return redirect()->route('post.home');
         } catch (\Exception $e) {
             flash($e->getMessage())->warning();
             return redirect()->back();
