@@ -43,6 +43,16 @@
                         </span>
                     <img src="{{asset('logo/img/icon/Notification-button.svg')}}" alt="">
                     </a>
+                    <div class="dropdown-content" id="notificationDropdown">
+                    <h5>Notificações</h5>
+                    <hr>
+                    <div class="menuOpt">
+                        @if(solicitacoes() > 0)
+                            <a href="{{route('user.pedidos')}}"><img src="logo/img/icon/notification-icon.svg" alt="">Pedidos de Férias</a>
+                        @else
+                            <span>Sem novas notificações</span>
+                        @endif
+                    </div>
                 </li>
                 @else
                     <li class="nav-item">
@@ -71,14 +81,61 @@
                 
             </a>
             <div class="dropdown-content" id="profileDropdown">
-                <h5>Meu Perfil</h5>
+                <div class="headerDropdownProfile">
+                    <img src="{{URL::to('/')}}/public/avatar_users/{{Auth::user()->avatar}}" alt="">
+                    <div class="content-dropdown-profile">
+                        <h3>{{ Auth::user()->name }}</h3>
+                        <span>{{ Auth::user()->cargo->titulo }}</span>
+                    </div>
+                </div>
+                <a href="#" data-toggle="modal" data-target="#cardUserView-{{ Auth::user()->id }}" class="btn-dropdown-pressed">Meu Perfil</a>
                 <hr>
                 <div class="menuOpt">
-                    <a href="">Ver Perfil</a>
-                    <a href="">Configurações</a>
+                    <a href="">Configurações e privacidade</a>
+                    <a href="">Contas suspensas</a>
                     <a class="{{Route::current()->getName() === 'admin.logout' ? 'active' : ''}}"
                 data-toggle="tooltip" title="Sair do sistema" href="{{route('admin.logout')}}" >Sair</a>
                 </div>
+
+                <div class="modal fade cardUserView" id="cardUserView-{{ Auth::user()->id }}" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                
+                                <div class="modal-body">
+                                <hr>
+                                    <div class="profile d-flex align-items-center mb-3">
+                                        <div class="user-info-left">
+                                        <img src="{{URL::to('/')}}/public/avatar_users/{{$user->avatar}}" alt="Foto do perfil" style="border-radius: 50%; width: 60px; height: 60px; margin-right: 15px;">
+                                            <div>
+                                                <h4 style="padding: 0 !important; margin: 0 !important;">{{ Auth::user()->name }}</h4>
+                                                <p  style="padding: 0 !important; margin: 0 !important;">{{ Auth::user()->cargo->titulo}}</p>
+                                                <p style="padding: 0 !important; margin: 0 !important;">{{Auth::user()->unidade->titulo}}</p>
+                                            </div>
+                                        </div>
+                                            <div>
+                                                <a style="border: none;" href="{{route('user.edit', ['user' => Auth::user()->id])}}">
+                                                    <img src="logo/img/icon/icon-edit.svg" alt="">
+                                                </a>
+                                            </div>
+                                       
+                                    </div>
+                                <hr>
+                                    <div class="info-section">
+                                        <p>Data de nascimento: <span>{{date('d/m/Y', strtotime(Auth::user()->nascimento))}}</span></p>
+                                        <p>Gênero:<span>{{ Auth::user()->genero }}</span></p>
+                                        <p>Nº mecanográfico: <span>{{ Auth::user()->numero_mecanografico }}</span></p>
+                                        <p>Telefone da firma: <span>{{ Auth::user()->fone }}</span></p>
+                                        <p>E-mail: <span>{{ Auth::user()->email }}</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
             </div>
 
                 
@@ -131,17 +188,20 @@
 
 </nav>
 
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-   
-
-    // Função para controlar a exibição de um dropdown específico
+    // Função para controlar a exibição de um dropdown específico e fechar os outros abertos
     function toggleDropdown(dropdownId, toggleButtonId) {
         const dropdown = document.getElementById(dropdownId);
         const toggleButton = document.getElementById(toggleButtonId);
 
         toggleButton.addEventListener('click', function(event) {
             event.preventDefault(); // Previne comportamento padrão
+            
+            // Fecha outros dropdowns antes de abrir o atual
+            closeOtherDropdowns(dropdownId);
+
             dropdown.classList.toggle('show'); // Alterna a exibição do dropdown
         });
 
@@ -153,8 +213,34 @@
         });
     }
 
+    // Função para fechar outros dropdowns
+    function closeOtherDropdowns(currentDropdownId) {
+        const dropdowns = document.querySelectorAll('.dropdown-content'); // Seleciona todos os dropdowns
+
+        dropdowns.forEach(dropdown => {
+            if (dropdown.id !== currentDropdownId) { // Fecha apenas os dropdowns que não são o atual
+                dropdown.classList.remove('show');
+            }
+        });
+    }
+
     // Inicializa os dropdowns
     toggleDropdown('notificationDropdown', 'notificationDropdownToggle');
     toggleDropdown('profileDropdown', 'profileDropdownToggle');
     toggleDropdown('menuDropdown', 'menuDropdownToggle');
+
+    $('.cardUserView').on('show.bs.modal', function () {
+        $('body').addClass('modal-open-no-backdrop');
+        });
+
+        $('.cardUserView').on('hidden.bs.modal', function () {
+            $('body').removeClass('modal-open-no-backdrop');
+        });
+
+        $(document).on('click', function (event) {
+            const $modal = $('.cardUserView');
+            if ($modal.is(':visible') && !$(event.target).closest('.modal-content').length) {
+                $modal.modal('hide');
+            }
+        });
 </script>

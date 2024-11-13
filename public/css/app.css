@@ -65,7 +65,7 @@
     z-index: 1;
     right: 210px;
     border-radius: 5px;
-    padding: 0 25px 0  25px;
+    padding: 0 25px 0 25px;
     margin-top: 12px;
 }
 .dropdown-content a {
@@ -78,6 +78,43 @@
     border: 0.75px solid #ABABAB;
     border-radius: 5px;
     margin: 18px 0 18px 0;
+    font-weight: 700;
+}
+
+.dropdown-content a:hover{
+    color: var(--Text-highlighted, #555);
+}
+
+.content-dropdown-profile{
+    display: flex;
+    flex-direction: column;
+}
+
+.content-dropdown-profile h3{
+    font-size: 20px !important;
+    color: #009AC1;
+    font-weight: 400;
+    margin: 0 !important;
+}
+
+.content-dropdown-profile span{
+    font-size: 14px !important;
+    color: #555;
+    margin: 0 !important;
+    font-weight: 400 !important;
+}
+
+.headerDropdownProfile{
+    display: flex;
+    height: 72px;
+    gap: 12px;
+    align-items: center;
+    margin-top: 25px;
+}
+
+.headerDropdownProfile img {
+    width: 69px;
+    border-radius: 100%;
 }
 
 .dropdown-content h5{
@@ -99,6 +136,22 @@
     display: inline-block;
     margin-top: 9px;
 }
+
+.btn-dropdown-pressed{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 9px;
+    font-size: 14px;
+    color: #009AC1 !important;
+    border: 0.75px solid #009AC1 !important;
+}
+
+.btn-dropdown-pressed:hover{
+    color: #fff !important;
+    background-color: #009AC1 !important;
+}
+
 /* Exibir dropdown ao adicionar a classe .show */
 .show {
     display: block;
