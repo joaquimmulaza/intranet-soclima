@@ -6079,16 +6079,16 @@
         },
         {
             "name": "twilio/sdk",
-            "version": "8.3.3",
+            "version": "8.3.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twilio/twilio-php.git",
-                "reference": "5fae06f959653c426b040972b7a2f7679dbd5b8f"
+                "reference": "d2eba45cdc483fde10527ce44811d6bbeea3c82e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twilio/twilio-php/zipball/5fae06f959653c426b040972b7a2f7679dbd5b8f",
-                "reference": "5fae06f959653c426b040972b7a2f7679dbd5b8f",
+                "url": "https://api.github.com/repos/twilio/twilio-php/zipball/d2eba45cdc483fde10527ce44811d6bbeea3c82e",
+                "reference": "d2eba45cdc483fde10527ce44811d6bbeea3c82e",
                 "shasum": ""
             },
             "require": {
@@ -6126,9 +6126,9 @@
             ],
             "support": {
                 "issues": "https://github.com/twilio/twilio-php/issues",
-                "source": "https://github.com/twilio/twilio-php/tree/8.3.3"
+                "source": "https://github.com/twilio/twilio-php/tree/8.3.7"
             },
-            "time": "2024-10-03T15:44:20+00:00"
+            "time": "2024-10-28T12:15:00+00:00"
         },
         {
             "name": "vlucas/phpdotenv",
@@ -8378,12 +8378,12 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {},
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": "^7.2.5"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "plugin-api-version": "2.6.0"
 }

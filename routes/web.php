@@ -8,6 +8,7 @@ use \App\Http\Controllers\TelefoneController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\FeriaController;
+use App\Http\Controllers\AuthController;
 /*
 |--------------------------------------------------------------------------
 | TESTES UNIDADE - Auth::routes();
@@ -315,3 +316,5 @@ Route::get('/usuarios/{userId}/ferias', [FeriaController::class, 'showDiasFerias
     
 
 
+
+Route::get('/test-twilio', [AuthController::class, 'testTwilio'])->name('test.twilio');

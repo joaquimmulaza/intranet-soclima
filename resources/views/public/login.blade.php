@@ -26,7 +26,7 @@
 
                     <div class=" fullContainer">
                         <label for="email" class="labelLogin">ID do trabalhador</label>
-                        <input type="email" name="email" class="form-control inputLogin" >
+                        <input type="text" name="numero_mecanografico" class="form-control inputLogin" >
                         {{-- <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-user"></span>

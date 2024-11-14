@@ -1300,3 +1300,47 @@ button:active{
     color: var(--Text-highlighted, #555);
     
 }
+
+/*LISTA TELEFONICA STYLES*/
+#addContact .modal-header{
+    border-bottom: none !important;
+}
+
+#addContact label {
+    font-size: 14px;
+    font-weight: 400;
+    color: #7B7B7B;
+}
+
+.input-container {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.prefix {
+    padding: 0 10px;
+    background-color: #f9f9f9;
+    border-right: 1px solid #ccc;
+    font-size: 14px;
+    font-weight: 400;
+    color: #7B7B7B;
+    height: 38px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.input-field {
+    border: none;
+    outline: none;
+    padding: 8px;
+    flex: 1;
+    font-size: 14px;
+}
+
+.input-field::placeholder {
+    color: #bbb;
+}

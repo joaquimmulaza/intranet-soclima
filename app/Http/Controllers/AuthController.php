@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Hash;
 use Laravel\Socialite\Facades\Socialite;
 use RealRashid\SweetAlert\Facades\Alert;
 use \Illuminate\Support\Str;
+use Twilio\Rest\Client;
 
 class AuthController extends Controller
 {
@@ -85,22 +86,25 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-
-        if(!filter_var($request->email, FILTER_VALIDATE_EMAIL)){
+        // Validação simples para garantir que o número mecanográfico foi enviado
+        if (!$request->numero_mecanografico || !$request->password) {
             return redirect()->back()->withInput()
-                ->withErrors(['O email informado não é valido!']);
-        }
-         $credenciais = [
-            'email'=> $request->email,
-            'password'=> $request->password
-        ];
-        if(Auth::attempt($credenciais) && Auth::user()->status == "ativo"){
-            return redirect()->route('home');
+                ->withErrors(['O número mecanográfico e a senha são obrigatórios.']);
         }
 
-        //notify()->success("Dados informado incorretos!","error","bottomRight");
-        //return redirect()->route('admin.login');
-        return redirect()->back()->withInput()->withErrors(['O email informado não é valido!']);
+        // Definindo as credenciais para login
+        $credenciais = [
+            'numero_mecanografico' => $request->numero_mecanografico,
+            'password' => $request->password
+        ];
+
+        // Tentando autenticar o usuário
+        if (Auth::attempt($credenciais) && Auth::user()->status == "ativo") {
+            return redirect()->route('home'); // Redireciona para a página principal
+        }
+
+        // Se não conseguiu autenticar, mostra uma mensagem de erro genérica
+        return redirect()->back()->withInput()->withErrors(['Número mecanográfico ou senha incorretos!']);
     }
 
     public function logout(){
@@ -118,41 +122,83 @@ class AuthController extends Controller
         return view('public.pedido');
     }
 
+    
+
+
     public function criarNovoUsuario(Request $request)
     {
-        try{
-            $user = new User();
-            $user->name = $request->name;
-
-            $users = User::all();
-
-            foreach($users as $u){
-                if($request->email == $u->email){
-                    notify()->success("Por favor registre","Success","bottomRight");
-                    return redirect()->route('user.register');
-                }
+        try {
+            // Verifica se o email já está em uso
+            $existingUser = User::where('email', $request->email)->first();
+            if ($existingUser) {
+                notify()->error("O email já está registrado, por favor, tente outro.", "Erro", "bottomRight");
+                return redirect()->route('user.create');
             }
 
-            $user->email = $request->email;
-            $user->remember_token = Str::random(8);
-            $user->password = Hash::make($user->remember_token);
-            $user->status = "inativo";
+            // Cria o novo usuário com uma senha temporária
+            $user = new User();
+            $user->numero_mecanografico = $request->numero_mecanografico;
+            $user->name = $request->name;
+            $user->numero_bi = $request->numero_bi;
+            $user->numero_beneficiario = $request->numero_beneficiario;
+            $user->numero_contribuinte = $request->numero_contribuinte;
+            $user->data_admissao = $request->data_admissao;
+            $user->nascimento = $request->nascimento; // Utilizando 'nascimento'
             $user->role_id = 2;
             $user->cargo_id = 2;
             $user->unidade_id = 1;
+            $user->email = $request->email;
+            $user->data_emissao_bi = $request->data_emissao_bi;
+            $user->data_validade_bi = $request->data_validade_bi;
+            $user->fone = $request->fone;
+            $user->genero = $request->genero;
+            $user->responsavel_id = $request->responsavel_id;
+            $temporaryPassword = Str::random(8);  // Gera uma senha aleatória de 8 caracteres
+            $user->password = Hash::make($temporaryPassword);
+            $user->status = 'ativo';
 
+            // Salva o novo usuário
             $user->save();
-
-            return redirect()->route('user.pedido');
-
-        }catch (\Exception $e){
-            if(env('APP_DEBUG')){
-                flash($e->getMessage())->warning();
-                return redirect()->route('admin.login');
+            $phoneNumber = $user->fone;
+            if (strpos($phoneNumber, '+') !== 0) {
+                $phoneNumber = '+244' . ltrim($phoneNumber, '0'); // Adiciona o código +244 de Angola
             }
-            notify()->error("Ocorreu um erro ao tentar criar um usuário!","Error","bottomRight");
+            // Envia uma mensagem SMS com o Twilio
+            $this->sendWelcomeMessage($user, $temporaryPassword, $user->fone);
+
+            return redirect()->route('user.index');
+
+        } catch (\Exception $e) {
+            \Log::error('Erro ao criar novo usuário: ' . $e->getMessage());
+            if (env('APP_DEBUG')) {
+                flash($e->getMessage())->warning();
+                return redirect()->route('user.index');
+            }
+            notify()->error("Ocorreu um erro ao tentar criar um usuário!", "Error", "bottomRight");
             return redirect()->back();
         }
+    }
+
+    private function sendWelcomeMessage(User $user, $temporaryPassword, $phoneNumber)
+    {
+        $twilioSid = env('TWILIO_SID');
+        $twilioAuthToken = env('TWILIO_AUTH_TOKEN');
+        $twilioPhoneNumber = env('TWILIO_PHONE_NUMBER');
+
+        $client = new Client($twilioSid, $twilioAuthToken);
+
+        // Personalize a mensagem
+        $message = "Olá, {$user->name}! Bem-vindo(a)! Seu ID de acesso é {$user->numero_mecanografico} e sua senha de acesso é: {$temporaryPassword}. para alterar clique no link:";
+
+        // Envia a mensagem para o número de telefone do usuário
+        $client->messages->create(
+            $phoneNumber, // Certifique-se de que o campo 'phone' está preenchido corretamente no banco de dados
+            
+            [
+                'from' => $twilioPhoneNumber,
+                'body' => $message
+            ]
+        );
     }
 
     public function redirectToProviderFacebook()
@@ -214,6 +260,38 @@ class AuthController extends Controller
 
         return redirect()->route('admin.login.do');
     }
+
+
+    public function testTwilio()
+{
+    try {
+        $twilioSid = env('TWILIO_SID');
+        $twilioAuthToken = env('TWILIO_AUTH_TOKEN');
+        $twilioPhoneNumber = env('TWILIO_PHONE_NUMBER');
+
+        $client = new \Twilio\Rest\Client($twilioSid, $twilioAuthToken);
+
+        // Número para onde enviar a mensagem de teste
+        $toPhoneNumber = '+244923766405'; // Substitua pelo número de telefone com o código do país, exemplo: +5511999999999
+
+        // Mensagem de teste
+        $message = "Este é um teste de integração com o Twilio!";
+
+        // Envia a mensagem de teste
+        $client->messages->create(
+            $toPhoneNumber,
+            [
+                'from' => $twilioPhoneNumber,
+                'body' => $message
+            ]
+        );
+
+        return "Mensagem de teste enviada com sucesso!";
+    } catch (\Exception $e) {
+        return "Erro ao enviar a mensagem: " . $e->getMessage();
+    }
+}
+
 
     public function redirectToProviderGoogle()
     {

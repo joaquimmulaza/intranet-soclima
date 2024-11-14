@@ -170,40 +170,43 @@
 
 
 <div class="modal fade" id="addContact" tabindex="-1" aria-labelledby="createEventModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="createEventModalLabel">Criar Novo Evento</h5>
+       
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-      </div>+
+      </div>
       <div class="modal-body">
         <form id="AddContactAjax-{{ $telefone->id }}" class="formStyle" action="{{ route('telefones.store') }}" method="POST">
                 @csrf
                 <div class="form-group">
                     <label for="nome">Nome</label>
-                    <input type="text" name="nome" class="form-control" id="nome" placeholder="Informe o nome" required>
+                    <input type="text" name="nome" class="form-control" id="nome" required>
                 </div>
 
                 <div class="form-group">
                     <label for="departamento">Departamento</label>
-                    <input type="text" name="departamento" class="form-control" id="departamento" placeholder="Informe o departamento" required>
+                    <input type="text" name="departamento" class="form-control" id="departamento" required>
                 </div>
 
                 <div class="form-group">
                     <label for="funcao">Função</label>
-                    <input type="text" name="funcao" class="form-control" id="funcao" placeholder="Informe a função" required>
+                    <input type="text" name="funcao" class="form-control" id="funcao" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="telefone">Telefone</label>
-                    <input type="text" name="telefone" class="form-control" id="telefone" placeholder="Informe o telefone">
+                    <label for="telefone">Nº de telefone</label>
+                    <div class="input-container">
+                        <span class="prefix">+244</span>
+                        <input type="tel" name="telefone" class="input-field">
+                    </div>
                 </div>
 
                 <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="email" name="email" class="form-control" id="email" placeholder="Informe o email (opcional)">
+                    <input type="email" name="email" class="form-control" id="email">
                 </div>
 
                 <div class="row">
