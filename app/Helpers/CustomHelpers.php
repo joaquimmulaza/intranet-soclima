@@ -13,9 +13,11 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use \Illuminate\Support\Facades\DB;
 
-if(!function_exists('aniversariantes_mes')){
-    function aniversariantes_mes(){
-        $users = User::whereMonth('nascimento', '=', Carbon::now('m'))->get();
+if(!function_exists('aniversariantes_hoje')) {
+    function aniversariantes_hoje() {
+        $users = User::whereMonth('nascimento', '=', Carbon::now()->month)
+            ->whereDay('nascimento', '=', Carbon::now()->day)
+            ->get();
         return $users;
     }
 }
