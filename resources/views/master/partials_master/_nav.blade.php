@@ -110,7 +110,9 @@
                                 <hr>
                                     <div class="profile d-flex align-items-center mb-3">
                                         <div class="user-info-left">
-                                        <img src="{{URL::to('/')}}/public/avatar_users/{{$user->avatar}}" alt="Foto do perfil" style="border-radius: 50%; width: 60px; height: 60px; margin-right: 15px;">
+                                       
+                                        <img src="{{ URL::to('/') }}/public/avatar_users/{{ Auth::user()->avatar }}" alt="Foto do perfil" style="border-radius: 50%; width: 60px; height: 60px; margin-right: 15px;">
+
                                             <div>
                                                 <h4 style="padding: 0 !important; margin: 0 !important;">{{ Auth::user()->name }}</h4>
                                                 <p  style="padding: 0 !important; margin: 0 !important;">{{ Auth::user()->cargo->titulo}}</p>
