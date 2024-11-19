@@ -14,7 +14,8 @@ use Illuminate\Support\Facades\Hash;
 use Laravel\Socialite\Facades\Socialite;
 use RealRashid\SweetAlert\Facades\Alert;
 use \Illuminate\Support\Str;
-use Twilio\Rest\Client;
+use Vonage\Client;
+use Vonage\Client\Credentials\Basic;
 
 class AuthController extends Controller
 {
@@ -84,27 +85,47 @@ class AuthController extends Controller
         return view('public.login');
     }
 
+    // public function login(Request $request)
+    // {
+    //     // Validação simples para garantir que o número mecanográfico foi enviado
+    //     if (!$request->numero_mecanografico || !$request->password) {
+    //         return redirect()->back()->withInput()
+    //             ->withErrors(['O número mecanográfico e a senha são obrigatórios.']);
+    //     }
+
+    //     // Definindo as credenciais para login
+    //     $credenciais = [
+    //         'numero_mecanografico' => $request->numero_mecanografico,
+    //         'password' => $request->password
+    //     ];
+
+    //     // Tentando autenticar o usuário
+    //     if (Auth::attempt($credenciais) && Auth::user()->status == "ativo") {
+    //         return redirect()->route('home'); // Redireciona para a página principal
+    //     }
+
+    //     // Se não conseguiu autenticar, mostra uma mensagem de erro genérica
+    //     return redirect()->back()->withInput()->withErrors(['Número mecanográfico ou senha incorretos!']);
+    // }
+
     public function login(Request $request)
     {
-        // Validação simples para garantir que o número mecanográfico foi enviado
-        if (!$request->numero_mecanografico || !$request->password) {
+
+        if(!filter_var($request->email, FILTER_VALIDATE_EMAIL)){
             return redirect()->back()->withInput()
-                ->withErrors(['O número mecanográfico e a senha são obrigatórios.']);
+                ->withErrors(['O email informado não é valido!']);
         }
-
-        // Definindo as credenciais para login
-        $credenciais = [
-            'numero_mecanografico' => $request->numero_mecanografico,
-            'password' => $request->password
+         $credenciais = [
+            'email'=> $request->email,
+            'password'=> $request->password
         ];
-
-        // Tentando autenticar o usuário
-        if (Auth::attempt($credenciais) && Auth::user()->status == "ativo") {
-            return redirect()->route('home'); // Redireciona para a página principal
+        if(Auth::attempt($credenciais) && Auth::user()->status == "ativo"){
+            return redirect()->route('home');
         }
 
-        // Se não conseguiu autenticar, mostra uma mensagem de erro genérica
-        return redirect()->back()->withInput()->withErrors(['Número mecanográfico ou senha incorretos!']);
+        //notify()->success("Dados informado incorretos!","error","bottomRight");
+        //return redirect()->route('admin.login');
+        return redirect()->back()->withInput()->withErrors(['O email informado não é valido!']);
     }
 
     public function logout(){
@@ -126,80 +147,89 @@ class AuthController extends Controller
 
 
     public function criarNovoUsuario(Request $request)
-    {
-        try {
-            // Verifica se o email já está em uso
-            $existingUser = User::where('email', $request->email)->first();
-            if ($existingUser) {
-                notify()->error("O email já está registrado, por favor, tente outro.", "Erro", "bottomRight");
-                return redirect()->route('user.create');
-            }
-
-            // Cria o novo usuário com uma senha temporária
-            $user = new User();
-            $user->numero_mecanografico = $request->numero_mecanografico;
-            $user->name = $request->name;
-            $user->numero_bi = $request->numero_bi;
-            $user->numero_beneficiario = $request->numero_beneficiario;
-            $user->numero_contribuinte = $request->numero_contribuinte;
-            $user->data_admissao = $request->data_admissao;
-            $user->nascimento = $request->nascimento; // Utilizando 'nascimento'
-            $user->role_id = 2;
-            $user->cargo_id = 2;
-            $user->unidade_id = 1;
-            $user->email = $request->email;
-            $user->data_emissao_bi = $request->data_emissao_bi;
-            $user->data_validade_bi = $request->data_validade_bi;
-            $user->fone = $request->fone;
-            $user->genero = $request->genero;
-            $user->responsavel_id = $request->responsavel_id;
-            $temporaryPassword = Str::random(8);  // Gera uma senha aleatória de 8 caracteres
-            $user->password = Hash::make($temporaryPassword);
-            $user->status = 'ativo';
-
-            // Salva o novo usuário
-            $user->save();
-            $phoneNumber = $user->fone;
-            if (strpos($phoneNumber, '+') !== 0) {
-                $phoneNumber = '+244' . ltrim($phoneNumber, '0'); // Adiciona o código +244 de Angola
-            }
-            // Envia uma mensagem SMS com o Twilio
-            $this->sendWelcomeMessage($user, $temporaryPassword, $user->fone);
-
-            return redirect()->route('user.index');
-
-        } catch (\Exception $e) {
-            \Log::error('Erro ao criar novo usuário: ' . $e->getMessage());
-            if (env('APP_DEBUG')) {
-                flash($e->getMessage())->warning();
-                return redirect()->route('user.index');
-            }
-            notify()->error("Ocorreu um erro ao tentar criar um usuário!", "Error", "bottomRight");
-            return redirect()->back();
+{
+    try {
+        // Verifica se o email já está em uso
+        $existingUser = User::where('email', $request->email)->first();
+        if ($existingUser) {
+            notify()->error("O email já está registrado, por favor, tente outro.", "Erro", "bottomRight");
+            return redirect()->route('user.create');
         }
+
+        // Cria o novo usuário com uma senha temporária
+        $user = new User();
+        $user->numero_mecanografico = $request->numero_mecanografico;
+        $user->name = $request->name;
+        $user->numero_bi = $request->numero_bi;
+        $user->numero_beneficiario = $request->numero_beneficiario;
+        $user->numero_contribuinte = $request->numero_contribuinte;
+        $user->data_admissao = $request->data_admissao;
+        $user->nascimento = $request->nascimento; // Utilizando 'nascimento'
+        $user->role_id = 2;
+        $user->cargo_id = 2;
+        $user->unidade_id = 1;
+        $user->email = $request->email;
+        $user->data_emissao_bi = $request->data_emissao_bi;
+        $user->data_validade_bi = $request->data_validade_bi;
+        $user->fone = $request->fone;
+        $user->genero = $request->genero;
+        $user->responsavel_id = $request->responsavel_id;
+        $temporaryPassword = Str::random(8);  // Gera uma senha aleatória de 8 caracteres
+        $user->password = Hash::make($temporaryPassword);
+        $user->status = 'ativo';
+
+        // Salva o novo usuário
+        $user->save();
+
+        $phoneNumber = $user->fone;
+        if (strpos($phoneNumber, '+') !== 0) {
+            $phoneNumber = '+244' . ltrim($phoneNumber, '0'); // Adiciona o código +244 de Angola
+        }
+
+        // Envia uma mensagem SMS com o Vonage
+        $this->sendWelcomeMessage($user, $temporaryPassword, $phoneNumber);
+
+        return redirect()->route('user.index');
+
+    } catch (\Exception $e) {
+        \Log::error('Erro ao criar novo usuário: ' . $e->getMessage());
+        if (env('APP_DEBUG')) {
+            flash($e->getMessage())->warning();
+            return redirect()->route('user.index');
+        }
+        notify()->error("Ocorreu um erro ao tentar criar um usuário!", "Error", "bottomRight");
+        return redirect()->back();
     }
+}
 
-    private function sendWelcomeMessage(User $user, $temporaryPassword, $phoneNumber)
-    {
-        $twilioSid = env('TWILIO_SID');
-        $twilioAuthToken = env('TWILIO_AUTH_TOKEN');
-        $twilioPhoneNumber = env('TWILIO_PHONE_NUMBER');
+private function sendWelcomeMessage(User $user, $temporaryPassword, $phoneNumber)
+{
+    $vonageKey = env('VONAGE_API_KEY');
+    $vonageSecret = env('VONAGE_API_SECRET');
+    $vonageFrom = env('VONAGE_FROM_NUMBER', 'Vonage APIs'); // Nome ou número de origem permitido pela Vonage
 
-        $client = new Client($twilioSid, $twilioAuthToken);
+    // Personalize a mensagem
 
-        // Personalize a mensagem
-        $message = "Olá, {$user->name}! Bem-vindo(a)! Seu ID de acesso é {$user->numero_mecanografico} e sua senha de acesso é: {$temporaryPassword}. para alterar clique no link:";
+    $link = "https://cotarco.co.ao/intra-soclima";
 
-        // Envia a mensagem para o número de telefone do usuário
-        $client->messages->create(
-            $phoneNumber, // Certifique-se de que o campo 'phone' está preenchido corretamente no banco de dados
-            
-            [
-                'from' => $twilioPhoneNumber,
-                'body' => $message
-            ]
+    $message = "Olá, {$user->name},\nSeu ID de acesso é {$user->numero_mecanografico} e a sua\npalavra-passe é{$temporaryPassword}\nCaso queira alterar sua senha,\n clique no link a seguir:\n $link ";
+
+    $client = new \Vonage\Client(new \Vonage\Client\Credentials\Basic($vonageKey, $vonageSecret));
+
+    try {
+        $response = $client->sms()->send(
+            new \Vonage\SMS\Message\SMS($phoneNumber, $vonageFrom, $message)
         );
+
+        $messageStatus = $response->current()->getStatus();
+        if ($messageStatus != 0) {
+            \Log::error("Falha ao enviar SMS para {$phoneNumber}. Status: {$messageStatus}");
+        }
+    } catch (\Exception $e) {
+        \Log::error("Erro ao enviar SMS: " . $e->getMessage());
     }
+}
+
 
     public function redirectToProviderFacebook()
     {
@@ -290,6 +320,61 @@ class AuthController extends Controller
     } catch (\Exception $e) {
         return "Erro ao enviar a mensagem: " . $e->getMessage();
     }
+
+    function iniciarVerificacao($numeroTelefone) {
+        $twilioSid = getenv('TWILIO_SID');
+        $twilioAuthToken = getenv('TWILIO_AUTH_TOKEN');
+        $client = new Client($twilioSid, $twilioAuthToken);
+    
+        try {
+            // Envia o código de verificação para o número fornecido
+            $verification = $client->verify->v2->services("YOUR_VERIFICATION_SERVICE_SID")
+                ->verifications
+                ->create($numeroTelefone, "sms");
+    
+            return $verification->sid;
+        } catch (\Exception $e) {
+            echo "Erro ao iniciar a verificação: " . $e->getMessage();
+            return null;
+        }
+    }
+
+    function confirmarVerificacao($numeroTelefone, $codigoVerificacao) {
+        $twilioSid = getenv('TWILIO_SID');
+        $twilioAuthToken = getenv('TWILIO_AUTH_TOKEN');
+        $client = new Client($twilioSid, $twilioAuthToken);
+    
+        try {
+            // Verifica o código de verificação
+            $verificationCheck = $client->verify->v2->services("YOUR_VERIFICATION_SERVICE_SID")
+                ->verificationChecks
+                ->create([
+                    "to" => $numeroTelefone,
+                    "code" => $codigoVerificacao
+                ]);
+    
+            return $verificationCheck->status === "approved";
+        } catch (\Exception $e) {
+            echo "Erro ao confirmar a verificação: " . $e->getMessage();
+            return false;
+        }
+    }
+    
+    $numero = "+244923766405";
+    $verificacaoSid = iniciarVerificacao($numero);
+    if ($verificacaoSid) {
+        echo "Código de verificação enviado para " . $numero;
+    }
+
+    $codigo = "123456";  // Código de verificação recebido
+    $resultado = confirmarVerificacao($numero, $codigo);
+
+    if ($resultado) {
+        echo "Número verificado com sucesso!";
+    } else {
+        echo "Falha na verificação do número.";
+    }
+
 }
 
 

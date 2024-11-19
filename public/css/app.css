@@ -1000,9 +1000,61 @@ button:active{
     cursor: pointer;
 }
 
+.btnCardUser{
+    padding-top: 35px;
+    display: flex;
+    gap: 20px;
+}
+
+.btnCardUser button{
+    width: 169px;
+    height: 29px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.btnCardUser button:first-of-type{
+    background-color: #009AC1;
+    color: #fff;
+    border: none;
+    outline: none;
+    outline-color: #009AC1;
+    border-radius: 5px;
+}
+
+.btnCardUser button:nth-of-type(2) {
+    background-color: #fff;
+    border: 1px solid #009AC1;
+    border-radius: 5px;
+    outline: none;
+    outline-color: #009AC1;
+    color: #009AC1;
+}
+
+.outrosDados{
+    background-color: #fff;
+    border: none;
+    color: #555;
+    font-size: 14px;
+    font-weight: 700;
+    outline: none;
+    outline-color: #fff;
+}
 
 .cardUserView .modal-header{
     border-bottom: none !important;
+    background: linear-gradient(91deg, #009AC1 0.77%, #CDCC00 156.69%);
+    height: 102px;
+    border-top-left-radius: 5px !important;
+    border-top-right-radius: 5px !important;
+}
+
+.cardUserView .modal-header .close {
+    font-size: 30px;
+    color: #fff !important;
 }
 
 .cardUserView hr{
@@ -1010,9 +1062,9 @@ button:active{
 }
 
 .cardUserView h4{
-    color: #009ac1 !important;
-    font-size: 20px !important;
-    font-weight: bold;
+    color: #555 !important;
+    font-size: 21.42px;
+    font-weight: 700;
 }
 
 .cardUserView  .profile p{
@@ -1024,6 +1076,37 @@ button:active{
 .cardUserView .modal-dialog{
     max-width: 537px !important;
     box-shadow: none !important;
+}
+
+.dadosPessoais{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+    margin-bottom: 28px;
+}
+
+.size-g-icon{
+    width: 28px;
+}
+
+.dadosPessoais div{
+    width: 179px;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 9px;
+}
+
+.dadosPessoais div span{
+    font-size: 14px !important;
+    color: #555 !important;
+    display: inline-block;
+    font-weight: 700;
+}
+
+.info-section{
+    padding-top: 35px;
 }
 
 .info-section p{ 
@@ -1041,15 +1124,49 @@ button:active{
     font-weight: 600;
 }
 
+.modal-header-center{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    margin: 0 auto !important;
+    left: 0;
+    right: 0;
+    padding-top: 18px;
+}
+
+.modal-header-center img{
+    border-radius: 50%;
+    width: 130.917px; 
+    border: 2px solid #fff;
+}
+
 .user-info-left{
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    flex-direction: column;
     align-items: center;
+
+}
+
+.user-info-left div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }
 
 .profile{
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    padding-top: 80px;
+    position: relative;
+    justify-content: center;
+}
+
+.divBtnEdit {
+    position: absolute;
+    right: 0;
 }
 
 .cardUserView .modal-body{

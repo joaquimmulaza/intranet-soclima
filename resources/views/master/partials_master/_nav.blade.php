@@ -97,7 +97,7 @@
                 data-toggle="tooltip" title="Sair do sistema" href="{{route('admin.logout')}}" >Sair</a>
                 </div>
 
-                <div class="modal fade cardUserView" id="cardUserViewNav-{{ Auth::user()->id }}" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+                <div class="modal fade cardUserView" id="" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -142,6 +142,130 @@
 
                 
             </li>
+
+            <div class="modal fade cardUserView escurecer" id="cardUserViewNav-{{ Auth::user()->id }}" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true" data-dismiss="modal">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <div class="modal-header-center">
+                                        <img src="{{URL::to('/')}}/public/avatar_users/{{Auth::user()->avatar}}" alt="Foto do perfil">
+                                    </div>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                                        <span aria-hidden="true"><img src="logo/img/icon/clear.svg" alt=""></span>
+                                    </button>
+                                </div>
+                               
+                                <div class="modal-body">
+                                    <div class="profile d-flex align-items-center mb-3">
+                                        <div class="user-info-left">
+                                            
+                                            <div>
+                                                <h4 style="padding: 0 !important; margin: 0 !important;">{{ Auth::user()->name }}</h4>
+                                                <p  style="padding: 0 !important; margin: 0 !important;">{{ Auth::user()->cargo->titulo}}</p>
+                                                
+                                            </div>
+                                        </div>
+                                        <div class="divBtnEdit">
+                                            <a href="{{ route('user.edit', ['user' => Auth::user()->id]) }}">
+                                                <img src="logo/img/icon/icon-edit.svg" alt="">
+                                            </a>
+                                        </div>
+                                       
+                                    </div>
+                                    <hr style="width: 537px; position: absolute; left: 0; right: 0; background-color: #cecece !important;">
+
+                                    <div class="btnCardUser">
+                                        <button>Dados deste perfil</button>
+                                        <button>Publicações</button>
+                                    </div>
+                                    <div class="info-section">
+                                        <div class="dadosPessoais">
+                                            <div>
+                                                <img class="size-g-icon"{{ asset('logo/img/icon/cake.svg') }}" alt="">
+                                                <span class="">Data de nascimento:</span>
+                                            </div>
+                                            <span>{{date('d/m/Y', strtotime(Auth::user()->nascimento))}}</span>
+                                        </div>
+                                        <div class="dadosPessoais">
+                                            <div>
+                                                <img class="size-g-icon" src="logo/img/icon/gender.svg" alt="">
+                                                <span>Gênero:</span>
+                                            </div>
+                                            <span>{{ Auth::user()->genero }}</span>
+                                        </div>
+                                        <div class="dadosPessoais">
+                                            <div>
+                                                <img class="size-g-icon" src="logo/img/icon/eventIcon.svg" alt="">
+                                                <span>Data de admissão:</span>
+                                            </div>
+                                            <span>{{date('d/m/Y', strtotime(Auth::user()->data_admissao))}}</span>
+                                        </div>
+                                        <div class="dadosPessoais">
+                                            <div>
+                                                <img class="size-g-icon" src="logo/img/icon/call.svg" alt="">
+                                                <span>Telemóvel da firma</span>
+                                            </div>
+                                            <span></span>
+                                        </div>
+                                        <div class="dadosPessoais">
+                                            <div>
+                                                <img class="size-g-icon" src="logo/img/icon/call.svg" alt="">
+                                                <span>Telemóvel pessoal:</span>
+                                            </div>
+                                            <span>{{ Auth::user()->fone }}</span>
+                                        </div>
+                                        <div class="dadosPessoais">
+                                            <div>
+                                                <img class="size-g-icon" src="logo/img/icon/mail.svg" alt="">
+                                                <span>E-mail</span>
+                                            </div>
+                                            <span>{{ Auth::user()->email }}</span>
+                                        </div>
+                                        
+                                        <div class="dadosPessoais">
+                                            <div>
+                                                <img class="size-g-icon" src="logo/img/icon/numbers.svg" alt="">
+                                                <span class="">Nº mecanográfico:</span>
+                                            </div>
+                                            <span>{{ Auth::user()->numero_mecanografico }}</span>
+                                        </div>
+                                        <div class="dadosPessoais" style="display: none;">
+                                            <div>
+                                                <button class="btn-link" data-toggle="modal" data-target="#outrosDadosModal-{{ Auth::user()->id }}" data-dismiss="modal">Outros dados</button>
+                                            </div>
+                                            <span><img src="logo/img/icon/chevron_right.svg" alt=""></span>
+                                        </div>
+                                        <div class="modal fade" id="outrosDadosModal-{{ Auth::user()->id }}" tabindex="-1" aria-labelledby="outrosDadosLabel" aria-hidden="true" data-parent-modal="cardUserView-{{ Auth::user()->id }}">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">Outros Dados</h5>
+                                                        <button type="button" class="close" aria-label="Fechar">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <!-- Conteúdo do Modal -->
+                                                        <p>Informações adicionais do usuário aqui.</p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#cardUserView-{{ Auth::user()->id }}" data-dismiss="modal">
+                                                            Voltar
+                                                        </button>
+                                                        <button type="button" class="btn btn-danger" data-dismiss="modal">
+                                                            Fechar Todos
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                       
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
             <span><img src="{{asset('logo/img/icon/line-1.svg')}}" alt=""></span>
             @can('app.dashboard')
             <li class="nav-item btnCadastrar">

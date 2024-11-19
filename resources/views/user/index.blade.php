@@ -196,40 +196,124 @@
                         </div>
                     </div>
 
-                    <div class="modal fade cardUserView escurecer" id="cardUserView-{{ $user->id }}" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+                    <div class="modal fade cardUserView escurecer" id="cardUserView-{{ $user->id }}" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true" data-dismiss="modal">
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
                                 <div class="modal-header">
+                                    <div class="modal-header-center">
+                                        <img src="{{URL::to('/')}}/public/avatar_users/{{$user->avatar}}" alt="Foto do perfil">
+                                    </div>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
-                                        <span aria-hidden="true">&times;</span>
+                                        <span aria-hidden="true"><img src="logo/img/icon/clear.svg" alt=""></span>
                                     </button>
                                 </div>
-                                
+                               
                                 <div class="modal-body">
-                                <hr>
                                     <div class="profile d-flex align-items-center mb-3">
                                         <div class="user-info-left">
-                                        <img src="{{URL::to('/')}}/public/avatar_users/{{$user->avatar}}" alt="Foto do perfil" style="border-radius: 50%; width: 60px; height: 60px; margin-right: 15px;">
+                                            
                                             <div>
                                                 <h4 style="padding: 0 !important; margin: 0 !important;">{{ $user->name }}</h4>
                                                 <p  style="padding: 0 !important; margin: 0 !important;">{{ $user->cargo->titulo}}</p>
-                                                <p style="padding: 0 !important; margin: 0 !important;">{{$user->unidade->titulo}}</p>
+                                                <!-- <p style="padding: 0 !important; margin: 0 !important;">{{$user->unidade->titulo}}</p> -->
                                             </div>
                                         </div>
-                                            <div>
-                                                <a href="{{route('user.edit', ['user' => $user->id])}}">
-                                                    <img src="logo/img/icon/icon-edit.svg" alt="">
-                                                </a>
-                                            </div>
+                                        <div class="divBtnEdit">
+                                            <a href="{{route('user.edit', ['user' => $user->id])}}">
+                                                <img src="logo/img/icon/icon-edit.svg" alt="">
+                                            </a>
+                                        </div>
                                        
                                     </div>
-                                <hr>
+                                    <hr style="width: 537px; position: absolute; left: 0; right: 0; background-color: #cecece !important;">
+
+                                    <div class="btnCardUser">
+                                        <button>Dados deste perfil</button>
+                                        <button>Publicações</button>
+                                    </div>
                                     <div class="info-section">
-                                        <p>Data de nascimento: <span>{{date('d/m/Y', strtotime($user->nascimento))}}</span></p>
-                                        <p>Gênero:<span>{{ $user->genero }}</span></p>
-                                        <p>Nº mecanográfico: <span>{{ $user->numero_mecanografico }}</span></p>
-                                        <p>Telefone da firma: <span>{{ $user->fone }}</span></p>
-                                        <p>E-mail: <span>{{ $user->email }}</span></p>
+                                        <div class="dadosPessoais">
+                                            <div>
+                                                <img class="size-g-icon" src="logo/img/icon/cake.svg" alt="">
+                                                <span class="">Data de nascimento:</span>
+                                            </div>
+                                            <span>{{date('d/m/Y', strtotime($user->nascimento))}}</span>
+                                        </div>
+                                        <div class="dadosPessoais">
+                                            <div>
+                                                <img class="size-g-icon" src="logo/img/icon/gender.svg" alt="">
+                                                <span>Gênero:</span>
+                                            </div>
+                                            <span>{{ $user->genero }}</span>
+                                        </div>
+                                        <div class="dadosPessoais">
+                                            <div>
+                                                <img class="size-g-icon" src="logo/img/icon/eventIcon.svg" alt="">
+                                                <span>Data de admissão:</span>
+                                            </div>
+                                            <span>{{date('d/m/Y', strtotime($user->data_admissao))}}</span>
+                                        </div>
+                                        <div class="dadosPessoais">
+                                            <div>
+                                                <img class="size-g-icon" src="logo/img/icon/call.svg" alt="">
+                                                <span>Telemóvel da firma</span>
+                                            </div>
+                                            <span></span>
+                                        </div>
+                                        <div class="dadosPessoais">
+                                            <div>
+                                                <img class="size-g-icon" src="logo/img/icon/call.svg" alt="">
+                                                <span>Telemóvel pessoal:</span>
+                                            </div>
+                                            <span>{{ $user->fone }}</span>
+                                        </div>
+                                        <div class="dadosPessoais">
+                                            <div>
+                                                <img class="size-g-icon" src="logo/img/icon/mail.svg" alt="">
+                                                <span>E-mail</span>
+                                            </div>
+                                            <span>{{ $user->email }}</span>
+                                        </div>
+                                        
+                                        <div class="dadosPessoais">
+                                            <div>
+                                                <img class="size-g-icon" src="logo/img/icon/numbers.svg" alt="">
+                                                <span class="">Nº mecanográfico:</span>
+                                            </div>
+                                            <span>{{ $user->numero_mecanografico }}</span>
+                                        </div>
+                                        <div class="dadosPessoais" style="display: none;">
+                                            <div>
+                                                <button class="btn-link" data-toggle="modal" data-target="#outrosDadosModal-{{ $user->id }}" data-dismiss="modal">Outros dados</button>
+                                            </div>
+                                            <span><img src="logo/img/icon/chevron_right.svg" alt=""></span>
+                                        </div>
+                                        <div class="modal fade" id="outrosDadosModal-{{ $user->id }}" tabindex="-1" aria-labelledby="outrosDadosLabel" aria-hidden="true" data-parent-modal="cardUserView-{{ $user->id }}">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">Outros Dados</h5>
+                                                        <button type="button" class="close" aria-label="Fechar">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <!-- Conteúdo do Modal -->
+                                                        <p>Informações adicionais do usuário aqui.</p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#cardUserView-{{ $user->id }}" data-dismiss="modal">
+                                                            Voltar
+                                                        </button>
+                                                        <button type="button" class="btn btn-danger" data-dismiss="modal">
+                                                            Fechar Todos
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                       
                                     </div>
                                 </div>
                             </div>
@@ -246,6 +330,7 @@
     </section>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+
     <script>
         $('.modalOptUsers').on('show.bs.modal', function () {
             $('body').addClass('modal-open-no-backdrop');
@@ -262,10 +347,16 @@
             }
         });
 
-        
+        // $(document).on('hidden.bs.modal', function (e) {
+        //     if ($('.modal.show').length) {
+        //         $('body').addClass('modal-open');
+        //     }
+        // });
+
+
     </script>
 
     <script src="{{ asset('sweetalerta/app-sweetalert.js') }}"></script>
     <script src="{{ asset('sweetalerta/sweetalert2.all.js') }}"></script>
-
+    
 @endsection

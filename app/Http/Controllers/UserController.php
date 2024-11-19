@@ -23,7 +23,9 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
-
+use \Illuminate\Support\Str;
+use Vonage\Client;
+use Vonage\Client\Credentials\Basic;
 
 class UserController extends Controller
 {
@@ -120,6 +122,12 @@ class UserController extends Controller
     public function store(Request $request)
     {
         try{
+            // Verifica se o email já está em uso
+            $existingUser = User::where('email', $request->email)->first();
+            if ($existingUser) {
+                notify()->error("O email já está registrado, por favor, tente outro.", "Erro", "bottomRight");
+                return redirect()->route('user.create');
+            }
             $user = new User();
             $user->numero_mecanografico = $request->numero_mecanografico;
             $user->name = $request->name;
@@ -136,7 +144,8 @@ class UserController extends Controller
             $user->fone = $request->fone;
             $user->genero = $request->genero;
             $user->responsavel_id = $request->responsavel_id;
-            $user->password = Hash::make($request->password);
+            $temporaryPassword = Str::random(8);
+            $user->password = Hash::make($temporaryPassword);
             $user->status = 'ativo';
 
             $cargo = Cargo::find($request->cargo);
@@ -149,7 +158,7 @@ class UserController extends Controller
             $user->role_id = $role->id;
 
 
-            $user->nascimento = $request->nascimento;
+            // $user->nascimento = $request->nascimento;
 
             // $user->state_civil = $request->stateCivil;
             // $user->formacao = $request->formacao;
@@ -166,7 +175,11 @@ class UserController extends Controller
 
             $user->save();
             // dd('SALVO USER');
-
+            $phoneNumber = $user->fone;
+            if (strpos($phoneNumber, '+') !== 0) {
+                $phoneNumber = '+244' . ltrim($phoneNumber, '0'); // Adiciona o código +244 de Angola
+            }
+            $this->sendWelcomeMessage($user, $temporaryPassword, $phoneNumber);
 
             notify()->success("Usuário criado com sucesso!","Success","bottomRight");
             return redirect()->route('user.index');
@@ -179,6 +192,34 @@ class UserController extends Controller
             }
             notify()->error("Ocorreu um erro ao tentar criar um usuário!","Error","bottomRight");
             return redirect()->back();
+        }
+    }
+
+    private function sendWelcomeMessage(User $user, $temporaryPassword, $phoneNumber)
+    {
+        $vonageKey = env('VONAGE_API_KEY');
+        $vonageSecret = env('VONAGE_API_SECRET');
+        $vonageFrom = env('VONAGE_FROM_NUMBER', 'Vonage APIs'); // Nome ou número de origem permitido pela Vonage
+
+        // Personalize a mensagem
+
+        $link = "https://cotarco.co.ao/intra-soclima";
+
+        $message = "Olá, {$user->name},\nSeu ID de acesso é {$user->numero_mecanografico} e a sua\npalavra-passe é{$temporaryPassword}\nCaso queira alterar sua senha,\n clique no link a seguir:\n $link ";
+
+        $client = new \Vonage\Client(new \Vonage\Client\Credentials\Basic($vonageKey, $vonageSecret));
+
+        try {
+            $response = $client->sms()->send(
+                new \Vonage\SMS\Message\SMS($phoneNumber, $vonageFrom, $message)
+            );
+
+            $messageStatus = $response->current()->getStatus();
+            if ($messageStatus != 0) {
+                \Log::error("Falha ao enviar SMS para {$phoneNumber}. Status: {$messageStatus}");
+            }
+        } catch (\Exception $e) {
+            \Log::error("Erro ao enviar SMS: " . $e->getMessage());
         }
     }
 
@@ -214,7 +255,7 @@ class UserController extends Controller
         $user->status = $request->status;
         $user->save();
         notify()->success("Usuário editado com sucesso!","Success","bottomRight");
-        return redirect()->route('user.index');
+        return redirect()->route('home');
     }
 
     public function update(Request $request, User $user)
@@ -228,7 +269,7 @@ class UserController extends Controller
             $user->numero_beneficiario = $request->numero_beneficiario;
             $user->numero_contribuinte = $request->numero_contribuinte;
             $user->data_admissao = $request->data_admissao;
-            
+            $user->nascimento = $request->nascimento;
             $user->data_emissao_bi = $request->data_emissao_bi;
             $user->data_validade_bi = $request->data_validade_bi;
             $user->fone = $request->fone;
@@ -250,7 +291,6 @@ class UserController extends Controller
                 $role = Role::find($request->role);
                 $user->role_id = $role->id;
             }
-            $user->nascimento = $request->nascimento;
             
             // $user->state_civil = $request->stateCivil;
             // $user->formacao = $request->formacao;
@@ -277,7 +317,7 @@ class UserController extends Controller
             $user->save();
 
             notify()->success("Usuário editado com sucesso!","Success","bottomRight");
-            return redirect()->route('user.show', compact('user'));
+            return redirect()->route('user.index', compact('user'));
 
         }catch (\Exception $e){
             if(env('APP_DEBUG')){

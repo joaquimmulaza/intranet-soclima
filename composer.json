@@ -24,7 +24,8 @@
         "maatwebsite/excel": "^3.1",
         "phpmailer/phpmailer": "^6.4",
         "realrashid/sweet-alert": "^3.1",
-        "twilio/sdk": "^8.3"
+        "twilio/sdk": "^8.3",
+        "vonage/client": "^2.3"
     },
     "require-dev": {
         "facade/ignition": "^2.0",
