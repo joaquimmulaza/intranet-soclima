@@ -85,48 +85,48 @@ class AuthController extends Controller
         return view('public.login');
     }
 
-    // public function login(Request $request)
-    // {
-    //     // Validação simples para garantir que o número mecanográfico foi enviado
-    //     if (!$request->numero_mecanografico || !$request->password) {
-    //         return redirect()->back()->withInput()
-    //             ->withErrors(['O número mecanográfico e a senha são obrigatórios.']);
-    //     }
-
-    //     // Definindo as credenciais para login
-    //     $credenciais = [
-    //         'numero_mecanografico' => $request->numero_mecanografico,
-    //         'password' => $request->password
-    //     ];
-
-    //     // Tentando autenticar o usuário
-    //     if (Auth::attempt($credenciais) && Auth::user()->status == "ativo") {
-    //         return redirect()->route('home'); // Redireciona para a página principal
-    //     }
-
-    //     // Se não conseguiu autenticar, mostra uma mensagem de erro genérica
-    //     return redirect()->back()->withInput()->withErrors(['Número mecanográfico ou senha incorretos!']);
-    // }
-
     public function login(Request $request)
     {
-
-        if(!filter_var($request->email, FILTER_VALIDATE_EMAIL)){
+        // Validação simples para garantir que o número mecanográfico foi enviado
+        if (!$request->numero_mecanografico || !$request->password) {
             return redirect()->back()->withInput()
-                ->withErrors(['O email informado não é valido!']);
-        }
-         $credenciais = [
-            'email'=> $request->email,
-            'password'=> $request->password
-        ];
-        if(Auth::attempt($credenciais) && Auth::user()->status == "ativo"){
-            return redirect()->route('home');
+                ->withErrors(['O número mecanográfico e a senha são obrigatórios.']);
         }
 
-        //notify()->success("Dados informado incorretos!","error","bottomRight");
-        //return redirect()->route('admin.login');
-        return redirect()->back()->withInput()->withErrors(['O email informado não é valido!']);
+        // Definindo as credenciais para login
+        $credenciais = [
+            'numero_mecanografico' => $request->numero_mecanografico,
+            'password' => $request->password
+        ];
+
+        // Tentando autenticar o usuário
+        if (Auth::attempt($credenciais) && Auth::user()->status == "ativo") {
+            return redirect()->route('home'); // Redireciona para a página principal
+        }
+
+        // Se não conseguiu autenticar, mostra uma mensagem de erro genérica
+        return redirect()->back()->withInput()->withErrors(['Número mecanográfico ou senha incorretos!']);
     }
+
+    // public function login(Request $request)
+    // {
+
+    //     if(!filter_var($request->email, FILTER_VALIDATE_EMAIL)){
+    //         return redirect()->back()->withInput()
+    //             ->withErrors(['O email informado não é valido!']);
+    //     }
+    //      $credenciais = [
+    //         'email'=> $request->email,
+    //         'password'=> $request->password
+    //     ];
+    //     if(Auth::attempt($credenciais) && Auth::user()->status == "ativo"){
+    //         return redirect()->route('home');
+    //     }
+
+    //     //notify()->success("Dados informado incorretos!","error","bottomRight");
+    //     //return redirect()->route('admin.login');
+    //     return redirect()->back()->withInput()->withErrors(['O email informado não é valido!']);
+    // }
 
     public function logout(){
         Auth::logout();
