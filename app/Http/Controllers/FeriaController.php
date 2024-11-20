@@ -48,8 +48,8 @@ class FeriaController extends Controller
     // Criação do pedido de férias
     $feria->user_id = Auth::id();
     $feria->responsavel_id = Auth::user()->responsavel_id; // O responsável atribuído ao usuário
-    $feria->data_inicio = $request->data_inicio;
-    $feria->data_fim = $request->data_fim;
+    $feria->data_inicio = $dataInicio; // Usando a variável processada
+    $feria->data_fim = $dataFim;       // Usando a variável processada
     $feria->status = 'pendente'; // O status será "pendente" até ser aprovado pelo responsável
 
     // Implementação da data de retorno prevista
@@ -58,9 +58,20 @@ class FeriaController extends Controller
     // Salvar o pedido de férias no banco de dados
     $feria->save();
 
+    // **Criar uma notificação para o responsável**
+    $notificationController = app(NotificationController::class);
+    $notificationController->criar(
+        'pedido_ferias',
+        'Novo Pedido de Férias',
+        Auth::user()->name . ' solicitou férias para o período de ' . $dataInicio->format('d/m/Y') . ' a ' . $dataFim->format('d/m/Y') . '.', // Agora usa $dataInicio e $dataFim
+        route('user.pedidos'),
+        $feria->responsavel_id
+    );
+
     // Retornar uma resposta ou redirecionamento
     return redirect()->route('home')->with('success', 'Férias solicitadas com sucesso!');
 }
+
 
 
     
@@ -171,6 +182,15 @@ class FeriaController extends Controller
         // Remove o registro do banco de dados
         $feria->delete();
 
+        NotificationController::criar(
+            'aprovacao_pedido',
+            'Pedido de Férias Aprovado',
+            'Seu pedido de férias foi aprovado!',
+            route('user.pedidos'),
+            $user->id // ID do usuário que fez o pedido
+        );
+        
+
         return redirect()->route('user.pedidos')->with('success', 'Pedido de férias aprovado e excluído com sucesso.');
     }
 
@@ -186,6 +206,7 @@ class FeriaController extends Controller
         $feria->delete();
 
         return redirect()->route('user.pedidos')->with('success', 'Pedido de férias rejeitado e excluído com sucesso.');
+        
 }
 
 }

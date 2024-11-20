@@ -35,46 +35,40 @@
             </li>
             
             
-            @if(solicitacoes() > 0)
-                <li class="nav-item">
-                    <a style="padding: 0 !important; margin: 0 !important;" class="nav-link" href="{{route('user.pedidos')}}"> {{-- Redirecionar para a página de pedidos de férias --}}
-                        <span class="badge shapeNotification navbar-badge">
-                            {{solicitacoes()}}
-                        </span>
-                    <img src="{{asset('logo/img/icon/Notification-button.svg')}}" alt="">
+            <li class="nav-item">
+    <a style="padding: 0 !important; margin: 0 !important;" 
+       class="nav-link notificacao" 
+       data-toggle="dropdown" 
+       id="notificationDropdownToggle">
+        <!-- Shape de notificação -->
+        @if(auth()->check() && ($notificacoes ?? collect())->count() > 0)
+            <span class="badge shapeNotification navbar-badge">
+                {{ $notificacoes->count() }}
+            </span>
+        @endif
+        <img src="{{ asset('logo/img/icon/Notification-button.svg') }}" alt="Ícone Notificação" 
+             id="notificationIcon">
+    </a>
+    <div class="dropdown-content" id="notificationDropdown">
+        <h5>Notificações</h5>
+        <hr>
+        <div class="menuOpt">
+            @if($notificacoes->count() > 0)
+                @foreach($notificacoes as $notification_user)
+                    <a href="{{ $notification_user->rota ?? '#' }}" 
+                       onclick="markAsRead('{{ $notification_user->id }}')">
+                        <img src="{{ asset('logo/img/icon/notification-icon.svg') }}" alt="Ícone Notificação">
+                        <strong>{{ $notification_user->titulo }}</strong>
+                        <p>{{ $notification_user->descricao }}</p>
                     </a>
-                    <div class="dropdown-content" id="notificationDropdown">
-                    <h5>Notificações</h5>
-                    <hr>
-                    <div class="menuOpt">
-                        @if(solicitacoes() > 0)
-                            <a href="{{route('user.pedidos')}}"><img src="logo/img/icon/notification-icon.svg" alt="">Pedidos de Férias</a>
-                        @else
-                            <span>Sem novas notificações</span>
-                        @endif
-                    </div>
-                </li>
-                @else
-                    <li class="nav-item">
-                    <a style="padding: 0 !important; margin: 0 !important;" class="nav-link notificacao" data-toggle="dropdown" id="notificationDropdownToggle">
-                        <!-- <span class="  navbar-badge">
-                            {{solicitacoes()}}
-                        </span> -->
-                        <img src="{{asset('logo/img/icon/Notification-button.svg')}}" alt="">
-                    </a>
-                    <div class="dropdown-content" id="notificationDropdown">
-                    <h5>Notificações</h5>
-                    <hr>
-                    <div class="menuOpt">
-                        @if(solicitacoes() > 0)
-                            <a href="{{route('user.pedidos')}}"><img src="logo/img/icon/notification-icon.svg" alt="">Pedidos de Férias</a>
-                        @else
-                            <span>Sem novas notificações</span>
-                        @endif
-                    </div>
-                </div>
-                </li>
-            @endcan
+                @endforeach
+            @else
+                <span>Sem novas notificações</span>
+            @endif
+        </div>
+    </div>
+</li>
+
             <li class="nav-item">
                 <a style="padding: 0 !important; margin: 0 !important;" class="nav-link myProfile"
                 href="#" class="nav-link"><img src="{{asset('logo/img/icon/user-avatar.svg')}}" alt="" id="profileDropdownToggle">

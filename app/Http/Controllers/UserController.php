@@ -144,9 +144,9 @@ class UserController extends Controller
             $user->fone = $request->fone;
             $user->genero = $request->genero;
             $user->responsavel_id = $request->responsavel_id;
-            $temporaryPassword = Str::random(8);
-            $user->password = Hash::make($temporaryPassword);
             $user->status = 'ativo';
+            $temporaryPassword = Str::random(8); // Gera a senha temporária
+            $user->password = Hash::make($temporaryPassword); // Criptografa a senha
 
             $cargo = Cargo::find($request->cargo);
             $user->cargo_id = $cargo->id;
@@ -156,6 +156,7 @@ class UserController extends Controller
 
             $role = Role::find($request->role);
             $user->role_id = $role->id;
+
 
 
             // $user->nascimento = $request->nascimento;
@@ -205,10 +206,10 @@ class UserController extends Controller
 
         $link = "https://cotarco.co.ao/intra-soclima";
 
-        $message = "Olá, {$user->name},\nSeu ID de acesso é {$user->numero_mecanografico} e a sua\npalavra-passe é{$temporaryPassword}\nCaso queira alterar sua senha,\n clique no link a seguir:\n $link ";
+        $message = "Olá, {$user->name},\nSeu ID de acesso é {$user->numero_mecanografico} e a sua\npalavra-passe é {$temporaryPassword}\nCaso queira alterar sua senha,\nclique no link a seguir:\n$link ";
 
         $client = new \Vonage\Client(new \Vonage\Client\Credentials\Basic($vonageKey, $vonageSecret));
-
+ 
         try {
             $response = $client->sms()->send(
                 new \Vonage\SMS\Message\SMS($phoneNumber, $vonageFrom, $message)

@@ -85,7 +85,7 @@ class AuthController extends Controller
         return view('public.login');
     }
 
-    public function login(Request $request)
+    public function login(Request $request) 
     {
         // Validação simples para garantir que o número mecanográfico foi enviado
         if (!$request->numero_mecanografico || !$request->password) {
@@ -93,20 +93,19 @@ class AuthController extends Controller
                 ->withErrors(['O número mecanográfico e a senha são obrigatórios.']);
         }
 
-        // Definindo as credenciais para login
-        $credenciais = [
-            'numero_mecanografico' => $request->numero_mecanografico,
-            'password' => $request->password
-        ];
+        // Tentando encontrar o usuário com base no número mecanográfico
+        $user = User::where('numero_mecanografico', $request->numero_mecanografico)->first();
 
-        // Tentando autenticar o usuário
-        if (Auth::attempt($credenciais) && Auth::user()->status == "ativo") {
+        // Verificando se o usuário foi encontrado e se a senha está correta
+        if ($user && Hash::check($request->password, $user->password) && $user->status == 'ativo') {
+            Auth::login($user); // Faz o login do usuário
             return redirect()->route('home'); // Redireciona para a página principal
         }
 
         // Se não conseguiu autenticar, mostra uma mensagem de erro genérica
         return redirect()->back()->withInput()->withErrors(['Número mecanográfico ou senha incorretos!']);
     }
+
 
     // public function login(Request $request)
     // {
@@ -212,7 +211,7 @@ private function sendWelcomeMessage(User $user, $temporaryPassword, $phoneNumber
 
     $link = "https://cotarco.co.ao/intra-soclima";
 
-    $message = "Olá, {$user->name},\nSeu ID de acesso é {$user->numero_mecanografico} e a sua\npalavra-passe é{$temporaryPassword}\nCaso queira alterar sua senha,\n clique no link a seguir:\n $link ";
+    $message = "Olá, {$user->name},\nSeu ID de acesso é {$user->numero_mecanografico} e a sua\npalavra-passe é{$temporaryPassword}\nCaso queira alterar sua senha,\nclique no link a seguir:\n$link ";
 
     $client = new \Vonage\Client(new \Vonage\Client\Credentials\Basic($vonageKey, $vonageSecret));
 

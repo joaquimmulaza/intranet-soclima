@@ -9,6 +9,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\FeriaController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\NotificationController;
 /*
 |--------------------------------------------------------------------------
 | TESTES UNIDADE - Auth::routes();
@@ -318,3 +319,8 @@ Route::get('/usuarios/{userId}/ferias', [FeriaController::class, 'showDiasFerias
 
 
 Route::get('/test-twilio', [AuthController::class, 'testTwilio'])->name('test.twilio');
+
+//Notificações
+
+Route::get('/notificacoes', [NotificationController::class, 'index'])->name('notificacoes');
+Route::get('/notificacoes/marcar/{id}', [NotificationController::class, 'marcarComoLida'])->name('notificacoes.marcar');
