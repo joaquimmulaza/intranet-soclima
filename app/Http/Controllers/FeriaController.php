@@ -183,7 +183,7 @@ class FeriaController extends Controller
     }
 
 
-    public function rejeitar($id)
+        public function rejeitar($id)
     {
         $feria = Feria::findOrFail($id);
 
@@ -191,12 +191,18 @@ class FeriaController extends Controller
         $feria->status = 'rejeitado';
         $feria->save();
 
-        // Remove o registro do banco de dados
-        $feria->delete();
+        // Cria uma notificação para o usuário que fez o pedido
+        $notificationController = app(NotificationController::class);
+        $notificationController->criar(
+            'rejeicao_pedido',
+            'Pedido de Férias Rejeitado',
+            'Seu pedido de férias foi rejeitado.',
+            route('user.pedidos'),
+            $feria->user_id // ID do usuário que fez o pedido
+        );
 
-        return redirect()->route('user.pedidos')->with('success', 'Pedido de férias rejeitado e excluído com sucesso.');
-        
-}
+        return redirect()->route('user.pedidos')->with('success', 'Pedido de férias rejeitado com sucesso.');
+    }
 
 }
 
