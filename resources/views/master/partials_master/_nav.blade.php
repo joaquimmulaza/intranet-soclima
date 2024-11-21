@@ -36,30 +36,37 @@
             
             
             <li class="nav-item">
-    <a style="padding: 0 !important; margin: 0 !important;" 
-       class="nav-link notificacao" 
-       data-toggle="dropdown" 
-       id="notificationDropdownToggle">
+    <a style="padding: 0 !important; margin: 0 !important;" class="nav-link notificacao" data-toggle="dropdown" id="notificationDropdownToggle">
         <!-- Shape de notificação -->
-        @if(auth()->check() && ($notificacoes ?? collect())->count() > 0)
-            <span class="badge shapeNotification navbar-badge">
-                {{ $notificacoes->count() }}
+        @php
+            // Filtrar as notificações para o usuário logado ou responsável
+            $userNotifications = $notificacoes->filter(function($notification_user) {
+                return $notification_user->user_id == Auth::id() || $notification_user->responsavel_id == Auth::id();
+            });
+        @endphp
+
+        @if(auth()->check() && $userNotifications->count() > 0)
+            <span class="shapeNotification navbar-badge">
+                {{ $userNotifications->count() }}
             </span>
         @endif
-        <img src="{{ asset('logo/img/icon/Notification-button.svg') }}" alt="Ícone Notificação" 
-             id="notificationIcon">
+        <img src="{{ asset('logo/img/icon/Notification-button.svg') }}" alt="Ícone Notificação" id="notificationIcon"
+         data-default-icon="{{ asset('logo/img/icon/Notification-button.svg') }}"
+        data-pressed-icon="{{ asset('logo/img/icon/Notification-button-pressed.svg') }}"
+        >
     </a>
     <div class="dropdown-content" id="notificationDropdown">
         <h5>Notificações</h5>
         <hr>
         <div class="menuOpt">
-            @if($notificacoes->count() > 0)
-                @foreach($notificacoes as $notification_user)
-                    <a href="{{ $notification_user->rota ?? '#' }}" 
-                       onclick="markAsRead('{{ $notification_user->id }}')">
-                        <img src="{{ asset('logo/img/icon/notification-icon.svg') }}" alt="Ícone Notificação">
-                        <strong>{{ $notification_user->titulo }}</strong>
-                        <p>{{ $notification_user->descricao }}</p>
+            <h6>Não lidas</h6>
+            @if($userNotifications->count() > 0)
+                @foreach($userNotifications as $notification_user)
+                    <a class="text-notification" href="{{ $notification_user->rota ?? '#' }}" 
+                    onclick="markAsRead('{{ $notification_user->id }}')">
+                        <img class="img-notification" src="{{ URL::to('/') }}/public/avatar_users/{{ $notification_user->user->avatar ?? 'default.png' }}" alt="Ícone Notificação">
+                        <p style="padding: 0 !important; margin: 0 !important;">{{ $notification_user->descricao }}</p>
+                        <small>{{ $notification_user->tempo_decorrido_formatado }}</small>
                     </a>
                 @endforeach
             @else
@@ -68,6 +75,8 @@
         </div>
     </div>
 </li>
+
+
 
             <li class="nav-item">
                 <a style="padding: 0 !important; margin: 0 !important;" class="nav-link myProfile"
@@ -266,7 +275,8 @@
                 <a class="linksNav {{Route::current()->getName() === 'user.create' || '' ? 'active menu-open' : ''}}" style="padding: 0 !important; margin: 0 !important;" class="nav-link {{Route::current()->getName() === 'admin' ? 'active' : ''}}"
                 href="{{route('user.create')}}" class="nav-link colorLink">Cadastrar</a>
             </li>
-        
+            
+            @endif
             <li class="nav-item menu">
                 <a id="menuDropdownToggle" style="padding: 0 !important; margin: 0 !important;" class="nav-link {{Route::current()->getName() === 'admin.logout' ? 'active' : ''}}"
                 data-toggle="tooltip" title="Sair do sistema" href="#">
@@ -279,7 +289,11 @@
                         <div class="menuOpt">
                             <a href="#"><img src="logo/img/icon/calendar-star.svg" alt="">Eventos</a>
                             <span>Gerenciar</span>
-                            <a class="{{Route::current()->getName() === 'user.index' ? 'menu-open' : ''}}" href="{{route('user.index')}}"><img src="logo/img/icon/managerUser.svg" alt="">Gerir usuários</a>
+                            @can('app.dashboard')
+                            <a class="{{Route::current()->getName() === 'user.index' ? 'menu-open' : ''}}" href="{{route('user.index')}}">
+                           
+                                <img src="logo/img/icon/managerUser.svg" alt="">Gerir usuários</a>
+                                @endcan
                             <a href="#"><img src="logo/img/icon/holiday-icon.svg" alt="">Pedidos férias</a>
                             <a href="#"><img src="logo/img/icon/feeds.svg" alt="">Publicações e atividades</a>
                         </div>
@@ -296,11 +310,10 @@
             </li>
 
             {{-- HELPER PARA SOLICITAÇÕES DE PEDIDOS --}}
-            @can('app.dashboard')
+           
                 
         </div>
-            @endif
-        @endcan
+           
 
     </ul>
 
@@ -311,43 +324,65 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    // Função para controlar a exibição de um dropdown específico e fechar os outros abertos
-    function toggleDropdown(dropdownId, toggleButtonId) {
-        const dropdown = document.getElementById(dropdownId);
-        const toggleButton = document.getElementById(toggleButtonId);
+    // Função para controlar a exibição de um dropdown específico e fechar os outros abertos// Função para controlar a exibição de um dropdown específico e fechar os outros abertos
+function toggleDropdown(dropdownId, toggleButtonId) {
+    const dropdown = document.getElementById(dropdownId);
+    const toggleButton = document.getElementById(toggleButtonId);
 
-        toggleButton.addEventListener('click', function(event) {
-            event.preventDefault(); // Previne comportamento padrão
-            
-            // Fecha outros dropdowns antes de abrir o atual
-            closeOtherDropdowns(dropdownId);
+    toggleButton.addEventListener('click', function (event) {
+        event.preventDefault();
 
-            dropdown.classList.toggle('show'); // Alterna a exibição do dropdown
-        });
+        // Fecha outros dropdowns antes de abrir o atual
+        closeOtherDropdowns(dropdownId);
 
-        // Fecha o dropdown ao clicar fora dele
-        window.addEventListener('click', function(event) {
-            if (!toggleButton.contains(event.target) && !dropdown.contains(event.target)) {
-                dropdown.classList.remove('show');
-            }
-        });
+        dropdown.classList.toggle('show'); // Alterna a exibição do dropdown
+        updateNotificationIcon(); // Atualiza o ícone de notificação
+    });
+
+    // Fecha o dropdown ao clicar fora dele
+    window.addEventListener('click', function (event) {
+        if (!toggleButton.contains(event.target) && !dropdown.contains(event.target)) {
+            dropdown.classList.remove('show');
+            updateNotificationIcon(); // Restaura o ícone de notificação
+        }
+    });
+}
+
+// Função para fechar outros dropdowns
+function closeOtherDropdowns(currentDropdownId) {
+    const dropdowns = document.querySelectorAll('.dropdown-content'); // Seleciona todos os dropdowns
+
+    dropdowns.forEach(dropdown => {
+        if (dropdown.id !== currentDropdownId) { // Fecha apenas os dropdowns que não são o atual
+            dropdown.classList.remove('show');
+        }
+    });
+}
+
+// Função específica para alternar o ícone de notificação
+function updateNotificationIcon() {
+    const notificationDropdown = document.getElementById('notificationDropdown');
+    const notificationIcon = document.getElementById('notificationIcon');
+
+    // Obter os caminhos do ícone dos atributos data
+    const defaultIconPath = notificationIcon.dataset.defaultIcon;
+    const pressedIconPath = notificationIcon.dataset.pressedIcon;
+
+    // Alterar o ícone com base no estado do dropdown
+    if (notificationDropdown.classList.contains('show')) {
+        notificationIcon.src = pressedIconPath; // Ícone pressionado
+    } else {
+        notificationIcon.src = defaultIconPath; // Ícone padrão
     }
+}
 
-    // Função para fechar outros dropdowns
-    function closeOtherDropdowns(currentDropdownId) {
-        const dropdowns = document.querySelectorAll('.dropdown-content'); // Seleciona todos os dropdowns
+// Inicializa os dropdowns
+toggleDropdown('notificationDropdown', 'notificationDropdownToggle');
+toggleDropdown('profileDropdown', 'profileDropdownToggle');
+toggleDropdown('menuDropdown', 'menuDropdownToggle');
 
-        dropdowns.forEach(dropdown => {
-            if (dropdown.id !== currentDropdownId) { // Fecha apenas os dropdowns que não são o atual
-                dropdown.classList.remove('show');
-            }
-        });
-    }
 
-    // Inicializa os dropdowns
-    toggleDropdown('notificationDropdown', 'notificationDropdownToggle');
-    toggleDropdown('profileDropdown', 'profileDropdownToggle');
-    toggleDropdown('menuDropdown', 'menuDropdownToggle');
+
 
     
 

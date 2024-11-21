@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Auth;
 use App\NotificationUsers;
 use Illuminate\Http\Request;
 
@@ -15,13 +15,11 @@ class NotificationController extends Controller
     }
 
     public function showNavbar()
-{
-    // Carrega notificações não lidas para a navegação
-    $notificacoes = NotificationUsers::where('lida', false)->orderBy('created_at', 'desc')->get();
+    {
+        $notificacoes = $this->carregarNotificacoes();
+        return view('master.partials_master._nav', compact('notificacoes'));
+    }
     
-    // Passa a variável para a view que renderiza o menu de navegação
-    return view('master.partials_master._nav', compact('notificacoes'));
-}
 
 
     public function marcarComoLida($id)
@@ -43,5 +41,17 @@ class NotificationController extends Controller
             'user_id' => $userId,
         ]);
     }
+
+ 
+
+public function obterNotificacoes()
+{
+    $userId = Auth::id();
+
+    // Buscar notificações destinadas ao usuário logado
+    $notificacoes = NotificationUsers::where('user_id', $userId)->get();
+
+    return view('notificacoes.index', compact('notificacoes'));
+}
 
 }

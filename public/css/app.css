@@ -54,6 +54,38 @@
     padding-left: 0 !important;
 }
 
+/*STYLES DROPDOWN NOTIFICATION*/
+.dropdown-content .menuOpt h6{
+    font-size: 17px;
+    color: #555;
+    font-weight: 400;
+}
+.img-notification{
+    width: 31px;
+    border-radius: 50%;
+}
+
+.text-notification {
+    display: flex;
+    flex-direction: row;
+    justify-content: center !important;
+    align-items: center !important;
+    background-color: #C9F0FA;
+    height: 50px;
+    border-color: #009AC1 !important;
+}
+
+.text-notification p{
+    font-size: 14px;
+}
+
+.text-notification small{
+    font-size: 10px !important;
+    width: 35px;
+    color: #555;
+    font-weight: 400;
+    
+}
 
 
 /*STYLES DROPDOWN*/

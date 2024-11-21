@@ -59,10 +59,12 @@
     <div class="main-content">
         <div class="sidebar-left">
             <ul>
+                @can('app.dashboard')
                 <li>
                     <img src="logo/img/icon/assignment_ind.svg" alt="">
                     <a class="linksNav {{Route::current()->getName() === 'user.index' ? 'menu-open' : ''}}" href="{{route('user.index')}}">Gerir Usuários</a>
                 </li>
+                @endcan
                 <li>
                     <img src="logo/img/icon/article.svg" alt="">
                     <a href="#">Recibos</a>

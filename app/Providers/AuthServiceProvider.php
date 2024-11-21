@@ -10,6 +10,7 @@ class AuthServiceProvider extends ServiceProvider
 
     protected $policies = [
         // 'App\Model' => 'App\Policies\ModelPolicy',
+        \App\NotificationUsers::class => \App\Policies\NotificationPolicy::class,
     ];
 
     public function boot()
