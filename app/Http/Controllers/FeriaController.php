@@ -47,13 +47,14 @@ class FeriaController extends Controller
         $feria->status = 'pendente';
         $feria->data_retorno_prevista = $feria->calcularDataRetorno($dataInicio, $diasSolicitados);
         $feria->save();
+        $UserName = Auth::user()->name; 
 
         // Criar notificação apenas para o responsável
         $notificationController = app(NotificationController::class);
         $notificationController->criar(
             'pedido_ferias',
             'Pedido de Férias',
-            'Funcionário ' . Auth::user()->name . ' solicitou férias de ' . $dataInicio->format('d/m/Y') . ' a ' . $dataFim->format('d/m/Y'),
+            '<strong>' . $UserName . '</strong> solicitou férias de ' . $dataInicio->format('d/m/Y') . ' a ' . $dataFim->format('d/m/Y'),
             route('ferias.pedidos'),
             $feria->responsavel_id
         );
@@ -168,13 +169,13 @@ class FeriaController extends Controller
         // Atualiza o status para aprovado
         $feria->status = 'aprovado';
         $feria->save();
-
+        $responsavelNome = Auth::user()->name; 
         // Cria uma notificação para o usuário que fez o pedido
         $notificationController = app(NotificationController::class);
         $notificationController->criar(
             'aprovacao_pedido',
             'Pedido de Férias Aprovado',
-            'Seu pedido de férias foi aprovado!',
+            'Seu pedido de férias foi aprovado por <strong>'. $responsavelNome . '</strong>.',
             route('user.pedidos'),
             $feria->user_id // ID do usuário que fez o pedido
         );
@@ -190,19 +191,19 @@ class FeriaController extends Controller
         // Atualiza o status para rejeitado
         $feria->status = 'rejeitado';
         $feria->save();
+        $responsavelNome = Auth::user()->name; 
 
         // Cria uma notificação para o usuário que fez o pedido
         $notificationController = app(NotificationController::class);
         $notificationController->criar(
             'rejeicao_pedido',
             'Pedido de Férias Rejeitado',
-            'Seu pedido de férias foi rejeitado.',
+            'Seu pedido de férias foi rejeitado por <strong>'. $responsavelNome . '</strong>.',
             route('user.pedidos'),
             $feria->user_id // ID do usuário que fez o pedido
         );
 
         return redirect()->route('user.pedidos')->with('success', 'Pedido de férias rejeitado com sucesso.');
     }
-
 }
 

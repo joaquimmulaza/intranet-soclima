@@ -64,9 +64,11 @@
                 @foreach($userNotifications as $notification_user)
                     <a class="text-notification" href="{{ $notification_user->rota ?? '#' }}" 
                     onclick="markAsRead('{{ $notification_user->id }}')">
-                        <img class="img-notification" src="{{ URL::to('/') }}/public/avatar_users/{{ $notification_user->user->avatar ?? 'default.png' }}" alt="Ícone Notificação">
-                        <p style="padding: 0 !important; margin: 0 !important;">{{ $notification_user->descricao }}</p>
-                        <small>{{ $notification_user->tempo_decorrido_formatado }}</small>
+                        <div class="notification-content">
+                            <img class="img-notification" src="{{ URL::to('/') }}/public/avatar_users/{{ $notification_user->user->avatar ?? 'default.png' }}" alt="Ícone Notificação">
+                            <p style="padding: 0 !important; margin: 0 !important;">{!! $notification_user->descricao !!}</p>
+                        </div>
+                        <div class="time-notification"><small>{{ $notification_user->tempo_decorrido_formatado }}</small></div>
                     </a>
                 @endforeach
             @else
@@ -306,7 +308,6 @@
                             <a href="#"><img src="logo/img/icon/ferias-icon.svg" alt="">Férias</a>
                         </div>
                     </div>
-               
             </li>
 
             {{-- HELPER PARA SOLICITAÇÕES DE PEDIDOS --}}

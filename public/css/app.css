@@ -1,5 +1,4 @@
 *{
-    font-weight: 100;
     font-family: "Lato", sans-serif;
     padding: 0;
     margin: 0;
@@ -7,6 +6,10 @@
 
 :root {
     --main-bg: #E7ECEB;
+}
+
+.responsavel-nome {
+    font-weight: bold !important;
 }
 
 .online{
@@ -59,9 +62,43 @@
     font-size: 17px;
     color: #555;
     font-weight: 400;
+    margin-bottom: 18px !important;
 }
+
+#notificationDropdown{
+    height: 500px;
+    overflow-y: auto;  
+}
+
+#notificationDropdown::-webkit-scrollbar {
+    width: 7px !important;
+}
+
+#notificationDropdown::-webkit-scrollbar-thumb {
+    background: #ABABAB;
+    border-radius: 10px;
+}
+
+#notificationDropdown::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+#notificationDropdown::-webkit-scrollbar-track {
+    background: #f3f3f3;
+    border-radius: 10px;
+}
+
+.notification-content{
+    display: flex;
+    justify-content: start;
+    gap: 10px;
+    align-items: center;
+    width: 350px;
+}
+
 .img-notification{
-    width: 31px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
 }
 
@@ -73,18 +110,20 @@
     background-color: #C9F0FA;
     height: 50px;
     border-color: #009AC1 !important;
+    margin: 0 0 7px !important;
 }
 
 .text-notification p{
     font-size: 14px;
+    font-weight: 400 !important;
 }
 
 .text-notification small{
     font-size: 10px !important;
     width: 35px;
     color: #555;
-    font-weight: 400;
-    
+    font-weight: 400 !important;
+    display: flex;
 }
 
 
