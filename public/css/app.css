@@ -1532,3 +1532,26 @@ button:active{
 .input-field::placeholder {
     color: #bbb;
 }
+
+.notification-content {
+    padding: 10px;
+    margin-bottom: 5px;
+    transition: background-color 0.3s;
+    border-radius: 5px;
+}
+
+.notification-content.vista {
+    background-color: #f0f8ff; /* Fundo claro para notificações vistas */
+}
+
+.notification-content.lida {
+    background-color: white; /* Fundo branco para notificações lidas */
+}
+
+.notification-content:not(.vista):not(.lida) {
+    background-color: #e9ecef; /* Fundo mais escuro para notificações novas */
+}
+
+.notification-item.vista {
+    background-color: #f9f9f9; /* Fundo claro para notificações vistas */
+}

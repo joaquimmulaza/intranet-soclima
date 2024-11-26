@@ -37,12 +37,14 @@
             
             <li class="nav-item">
     <a style="padding: 0 !important; margin: 0 !important;" class="nav-link notificacao" data-toggle="dropdown" id="notificationDropdownToggle">
-        <!-- Shape de notificação -->
         @php
-            // Filtrar as notificações para o usuário logado ou responsável
+            // Filtrar notificações para o usuário logado ou responsável
             $userNotifications = $notificacoes->filter(function($notification_user) {
                 return $notification_user->user_id == Auth::id() || $notification_user->responsavel_id == Auth::id();
             });
+
+            $naoLidas = $userNotifications->where('lida', false);
+            $lidas = $userNotifications->where('lida', true);
         @endphp
 
         @if(auth()->check() && $userNotifications->count() > 0)
@@ -52,31 +54,51 @@
         @endif
         <img src="{{ asset('logo/img/icon/Notification-button.svg') }}" alt="Ícone Notificação" id="notificationIcon"
          data-default-icon="{{ asset('logo/img/icon/Notification-button.svg') }}"
-        data-pressed-icon="{{ asset('logo/img/icon/Notification-button-pressed.svg') }}"
+         data-pressed-icon="{{ asset('logo/img/icon/Notification-button-pressed.svg') }}"
         >
     </a>
     <div class="dropdown-content" id="notificationDropdown">
         <h5>Notificações</h5>
         <hr>
-        <div class="menuOpt">
-            <h6>Não lidas</h6>
-            @if($userNotifications->count() > 0)
-                @foreach($userNotifications as $notification_user)
-                    <a class="text-notification" href="{{ $notification_user->rota ?? '#' }}" 
-                    onclick="markAsRead('{{ $notification_user->id }}')">
+        <div class="notificacoes-nao-lidas">
+            <h6>Não Lidas</h6>
+            <div class="lista-notificacoes" id="naoLidas">
+                @forelse($naoLidas as $notification_user)
+                    <a class="text-notification notification-item nao-lida" href="{{ $notification_user->rota ?? '#' }}" 
+                    onclick="markAsRead('{{ $notification_user->id }}')"
+                    data-id="{{ $notification_user->id }}" data-lida="false" data-vista="false">
                         <div class="notification-content">
                             <img class="img-notification" src="{{ URL::to('/') }}/public/avatar_users/{{ $notification_user->user->avatar ?? 'default.png' }}" alt="Ícone Notificação">
-                            <p style="padding: 0 !important; margin: 0 !important;">{!! $notification_user->descricao !!}</p>
+                            <p>{!! $notification_user->descricao !!}</p>
                         </div>
                         <div class="time-notification"><small>{{ $notification_user->tempo_decorrido_formatado }}</small></div>
                     </a>
-                @endforeach
-            @else
-                <span>Sem novas notificações</span>
-            @endif
+                @empty
+                    <span>Sem novas notificações</span>
+                @endforelse
+            </div>
+        </div>
+        <hr>
+        <div class="notificacoes-lidas">
+            <h6>Lidas</h6>
+            <div class="lista-notificacoes" id="lidas">
+                @forelse($lidas as $notification_user)
+                    <a class="text-notification notification-item lida" href="{{ $notification_user->rota ?? '#' }}"
+                    data-id="{{ $notification_user->id }}" data-lida="true" data-vista="true">
+                        <div class="notification-content">
+                            <img class="img-notification" src="{{ URL::to('/') }}/public/avatar_users/{{ $notification_user->user->avatar ?? 'default.png' }}" alt="Ícone Notificação">
+                            <p>{!! $notification_user->descricao !!}</p>
+                        </div>
+                        <div class="time-notification"><small>{{ $notification_user->tempo_decorrido_formatado }}</small></div>
+                    </a>
+                @empty
+                    <span>Sem notificações lidas</span>
+                @endforelse
+            </div>
         </div>
     </div>
 </li>
+
 
 
 
@@ -326,7 +348,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     // Função para controlar a exibição de um dropdown específico e fechar os outros abertos// Função para controlar a exibição de um dropdown específico e fechar os outros abertos
-function toggleDropdown(dropdownId, toggleButtonId) {
+    function toggleDropdown(dropdownId, toggleButtonId) {
     const dropdown = document.getElementById(dropdownId);
     const toggleButton = document.getElementById(toggleButtonId);
 
@@ -336,7 +358,13 @@ function toggleDropdown(dropdownId, toggleButtonId) {
         // Fecha outros dropdowns antes de abrir o atual
         closeOtherDropdowns(dropdownId);
 
-        dropdown.classList.toggle('show'); // Alterna a exibição do dropdown
+        const isDropdownVisible = dropdown.classList.toggle('show'); // Alterna a exibição do dropdown
+
+        // Atualiza o status de visualização das notificações
+        if (isDropdownVisible && dropdownId === 'notificationDropdown') {
+            marcarNotificacoesComoVistas(); // Marca notificações como vistas
+        }
+
         updateNotificationIcon(); // Atualiza o ícone de notificação
     });
 
@@ -376,6 +404,63 @@ function updateNotificationIcon() {
         notificationIcon.src = defaultIconPath; // Ícone padrão
     }
 }
+
+function marcarNotificacoesComoVistas() {
+    const csrfMeta = document.querySelector('meta[name="csrf-token"]');
+
+    if (!csrfMeta) {
+        console.error('CSRF token não encontrado no HTML.');
+        return;
+    }
+
+    // Faz a requisição para marcar as notificações como vistas
+    fetch('/notificacoes/marcar-como-vistas', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfMeta.content // Usa o token CSRF
+        },
+        body: JSON.stringify({})
+    }).then(response => {
+        if (response.ok) {
+            atualizarEstiloNotificacoes(); // Atualiza o estilo das notificações vistas
+        } else {
+            console.error('Erro ao marcar notificações como vistas:', response.statusText);
+        }
+    }).catch(error => {
+        console.error('Erro ao marcar notificações como vistas:', error);
+    });
+}
+
+
+function atualizarEstiloNotificacoes() {
+    const notificacoes = document.querySelectorAll('.notification-item');
+
+    notificacoes.forEach(notificacao => {
+        if (notificacao.dataset.vista === 'false') {
+            notificacao.dataset.vista = 'true'; // Marca como vista no frontend
+            notificacao.classList.add('vista'); // Aplica a classe para fundo claro
+        }
+    });
+
+    function atualizarListasNotificacoes() {
+    const naoLidasContainer = document.getElementById('naoLidas');
+    const lidasContainer = document.getElementById('lidas');
+
+    const notificacoes = document.querySelectorAll('.notification-item');
+    notificacoes.forEach(notificacao => {
+        if (notificacao.dataset.lida === 'true') {
+            lidasContainer.appendChild(notificacao);
+        } else {
+            naoLidasContainer.appendChild(notificacao);
+        }
+    });
+}
+console.log(document.querySelector('#naoLidas'));
+console.log(document.querySelector('#lidas'));
+
+}
+
 
 // Inicializa os dropdowns
 toggleDropdown('notificationDropdown', 'notificationDropdownToggle');

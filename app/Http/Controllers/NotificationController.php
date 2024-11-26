@@ -9,10 +9,24 @@ class NotificationController extends Controller
 {
     public function index()
     {
-        // Carrega notificações não lidas
-        $notificacoes = NotificationUsers::where('lida', false)->orderBy('created_at', 'desc')->get();
-        return view('notifications.index', compact('notificacoes'));
+        $userId = Auth::id();
+
+        // Notificações "Não Lidas" (Inclui vistas ou não vistas, mas não marcadas como lidas)
+        $naoLidas = NotificationUsers::where('user_id', $userId)
+            ->where('lida', false)
+            ->orderBy('vista', 'asc') // Exibe não vistas primeiro
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Notificações "Lidas"
+        $lidas = NotificationUsers::where('user_id', $userId)
+            ->where('lida', true)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('notifications.index', compact('naoLidas', 'lidas'));
     }
+
 
     public function showNavbar()
     {
@@ -28,8 +42,9 @@ class NotificationController extends Controller
         $notificacao->lida = true;
         $notificacao->save();
 
-        return redirect($notificacao->rota ?? route('home'));
+        return response()->json(['success' => true, 'rota' => $notificacao->rota]);
     }
+
 
     public static function criar($tipo, $titulo, $descricao, $rota = null, $userId = null)
     {
@@ -39,8 +54,10 @@ class NotificationController extends Controller
             'descricao' => $descricao,
             'rota' => $rota,
             'user_id' => $userId,
+            'vista' => false, // Notificação criada como "não vista"
         ]);
     }
+
 
  
 
@@ -53,5 +70,32 @@ public function obterNotificacoes()
 
     return view('notificacoes.index', compact('notificacoes'));
 }
+
+
+public function marcarComoVista()
+{
+    $userId = Auth::id();
+
+    // Atualiza todas as notificações do usuário para "vista"
+    NotificationUsers::where('user_id', $userId)
+        ->where('vista', false)
+        ->update(['vista' => true]);
+
+    return response()->json(['success' => true]);
+}
+
+public function marcarComoVistas()
+{
+    $userId = Auth::id();
+
+    // Atualiza todas as notificações para "vista = true"
+    NotificationUsers::where('user_id', $userId)
+        ->where('vista', false)
+        ->update(['vista' => true]);
+
+    return response()->json(['success' => true]);
+}
+
+
 
 }

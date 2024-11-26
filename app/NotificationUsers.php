@@ -12,7 +12,12 @@ class NotificationUsers extends Model
     protected $table = 'notification_users'; // Especificando o nome da tabela
 
     protected $fillable = [
-        'tipo', 'titulo', 'descricao', 'rota', 'lida', 'user_id'
+        'user_id',
+        'titulo',
+        'descricao',
+        'rota',
+        'lida',
+        'vista',
     ];
 
     protected $casts = [

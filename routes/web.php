@@ -324,3 +324,10 @@ Route::get('/test-twilio', [AuthController::class, 'testTwilio'])->name('test.tw
 
 Route::get('/notificacoes', [NotificationController::class, 'index'])->name('notificacoes');
 Route::get('/notificacoes/marcar/{id}', [NotificationController::class, 'marcarComoLida'])->name('notificacoes.marcar');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/notificacoes', [NotificationController::class, 'index'])->name('notificacoes.index');
+    Route::post('/notificacoes/vista', [NotificationController::class, 'marcarComoVista'])->name('notificacoes.vista');
+    Route::post('/notificacoes/lida/{id}', [NotificationController::class, 'marcarComoLida'])->name('notificacoes.lida');
+});
+Route::post('/notificacoes/marcar-como-vistas', [NotificationController::class, 'marcarComoVistas']);

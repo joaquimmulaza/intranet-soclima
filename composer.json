@@ -12,6 +12,7 @@
         "appslabke/lara-izitoast": "^1.1",
         "barryvdh/laravel-dompdf": "^0.8.7",
         "consoletvs/charts": "6.*",
+        "doctrine/dbal": "^2.13",
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^1.0",
         "guzzlehttp/guzzle": "^6.3",

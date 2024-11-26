@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+
         @include('master.partials_master._head')
     </head>
 @if(Auth::user() != null)
