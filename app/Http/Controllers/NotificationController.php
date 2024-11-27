@@ -38,12 +38,23 @@ class NotificationController extends Controller
 
     public function marcarComoLida($id)
     {
-        $notificacao = NotificationUsers::findOrFail($id);
-        $notificacao->lida = true;
-        $notificacao->save();
+        $notificacao = NotificationUsers::where('id', $id)
+            ->where(function ($query) {
+                $query->where('user_id', auth()->id())
+                    ->orWhere('responsavel_id', auth()->id());
+            })
+            ->first();
 
-        return response()->json(['success' => true, 'rota' => $notificacao->rota]);
+        if ($notificacao) {
+            $notificacao->lida = true;
+            $notificacao->save();
+
+            return response()->json(['success' => true, 'message' => 'Notificação marcada como lida.']);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Notificação não encontrada.'], 404);
     }
+
 
 
     public static function criar($tipo, $titulo, $descricao, $rota = null, $userId = null)
@@ -84,18 +95,20 @@ public function marcarComoVista()
     return response()->json(['success' => true]);
 }
 
-public function marcarComoVistas()
-{
-    $userId = Auth::id();
+public function marcarComoVistas(Request $request) {
+    // Autenticação do usuário
+    $user = auth()->user();
 
-    // Atualiza todas as notificações para "vista = true"
-    NotificationUsers::where('user_id', $userId)
+    if (!$user) {
+        return response()->json(['success' => false, 'message' => 'Usuário não autenticado.'], 401);
+    }
+
+    // Marcar todas as notificações como vistas
+    $notificacoes = NotificationUsers::where('user_id', $user->id)
         ->where('vista', false)
-        ->update(['vista' => true]);
+        ->update(['vista' => true, 'lida' => true]);
 
-    return response()->json(['success' => true]);
+    return response()->json(['success' => true, 'mensagem' => 'Notificações marcadas como vistas.']);
 }
-
-
 
 }

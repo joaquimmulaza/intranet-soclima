@@ -43,9 +43,11 @@
                 return $notification_user->user_id == Auth::id() || $notification_user->responsavel_id == Auth::id();
             });
 
-            $naoLidas = $userNotifications->where('lida', false);
-            $lidas = $userNotifications->where('lida', true);
+            // Separar notificações lidas e não lidas
+            $naoLidas = $userNotifications->filter(fn($n) => !$n->lida);
+            $lidas = $userNotifications->filter(fn($n) => $n->lida);
         @endphp
+
 
         @if(auth()->check() && $userNotifications->count() > 0)
             <span class="shapeNotification navbar-badge">
@@ -64,15 +66,19 @@
             <h6>Não Lidas</h6>
             <div class="lista-notificacoes" id="naoLidas">
                 @forelse($naoLidas as $notification_user)
-                    <a class="text-notification notification-item nao-lida" href="{{ $notification_user->rota ?? '#' }}" 
-                    onclick="markAsRead('{{ $notification_user->id }}')"
-                    data-id="{{ $notification_user->id }}" data-lida="false" data-vista="false">
-                        <div class="notification-content">
-                            <img class="img-notification" src="{{ URL::to('/') }}/public/avatar_users/{{ $notification_user->user->avatar ?? 'default.png' }}" alt="Ícone Notificação">
-                            <p>{!! $notification_user->descricao !!}</p>
-                        </div>
-                        <div class="time-notification"><small>{{ $notification_user->tempo_decorrido_formatado }}</small></div>
-                    </a>
+                <a class="text-notification notification-item {{ $notification_user->lida ? 'lida' : 'nao-lida' }}" 
+                href="{{ $notification_user->rota ?? '#' }}" 
+                onclick="console.log('{{ $notification_user->id }}'); markAsRead('{{ $notification_user->id }}', this);"
+"
+                data-id="{{ $notification_user->id }}" data-lida="{{ $notification_user->lida ? 'true' : 'false' }}" data-vista="false">
+                <div class="notification-content">
+                    <img class="img-notification" src="{{ URL::to('/') }}/public/avatar_users/{{ $notification_user->user->avatar ?? 'default.png' }}" alt="Ícone Notificação">
+                    <p>{!! $notification_user->descricao !!}</p>
+                </div>
+                <div class="time-notification"><small>{{ $notification_user->tempo_decorrido_formatado }}</small></div>
+                </a>
+
+
                 @empty
                     <span>Sem novas notificações</span>
                 @endforelse
@@ -435,31 +441,82 @@ function marcarNotificacoesComoVistas() {
 
 function atualizarEstiloNotificacoes() {
     const notificacoes = document.querySelectorAll('.notification-item');
-
-    notificacoes.forEach(notificacao => {
-        if (notificacao.dataset.vista === 'false') {
-            notificacao.dataset.vista = 'true'; // Marca como vista no frontend
-            notificacao.classList.add('vista'); // Aplica a classe para fundo claro
-        }
-    });
-
-    function atualizarListasNotificacoes() {
     const naoLidasContainer = document.getElementById('naoLidas');
     const lidasContainer = document.getElementById('lidas');
 
-    const notificacoes = document.querySelectorAll('.notification-item');
     notificacoes.forEach(notificacao => {
         if (notificacao.dataset.lida === 'true') {
-            lidasContainer.appendChild(notificacao);
+            // Mover para a seção de lidas
+            if (!lidasContainer.contains(notificacao)) {
+                lidasContainer.appendChild(notificacao);
+            }
         } else {
-            naoLidasContainer.appendChild(notificacao);
+            // Mover para a seção de não lidas
+            if (!naoLidasContainer.contains(notificacao)) {
+                naoLidasContainer.appendChild(notificacao);
+            }
         }
     });
+
+    // Atualizar mensagens de "sem notificações"
+    if (!naoLidasContainer.hasChildNodes()) {
+        naoLidasContainer.innerHTML = `<span>Sem notificações não lidas</span>`;
+    } else {
+        const span = naoLidasContainer.querySelector('span');
+        if (span) span.remove();
+    }
+
+    if (!lidasContainer.hasChildNodes()) {
+        lidasContainer.innerHTML = `<span>Sem notificações lidas</span>`;
+    } else {
+        const span = lidasContainer.querySelector('span');
+        if (span) span.remove();
+    }
 }
+
+
+
+function markAsRead(notificationId, element) {
+    if (!notificationId) {
+        console.error("notificationId não foi definido!");
+        return;
+    }
+
+    // Exemplo de operação:
+    fetch(`/notifications/${notificationId}/mark-as-read`, { method: 'POST' })
+        .then(response => {
+            if (response.ok) {
+                // Atualize o status da notificação no DOM
+                element.classList.remove('nao-lida');
+                element.classList.add('lida');
+            } else {
+                console.error("Erro ao marcar como lida.");
+            }
+        })
+        .catch(err => console.error("Erro na requisição:", err));
+}
+
+async function markAsRead(notificationId, element) {
+    try {
+        const response = await fetch(`/notifications/${notificationId}/mark-as-read`, { method: 'POST' });
+        if (response.ok) {
+            console.log("Notificação marcada como lida.");
+        } else {
+            console.error("Erro na API ao marcar como lida.");
+        }
+    } catch (error) {
+        console.error("Erro na comunicação:", error);
+    }
+}
+
+
+
+
+
 console.log(document.querySelector('#naoLidas'));
 console.log(document.querySelector('#lidas'));
 
-}
+
 
 
 // Inicializa os dropdowns

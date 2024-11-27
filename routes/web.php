@@ -331,3 +331,4 @@ Route::middleware('auth')->group(function () {
     Route::post('/notificacoes/lida/{id}', [NotificationController::class, 'marcarComoLida'])->name('notificacoes.lida');
 });
 Route::post('/notificacoes/marcar-como-vistas', [NotificationController::class, 'marcarComoVistas']);
+Route::post('/notificacoes/marcar-como-lida/{id}', [NotificacaoController::class, 'marcarComoLida'])->name('notificacao.lida');
