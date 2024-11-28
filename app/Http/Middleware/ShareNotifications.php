@@ -4,16 +4,28 @@ namespace App\Http\Middleware;
 
 use Closure;
 use App\NotificationUsers;
-
+use Illuminate\Support\Facades\Auth;
 class ShareNotifications
 {
     public function handle($request, Closure $next)
     {
-        // Carrega as notificações não lidas
-        $notificacoes = NotificationUsers::where('lida', false)->orderBy('created_at', 'desc')->get();
+        if (Auth::check()) {
+            $userId = Auth::id();
+            $notificacoes = NotificationUsers::where('user_id', $userId)->get();
+            view()->share('notificacoes', $notificacoes);
+            $lidas = NotificationUsers::where('user_id', $userId)
+                ->where('lida', true)
+                ->orderBy('created_at', 'desc')
+                ->get();
 
-        // Compartilha as notificações com todas as views
-        view()->share('notificacoes', $notificacoes);
+            $naoLidas = NotificationUsers::where('user_id', $userId)
+                ->where('lida', false)
+                ->orderBy('vista', 'desc')
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+            view()->share(compact('lidas', 'naoLidas'));
+        }
 
         return $next($request);
     }

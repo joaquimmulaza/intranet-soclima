@@ -1,5 +1,5 @@
-<nav class="main-header navbar navbar-expand navbar-white heightNav justify-content-start" style="margin: 0 !important;">
 
+<nav class="main-header navbar navbar-expand navbar-white heightNav justify-content-start" style="margin: 0 !important;">
     <!-- MENU ESQUERDO ADMINISTRATIVO -->
     <ul class="navbar-nav widthNav">
         <!-- <li class="nav-item">
@@ -68,22 +68,22 @@
                 @forelse($naoLidas as $notification_user)
                 <a class="text-notification notification-item {{ $notification_user->lida ? 'lida' : 'nao-lida' }}" 
                 href="{{ $notification_user->rota ?? '#' }}" 
-                onclick="console.log('{{ $notification_user->id }}'); markAsRead('{{ $notification_user->id }}', this);"
-"
-                data-id="{{ $notification_user->id }}" data-lida="{{ $notification_user->lida ? 'true' : 'false' }}" data-vista="false">
-                <div class="notification-content">
-                    <img class="img-notification" src="{{ URL::to('/') }}/public/avatar_users/{{ $notification_user->user->avatar ?? 'default.png' }}" alt="Ícone Notificação">
-                    <p>{!! $notification_user->descricao !!}</p>
-                </div>
-                <div class="time-notification"><small>{{ $notification_user->tempo_decorrido_formatado }}</small></div>
+                onclick="markAsRead('{{ $notification_user->id }}', this);"
+                data-id="{{ $notification_user->id }}" 
+                data-lida="{{ $notification_user->lida ? 'true' : 'false' }}" 
+                data-vista="false">
+                    <div class="notification-content">
+                        <img class="img-notification" src="{{ URL::to('/') }}/public/avatar_users/{{ $notification_user->user->avatar ?? 'default.png' }}" alt="Ícone Notificação">
+                        <p>{!! $notification_user->descricao !!}</p>
+                    </div>
+                    <div class="time-notification"><small>{{ $notification_user->tempo_decorrido_formatado }}</small></div>
                 </a>
-
-
                 @empty
                     <span>Sem novas notificações</span>
                 @endforelse
             </div>
         </div>
+
         <hr>
         <div class="notificacoes-lidas">
             <h6>Lidas</h6>
@@ -412,89 +412,97 @@ function updateNotificationIcon() {
 }
 
 function marcarNotificacoesComoVistas() {
-    const csrfMeta = document.querySelector('meta[name="csrf-token"]');
-
-    if (!csrfMeta) {
-        console.error('CSRF token não encontrado no HTML.');
-        return;
-    }
-
-    // Faz a requisição para marcar as notificações como vistas
-    fetch('/notificacoes/marcar-como-vistas', {
+    fetch(`/notificacoes/marcar-como-vistas`, {
         method: 'POST',
         headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
             'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': csrfMeta.content // Usa o token CSRF
         },
-        body: JSON.stringify({})
-    }).then(response => {
+    })
+    .then(response => {
         if (response.ok) {
-            atualizarEstiloNotificacoes(); // Atualiza o estilo das notificações vistas
-        } else {
-            console.error('Erro ao marcar notificações como vistas:', response.statusText);
+            return response.json();
         }
-    }).catch(error => {
-        console.error('Erro ao marcar notificações como vistas:', error);
-    });
+        throw new Error('Erro ao marcar notificações como vistas.');
+    })
+    .then(data => {
+        if (data.success) {
+            console.log('Notificações foram marcadas como vistas.');
+            // Opcional: Atualizar a interface do usuário
+        } else {
+            console.error(data.message);
+        }
+    })
+    .catch(error => console.error(error.message));
 }
+
 
 
 function atualizarEstiloNotificacoes() {
-    const notificacoes = document.querySelectorAll('.notification-item');
     const naoLidasContainer = document.getElementById('naoLidas');
     const lidasContainer = document.getElementById('lidas');
 
-    notificacoes.forEach(notificacao => {
-        if (notificacao.dataset.lida === 'true') {
-            // Mover para a seção de lidas
-            if (!lidasContainer.contains(notificacao)) {
-                lidasContainer.appendChild(notificacao);
-            }
-        } else {
-            // Mover para a seção de não lidas
-            if (!naoLidasContainer.contains(notificacao)) {
-                naoLidasContainer.appendChild(notificacao);
-            }
-        }
-    });
-
-    // Atualizar mensagens de "sem notificações"
+    // Se o contêiner "Não Lidas" estiver vazio, exibir mensagem
     if (!naoLidasContainer.hasChildNodes()) {
-        naoLidasContainer.innerHTML = `<span>Sem notificações não lidas</span>`;
+        if (!naoLidasContainer.querySelector('span')) {
+            naoLidasContainer.innerHTML = `<span>Sem notificações não lidas</span>`;
+        }
     } else {
-        const span = naoLidasContainer.querySelector('span');
-        if (span) span.remove();
+        const mensagem = naoLidasContainer.querySelector('span');
+        if (mensagem) mensagem.remove();
     }
 
+    // Se o contêiner "Lidas" estiver vazio, exibir mensagem
     if (!lidasContainer.hasChildNodes()) {
-        lidasContainer.innerHTML = `<span>Sem notificações lidas</span>`;
+        if (!lidasContainer.querySelector('span')) {
+            lidasContainer.innerHTML = `<span>Sem notificações lidas</span>`;
+        }
     } else {
-        const span = lidasContainer.querySelector('span');
-        if (span) span.remove();
+        const mensagem = lidasContainer.querySelector('span');
+        if (mensagem) mensagem.remove();
     }
 }
+
 
 
 
 function markAsRead(notificationId, element) {
-    if (!notificationId) {
-        console.error("notificationId não foi definido!");
-        return;
-    }
+    fetch(`/notificacoes/lida/${notificationId}`, {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+            'Content-Type': 'application/json',
+        },
+    })
+    .then(response => {
+        if (response.ok) {
+            return response.json();
+        }
+        throw new Error('Erro ao marcar como lida.');
+    })
+    .then(data => {
+        if (data.success) {
+            const naoLidasContainer = document.getElementById('naoLidas');
+            const lidasContainer = document.getElementById('lidas');
 
-    // Exemplo de operação:
-    fetch(`/notifications/${notificationId}/mark-as-read`, { method: 'POST' })
-        .then(response => {
-            if (response.ok) {
-                // Atualize o status da notificação no DOM
-                element.classList.remove('nao-lida');
-                element.classList.add('lida');
-            } else {
-                console.error("Erro ao marcar como lida.");
-            }
-        })
-        .catch(err => console.error("Erro na requisição:", err));
+            // Atualiza classes do elemento
+            element.classList.remove('nao-lida');
+            element.classList.add('lida');
+
+            // Move a notificação para a seção de lidas
+            naoLidasContainer.removeChild(element);
+            lidasContainer.appendChild(element);
+
+            atualizarEstiloNotificacoes(); // Atualiza a mensagem
+        } else {
+            console.error(data.message);
+        }
+    })
+    .catch(error => console.error(error.message));
 }
+
+
+
 
 async function markAsRead(notificationId, element) {
     try {

@@ -14,7 +14,7 @@ class NotificationController extends Controller
         // Notificações "Não Lidas" (Inclui vistas ou não vistas, mas não marcadas como lidas)
         $naoLidas = NotificationUsers::where('user_id', $userId)
             ->where('lida', false)
-            ->orderBy('vista', 'asc') // Exibe não vistas primeiro
+            ->orderBy('vista', 'desc') // Exibe não vistas primeiro
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -23,7 +23,11 @@ class NotificationController extends Controller
             ->where('lida', true)
             ->orderBy('created_at', 'desc')
             ->get();
-
+          
+            dd([
+                'naoLidas' => $naoLidas->toArray(),
+                'lidas' => $lidas->toArray(),
+            ]); 
         return view('notifications.index', compact('naoLidas', 'lidas'));
     }
 
@@ -39,10 +43,7 @@ class NotificationController extends Controller
     public function marcarComoLida($id)
     {
         $notificacao = NotificationUsers::where('id', $id)
-            ->where(function ($query) {
-                $query->where('user_id', auth()->id())
-                    ->orWhere('responsavel_id', auth()->id());
-            })
+            ->where('user_id', auth()->id())
             ->first();
 
         if ($notificacao) {
@@ -54,6 +55,7 @@ class NotificationController extends Controller
 
         return response()->json(['success' => false, 'message' => 'Notificação não encontrada.'], 404);
     }
+
 
 
 
@@ -95,20 +97,16 @@ public function marcarComoVista()
     return response()->json(['success' => true]);
 }
 
-public function marcarComoVistas(Request $request) {
-    // Autenticação do usuário
-    $user = auth()->user();
+public function marcarComoVistas()
+{
+    $userId = Auth::id();
 
-    if (!$user) {
-        return response()->json(['success' => false, 'message' => 'Usuário não autenticado.'], 401);
-    }
+    // Atualiza todas as notificações do usuário para "vista", mas sem marcar como "lida"
+    NotificationUsers::where('user_id', $userId)
+        ->where('vista', false) // Marca apenas as notificações que ainda não foram vistas
+        ->update(['vista' => true]);
 
-    // Marcar todas as notificações como vistas
-    $notificacoes = NotificationUsers::where('user_id', $user->id)
-        ->where('vista', false)
-        ->update(['vista' => true, 'lida' => true]);
-
-    return response()->json(['success' => true, 'mensagem' => 'Notificações marcadas como vistas.']);
+    return response()->json(['success' => true]);
 }
 
 }

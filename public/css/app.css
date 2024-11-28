@@ -88,13 +88,7 @@
     border-radius: 10px;
 }
 
-.notification-content{
-    display: flex;
-    justify-content: start;
-    gap: 10px;
-    align-items: center;
-    width: 350px;
-}
+
 
 .img-notification{
     width: 32px;
@@ -1533,24 +1527,36 @@ button:active{
     color: #bbb;
 }
 
-.notification-content {
+.notification-content{
+    display: flex;
+    justify-content: start;
+    gap: 10px;
+    align-items: center;
+    width: 350px;
     padding: 10px;
-    margin-bottom: 5px;
     transition: background-color 0.3s;
     border-radius: 5px;
 }
 
+.notification-content p{
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+
+
 .notification-content.vista {
-    background-color: #f0f8ff; /* Fundo claro para notificações vistas */
+    background-color: #2b2b2b; /* Fundo claro para notificações vistas */
 }
 
-.notification-content.lida {
-    background-color: white; /* Fundo branco para notificações lidas */
+.lida {
+    background-color: #fff !important;
+    border: 0.1px solid #ABABAB !important; /* Fundo branco para notificações lidas */
 }
-
-.notification-content:not(.vista):not(.lida) {
-    background-color: #e9ecef; /* Fundo mais escuro para notificações novas */
-}
+/* Fundo mais escuro para notificações novas */
+/* .notification-content:not(.vista):not(.lida) {
+    background-color: #e9ecef; 
+} */
 
 .notification-item.vista {
     background-color: #f9f9f9; /* Fundo claro para notificações vistas */

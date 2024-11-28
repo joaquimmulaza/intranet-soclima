@@ -322,13 +322,16 @@ Route::get('/test-twilio', [AuthController::class, 'testTwilio'])->name('test.tw
 
 //Notificações
 
-Route::get('/notificacoes', [NotificationController::class, 'index'])->name('notificacoes');
-Route::get('/notificacoes/marcar/{id}', [NotificationController::class, 'marcarComoLida'])->name('notificacoes.marcar');
-
 Route::middleware('auth')->group(function () {
+    // Página de notificações
     Route::get('/notificacoes', [NotificationController::class, 'index'])->name('notificacoes.index');
+    
+    // Marcar notificações como vistas
     Route::post('/notificacoes/vista', [NotificationController::class, 'marcarComoVista'])->name('notificacoes.vista');
+
+    // Marcar uma única notificação como lida
     Route::post('/notificacoes/lida/{id}', [NotificationController::class, 'marcarComoLida'])->name('notificacoes.lida');
+
+    // Marcar todas as notificações como vistas/lidas
+    Route::post('/notificacoes/marcar-como-vistas', [NotificationController::class, 'marcarComoVistas'])->name('notificacoes.marcar-todas');
 });
-Route::post('/notificacoes/marcar-como-vistas', [NotificationController::class, 'marcarComoVistas']);
-Route::post('/notificacoes/marcar-como-lida/{id}', [NotificacaoController::class, 'marcarComoLida'])->name('notificacao.lida');
