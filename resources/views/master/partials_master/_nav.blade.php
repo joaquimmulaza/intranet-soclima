@@ -353,6 +353,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+    
     // Função para controlar a exibição de um dropdown específico e fechar os outros abertos// Função para controlar a exibição de um dropdown específico e fechar os outros abertos
     function toggleDropdown(dropdownId, toggleButtonId) {
     const dropdown = document.getElementById(dropdownId);
@@ -467,7 +468,8 @@ function atualizarEstiloNotificacoes() {
 
 
 function markAsRead(notificationId, element) {
-    fetch(`/notificacoes/lida/${notificationId}`, {
+    console.log(`Marcar como lida: ${notificationId}`);
+    fetch(`/notifications/${notificationId}/mark-as-read`, { // Ajuste a rota para o que você configurou
         method: 'POST',
         headers: {
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
@@ -490,16 +492,20 @@ function markAsRead(notificationId, element) {
             element.classList.add('lida');
 
             // Move a notificação para a seção de lidas
-            naoLidasContainer.removeChild(element);
-            lidasContainer.appendChild(element);
+            if (naoLidasContainer.contains(element)) {
+                naoLidasContainer.removeChild(element);
+                lidasContainer.appendChild(element);
+            }
 
-            atualizarEstiloNotificacoes(); // Atualiza a mensagem
+            atualizarEstiloNotificacoes(); // Atualiza a mensagem de status
         } else {
             console.error(data.message);
         }
     })
     .catch(error => console.error(error.message));
 }
+
+
 
 
 

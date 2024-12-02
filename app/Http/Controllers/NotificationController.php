@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use App\NotificationUsers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class NotificationController extends Controller
 {
@@ -40,8 +41,9 @@ class NotificationController extends Controller
     
 
 
-    public function marcarComoLida($id)
+    public function markAsRead($id)
     {
+        Log::info('Requisição recebida para marcar como lida.', ['id' => $id, 'user_id' => auth()->id()]);
         $notificacao = NotificationUsers::where('id', $id)
             ->where('user_id', auth()->id())
             ->first();
@@ -52,7 +54,7 @@ class NotificationController extends Controller
 
             return response()->json(['success' => true, 'message' => 'Notificação marcada como lida.']);
         }
-
+        Log::warning('Notificação não encontrada ou não pertence ao usuário.', ['id' => $id, 'user_id' => auth()->id()]);
         return response()->json(['success' => false, 'message' => 'Notificação não encontrada.'], 404);
     }
 

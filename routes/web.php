@@ -330,8 +330,18 @@ Route::middleware('auth')->group(function () {
     Route::post('/notificacoes/vista', [NotificationController::class, 'marcarComoVista'])->name('notificacoes.vista');
 
     // Marcar uma única notificação como lida
-    Route::post('/notificacoes/lida/{id}', [NotificationController::class, 'marcarComoLida'])->name('notificacoes.lida');
+
 
     // Marcar todas as notificações como vistas/lidas
     Route::post('/notificacoes/marcar-como-vistas', [NotificationController::class, 'marcarComoVistas'])->name('notificacoes.marcar-todas');
+
+    Route::post('/notifications/{id}/mark-as-read', [NotificationController::class, 'markAsRead'])
+    ->middleware('auth')
+     ->name('notifications.markAsRead');
+});
+
+
+
+Route::post('/test-csrf', function () {
+    return response()->json(['success' => true, 'message' => 'CSRF válido']);
 });
