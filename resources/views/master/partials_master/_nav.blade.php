@@ -43,15 +43,17 @@
                 return $notification_user->user_id == Auth::id() || $notification_user->responsavel_id == Auth::id();
             });
 
-            // Separar notificações lidas e não lidas
-            $naoLidas = $userNotifications->filter(fn($n) => !$n->lida);
-            $lidas = $userNotifications->filter(fn($n) => $n->lida);
+            
+            // Separar notificações lidas, não lidas e não vistas e ordenar por ordem decrescente de criação
+            $naoLidas = $userNotifications->filter(fn($n) => !$n->lida)->sortByDesc('created_at');
+            $naoVistas = $userNotifications->filter(fn($n) => !$n->vista)->sortByDesc('created_at');
+            $lidas = $userNotifications->filter(fn($n) => $n->lida)->sortByDesc('created_at');
         @endphp
 
 
-        @if(auth()->check() && $userNotifications->count() > 0)
+        @if(auth()->check() && $naoVistas->count() > 0)
             <span class="shapeNotification navbar-badge">
-                {{ $userNotifications->count() }}
+                {{ $naoVistas->count() }}
             </span>
         @endif
         <img src="{{ asset('logo/img/icon/Notification-button.svg') }}" alt="Ícone Notificação" id="notificationIcon"
@@ -66,18 +68,19 @@
             <h6>Não Lidas</h6>
             <div class="lista-notificacoes" id="naoLidas">
                 @forelse($naoLidas as $notification_user)
-                <a class="text-notification notification-item {{ $notification_user->lida ? 'lida' : 'nao-lida' }}" 
-                href="{{ $notification_user->rota ?? '#' }}" 
-                onclick="markAsRead('{{ $notification_user->id }}', this);"
-                data-id="{{ $notification_user->id }}" 
-                data-lida="{{ $notification_user->lida ? 'true' : 'false' }}" 
-                data-vista="false">
-                    <div class="notification-content">
-                        <img class="img-notification" src="{{ URL::to('/') }}/public/avatar_users/{{ $notification_user->user->avatar ?? 'default.png' }}" alt="Ícone Notificação">
-                        <p>{!! $notification_user->descricao !!}</p>
-                    </div>
-                    <div class="time-notification"><small>{{ $notification_user->tempo_decorrido_formatado }}</small></div>
-                </a>
+                <a class="text-notification notification-item 
+    {{ $notification_user->lida ? 'lida' : ($notification_user->vista ? 'vista-nao-lida' : 'nao-lida') }}" 
+    href="{{ $notification_user->rota ?? '#' }}" 
+    onclick="markAsRead('{{ $notification_user->id }}', this);"
+    data-id="{{ $notification_user->id }}" 
+    data-lida="{{ $notification_user->lida ? 'true' : 'false' }}" 
+    data-vista="{{ $notification_user->vista ? 'true' : 'false' }}">
+    <div class="notification-content">
+        <img class="img-notification" src="{{ URL::to('/') }}/public/avatar_users/{{ $notification_user->user->avatar ?? 'default.png' }}" alt="Ícone Notificação">
+        <p>{!! $notification_user->descricao !!}</p>
+    </div>
+    <div class="time-notification"><small>{{ $notification_user->tempo_decorrido_formatado }}</small></div>
+</a>
                 @empty
                     <span>Sem novas notificações</span>
                 @endforelse

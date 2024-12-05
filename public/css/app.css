@@ -1561,3 +1561,8 @@ button:active{
 .notification-item.vista {
     background-color: #f9f9f9; /* Fundo claro para notificações vistas */
 }
+
+.notification-item.vista-nao-lida {
+    background-color: #ddd;
+    border: 1px solid #ABABAB !important;
+}
