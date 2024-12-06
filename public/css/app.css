@@ -1566,3 +1566,62 @@ button:active{
     background-color: #ddd;
     border: 1px solid #ABABAB !important;
 }
+
+.fc-button{
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.fc-toolbar.fc-header-toolbar {
+    position: relative;
+}
+
+.fc-toolbar.fc-header-toolbar .fc-left {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    color: #555;
+    font-size: 21.42px;
+    font-weight: 700;
+}
+
+.fc-toolbar.fc-header-toolbar .fc-right{
+    position: absolute;
+    right: 0;
+} 
+
+.container_calendar{
+    width: 1080px;
+    margin: 0 auto;
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 21px 21px;
+    color: #555 !important;
+}
+
+.fc-head, .fc-head-container{
+    border: none !important;
+}
+
+.fc-day-header{
+    border: none !important;
+    background-color: #fff;
+}
+
+.fc-time{
+    display: none;
+}
+
+.fc-day-header span {
+    font-size: 21.42px;
+}
+
+.fc-week{
+    border: 1px solid #DBDBDB !important;
+    border-bottom: none !important;
+}
+
+thead th:hover tbody td {
+    background-color: red;
+  }

@@ -203,7 +203,30 @@ class FeriaController extends Controller
             $feria->user_id // ID do usuário que fez o pedido
         );
 
+
         return redirect()->route('user.pedidos')->with('success', 'Pedido de férias rejeitado com sucesso.');
     }
+
+    public function getEventos()
+    {
+        // Recupera todos os pedidos de férias aprovados
+        $ferias = Feria::where('status', 'aprovado')->get();  // Somente as férias aprovadas
+        
+
+        $events = [];
+        foreach ($ferias as $feria) {
+            $responsavelNome = $feria->responsavel ? $feria->responsavel->name : 'Desconhecido'; // Nome do responsável ou 'Desconhecido' se nulo
+            $events[] = [
+                'title' => 'Férias de ' . $feria->user->name,
+                'start' => \Carbon\Carbon::parse($feria->data_inicio)->toIso8601String(),
+                'end' => \Carbon\Carbon::parse($feria->data_fim)->toIso8601String(),
+                'description' => 'Aprovado por ' . $responsavelNome,
+                'status' => $feria->status,
+            ];
+        }
+
+        return response()->json($events);  // Retorna os eventos no formato JSON
+    }
+
 }
 

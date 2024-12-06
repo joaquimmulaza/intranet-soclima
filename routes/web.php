@@ -345,3 +345,8 @@ Route::middleware('auth')->group(function () {
 Route::post('/test-csrf', function () {
     return response()->json(['success' => true, 'message' => 'CSRF válido']);
 });
+
+Route::get('/events', [FeriaController::class, 'getEventos']);
+Route::get('/calendar', function () {
+    return view('public.calendar');  // Chama a view calendar.blade.php
+})->name('public.calendar');

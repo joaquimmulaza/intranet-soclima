@@ -79,7 +79,7 @@
                 </li>
                 <li>
                     <img src="logo/img/icon/Vector.svg" alt="">
-                    <a href="#">Férias</a>
+                    <a href="{{route('public.calendar')}}">Férias</a>
                 </li>
             </ul>
         </div>
