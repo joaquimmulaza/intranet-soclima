@@ -1625,3 +1625,8 @@ button:active{
 thead th:hover tbody td {
     background-color: red;
   }
+
+.fc-scroller {
+    overflow: hidden !important;
+    height: 100% !important;
+}
