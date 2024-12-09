@@ -70,10 +70,17 @@ class UserController extends Controller
         return redirect()->route('user.index');
     }
 
-    public function pedidos() {
-        $users = User::where('status', '!=', 'ativo')->get();
-        $ferias = Feria::where('status', 'pendente')->get(); // Ajuste conforme sua lógica
-        return view('user.pedidos', compact('users', 'ferias'));
+    public function pedidos()
+    {
+        // Obtém o ID do responsável logado
+        $responsavelId = Auth::id();
+
+        // Recupera apenas as férias pendentes do responsável logado
+        $ferias = Feria::where('status', 'pendente')
+                    ->where('responsavel_id', $responsavelId)
+                    ->get();
+
+        return view('user.pedidos', compact('ferias'));
     }
 
     public function liberaPedido(User $user){
@@ -275,6 +282,7 @@ class UserController extends Controller
             $user->data_validade_bi = $request->data_validade_bi;
             $user->fone = $request->fone;
             $user->genero = $request->genero;
+            $user->responsavel_id = $request->responsavel_id;
             if(!empty($request->password)){
                 $user->password = Hash::make($request->password);
             }

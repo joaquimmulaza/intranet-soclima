@@ -43,7 +43,7 @@ class NotificationController extends Controller
 
     public function markAsRead($id)
     {
-        Log::info('Requisição recebida para marcar como lida.', ['id' => $id, 'user_id' => auth()->id()]);
+        
         $notificacao = NotificationUsers::where('id', $id)
             ->where('user_id', auth()->id())
             ->first();

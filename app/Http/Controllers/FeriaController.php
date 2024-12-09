@@ -1,7 +1,9 @@
 <?php
-
 namespace App\Http\Controllers;
 
+use App\Mail\FeriaSolicitadaMail;
+use App\Mail\FeriaAprovadaOuReprovadaMail;
+use Illuminate\Support\Facades\Mail;
 use App\Feria;
 use App\Feriado;
 use App\User;
@@ -13,10 +15,15 @@ class FeriaController extends Controller
 {
     public function pedidos()
     {
-        // Exibir todos os pedidos de férias do usuário logado
-        $users = User::where('status', '!=', 'ativo')->get();
-        $ferias = Feria::where('status', 'pendente')->get(); // Ajuste conforme sua lógica
-        return view('user.pedidos', compact('users', 'ferias'));
+        // Obtém o ID do responsável logado
+        $responsavelId = Auth::id();
+
+        // Recupera apenas as férias pendentes do responsável logado
+        $ferias = Feria::where('status', 'pendente')
+                    ->where('responsavel_id', $responsavelId)
+                    ->get();
+
+        return view('user.pedidos', compact('ferias'));
     }
 
     public function create()
@@ -58,6 +65,12 @@ class FeriaController extends Controller
             route('ferias.pedidos'),
             $feria->responsavel_id
         );
+
+        $responsavel = User::find($feria->responsavel_id);
+        $funcionario = Auth::user();
+
+         // Enviar e-mail para o responsável
+        Mail::send(new FeriaSolicitadaMail($funcionario, $feria));
 
         return redirect()->route('home')->with('success', 'Férias solicitadas com sucesso!');
     }
@@ -170,6 +183,10 @@ class FeriaController extends Controller
         $feria->status = 'aprovado';
         $feria->save();
         $responsavelNome = Auth::user()->name; 
+        $funcionario = User::find($feria->user_id);
+
+        // Enviar e-mail para o funcionário
+        Mail::send(new FeriaAprovadaOuReprovadaMail($funcionario, $feria, 'aprovada'));
         // Cria uma notificação para o usuário que fez o pedido
         $notificationController = app(NotificationController::class);
         $notificationController->criar(
@@ -192,6 +209,12 @@ class FeriaController extends Controller
         $feria->status = 'rejeitado';
         $feria->save();
         $responsavelNome = Auth::user()->name; 
+
+        $funcionario = User::find($feria->user_id);
+
+        // Enviar e-mail para o funcionário
+        Mail::send(new FeriaAprovadaOuReprovadaMail($funcionario, $feria, 'reprovada'));
+    
 
         // Cria uma notificação para o usuário que fez o pedido
         $notificationController = app(NotificationController::class);

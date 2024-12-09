@@ -1630,3 +1630,7 @@ thead th:hover tbody td {
     overflow: hidden !important;
     height: 100% !important;
 }
+
+.fc-content-skeleton td:hover {
+    background-color: red !important;
+}
