@@ -106,9 +106,16 @@
 <h1>Nova solicitação de férias</h1>
 <p>O funcionário <strong>{{ $funcionario->name }}</strong> solicitou férias:</p>
 <ul>
-    <li><strong>Período:</strong> {{ $feria->data_inicio }} a {{ $feria->data_fim }}</li>
+    <li><strong>Período:</strong> {{ \Carbon\Carbon::parse($feria->data_inicio)->format('d/m/Y') }} a {{ \Carbon\Carbon::parse($feria->data_fim)->format('d/m/Y') }}</li>
     <li><strong>Status:</strong> {{ ucfirst($feria->status) }}</li>
 </ul>
+
+<p>Para visualizar e gerenciar esta solicitação, <strong> <a href="{{ route('ferias.pedidos') }}" 
+       style="display: inline-block; padding: 10px 20px; font-size: 16px; color: #44A2D0;  text-decoration: underline; border-radius: 5px;">
+        clique aqui!
+    </a></strong>
+</p>
+    
 
 </body>
 

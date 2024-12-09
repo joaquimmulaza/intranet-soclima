@@ -22,7 +22,7 @@ class FeriaSolicitadaMail extends Mailable
     public function build()
     {
         return $this
-            ->subject("Solicitação de Férias - {$this->funcionario->name}")
+            ->subject("Solicitação de férias - {$this->funcionario->name}")
             ->to($this->feria->responsavel->email) // E-mail do responsável
             ->view('mail.solicitacao')
             ->with([

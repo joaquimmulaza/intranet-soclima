@@ -103,13 +103,12 @@
 
 <body style="background-color: #f4f4f4; margin: 0 !important; padding: 0 !important;">
 {{-- HIDDEN PREHEADER TEXT --}}
-<h1>Solicitação de Férias - {{ ucfirst($status) }}</h1>
-<p>Olá {{ $funcionario->name }},</p>
-<p>Sua solicitação de férias foi <strong>{{ $status }}</strong>:</p>
-<ul>
-    <li><strong>Período:</strong> {{ $feria->data_inicio }} a {{ $feria->data_fim }}</li>
-</ul>
-<p>Em caso de dúvidas, entre em contato com o responsável do seu departamento.</p>
+<h1>Solicitação de férias - {{ strtoupper($status) }}</h1>
+<p>Olá, {{ $funcionario->name }},</p>
+<p>A sua solicitação de férias foi <strong>{{ $status }}!</strong></p>
+<p><strong>Previsto para:</strong></p>
+<p>Início: {{ \Carbon\Carbon::parse($feria->data_inicio)->format('d/m/Y') }}&nbsp;&nbsp;&nbsp;&nbsp;Fim: {{ \Carbon\Carbon::parse($feria->data_fim)->format('d/m/Y') }}</p><br>
+<p>Se quiser saber mais, por favor, entre em contacto com o seu chefe de departamento.</p>
 
 </body>
 
