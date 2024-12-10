@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use App\NotificationUsers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
+use App\User;
 
 class NotificationController extends Controller
 {
@@ -35,11 +37,16 @@ class NotificationController extends Controller
 
     public function showNavbar()
     {
-        $notificacoes = $this->carregarNotificacoes();
+        $userId = Auth::id();
+        // Carregar notificações específicas do usuário ou globais
+        $notificacoes = NotificationUsers::where(function ($query) use ($userId) {
+            $query->where('user_id', $userId) // Notificações específicas
+                ->orWhereNull('user_id');  // Notificações globais
+        })
+        ->orderBy('created_at', 'desc')
+        ->get();
         return view('master.partials_master._nav', compact('notificacoes'));
     }
-    
-
 
     public function markAsRead($id)
     {
@@ -109,6 +116,33 @@ public function marcarComoVistas()
         ->update(['vista' => true]);
 
     return response()->json(['success' => true]);
+}
+
+public function gerarNotificacaoAniversariantes()
+{
+    $hoje = Carbon::now()->format('m-d');
+
+    // Filtra usuários que fazem aniversário hoje
+    $aniversariantes = User::whereRaw("DATE_FORMAT(nascimento, '%m-%d') = ?", [$hoje])->get();
+
+    if ($aniversariantes->count() > 0) {
+        if ($aniversariantes->count() === 1) {
+            $descricao = "{$aniversariantes[0]->nome} faz anos hoje.";
+        } else {
+            $primeiroNome = $aniversariantes[0]->nome;
+            $descricao = "$primeiroNome e mais " . ($aniversariantes->count() - 1) . " pessoas fazem anos hoje.";
+        }
+
+        // Cria a notificação global para os usuários
+        NotificationUsers::create([
+            'user_id' => null, // null indica que é uma notificação global
+            'titulo' => 'Aniversariantes do dia',
+            'descricao' => $descricao,
+            'rota' => '#', // Pode ajustar para uma rota específica, se desejar
+            'lida' => false,
+            'vista' => false,
+        ]);
+    }
 }
 
 }

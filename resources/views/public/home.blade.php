@@ -418,18 +418,34 @@
                 <div class="eventsContainer">
                     <img src="logo/img/icon/Group14.svg" alt="">
                     <div class="aniversariosBody">
-                    @php
-                        $aniversariantes = aniversariantes_hoje();
-                    @endphp
-                    @if($aniversariantes->isEmpty())
-                        <p style="margin: 0 !important; padding: 0 !important;">Nenhum aniversário hoje,  mas estamos prontos para comemorar quando houver!</p>
-                    @else
-                    @foreach(aniversariantes_hoje() as $user)
-                        <h2 style="margin: 0 !important; padding: 0 !important;">{{$user->name }}</h2>
-                        <p style="margin: 0 !important; padding: 0 !important;" >Completou idade hoje {{date('d/m', strtotime($user->nascimento))}}</p>
-                    @endforeach
-                    @endif
+                        @php
+                            $aniversariantes = aniversariantes_hoje();
+                        @endphp
+
+                        @if($aniversariantes->isEmpty())
+                            <p style="margin: 0 !important; padding: 0 !important;">Nenhum aniversário hoje, mas estamos prontos para comemorar quando houver!</p>
+                        @else
+                            @php
+                                $count = $aniversariantes->count();
+                            @endphp
+                            
+                            @if($count == 1)
+                                <h2 style="margin: 0 !important; padding: 0 !important;">{{$aniversariantes->first()->name }} faz anos hoje!</h2>
+                            @else
+                                <h2 style="margin: 0 !important; padding: 0 !important;">
+                                    @foreach($aniversariantes as $index => $user)
+                                        @if($index == 0)
+                                            {{$user->name }}
+                                        @elseif($index == $count - 1)
+                                            e mais {{$count - 1}} pessoa
+                                        @endif
+                                    @endforeach
+                                </h2>
+                                <p style="padding: 0 !important; margin: 0 !important;">Fazem anos hoje!</p>
+                            @endif
+                        @endif
                     </div>
+
                 </div>
             </div>
 
