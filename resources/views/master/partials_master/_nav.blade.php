@@ -69,18 +69,25 @@
             <div class="lista-notificacoes" id="naoLidas">
                 @forelse($naoLidas as $notification_user)
                 <a class="text-notification notification-item 
-    {{ $notification_user->lida ? 'lida' : ($notification_user->vista ? 'vista-nao-lida' : 'nao-lida') }}" 
-    href="{{ $notification_user->rota ?? '#' }}" 
-    onclick="markAsRead('{{ $notification_user->id }}', this);"
-    data-id="{{ $notification_user->id }}" 
-    data-lida="{{ $notification_user->lida ? 'true' : 'false' }}" 
-    data-vista="{{ $notification_user->vista ? 'true' : 'false' }}">
-    <div class="notification-content">
-        <img class="img-notification" src="{{ URL::to('/') }}/public/avatar_users/{{ $notification_user->user->avatar ?? 'default.png' }}" alt="Ícone Notificação">
-        <p>{!! $notification_user->descricao !!}</p>
-    </div>
-    <div class="time-notification"><small>{{ $notification_user->tempo_decorrido_formatado }}</small></div>
-</a>
+                    {{ $notification_user->lida ? 'lida' : ($notification_user->vista ? 'vista-nao-lida' : 'nao-lida') }}" 
+                    href="{{ $notification_user->rota ?? '#' }}" 
+                    onclick="markAsRead('{{ $notification_user->id }}', this);"
+                    data-id="{{ $notification_user->id }}" 
+                    data-lida="{{ $notification_user->lida ? 'true' : 'false' }}" 
+                    data-vista="{{ $notification_user->vista ? 'true' : 'false' }}">
+                    <div class="notification-content">
+                            @php
+                                $imageSrc = ($notification_user->titulo === 'Aniversariantes do dia' || $notification_user->titulo === 'Aniversário')
+                                    ? asset('logo/img/icon/birthday_icon.svg')
+                                    : asset('public/avatar_users/' . ($notification_user->user->avatar ?? 'default.png'));
+                            @endphp
+                            <img class="img-notification" src="{{ $imageSrc }}" alt="Ícone Notificação">
+                            <p>{!! $notification_user->descricao !!}</p>
+                        
+                    </div>
+                    <div class="time-notification"><small>{{ $notification_user->tempo_decorrido_formatado }}</small></div>
+                </a>
+               
                 @empty
                     <span>Sem novas notificações</span>
                 @endforelse
@@ -95,7 +102,12 @@
                     <a class="text-notification notification-item lida" href="{{ $notification_user->rota ?? '#' }}"
                     data-id="{{ $notification_user->id }}" data-lida="true" data-vista="true">
                         <div class="notification-content">
-                            <img class="img-notification" src="{{ URL::to('/') }}/public/avatar_users/{{ $notification_user->user->avatar ?? 'default.png' }}" alt="Ícone Notificação">
+                        @php
+                                $imageSrc = ($notification_user->titulo === 'Aniversariantes do dia' || $notification_user->titulo === 'Aniversário')
+                                    ? asset('logo/img/icon/birthday_icon.svg')
+                                    : asset('public/avatar_users/' . ($notification_user->user->avatar ?? 'default.png'));
+                            @endphp
+                            <img class="img-notification" src="{{ $imageSrc }}" alt="Ícone Notificação">
                             <p>{!! $notification_user->descricao !!}</p>
                         </div>
                         <div class="time-notification"><small>{{ $notification_user->tempo_decorrido_formatado }}</small></div>

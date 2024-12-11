@@ -173,9 +173,20 @@
                                             <button style="border-top-left-radius: 5px; border-top-right-radius: 5px;" type="button" class="btnPosts" onClick="deleteData({{ $user->id }})">
                                                 Eliminar
                                             </button>
-                                            <button type="button" data-toggle="modal" data-target="#modalEdit" style="border-bottom: none;" class="btnPosts"  data-id="{{$user->id}}" data-title="{{$user->title}}" data-content="{{$user->content}}">
+                                            <!-- <button type="button" data-toggle="modal" data-target="#modalEdit" style="border-bottom: none;" class="btnPosts"  data-id="{{$user->id}}" data-title="{{$user->title}}" data-content="{{$user->content}}">
                                                 Suspender
+                                            </button> -->
+                                            <button type="button" 
+                                                    class="btnPosts" 
+                                                    data-toggle="modal" 
+                                                    data-target="#modalEdit"
+                                                    data-id="{{ $user->id }}"
+                                                    data-status="{{ $user->status }}"
+                                                    onclick="toggleStatus(this)">
+                                                {{ $user->status == 'ativo' ? 'Suspender' : 'Ativar' }}
                                             </button>
+
+                                            
                                             <button type="button" data-toggle="modal" data-target="#modalEdit" style="border-bottom: none;" class="btnPosts"  data-id="{{$user->id}}" data-title="{{$user->title}}" data-content="{{$user->content}}">
                                                 Consultar férias
                                             </button>
@@ -353,6 +364,37 @@
         //     }
         // });
 
+
+        function toggleStatus(button) {
+    // Obtém o ID do usuário e o status atual
+    var userId = $(button).data('id');
+    var currentStatus = $(button).data('status');
+    
+    // Envia a requisição AJAX para a rota de ativação/desativação
+    $.ajax({
+        url: '/user/' + userId + '/ativar',  // Altere conforme sua rota
+        type: 'POST',
+        data: {
+            _token: '{{ csrf_token() }}',  // Adiciona o token CSRF para a segurança
+        },
+        success: function(response) {
+            // Se a requisição for bem-sucedida, atualiza o status
+            if (response.status === 'ativo') {
+                $(button).text('Suspender');  // Altera o texto para 'Suspender'
+                $(button).data('status', 'ativo');  // Atualiza o status do botão
+            } else {
+                $(button).text('Ativar');  // Altera o texto para 'Ativar'
+                $(button).data('status', 'inativo');  // Atualiza o status do botão
+            }
+            // Exibe uma notificação de sucesso
+            alert(response.message);
+        },
+        error: function(xhr) {
+            // Caso haja erro na requisição
+            alert('Erro ao atualizar o status do usuário.');
+        }
+    });
+}
 
     </script>
 

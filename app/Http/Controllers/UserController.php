@@ -253,18 +253,27 @@ class UserController extends Controller
     }
 
     //SEM USO - toggle ativa usuario
-    public function ativacao(Request $request){
-        /*DATA - REQUEST TEM:
-         * status: ativo ou inativo
-         * member_id: O ID do usuario
-         * */
+    public function ativacao(Request $request, $id)
+{
+    // Encontrar o usuário pelo ID
+    $user = User::find($id);
 
-        $user = User::find($request->member_id);
-        $user->status = $request->status;
-        $user->save();
-        notify()->success("Usuário editado com sucesso!","Success","bottomRight");
-        return redirect()->route('home');
+    // Verificar se o usuário existe
+    if (!$user) {
+        return response()->json(['error' => 'Usuário não encontrado'], 404);
     }
+
+    // Alterar o status
+    $user->status = $user->status == 'ativo' ? 'inativo' : 'ativo';
+    $user->save();
+
+    // Retornar sucesso
+    return response()->json([
+        'status' => $user->status,
+        'message' => 'Status do usuário atualizado com sucesso!'
+    ]);
+}
+
 
     public function update(Request $request, User $user)
     {

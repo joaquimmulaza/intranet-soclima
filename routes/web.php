@@ -91,6 +91,7 @@ Route::get('/email', 'UserController@envio')->name('user.email');
 Route::resource('usuarios', 'UserController')->names('user')->parameters(['usuarios'=> 'user']);
 Route::resource('telefones', 'TelefoneController');
 Route::get('/ativador', 'UserController@ativacao')->name('user.ativa');
+Route::post('/user/{id}/ativar', 'UserController@ativacao')->name('user.ativar');
 Route::resource('telefones', 'TelefoneController');
 
 // Rota para exibir o formulário de edição de um telefone específico
