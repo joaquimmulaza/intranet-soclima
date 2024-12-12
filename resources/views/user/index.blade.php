@@ -4,7 +4,6 @@
 
 
 @section('content')
-
     {{-- CABEÇALHO BREADCRUMB--}}
     <div class="content-header header-crumb">
         <div class="container-fluid">

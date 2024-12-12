@@ -351,3 +351,5 @@ Route::get('/events', [FeriaController::class, 'getEventos']);
 Route::get('/calendar', function () {
     return view('public.calendar');  // Chama a view calendar.blade.php
 })->name('public.calendar');
+
+Route::get('/telefones/search', [TelefoneController::class, 'search'])->name('telefones.search');

@@ -25,7 +25,7 @@ class TelefoneController extends Controller
             'nome' => 'required|string|max:255',
             'departamento' => 'required|string|max:255',
             'funcao' => 'required|string|max:255',
-            'telefone' => 'required|string|max:15',
+            'telefone' => 'nullable|string|max:15',
             'email' => 'nullable|email',
         ]);
 
@@ -40,31 +40,46 @@ class TelefoneController extends Controller
     }
 
     public function edit($id)
+    {
+        $telefone = Telefone::findOrFail($id);
+        return view('telefones.edit', compact('telefone'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'nome' => 'required|string|max:255',
+            'departamento' => 'required|string|max:255',
+            'funcao' => 'required|string|max:255',
+            'telefone' => 'nullable|string|max:15',
+            'email' => 'nullable|email',
+        ]);
+
+        $telefone = Telefone::findOrFail($id);
+        $telefone->update($validated);
+        return redirect()->route('telefones.index')->with('success', 'Telefone atualizado com sucesso!');
+    }
+
+    public function search(Request $request)
 {
-    $telefone = Telefone::findOrFail($id);
-    return view('telefones.edit', compact('telefone'));
+    $query = $request->get('query');
+
+    // Filtrar telefones com base no nome
+    $telefones = Telefone::where('nome', 'LIKE', "%$query%")
+        ->orderBy('nome') // Ordenar pelo nome
+        ->get();
+
+    // Retornar apenas a tabela renderizada
+    return view('partials.telefones_table', compact('telefones'));
 }
 
-public function update(Request $request, $id)
-{
-    $validated = $request->validate([
-        'nome' => 'required|string|max:255',
-        'departamento' => 'required|string|max:255',
-        'funcao' => 'required|string|max:255',
-        'telefone' => 'required|string|max:15',
-        'email' => 'nullable|email',
-    ]);
 
-    $telefone = Telefone::findOrFail($id);
-    $telefone->update($validated);
-    return redirect()->route('telefones.index')->with('success', 'Telefone atualizado com sucesso!');
-}
 
-public function destroy($id)
-{
-    $telefone = Telefone::findOrFail($id);
-    $telefone->delete();
-    return redirect()->route('telefones.index')->with('success', 'Telefone excluído com sucesso!');
-}
+    public function destroy($id)
+    {
+        $telefone = Telefone::findOrFail($id);
+        $telefone->delete();
+        return redirect()->route('telefones.index')->with('success', 'Telefone excluído com sucesso!');
+    }
 
 }

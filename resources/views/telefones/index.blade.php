@@ -2,6 +2,7 @@
 @section('title', 'Lista Telefônica')
 
 @section('content')
+
 <script src="{{ asset('js/formMask/jquery.inputmask.min.js') }}"></script>
 {{-- CABEÇALHO BREADCRUMB --}}
 <div class="content-header header-crumb">
@@ -25,13 +26,70 @@
                 <div class=" card-primary">
                     <div class="cardPhoneHeader">
                         <button class="add-button" data-toggle="modal" data-target="#addContact">Adicionar</button>
-                        <div>
-                            <input class=" backgroundInput" placeholder="Pesquisar" type="text">
-                            <button class="filter"><img src="logo/img/icon/filter.svg" alt=""></button>
+                        <div class="filterContainer">
+                            <input id="searchInput" class=" backgroundInput" placeholder="Pesquisar" type="text">
+                            <button data-toggle="modal" data-target="#filtrar" class="filter"><img src="logo/img/icon/filter.svg" alt=""></button>
+                            <div class="modal fade modalOpt" id="filtrar" tabindex="-1" aria-labelledby="modalOptLabel" aria-hidden="true" data-backdrop="true" data-keyboard="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-body modal-bodyOpt">
+                                            <div class="containerBtnOpt">
+                                                <h1>Departamento</h1>
+                                                @can('app.dashboard')
+                                                <button type="button" class="btnPosts" data-departamento="Comercial">
+                                                Comercial
+                                                </button>
+                                                <button type="button" class="btnPosts" data-departamento="Assistência técnica">
+                                                Assistência técnica
+                                                </button>
+                                                <button type="button" class="btnPosts" data-departamento="Oficina mecânica">
+                                                Oficina mecânica
+                                                </button>
+                                                <button type="button" class="btnPosts" data-departamento="Fabrica de Condutas">
+                                                Fábrica de condutas
+                                                </button>
+                                                <button type="button" class="btnPosts" data-departamento="Armazém">
+                                                Armázem
+                                                </button>
+                                                <button type="button" class="btnPosts" data-departamento="Operações">
+                                                Operações
+                                                </button>
+                                                <button type="button" class="btnPosts" data-departamento="Marketing">
+                                                Marketing
+                                                </button>
+                                                <button type="button" class="btnPosts" data-departamento="Importação">
+                                                Importação
+                                                </button>
+                                                <button type="button" class="btnPosts" data-departamento="Recursos Humanos">
+                                                Recursos Humanos
+                                                </button>
+                                                <button type="button" class="btnPosts" data-departamento="Financeiro">
+                                                Financeiro
+                                                </button>
+                                                <button type="button" class="btnPosts" data-departamento="Relações Públicas">
+                                                Relações Públicas
+                                                </button>
+                                                <button type="button" class="btnPosts" data-departamento="Produção">
+                                                Produção
+                                                </button>
+                                                <button type="button" id="resetFilter" class="btnPosts">Todos os Departamentos</button>
+
+                                                @endcan
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="card-body">
+                        
+                    @php
+                        $telefones = $telefones->sortBy('nome'); // Ordena pela coluna 'nome' em ordem alfabética crescente
+                    @endphp
+
                     @foreach($telefones as $telefone)
+                    
                         <table class="containerTable">
                             <thead>
                                 <tr>
@@ -49,16 +107,16 @@
                                         <td>{{ $telefone->funcao }}</td>
                                         <td style="font-weight: 700;">{{ $telefone->departamento }}</td>
                                         <td style="padding: 0; margin: 0;" >
-                                            <span style="color: #009AC1; display: flex; padding: 0; margin: 0; justify-content: space-around; align-items: center; background: #EEF7FF; width: 129px !important; height: 27px; border-radius: 5px;">
+                                            <span style="color: #009AC1; display: flex; padding: 0 0 0 9px; margin: 0; justify-content: start; gap: 4px; align-items: center; background: #EEF7FF; width: 129px !important; height: 27px; border-radius: 5px; position: relative; bottom:15px;">
                                             <img style="padding: 0; margin: 0;" src="logo/img/icon/icon-cellphone.svg" alt="">
                                             <span style="font-weight: 600;">{{ $telefone->telefone }}<span>
                                             <span>
 
                                         </td>
                                         <td style="padding: 0; margin: 0;" >
-                                            <span style="color: #009AC1; display: flex; padding: 0; margin: 0; justify-content: space-around; align-items: center; background: #EEF7FF; !important; height: 27px; width: 76%; border-radius: 5px;">
+                                            <span style="color: #009AC1; display: flex; padding: 0 0 0 9px; margin: 0; justify-content: start; gap:4px; align-items: center; background: #EEF7FF; !important; height: 27px; width: 250px; border-radius: 5px; position: relative; bottom:15px;">
                                             <img style="padding: 0; margin: 0; font-weight: 600;" src="logo/img/icon/mail.svg" alt="">
-                                            <span style="font-weight: 600;">{{ $telefone->email }}<span>
+                                            <span style="font-weight: 600; ">{{ $telefone->email }}<span>
                                             <span>
 
                                         </td>
@@ -167,6 +225,8 @@
         </div>
     </div>
 </section>
+
+
 
 
 <div class="modal fade" id="addContact" tabindex="-1" aria-labelledby="createEventModalLabel" aria-hidden="true">
@@ -329,6 +389,119 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         });
     });
+
+//     document.getElementById('search').addEventListener('input', function () {
+//     let searchTerm = this.value.toLowerCase(); // Converte o termo em minúsculas
+//     let rows = document.querySelectorAll('.containerTable tbody tr'); // Seleciona todas as linhas da tabela
+
+//     rows.forEach(function (row) {
+//         let nome = row.querySelector('td:first-child').textContent.toLowerCase(); // Assume que o nome está na primeira célula
+//         let departamento = row.querySelector('td:nth-child(2)').textContent.toLowerCase(); // Assume que o departamento está na segunda célula
+
+//         if (nome.includes(searchTerm) || departamento.includes(searchTerm)) {
+//             row.style.display = ''; // Mostra a linha
+//         } else {
+//             row.style.display = 'none'; // Esconde a linha
+//         }
+//     });
+// });
+
+document.addEventListener("DOMContentLoaded", function () {
+    const searchInput = document.getElementById('searchInput');
+    
+    if (searchInput) {
+        searchInput.addEventListener('input', function () {
+            filtrarPorNome(this.value);
+        });
+    }
+
+    function filtrarPorNome(nomePesquisa) {
+        const nomePesquisaLower = nomePesquisa.trim().toLowerCase(); // Ignora maiúsculas/minúsculas e espaços extras
+        const rows = document.querySelectorAll('.containerTable tbody tr'); // Selecione todas as linhas da tabela dentro do <tbody>
+        
+        rows.forEach(row => {
+            const nomeContato = row.querySelector('td:nth-child(1)') ? row.querySelector('td:nth-child(1)').textContent.trim().toLowerCase() : ""; // Nome na primeira coluna
+            
+            // Verifica se o nome do contato corresponde ao texto da pesquisa
+            if (nomeContato.includes(nomePesquisaLower)) {
+                row.style.display = ''; // Exibe a linha
+            } else {
+                row.style.display = 'none'; // Oculta a linha
+            }
+        });
+    }
+});
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Seleciona todos os botões de filtro
+    const buttons = document.querySelectorAll('.btnPosts');
+
+    // Adiciona evento de clique em cada botão
+    buttons.forEach(button => {
+        button.addEventListener('click', function () {
+            const departamento = this.getAttribute('data-departamento'); // Obtém o departamento do botão
+            filtrarContatos(departamento); // Chama a função de filtro
+        });
+    });
+
+    // Função para filtrar os contatos por departamento
+    function filtrarContatos(departamento) {
+        const tables = document.querySelectorAll('.containerTable'); // Seleciona todas as tabelas
+
+        tables.forEach(table => {
+            const rows = table.querySelectorAll('tbody tr'); // Seleciona todas as linhas da tabela
+            let hasMatchingRows = false; // Flag para verificar se há linhas correspondentes ao filtro
+
+            rows.forEach(row => {
+                const depText = row.querySelector('td:nth-child(2)') ? row.querySelector('td:nth-child(2)').textContent.trim() : "";
+
+                // Se o departamento da linha corresponder ao departamento selecionado, exibe a linha
+                if (depText && depText.toLowerCase() === departamento.toLowerCase()) {
+                    row.style.display = ''; // Exibe a linha
+                    hasMatchingRows = true; // Marca que encontrou pelo menos uma linha correspondente
+                } else {
+                    row.style.display = 'none'; // Oculta a linha
+                }
+            });
+
+            // Exibe ou oculta a tabela com base na correspondência de linhas
+            if (hasMatchingRows) {
+                table.style.display = ''; // Exibe a tabela se houver linhas correspondentes
+            } else {
+                table.style.display = 'none'; // Oculta a tabela se não houver linhas correspondentes
+            }
+        });
+    }
+
+    // Função para exibir todos os contatos (reset)
+    const resetButton = document.getElementById('resetFilter');
+    if (resetButton) {
+        resetButton.addEventListener('click', function () {
+            mostrarTodosContatos(); // Exibe todos os contatos
+        });
+    }
+
+    // Exibe todas as linhas
+    function mostrarTodosContatos() {
+        const tables = document.querySelectorAll('.containerTable');
+        tables.forEach(table => {
+            const rows = table.querySelectorAll('tbody tr');
+            rows.forEach(row => {
+                row.style.display = ''; // Exibe todas as linhas
+            });
+            table.style.display = ''; // Exibe a tabela
+        });
+    }
+});
+
+
+
+
+
+
+
+
  
 </script>
 <script src="{{ asset('sweetalerta/app-sweetalert.js') }}"></script>

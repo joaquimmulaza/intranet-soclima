@@ -278,7 +278,6 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         try{
-
             $user->name = $request->name;
             $user->email = $request->email;
             $user->numero_mecanografico = $request->numero_mecanografico;
