@@ -498,6 +498,26 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
+document.addEventListener("DOMContentLoaded", function() {
+    const buttons = document.querySelectorAll('.btnPosts');
+    const resetButton = document.getElementById('resetFilter');
+    
+    buttons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Remove a classe 'active' de todos os botões
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            // Adiciona a classe 'active' ao botão clicado
+            this.classList.add('active');
+        });
+    });
+
+    // Adiciona evento para o botão de reset
+    resetButton.addEventListener('click', function() {
+        // Remove a classe 'active' de todos os botões
+        buttons.forEach(btn => btn.classList.remove('active'));
+    });
+});
 
 
 

@@ -1679,6 +1679,12 @@ thead th:hover tbody td {
     justify-content: start !important;
 }
 
+.filterContainer .btnPosts:focus {
+    outline: none !important;
+    background-color: #EFEFEF !important;
+    border: 2px solid #ccc !important;
+}
+
 .filterContainer .containerBtnOpt h1{
     margin: 18px 23px;
     font-size: 20px;
