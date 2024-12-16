@@ -95,10 +95,7 @@
                                 <tr>
                                     <th style="font-weight: 700;">{{ $telefone->nome }}</th>
                                     <th>Departamento</th>
-                                    <!-- <th>Função</th> -->
-                                    <!-- <th>Telefone</th> -->
-                                    <!-- <th>Email</th> -->
-                                    <!-- <th>Ações</th> -->
+                                 
                                 </tr>
                             </thead>
                             <tbody>
@@ -406,58 +403,98 @@ document.addEventListener("DOMContentLoaded", function () {
 //     });
 // });
 
-document.addEventListener("DOMContentLoaded", function () {
-    const searchInput = document.getElementById('searchInput');
+// document.addEventListener("DOMContentLoaded", function () {
+//     const searchInput = document.getElementById('searchInput');
     
-    if (searchInput) {
-        searchInput.addEventListener('input', function () {
-            filtrarPorNome(this.value);
-        });
-    }
+//     if (searchInput) {
+//         searchInput.addEventListener('input', function () {
+//             filtrarPorNome(this.value);
+//         });
+//     }
 
-    function filtrarPorNome(nomePesquisa) {
-        const nomePesquisaLower = nomePesquisa.trim().toLowerCase(); // Ignora maiúsculas/minúsculas e espaços extras
-        const rows = document.querySelectorAll('.containerTable tbody tr'); // Selecione todas as linhas da tabela dentro do <tbody>
+//     function filtrarPorNome(nomePesquisa) {
+//         const nomePesquisaLower = nomePesquisa.trim().toLowerCase(); // Ignora maiúsculas/minúsculas e espaços extras
+//         const rows = document.querySelectorAll(' tbody tr'); // Selecione todas as linhas da tabela dentro do <tbody>
         
-        rows.forEach(row => {
-            const nomeContato = row.querySelector('td:nth-child(1)') ? row.querySelector('td:nth-child(1)').textContent.trim().toLowerCase() : ""; // Nome na primeira coluna
+//         rows.forEach(row => {
+//             const nomeContato = row.querySelector('td:nth-child(2)') ? row.querySelector('td:nth-child(2)').textContent.trim().toLowerCase() : ""; // Nome na primeira coluna
             
-            // Verifica se o nome do contato corresponde ao texto da pesquisa
-            if (nomeContato.includes(nomePesquisaLower)) {
-                row.style.display = ''; // Exibe a linha
-            } else {
-                row.style.display = 'none'; // Oculta a linha
-            }
-        });
-    }
-});
+//             // Verifica se o nome do contato corresponde ao texto da pesquisa
+//             if (nomeContato.includes(nomePesquisaLower)) {
+//                 row.style.display = ''; // Exibe a linha
+//             } else {
+//                 row.style.display = 'none'; // Oculta a linha
+//             }
+//         });
+//     }
+// });
+
 
 
 document.addEventListener('DOMContentLoaded', function () {
-    // Seleciona todos os botões de filtro
+    // Seleciona todos os botões de filtro por departamento
     const buttons = document.querySelectorAll('.btnPosts');
 
-    // Adiciona evento de clique em cada botão
+    // Adiciona evento de clique em cada botão de departamento
     buttons.forEach(button => {
         button.addEventListener('click', function () {
             const departamento = this.getAttribute('data-departamento'); // Obtém o departamento do botão
-            filtrarContatos(departamento); // Chama a função de filtro
+            filtrarContatosPorDepartamento(departamento); // Chama a função de filtro por departamento
         });
     });
 
     // Função para filtrar os contatos por departamento
-    function filtrarContatos(departamento) {
+    function filtrarContatosPorDepartamento(departamento) {
         const tables = document.querySelectorAll('.containerTable'); // Seleciona todas as tabelas
 
         tables.forEach(table => {
             const rows = table.querySelectorAll('tbody tr'); // Seleciona todas as linhas da tabela
-            let hasMatchingRows = false; // Flag para verificar se há linhas correspondentes ao filtro
+            let hasMatchingRows = false; // Flag para verificar se há linhas correspondentes ao filtro de departamento
 
             rows.forEach(row => {
                 const depText = row.querySelector('td:nth-child(2)') ? row.querySelector('td:nth-child(2)').textContent.trim() : "";
 
                 // Se o departamento da linha corresponder ao departamento selecionado, exibe a linha
                 if (depText && depText.toLowerCase() === departamento.toLowerCase()) {
+                    row.style.display = ''; // Exibe a linha
+                    hasMatchingRows = true; // Marca que encontrou pelo menos uma linha correspondente
+                } else {
+                    row.style.display = 'none'; // Oculta a linha
+                }
+            });
+
+            // Exibe ou oculta a tabela com base na correspondência de linhas
+            if (hasMatchingRows) {
+                table.style.display = ''; // Exibe a tabela se houver linhas correspondentes
+            } else {
+                table.style.display = 'none'; // Oculta a tabela se não houver linhas correspondentes
+            }
+        });
+    }
+
+    // Função para filtrar os contatos por nome (pesquisa)
+    const searchInput = document.getElementById('searchInput');
+    
+    if (searchInput) {
+        searchInput.addEventListener('input', function () {
+            filtrarPorNome(this.value); // Chama a função de filtro de pesquisa com o valor da pesquisa
+        });
+    }
+
+    // Função para filtrar as linhas da tabela pelo nome
+    function filtrarPorNome(nomePesquisa) {
+        const nomePesquisaLower = nomePesquisa.trim().toLowerCase(); // Converte o nome para minúsculas e remove espaços
+        const tables = document.querySelectorAll('.containerTable'); // Seleciona todas as tabelas
+
+        tables.forEach(table => {
+            const rows = table.querySelectorAll('thead tr'); // Seleciona todas as linhas da tabela
+            let hasMatchingRows = false; // Flag para verificar se há linhas correspondentes à pesquisa
+
+            rows.forEach(row => {
+                const nomeContato = row.querySelector('th:nth-child(1)') ? row.querySelector('th:nth-child(1)').textContent.trim().toLowerCase() : ""; // Obtém o nome na primeira coluna
+
+                // Se o nome da linha corresponder ao nome pesquisado, exibe a linha
+                if (nomeContato.includes(nomePesquisaLower)) {
                     row.style.display = ''; // Exibe a linha
                     hasMatchingRows = true; // Marca que encontrou pelo menos uma linha correspondente
                 } else {
@@ -494,6 +531,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
+
 
 
 
