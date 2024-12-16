@@ -71,7 +71,11 @@
                 </li>
                 <li>
                     <img src="logo/img/icon/assignment_turned_in.svg" alt="">
-                    <a href="#">Justificativos</a>
+                    <a href="#">Envio de documento</a>
+                </li>
+                <li>
+                    <img src="logo/img/icon/feed.svg" alt="">
+                    <a href="#">Pedido de documento</a>
                 </li>
                 <li>
                     <img src="logo/img/icon/gmail_groups.svg" alt="">
