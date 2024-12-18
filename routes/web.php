@@ -10,6 +10,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\FeriaController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\DocumentController;
 /*
 |--------------------------------------------------------------------------
 | TESTES UNIDADE - Auth::routes();
@@ -353,3 +354,6 @@ Route::get('/calendar', function () {
 })->name('public.calendar');
 
 Route::get('/telefones/search', [TelefoneController::class, 'search'])->name('telefones.search');
+
+Route::get('/documents', [DocumentController::class, 'index'])->name('documents.index');
+Route::post('/documents', [DocumentController::class, 'store'])->name('documents.store');

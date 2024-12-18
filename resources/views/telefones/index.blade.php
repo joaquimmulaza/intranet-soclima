@@ -510,7 +510,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
-
+Çphp 
     // Função para exibir todos os contatos (reset)
     const resetButton = document.getElementById('resetFilter');
     if (resetButton) {

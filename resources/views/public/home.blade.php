@@ -71,7 +71,7 @@
                 </li>
                 <li>
                     <img src="logo/img/icon/assignment_turned_in.svg" alt="">
-                    <a href="#">Envio de documento</a>
+                    <a href="{{route('documents.index')}}">Envio de documento</a>
                 </li>
                 <li>
                     <img src="logo/img/icon/feed.svg" alt="">
