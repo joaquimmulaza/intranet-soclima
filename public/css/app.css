@@ -1861,3 +1861,122 @@ input[type="file"] {
 .doc_container{
     padding: 43px 0 24px 0;
 }
+
+.card-user-info{
+    /* border-right: 1px solid #CECECE; */
+    width: 427px;
+}
+
+.card-user-info img{
+    padding-bottom: 40px;
+}
+
+.card-user-info h4 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #009AC1;
+    border-bottom: 1px solid #CECECE;
+    width: 100%;
+    text-align: left;
+    
+}
+
+.outros-dados p {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #CECECE;
+    padding-bottom: 8px;
+    color: #555;
+}
+
+.card-user-info button{
+    font-size: var(--Label-Large-Size, 14px);
+    border-radius: 5px ;
+    font-weight: 400;
+    background: #009AC1;
+    width: 157px;
+    height: 34px;
+    justify-content: center;
+    align-items: center;color: #fff;
+    border: none;
+    margin-top: 79px;
+}
+
+.btnFerias{
+    background: #009AC1;
+    width: 167px;
+    height: 34px;
+    border: none;
+    font-weight: 400;
+    font-size: var(--Label-Large-Size, 14px);
+    color: #fff;
+    border-radius: 5px;
+}
+
+.dias-ferias{
+    display: flex;
+    border: 1px solid #ABABAB;
+    margin-bottom: 7px;
+    align-items: center;
+    justify-content: space-around;
+    width: 449px;
+    height: 99px;
+    border-radius: 5px;
+}
+
+.dias-ferias p{
+    margin-bottom:  0 !important;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+    padding: 11px 0 11px 0 !important;
+}
+
+.dias-ferias span:nth-of-type(1){
+    color: #ABABAB;
+
+    font-size: 14px;
+    font-weight: 500 !important;
+}
+
+.card-body{
+    padding: 0 !important;
+}
+
+.MainContainerFerias{
+    padding-top: 97px;
+    padding-bottom: 97px;
+}
+
+.totalDias{
+    color: #555;
+    font-weight: 400;
+    font-size: 32px;
+    height: 31px;
+    padding-top: 10px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.ferias-restantes p{
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center;
+    gap: 10px;
+}
+
+.ferias-restantes p span:nth-of-type(2){
+    font-size: 32px;
+    font-style: normal;
+    color: #555;
+}
+
+.uteis{
+    font-size: 14;
+    color: #555;
+    font-weight: 400;
+}

@@ -255,5 +255,20 @@ class FeriaController extends Controller
     }
 
 
-}
+    public function show($id)
+    {
+        // Buscar o funcionário pelo ID
+        $funcionario = User::findOrFail($id);
 
+        // Buscar os dados de férias do funcionário
+        $ferias = Feria::where('user_id', $id)->get();
+
+        // Calcular informações adicionais
+        $feriasAnuais = 22; // Por padrão
+        $feriasGozadas = $ferias->sum('dias_gozados'); // Assumindo que há um campo "dias_gozados"
+        $feriasRestantes = $feriasAnuais - $feriasGozadas;
+
+        // Enviar para a view
+        return view('ferias.show', compact('funcionario', 'feriasAnuais', 'feriasGozadas', 'feriasRestantes'));
+    }
+}
