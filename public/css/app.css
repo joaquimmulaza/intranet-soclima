@@ -1976,7 +1976,21 @@ input[type="file"] {
 }
 
 .uteis{
-    font-size: 14;
+    font-size: 14px;
     color: #555;
     font-weight: 400;
+}
+
+.docs_container{
+    padding: 10px 26px 20px 26px;
+}
+
+.docs_container tbody tr{
+    border: 1px solid #ABABAB !important;
+    padding: 100px !important;
+}
+
+.docs_table{
+    width: 100%;
+    padding-bottom: 20px;
 }

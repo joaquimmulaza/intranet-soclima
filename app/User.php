@@ -59,4 +59,10 @@ class User extends Authenticatable
         return $this->hasOne(DiasFerias::class, 'user_id');
     }
 
+    // Relacionamento com os documentos
+    public function documents()
+    {
+        return $this->hasMany(Document::class);
+    }
+
 }

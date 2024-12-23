@@ -26,7 +26,7 @@ class DocumentController extends Controller
         $filePath = $request->file('file')->store('uploads', 'public');
 
         // Salvar no banco
-        Document::create([
+        auth()->user()->documents()->create([
             'file_path' => $filePath,
             'file_name' => $request->file('file')->getClientOriginalName(),
             'document_type' => $request->document_type,
@@ -36,5 +36,31 @@ class DocumentController extends Controller
 
         return redirect()->back()->with('success', 'Documento enviado com sucesso.');
     }
+
+    public function showDocuments()
+    {
+        $documents = Document::with('user') // Certifique-se de que há um relacionamento com o modelo User.
+                        ->orderBy('created_at', 'desc')
+                        ->get();
+
+        return view('documents.show', compact('documents'));
+    }
+
+    public function destroy($id)
+    {
+        $document = Document::findOrFail($id);
+
+        // Remover o arquivo do armazenamento
+        if (\Storage::disk('public')->exists($document->file_path)) {
+            \Storage::disk('public')->delete($document->file_path);
+        }
+
+        // Remover do banco de dados
+        $document->delete();
+
+        return redirect()->route('documents.show')->with('success', 'Documento eliminado com sucesso.');
+    }
+
+
 }
 

@@ -32,7 +32,7 @@
                 <img src="logo/img/icon/upload_file.svg" alt="Upload Icon">
             </div>
             <p>Insira ou arrasta</p>
-            <input type="file" id="file-upload" />
+            <input type="file" id="file-upload" name="file"/>
         </div>
 
         <!-- Cartão de Upload com a Barra de Progresso -->
@@ -59,6 +59,7 @@
             <div class="form-group">
                 <label for="recipient">Destinatário</label>
                 <div class="destinatário">
+                <input type="hidden" name="recipient" value="Recursos Humanos" />
                     <span>Recursos Humanos</span>
                 </div>
             </div>
@@ -78,14 +79,6 @@
             <button type="submit">Enviar</button>
         </div>
     </form>
-    <ul>
-        @foreach ($documents as $document)
-            <li>
-                {{ $document->file_name }} - {{ $document->document_type }} - 
-                <a href="{{ asset('storage/' . $document->file_path) }}" target="_blank">Ver arquivo</a>
-            </li>
-        @endforeach
-    </ul>
 </div>
 
 <script>

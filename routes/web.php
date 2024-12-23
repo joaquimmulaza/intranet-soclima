@@ -358,3 +358,5 @@ Route::get('/telefones/search', [TelefoneController::class, 'search'])->name('te
 Route::get('/documents', [DocumentController::class, 'index'])->name('documents.index');
 Route::post('/documents', [DocumentController::class, 'store'])->name('documents.store');
 Route::get('/ferias/{id}', [FeriaController::class, 'show'])->name('ferias.show');
+Route::get('/documents/show', [DocumentController::class, 'showDocuments'])->name('documents.show');
+Route::delete('/documents/{id}', [DocumentController::class, 'destroy'])->name('documents.destroy');
