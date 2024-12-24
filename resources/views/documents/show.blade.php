@@ -14,23 +14,23 @@
     <hr>
 </div>
 <div class="main_container docs_container">
+   
+@foreach ($documents as $document)
     <table class="docs_table">
         <thead>
             <tr>
                 <th>Tipo</th>
                 <th>Enviado Por</th>
                 <th>Data</th>
-                <th>Ações</th>
             </tr>
         </thead>
         <tbody>
-        @foreach ($documents as $document)
             <tr>
-                <td>{{ $document->document_type }}
-                <br>
-                <small class="text-muted">{{ $document->description }}</small>
+                <td>
+                    {{ $document->document_type }}
+                    <br>
+                    <small class="text-muted">{{ $document->description }}</small>
                 </td>
-                <!-- <td>{{ $document->description }}</td> -->
                 <td>{{ $document->user->name ?? 'Usuário desconhecido' }}</td>
                 <td>{{ $document->created_at->format('d/m/Y H:i') }}</td>
                 <td>
@@ -42,9 +42,11 @@
                     </form>
                 </td>
             </tr>
-        @endforeach
-
         </tbody>
     </table>
+    <div style="margin-bottom: 20px;"></div> <!-- Espaçamento explícito entre tabelas -->
+@endforeach
+
+   
 </div>
 @endsection

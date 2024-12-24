@@ -1985,12 +1985,24 @@ input[type="file"] {
     padding: 10px 26px 20px 26px;
 }
 
-.docs_container tbody tr{
+/* .docs_container tbody td{
     border: 1px solid #ABABAB !important;
-    padding: 100px !important;
+} */
+.docs_table {
+    width: 100%;
+    margin-bottom: 20px; /* Garante o espaçamento entre tabelas */
 }
 
-.docs_table{
+/* .docs_table tr{
     width: 100%;
-    padding-bottom: 20px;
+} */
+
+.docs_table tbody{
+  
+    border: 0.75px solid #ABABAB;
+}
+
+
+.docs_table:not(:first-of-type) thead {
+    display: none; /* Esconde os <thead> duplicados */
 }
