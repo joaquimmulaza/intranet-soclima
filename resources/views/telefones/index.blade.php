@@ -510,7 +510,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
-Çphp 
     // Função para exibir todos os contatos (reset)
     const resetButton = document.getElementById('resetFilter');
     if (resetButton) {
@@ -531,10 +530,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
-
-
-
-
 
 document.addEventListener("DOMContentLoaded", function() {
     const buttons = document.querySelectorAll('.btnPosts');
@@ -557,10 +552,6 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 
-
-
-
- 
 </script>
 <script src="{{ asset('sweetalerta/app-sweetalert.js') }}"></script>
     <script src="{{ asset('sweetalerta/sweetalert2.all.js') }}"></script>

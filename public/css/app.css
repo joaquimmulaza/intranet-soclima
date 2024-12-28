@@ -1990,19 +1990,158 @@ input[type="file"] {
 } */
 .docs_table {
     width: 100%;
-    margin-bottom: 20px; /* Garante o espaçamento entre tabelas */
+    margin-bottom: -20px; /* Garante o espaçamento entre tabelas */
 }
 
 /* .docs_table tr{
     width: 100%;
 } */
 
+.docs_table thead{
+    border-bottom: 1px solid #CECECE;
+}
+
 .docs_table tbody{
-  
     border: 0.75px solid #ABABAB;
+    border-radius: 5px !important;
+    position: relative;
+    bottom: -20px;
+}
+
+.docs_table th{
+    color: var(--Textos-Texto-primrio, #555);
+    font-size: 13px;
+    font-weight: 400;
+    width: 300px;
+}
+
+.data_documents{
+    color: var(--Text-highlighted, #555);
+    font-size: 11px;
+    font-weight: 400; 
+}
+
+.docs_table td:nth-of-type(2), .docs_table td:nth-of-type(1){
+    color: var(--Text-highlighted, #555);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.text-muted{
+    color: #555;
+    font-size: 12px;
+    font-weight: 400;
+    
 }
 
 
-.docs_table:not(:first-of-type) thead {
-    display: none; /* Esconde os <thead> duplicados */
+.docs_table:not(:first-of-type) thead tr{
+    color: #fff !important;
+    opacity: 0;
+}
+
+
+.btnPosts:hover{
+    background-color: #EEE !important;
+}
+
+
+.docs_table .btnPosts a, .docs_table .btnPosts{
+    text-decoration: none;
+    color: var(--Textos-Texto-primrio, #555);
+    font-size: 14px;
+}
+
+/* Estilo para o popup */
+#success-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 40px;
+    width: 472px;
+    height: 277px;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    z-index: 1001;
+    font-family: Arial, sans-serif;
+}
+
+.content-sucess-popup{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    gap: 40px;
+}
+
+@keyframes success-icon-animation {
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+#success-popup img {
+    animation: success-icon-animation 0.5s ease-out;
+}
+
+#success-popup p {
+    font-size: 20px;
+    color: #555;
+    font-weight: 700;
+    margin-bottom: 0 !important;
+}
+
+#popup-ok-btn {
+    background-color: #009ac1;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    width: 109.56px;
+    height: 33px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+#popup-ok-btn:hover {
+    background-color: #006b94;
+}
+
+/* Estilo para o overlay */
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.info-time-doc {
+    text-align: center;
+    color: var(--Textos-Texto-primrio, #555);
+    font-size: 11px;
+    font-weight: 400;
+    margin-top: 24px;
 }
