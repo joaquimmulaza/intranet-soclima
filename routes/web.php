@@ -11,6 +11,7 @@ use App\Http\Controllers\FeriaController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\DocumentRequestController;
 /*
 |--------------------------------------------------------------------------
 | TESTES UNIDADE - Auth::routes();
@@ -359,4 +360,7 @@ Route::get('/documents', [DocumentController::class, 'index'])->name('documents.
 Route::post('/documents', [DocumentController::class, 'store'])->name('documents.store');
 Route::get('/ferias/{id}', [FeriaController::class, 'show'])->name('ferias.show');
 Route::get('/documents/show', [DocumentController::class, 'showDocuments'])->name('documents.show');
+Route::post('/documents/pedidos', [DocumentRequestController::class, 'store'])->name('document-request.store');
+Route::get('/documents/pedidos', [DocumentRequestController::class, 'create'])->name('document-request.create');
 Route::delete('/documents/{id}', [DocumentController::class, 'destroy'])->name('documents.destroy');
+Route::get('/contas-suspensas', [UserController::class, 'mostrarContasSuspensas'])->name('contas.suspensas');

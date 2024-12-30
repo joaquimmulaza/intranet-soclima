@@ -254,25 +254,37 @@ class UserController extends Controller
 
     //SEM USO - toggle ativa usuario
     public function ativacao(Request $request, $id)
-{
-    // Encontrar o usuário pelo ID
-    $user = User::find($id);
+    {
+        // Encontrar o usuário pelo ID
+        $user = User::find($id);
 
-    // Verificar se o usuário existe
-    if (!$user) {
-        return response()->json(['error' => 'Usuário não encontrado'], 404);
+        // Verificar se o usuário existe
+        if (!$user) {
+            return response()->json(['error' => 'Usuário não encontrado'], 404);
+        }
+
+        // Alterar o status
+        $user->status = $user->status == 'ativo' ? 'inativo' : 'ativo';
+        $user->save();
+
+        // Retornar sucesso
+        return response()->json([
+            'status' => $user->status,
+            'message' => 'Status do usuário atualizado com sucesso!'
+        ]);
     }
 
-    // Alterar o status
-    $user->status = $user->status == 'ativo' ? 'inativo' : 'ativo';
-    $user->save();
+    public function mostrarContasSuspensas()
+{
+    $contasSuspensas = User::where('status', 'inativo')->get();
 
-    // Retornar sucesso
-    return response()->json([
-        'status' => $user->status,
-        'message' => 'Status do usuário atualizado com sucesso!'
-    ]);
+    // Retorna uma resposta JSON com os dados
+    return response()->json($contasSuspensas);
 }
+
+    
+
+
 
 
     public function update(Request $request, User $user)

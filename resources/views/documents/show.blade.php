@@ -14,22 +14,25 @@
     <hr>
 </div>
 <div class="main_container docs_container">
-   
 @foreach ($documents as $document)
     <table class="docs_table">
         <thead>
             <tr>
                 <th>Tipo</th>
-                <th>Enviado Por</th>
+                <th style="width: 29%;">Enviado Por</th>
                 <th style="display:flex; gap: 10px;">Data<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M3 18H9V16H3V18ZM3 6V8H21V6H3ZM3 13H15V11H3V13Z" fill="#555555"/>
                 </svg>
+                
                 </th>
-                <th>kj</th>
+                <!-- <th>kj</th> -->
             </tr>
         </thead>
+        
         <tbody>
+        
             <tr>
+                
                 <td style="display: flex; flex-direction: row; gap:31px; padding: 12px 0 12px 0;">
                     <div style="padding-left: 26px;">
                         <svg  width="43" height="55" viewBox="0 0 43 55" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -49,7 +52,7 @@
                 </td>
                 <td>{{ $document->user->name ?? 'Usuário desconhecido' }}</td>
                 <td class="data_documents">{{ $document->created_at->translatedFormat('d \d\e M. \d\e Y') }}</td>
-                <td>
+                <td class="OptDocs">
                     <!-- <a href="{{ asset('storage/' . $document->file_path) }}" class="btn btn-primary" target="_blank">Download</a>
                     <form method="POST" action="{{ route('documents.destroy', $document->id) }}" style="display: inline;">
                         @csrf
@@ -57,37 +60,37 @@
                         <button type="submit" class="btn btn-danger">Eliminar</button>
                     </form> -->
                     <div class="containerOpt">
-                                                <button class="btnOpt"  data-toggle="modal" data-target="#modalOptPhone-{{ $document->id }}" style="margin: 0 !important; padding: 0 !important;"><svg width="18" height="34" viewBox="0 0 18 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <ellipse cx="8.5" cy="9.90277" rx="1.5" ry="1.40278" fill="#555555"/>
-                                                    <ellipse cx="8.5" cy="16.9164" rx="1.5" ry="1.40278" fill="#555555"/>
-                                                    <ellipse cx="8.5" cy="23.9306" rx="1.5" ry="1.40278" fill="#555555"/>
-                                                    </svg>
-                                                </button>
-                                                <div class="modal fade modalOpt" id="modalOptPhone-{{ $document->id }}" tabindex="-1" aria-labelledby="modalOptLabel" aria-hidden="true" data-backdrop="true" data-keyboard="true">
-                                                    <div class="modal-dialog">
-                                                        <div class="modal-content">
-                                                            <div class="modal-body modal-bodyOpt">
-                                                                <div class="containerBtnOpt">
-                                                                    @can('app.dashboard')
-                                    
-                                                                    <button type="button" data-toggle="modal" data-target="#EditContact" style="border-bottom: none;border-top-right-radius: 5px;    border-top-left-radius: 5px;" class="btnPosts"  data-id="">
-                                                                    <a href="{{ asset('storage/' . $document->file_path) }}" class="btnPosts" target="_blank">Download</a>
-                                                                    </button>
-                                                                    <button style="    border-bottom-right-radius: 5px;    border-bottom-left-radius: 5px;" type="button" class="btnPosts" onClick="deleteData({{ $document->id }})">
-                                                                        Eliminar
-                                                                    </button>
-                                                                    <form id="delete-form-{{ $document->id }}"
-                                                                            action="{{ route('documents.destroy', $document->id) }}" method="POST" style="display: none;">
-                                                                        @csrf()
-                                                                        @method('DELETE')
-                                                                    </form>
-                                                                    @endcan
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                        <button class="btnOpt"  data-toggle="modal" data-target="#modalOptPhone-{{ $document->id }}" style="margin: 0 !important; padding: 0 !important;"><svg width="18" height="34" viewBox="0 0 18 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <ellipse cx="8.5" cy="9.90277" rx="1.5" ry="1.40278" fill="#555555"/>
+                            <ellipse cx="8.5" cy="16.9164" rx="1.5" ry="1.40278" fill="#555555"/>
+                            <ellipse cx="8.5" cy="23.9306" rx="1.5" ry="1.40278" fill="#555555"/>
+                            </svg>
+                        </button>
+                        <div class="modal fade modalOpt" id="modalOptPhone-{{ $document->id }}" tabindex="-1" aria-labelledby="modalOptLabel" aria-hidden="true" data-backdrop="true" data-keyboard="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-body modal-bodyOpt">
+                                        <div class="containerBtnOpt">
+                                            @can('app.dashboard')
+            
+                                            <button type="button" data-toggle="modal" data-target="#EditContact" style="border-bottom: none;border-top-right-radius: 5px;    border-top-left-radius: 5px;" class="btnPosts"  data-id="">
+                                            <a href="{{ asset('storage/' . $document->file_path) }}" class="btnPosts" target="_blank">Download</a>
+                                            </button>
+                                            <button style="    border-bottom-right-radius: 5px;    border-bottom-left-radius: 5px;" type="button" class="btnPosts" onClick="deleteData({{ $document->id }})">
+                                                Eliminar
+                                            </button>
+                                            <form id="delete-form-{{ $document->id }}"
+                                                    action="{{ route('documents.destroy', $document->id) }}" method="POST" style="display: none;">
+                                                @csrf()
+                                                @method('DELETE')
+                                            </form>
+                                            @endcan
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </td>
                 
             </tr>

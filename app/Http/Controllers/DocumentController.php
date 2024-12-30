@@ -60,7 +60,5 @@ class DocumentController extends Controller
 
         return redirect()->route('documents.show')->with('success', 'Documento eliminado com sucesso.');
     }
-
-
 }
 

@@ -65,4 +65,9 @@ class User extends Authenticatable
         return $this->hasMany(Document::class);
     }
 
+    public function documentRequests()
+    {
+        return $this->hasMany(DocumentRequest::class);
+    }
+
 }

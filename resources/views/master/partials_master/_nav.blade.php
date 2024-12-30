@@ -140,10 +140,29 @@
                 <hr>
                 <div class="menuOpt">
                     <a href="">Configurações e privacidade</a>
-                    <a href="">Contas suspensas</a>
+                    <a href="#" data-toggle="modal" data-target="#suspendedAccountsModal">Contas suspensas</a>
                     <a class="{{Route::current()->getName() === 'admin.logout' ? 'active' : ''}}"
                 data-toggle="tooltip" title="Sair do sistema" href="{{route('admin.logout')}}" >Sair</a>
                 </div>
+
+                <div class="modal fade" id="suspendedAccountsModal" tabindex="-1" role="dialog" aria-labelledby="suspendedAccountsModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="suspendedAccountsModalLabel">Contas Suspensas</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div id="suspendedAccountsList">
+                                    <!-- Lista de contas suspensas será carregada aqui -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
 
                 <div class="modal fade cardUserView" id="" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
@@ -185,7 +204,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                </div>
             </div>
 
                 
@@ -572,4 +591,70 @@ toggleDropdown('menuDropdown', 'menuDropdownToggle');
                 $modal.modal('hide');
             }
         });
+
+        $(document).ready(function () {
+    $('#showSuspendedAccounts').click(function () {
+        // Faz a requisição AJAX para a rota que retorna os dados das contas suspensas
+        $.ajax({
+            url: '{{ route('contas.suspensas') }}',  // A URL que vai buscar as contas suspensas
+            method: 'GET',
+            success: function (data) {
+                console.log('Dados retornados: ', data);  // Exibe os dados retornados no console
+
+                // Limpa a lista de contas suspensas
+                $('#suspendedAccountsList').empty();
+
+                if (data.length > 0) {
+                    // Se houver contas suspensas, exibe-as
+                    data.forEach(function (user) {
+                        $('#suspendedAccountsList').append('<p>' + user.name + '</p>');
+                    });
+                } else {
+                    // Se não houver contas suspensas
+                    $('#suspendedAccountsList').append('<p>Nenhuma conta suspensa no momento.</p>');
+                }
+
+                // Exibe o modal
+                $('#suspendedAccountsModal').modal('show');
+            },
+            error: function () {
+                alert('Erro ao carregar as contas suspensas.');
+            }
+        });
+    });
+});
+
+$(document).ready(function () {
+    $('#showSuspendedAccounts').click(function () {
+        // Faz a requisição AJAX para a rota que retorna os dados das contas suspensas
+        $.ajax({
+            url: '{{ route('contas.suspensas') }}',  // A URL que vai buscar as contas suspensas
+            method: 'GET',
+            success: function (data) {
+                console.log('Dados retornados: ', data);  // Exibe os dados retornados no console
+
+                // Limpa a lista de contas suspensas
+                $('#suspendedAccountsList').empty();
+
+                if (data.length > 0) {
+                    // Se houver contas suspensas, exibe-as
+                    data.forEach(function (user) {
+                        $('#suspendedAccountsList').append('<p>' + user.name + '</p>');
+                    });
+                } else {
+                    // Se não houver contas suspensas
+                    $('#suspendedAccountsList').append('<p>Nenhuma conta suspensa no momento.</p>');
+                }
+
+                // Exibe o modal
+                $('#suspendedAccountsModal').modal('show');
+            },
+            error: function () {
+                alert('Erro ao carregar as contas suspensas.');
+            }
+        });
+    });
+});
+
+
 </script>

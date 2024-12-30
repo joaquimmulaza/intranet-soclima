@@ -2004,15 +2004,17 @@ input[type="file"] {
 .docs_table tbody{
     border: 0.75px solid #ABABAB;
     border-radius: 5px !important;
-    position: relative;
-    bottom: -20px;
 }
 
 .docs_table th{
     color: var(--Textos-Texto-primrio, #555);
     font-size: 13px;
     font-weight: 400;
-    width: 300px;
+    width: 39%;
+}
+
+.OptDocs .containerOpt{
+    left: 20px;
 }
 
 .data_documents{
@@ -2144,4 +2146,53 @@ input[type="file"] {
     font-size: 11px;
     font-weight: 400;
     margin-top: 24px;
+}
+
+.second_column{
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.second_column input, .second_column select{
+    width: 449px !important;
+    height: 38px;
+}
+
+.type_doc{
+    display: flex;
+    flex-direction: column;
+}
+
+.radio-docs{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 9px;
+}
+
+.radio-docs label{
+    margin-bottom: 0 !important;
+}
+
+.container_radios{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.third_column #prazo_entrega{
+    width: 145px;
+    height: 38px;
+}
+
+.third_column #observacoes {
+    width: 216px;
+    height: 38px;
+}
+
+.third_column{
+    display: flex;
+    justify-content: center;
+    gap: 20px;
 }
