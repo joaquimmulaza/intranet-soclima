@@ -48,7 +48,7 @@
 
 .header-crumb hr{
     border-width: 1px;
-    background-color: #ABABAB !important;
+    background-color: #CECECE !important;
 }
 
 .header-crumb .col-sm-12{
@@ -2157,6 +2157,10 @@ input[type="file"] {
 .second_column input, .second_column select{
     width: 449px !important;
     height: 38px;
+    border-radius: 5px !important;
+    border-color: #ABABAB !important;
+    color: #555 !important;
+    font-size: 14px !important;
 }
 
 .type_doc{
@@ -2184,15 +2188,72 @@ input[type="file"] {
 .third_column #prazo_entrega{
     width: 145px;
     height: 38px;
+    border-radius: 5px;
+    border-color: #ABABAB;
+    color: #7B7B7B !important;
 }
 
 .third_column #observacoes {
     width: 216px;
     height: 38px;
+    border-radius: 5px !important;
+    border-color: #ABABAB !important;
 }
 
 .third_column{
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.request_document label{
+    color: #7B7B7B;
+    font-size: 14px;
+    font-weight: 400 !important;
+}
+
+.all_column{
+    width: 918px;
+    margin: 0 auto;
+}
+
+.request_document button{
+    width: 109.56px;
+    height: 33px;
+    border-radius: 5px;
+    border: none;
+    font-size: 14px;
+    font-weight: 400;
+    cursor: pointer;
+}
+
+.requestBtn{
+    background: #009AC1;
+    color: var(--M3-sys-light-on-primary, var(--Schemes-On-Primary, #FFF));
+}
+
+.cancelRequest{
+    background: #E2E2E2;
+    color: #ABABAB;
+}
+
+.btnsRequest{
+    width: 100%;
+    display: flex;
+    justify-content: end;
+    gap: 20px;
+    padding-top: 128px;
+}
+
+.first_column{
+    display: flex;
+    gap: 20px;
+}
+.request_document{
+    padding: 51px 0 24px 0;
+}
+
+.prazo_obs{
+    display: flex;
     gap: 20px;
 }

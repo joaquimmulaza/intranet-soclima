@@ -363,4 +363,11 @@ Route::get('/documents/show', [DocumentController::class, 'showDocuments'])->nam
 Route::post('/documents/pedidos', [DocumentRequestController::class, 'store'])->name('document-request.store');
 Route::get('/documents/pedidos', [DocumentRequestController::class, 'create'])->name('document-request.create');
 Route::delete('/documents/{id}', [DocumentController::class, 'destroy'])->name('documents.destroy');
-Route::get('/contas-suspensas', [UserController::class, 'mostrarContasSuspensas'])->name('contas.suspensas');
+
+// Route::get('/contas-suspensas', [UserController::class, 'mostrarContasSuspensas'])->name('contas.suspensas');
+
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/admin/document-requests', [AdminDocumentRequestController::class, 'index'])->name('admin.document-requests.index');
+    Route::post('/admin/document-requests/{id}/upload', [AdminDocumentRequestController::class, 'uploadDocument'])->name('admin.document-requests.upload');
+    Route::post('/admin/document-requests/{id}/complete', [AdminDocumentRequestController::class, 'markAsComplete'])->name('admin.document-requests.complete');
+});
