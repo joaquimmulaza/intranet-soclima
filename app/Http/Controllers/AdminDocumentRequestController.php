@@ -2,26 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\DocumentRequest;
+use App\DocumentRequest;
 use Illuminate\Http\Request;
 
 class AdminDocumentRequestController extends Controller
 {
     public function index()
     {
-        // Obtém todas as solicitações, paginadas
-        $requests = DocumentRequest::latest()->paginate(10);
-        return view('admin.document-requests.index', compact('requests'));
+        $requests = DocumentRequest::with('user')->latest()->paginate(10);
+        return view('document-request.index', compact('requests'));
     }
 
     public function uploadDocument(Request $request, $id)
     {
         $documentRequest = DocumentRequest::findOrFail($id);
 
-        // Upload do arquivo
         if ($request->hasFile('documento')) {
             $path = $request->file('documento')->store('documents');
-            $documentRequest->update(['documento_path' => $path, 'status' => 'documento enviado']);
+            $documentRequest->update([
+                'documento_path' => $path,
+                'status' => 'concluído',
+            ]);
         }
 
         return back()->with('success', 'Documento enviado com sucesso.');
@@ -31,7 +32,6 @@ class AdminDocumentRequestController extends Controller
     {
         $documentRequest = DocumentRequest::findOrFail($id);
 
-        // Atualiza o status
         $documentRequest->update(['status' => 'concluído']);
 
         return back()->with('success', 'Solicitação marcada como concluída.');

@@ -12,6 +12,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\DocumentRequestController;
+use App\Http\Controllers\AdminDocumentRequestController;
+
 /*
 |--------------------------------------------------------------------------
 | TESTES UNIDADE - Auth::routes();
@@ -364,10 +366,15 @@ Route::post('/documents/pedidos', [DocumentRequestController::class, 'store'])->
 Route::get('/documents/pedidos', [DocumentRequestController::class, 'create'])->name('document-request.create');
 Route::delete('/documents/{id}', [DocumentController::class, 'destroy'])->name('documents.destroy');
 
-// Route::get('/contas-suspensas', [UserController::class, 'mostrarContasSuspensas'])->name('contas.suspensas');
+Route::get('/contas-suspensas', [UserController::class, 'mostrarContasSuspensas'])->name('contas.suspensas');
 
-Route::middleware(['auth', 'admin'])->group(function () {
-    Route::get('/admin/document-requests', [AdminDocumentRequestController::class, 'index'])->name('admin.document-requests.index');
-    Route::post('/admin/document-requests/{id}/upload', [AdminDocumentRequestController::class, 'uploadDocument'])->name('admin.document-requests.upload');
-    Route::post('/admin/document-requests/{id}/complete', [AdminDocumentRequestController::class, 'markAsComplete'])->name('admin.document-requests.complete');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/document-request', [DocumentRequestController::class, 'index'])->name('document-request.index');
 });
+
+Route::middleware(['auth',])->group(function () {
+    Route::get('/admin/document-request', [AdminDocumentRequestController::class, 'index'])->name('document-request.index');
+    Route::post('/admin/document-request/{id}/upload', [AdminDocumentRequestController::class, 'uploadDocument'])->name('admin.document-request.upload');
+    Route::post('/admin/document-request/{id}/complete', [AdminDocumentRequestController::class, 'markAsComplete'])->name('document-request.complete');
+});
+

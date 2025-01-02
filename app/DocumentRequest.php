@@ -16,9 +16,10 @@ class DocumentRequest extends Model
         'forma_entrega',
         'prazo_entrega',
         'observacoes',
+        'status',
+        'documento_path',
     ];
 
-    // Relacionamento com o usuário
     public function user()
     {
         return $this->belongsTo(User::class);

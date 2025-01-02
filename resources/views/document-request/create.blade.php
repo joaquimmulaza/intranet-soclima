@@ -26,14 +26,12 @@
                 <div class="form-group">
                     <label for="recipient">Nome completo</label>
                     <div class="destinatário">
-                    <input type="hidden" name="recipient" value="Recursos Humanos">
-                        <span>Recursos Humanos</span>
+                        <span>{{ Auth::user()->name }}</span>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="recipient">A solicitar ao</label>
                     <div class="destinatário">
-                    <input type="hidden" name="recipient" value="Recursos Humanos">
                         <span>Recursos Humanos</span>
                     </div>
                 </div>
@@ -43,7 +41,10 @@
                     <label for="tipo_documento" class="form-label">Tipo de documento*</label>
                     <select id="tipo_documento" name="tipo_documento" class="form-select" required>
                         <option value="Declaração de trabalho">Declaração de trabalho</option>
-                        <option value="Comprovativo de residência">Comprovativo de residência</option>
+                        <option value="Comprovativo de residência">Declaração para obtenção de visto</option>
+                        <option value="Declaração para obtenção de crédito bancário">Declaração para obtenção de crédito bancário</option>
+                        <option value="Declaração para actualização de conta bancária">Declaração para actualização de conta bancária</option>
+                        <option value="Outros">Outros</option>
                         <!-- Adicione outros tipos de documentos aqui -->
                     </select>
                 </div>

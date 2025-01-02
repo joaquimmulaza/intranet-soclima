@@ -2257,3 +2257,45 @@ input[type="file"] {
     display: flex;
     gap: 20px;
 }
+
+.container_graphic{
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    background-color: red;
+}
+
+.btn_ferias{
+    margin-top: 20px;
+}
+
+.btn_ferias button{
+    background-color: #fff;
+    color: #ABABAB;
+    border: 1px solid #ABABAB;
+    padding: 5px 24px;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.graphics_ferias{
+    margin-top: 21px;
+}
+
+.graphics_ferias p{
+    font-size: 14px;
+    color: #ABABAB;
+    font-weight: 500;
+    margin-bottom:  0 !important;
+}
+
+.graphics_ferias span {
+    color: #555;
+    font-size: 32px;
+    margin-bottom: 0 !important;
+}
+
+#feriasGozadasChart{
+    width: 65px;
+    height: 64px;
+}
