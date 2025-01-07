@@ -186,9 +186,9 @@
                                             </button>
 
                                             
-                                            <button type="button" data-toggle="modal" data-target="#modalEdit" style="border-bottom: none;" class="btnPosts"  data-id="{{$user->id}}" data-title="{{$user->title}}" data-content="{{$user->content}}">
+                                            <a href="{{ route('ferias.show', ['id' => $user->id]) }}" data-target="#modalEdit" style="border-bottom: none;" class="btnPosts button_a"  data-id="{{$user->id}}" data-title="{{$user->title}}" data-content="{{$user->content}}">
                                                 Consultar férias
-                                            </button>
+                                            </a>
                                             <button style="border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;" type="button" data-toggle="modal" data-target="#cardUserView-{{ $user->id }}" class="btnPosts">
                                                 Ver dados
                                             </button>

@@ -75,11 +75,6 @@ class FeriaController extends Controller
         return redirect()->route('home')->with('success', 'Férias solicitadas com sucesso!');
     }
 
-
-
-
-    
-
     public function update(Request $request, Feria $feria) {
         // Validação do formulário
         $request->validate([
@@ -259,16 +254,31 @@ class FeriaController extends Controller
     {
         // Buscar o funcionário pelo ID
         $funcionario = User::findOrFail($id);
+        
 
         // Buscar os dados de férias do funcionário
-        $ferias = Feria::where('user_id', $id)->get();
+        $ferias = Feria::where('user_id', $id)
+        ->where('status', 'Aprovado')  // Filtra apenas férias aprovadas
+        ->get();
 
         // Calcular informações adicionais
-        $feriasAnuais = 22; // Por padrão
-        $feriasGozadas = $ferias->sum('dias_gozados'); // Assumindo que há um campo "dias_gozados"
-        $feriasRestantes = $feriasAnuais - $feriasGozadas;
+        $feriasAnuais = 22; // Quantidade padrão de dias de férias anuais
+        $feriasGozadas = $ferias->sum(function ($feria) {
+            return $this->diasSolicitados($feria->data_inicio, $feria->data_fim);
+        });
+        $feriasRestantes = max($feriasAnuais - $feriasGozadas, 0);
 
-        // Enviar para a view
-        return view('ferias.show', compact('funcionario', 'feriasAnuais', 'feriasGozadas', 'feriasRestantes'));
+        // Formatar os períodos de férias para exibição
+        $historicoFerias = $ferias->map(function ($feria, $index) {
+            return [
+                'periodo' => $index + 1,
+                'data_inicio' => Carbon::parse($feria->data_inicio)->format('d/m/Y'),
+                'data_fim' => Carbon::parse($feria->data_fim)->format('d/m/Y'),
+                'data_retorno' => Carbon::parse($feria->data_fim)->addDay()->format('d/m/Y'), // Data de retorno prevista
+            ];
+        });
+
+        // Enviar os dados para a view
+        return view('ferias.show', compact('funcionario', 'feriasAnuais', 'feriasGozadas', 'feriasRestantes', 'historicoFerias', ));
     }
 }

@@ -169,7 +169,11 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
-                                        <span aria-hidden="true">&times;</span>
+                                        <span aria-hidden="true">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z" fill="#555555"/>
+                                            </svg>
+                                        </span>
                                     </button>
                                 </div>
                                 
@@ -332,45 +336,45 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+            </div>
             <span><img src="{{asset('logo/img/icon/line-1.svg')}}" alt=""></span>
-            @can('app.dashboard')
-            <li class="nav-item btnCadastrar">
-                <a class="linksNav {{Route::current()->getName() === 'user.create' || '' ? 'active menu-open' : ''}}" style="padding: 0 !important; margin: 0 !important;" class="nav-link {{Route::current()->getName() === 'admin' ? 'active' : ''}}"
-                href="{{route('user.create')}}" class="nav-link colorLink">Cadastrar</a>
-            </li>
-            
-            @endif
-            <li class="nav-item menu">
-                <a id="menuDropdownToggle" style="padding: 0 !important; margin: 0 !important;" class="nav-link {{Route::current()->getName() === 'admin.logout' ? 'active' : ''}}"
-                data-toggle="tooltip" title="Sair do sistema" href="#">
-                    <img src="{{asset('logo/img/icon/Menu.svg')}}" alt="">
-                </a>
-                    <!-- Dropdown Content -->
-                    <div class="dropdown-content" id="menuDropdown">
-                        <h5>Menu</h5>
-                        <hr>
-                        <div class="menuOpt">
-                            <a href="#"><img src="logo/img/icon/calendar-star.svg" alt="">Eventos</a>
-                            <span>Gerenciar</span>
-                            @can('app.dashboard')
-                            <a class="{{Route::current()->getName() === 'user.index' ? 'menu-open' : ''}}" href="{{route('user.index')}}">
-                           
-                                <img src="logo/img/icon/managerUser.svg" alt="">Gerir usuários</a>
-                                @endcan
-                            <a href="#"><img src="logo/img/icon/holiday-icon.svg" alt="">Pedidos férias</a>
-                            <a href="#"><img src="logo/img/icon/feeds.svg" alt="">Publicações e atividades</a>
-                        </div>
+                @can('app.dashboard')
+                <li class="nav-item btnCadastrar">
+                    <a class="linksNav {{Route::current()->getName() === 'user.create' || '' ? 'active menu-open' : ''}}" style="padding: 0 !important; margin: 0 !important;" class="nav-link {{Route::current()->getName() === 'admin' ? 'active' : ''}}"
+                    href="{{route('user.create')}}" class="nav-link colorLink">Cadastrar</a>
+                </li>
+                
+                @endif
+                <li class="nav-item menu">
+                    <a id="menuDropdownToggle" style="padding: 0 !important; margin: 0 !important;" class="nav-link {{Route::current()->getName() === 'admin.logout' ? 'active' : ''}}"
+                    data-toggle="tooltip" title="Sair do sistema" href="#">
+                        <img src="{{asset('logo/img/icon/Menu.svg')}}" alt="">
+                    </a>
+                        <!-- Dropdown Content -->
+                        <div class="dropdown-content" id="menuDropdown">
+                            <h5>Menu</h5>
+                            <hr>
+                            <div class="menuOpt">
+                                <a href="#"><img src="logo/img/icon/calendar-star.svg" alt="">Eventos</a>
+                                <span>Gerenciar</span>
+                                @can('app.dashboard')
+                                <a class="{{Route::current()->getName() === 'user.index' ? 'menu-open' : ''}}" href="{{route('user.index')}}">
+                            
+                                    <img src="logo/img/icon/managerUser.svg" alt="">Gerir usuários</a>
+                                    @endcan
+                                <a href="#"><img src="logo/img/icon/holiday-icon.svg" alt="">Pedidos férias</a>
+                                <a href="#"><img src="logo/img/icon/feeds.svg" alt="">Publicações e atividades</a>
+                            </div>
 
-                        <div class="menuOpt">
-                            <span>Geral</span>
-                            <a href="#"><img src="logo/img/icon/recibos-icon.svg" alt="">Recibos</a>
-                            <a href="#"><img src="logo/img/icon/justificativo-icon.svg" alt="">Justificativos</a>
-                            <a class="{{Route::current()->getName() === 'telefones.index' ? 'menu-open' : ''}}" href="{{route('telefones.index')}}"><img src="logo/img/icon/list-phone.svg" alt="">Lista telefônica</a>
-                            <a href="#"><img src="logo/img/icon/ferias-icon.svg" alt="">Férias</a>
+                            <div class="menuOpt">
+                                <span>Geral</span>
+                                <a href="#"><img src="logo/img/icon/recibos-icon.svg" alt="">Recibos</a>
+                                <a href="#"><img src="logo/img/icon/justificativo-icon.svg" alt="">Justificativos</a>
+                                <a class="{{Route::current()->getName() === 'telefones.index' ? 'menu-open' : ''}}" href="{{route('telefones.index')}}"><img src="logo/img/icon/list-phone.svg" alt="">Lista telefônica</a>
+                                <a href="#"><img src="logo/img/icon/ferias-icon.svg" alt="">Férias</a>
+                            </div>
                         </div>
-                    </div>
-            </li>
+                </li>
 
             {{-- HELPER PARA SOLICITAÇÕES DE PEDIDOS --}}
            
