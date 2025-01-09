@@ -18,7 +18,7 @@
 <div class="main_container">
     <div class="column justify-content-center">
         <div class="d-flex justify-content-end align-items-center" style="width: 95%; margin: 0 auto; position: relative; top: 29px;">
-            <button data-toggle="modal" data-target="#modalFerias" class="btnFerias">Atualizar férias</button>
+            <button data-toggle="modal" data-target="#modalFerias-{{ $funcionario->id }}" class="btnFerias">Atualizar férias</button>
         </div>
         
         <div class="row justify-content-around MainContainerFerias">
@@ -151,7 +151,7 @@
 
 <div class="graphic_restantes">
     <div class="graphic_ferias">
-        <div class="square-chart">
+        <div class="square-chart" style="width: 109px">
             <svg width="6" height="8" viewBox="0 0 6 8" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect width="6" height="8" transform="matrix(-1 0 0 1 6 0)" fill="#CDCC00"/>
             </svg>
@@ -174,7 +174,7 @@
         </div>
     </div>
 </div>
-<div id="modalFerias" class="modal escurecer" style="display: none;">
+<div id="modalFerias-{{ $funcionario->id }}" class="modal escurecer modalFerias" style="display: none;">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content " style="width: 300px; margin: 0 auto; background: white; padding: 20px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);">
             <div class="modal-header">
@@ -182,18 +182,22 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="inputDiasFerias">
-                <label for="diasFerias">Preencher férias anuais</label>
-                <div class="input-container">
-                        
-                <input type="number" id="diasFerias" max="22" 
-                oninput="validarLimite(this)" min="1">
-                        <span class="prefix">dias</span>
+            <form action="{{ route('ferias.updateDias') }}" method="POST">
+                @csrf
+                <div class="inputDiasFerias">
+                    <label for="diasFerias">Preencher férias anuais</label>
+                    <div class="input-container">
+                            
+                    <input type="number" id="diasFerias" name="dias_disponiveis" max="22" 
+                    oninput="validarLimite(this)" min="1">
+                            <span class="prefix">dias</span>
+                    </div>
                 </div>
-            </div>
-            <div class="d-flex justify-content-center">
-                <button id="btnAdicionarFerias" >Adicionar</button>
-            </div>
+                <input type="hidden" name="user_id" value="{{ $funcionario->id }}">
+                <div class="d-flex justify-content-center">
+                    <button id="btnAdicionarFerias" >Adicionar</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -303,7 +307,7 @@
                                                         <p>Informações adicionais do usuário aqui.</p>
                                                     </div>
                                                     <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#cardUserView-{{ Auth::user()->id }}" data-dismiss="modal">
+                                                        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#cardUserView-{{ $funcionario->id }}" data-dismiss="modal">
                                                             Voltar
                                                         </button>
                                                         <button type="button" class="btn btn-danger" data-dismiss="modal">

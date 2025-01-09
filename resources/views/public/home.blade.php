@@ -83,7 +83,7 @@
                 </li>
                 <li>
                     <img src="logo/img/icon/Vector.svg" alt="">
-                    <a href="{{route('public.calendar')}}">Férias</a>
+                    <a href="{{route('public.calendar')}}">Ausências</a>
                 </li>
             </ul>
         </div>
@@ -94,9 +94,7 @@
             <div class="mainPostContainer">
                 <div class="inputPost">
                     <img src="logo/img/icon/avatar-input.svg" alt="">
-                    
                         <input type="button" value="Comunique algo..." data-toggle="modal" data-target="#createPostModal" placeholder="Comunique algo...">
-                   
                 </div>
             </div>
 

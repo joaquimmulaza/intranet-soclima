@@ -310,8 +310,7 @@ Route::get('/ferias/{id}/rejeitar', [FeriaController::class, 'rejeitar'])->name(
 
 /*ATRIBUIR FERIAS*/
 // Atualizar os dias de férias de um usuário
-Route::patch('/usuarios/{userId}/ferias', [FeriaController::class, 'updateDiasFerias'])
-    ->name('users.ferias.update');
+Route::post('/ferias/updateDias', [FeriaController::class, 'updateDiasFerias'])->name('ferias.updateDias');
 
 // Exibir o formulário de atualização de férias
 Route::get('/usuarios/{userId}/ferias', [FeriaController::class, 'showDiasFeriasForm'])

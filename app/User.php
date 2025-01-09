@@ -70,4 +70,9 @@ class User extends Authenticatable
         return $this->hasMany(DocumentRequest::class);
     }
 
+    public function ausencias()
+    {
+        return $this->hasMany(Ausencia::class);
+    }
+
 }

@@ -4,6 +4,34 @@
 @section('content')
 
 <script src="{{ asset('js/formMask/jquery.inputmask.min.js') }}"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+
+<style>
+    .mySelectAusencias .select2-selection__arrow {
+        background-image: url('{{ asset('logo/img/icon/seta_dowm.svg') }}') !important;
+        background-size: contain !important;
+        background-repeat: no-repeat !important;
+        background-position: center !important;
+        width: 20px !important;
+        height: 20px !important;
+        position: absolute !important;
+        top: 10px !important;
+        right: 10px !important;
+    }
+
+    /* Seta para cima quando o Select2 está aberto */
+.mySelectAusencias .select2-selection[aria-expanded="true"] .select2-selection__arrow {
+    background-image: url('{{ asset('logo/img/icon/seta-up.svg') }}') !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    width: 20px !important;
+    height: 20px !important;
+    position: absolute !important;
+    top: 10px !important;
+    right: 10px !important;
+}
+</style>
 {{-- CABEÇALHO BREADCRUMB --}}
 <div class="content-header header-crumb">
     <div class="container-fluid">
@@ -11,7 +39,7 @@
             <div class="col-sm-12">
                 <ol class="breadcrumb float-sm-right">
                     <!-- <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li> -->
-                    <li class="breadcrumb-item active">Envio de documentos</li>
+                    <li class="breadcrumb-item active">Ausências</li>
                 </ol>
             </div>
         </div>
@@ -19,8 +47,24 @@
     <hr>
 </div>
 <div class="main_container manager_doc">
-    <span>Nenhum documento recebido</span>
-    <a href="#">Gerenciar</a>
+    <div class="container_radio_foul">
+        <span>Tipo de falta</span>
+        <div class="radio_foul">
+            <div class="radio-docs">
+                <input type="radio" name="tipo_falta" id="justificada" value="Justificada" required>
+                <label for="justificada">Justificada</label>
+            </div>
+            <div class="radio-docs">
+                <input type="radio" name="tipo_falta" id="injustificada" value="Injustificada">
+                <label for="injustificada">Injustificada</label>
+            </div>
+            <div class="radio-docs">
+                <input type="radio" name="tipo_falta" id="ausentar" value="Desejo ausentar-se">
+                <label for="ausentar">Desejo ausentar-se</label>
+            </div>
+        </div>
+    </div>
+    <!-- <a href="#">Gerenciar</a> -->
 </div>
 <div class="main_container doc_container">
     <form method="POST" class="formDocs" action="{{ route('documents.store') }}" enctype="multipart/form-data">
@@ -57,26 +101,69 @@
         
         <div class="document-inputs">
             <div class="form-group">
-                <label for="recipient">Destinatário</label>
+                <label for="recipient">Nome completo</label>
                 <div class="destinatário">
                 <input type="hidden" name="recipient" value="Recursos Humanos" />
-                    <span>Recursos Humanos</span>
+                    <span>Nome User</span>
                 </div>
             </div>
             <div class="form-group">
-                <label for="document_type">Tipo de documento</label>
+                <label for="recipient">Função</label>
+                <div class="destinatário">
+                <input type="hidden" name="recipient" value="Recursos Humanos" />
+                    <span>Designer</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="recipient">Departamento</label>
+                <div class="destinatário">
+                <input type="hidden" name="recipient" value="Recursos Humanos" />
+                    <span>Marketing</span>
+                </div>
+            </div>
+            
+            <div class="form-group mySelectAusencias">
+                <label for="document_type">Tipo de registo</label>
+                <select name="document_type" class="form-control" id="mySelect" required>
+                    <option value="Dia Justificado">Dia Justificado</option>
+                    <option value="Desconto por atraso">Desconto por atraso</option>
+                    <span class="select2-selection__arrow" role="presentation">
+      <b role="presentation"></b> <!-- Esta é a seta interna -->
+    </span>
+                </select>
+            </div>
+
+            <div class="form-group mySelectAusencias">
+                <label for="document_type">Motivo</label>
                 <select name="document_type" class="form-control" id="document_type" required>
-                    <option value="Cópia do bilhete de identidade">Cópia do bilhete de identidade</option>
-                    <option value="Contrato de trabalho">Contrato de trabalho</option>
+                    <option style=" border-bottom-right-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;" value="Cópia do bilhete de identidade">Assistência membro familiar</option>
+                    <option value="Contrato de trabalho">Doença</option>
+                    <option value="Contrato de trabalho">Justificação de filhos</option>
+                    <option value="Contrato de trabalho">Licença matrimónio</option>
+                    <option value="Contrato de trabalho">Óbito</option>
                 </select>
             </div>
             
-            <div class="form-group" style="position: relative;">
-                <label for="description">Descrição</label>
-                <textarea id="description" name="description" class="form-control" rows="3" maxlength="200" required></textarea>
-                <span id="char-count" style="position: absolute; bottom: 5px; right: 10px; color: #888;">200</span>
+            
+            <div class="form-group container_set_date" style="position: relative;">
+                <div class="container_start_date">
+                    <label for="description" >Data que faltou</label>
+                    <input type="date">
+                </div>
+                <div class="container_end_date">
+                    <label for="description" class="description_label ocultado">Faltou apenas</label>
+                    <div class="container_input_end_date">
+                        <input type="number" id="input_hours" class="description_label ocultado" placeholder="0">
+                        <span class="description_label ocultado">Horas</span>
+                    </div>
+                </div>
+                <!-- <span id="char-count" style="position: absolute; bottom: 5px; right: 10px; color: #888;">200</span> -->
             </div>
-            <button type="submit" id="submit-btn" style="cursor: not-allowed;" disabled>Enviar</button>
+            <div class="ausencias_container_btn">
+                <button type="submit">Cancelar</button>
+                <button type="submit">Enviar</button>
+            </div>
         </div>
     </form>
 </div>
@@ -90,10 +177,7 @@
     </div>
 </div>
 <div id="overlay" style="display: none;"></div>
-
-
-
-
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
 <script>
 const fileInput = document.getElementById('file-upload');
 const dropArea = document.getElementById('drop-area_docs');
@@ -175,7 +259,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener("DOMContentLoaded", function () {
     const form = document.querySelector(".formDocs");
     const fileInput = document.getElementById("file-upload");
-    const docType = document.getElementById("document_type");
+    const docType = document.getElementById("mySelect");
     const description = document.getElementById("description");
     const submitButton = document.getElementById("submit-btn");
 
@@ -281,6 +365,44 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
+function updateFieldState() {
+    const select = $('#mySelect');  // Seleciona o elemento usando jQuery Select2
+    const inputHours = document.getElementById('input_hours');
+    const descriptionLabels = document.querySelectorAll(".description_label");
+
+    // Usando o valor do select através do Select2
+    if (select.val() === 'Dia Justificado') {
+        inputHours.disabled = true; // Desabilita o input
+        descriptionLabels.forEach(label => {
+            label.classList.add('disabled-label'); // Aplica estilo desabilitado
+        });
+    } else {
+        inputHours.disabled = false; // Habilita o input
+        descriptionLabels.forEach(label => {
+            label.classList.remove('disabled-label'); // Remove estilo desabilitado
+        });
+    }
+}
+
+
+// Atualiza o estado ao carregar a página
+document.addEventListener('DOMContentLoaded', updateFieldState);
+
+// Atualiza o estado ao mudar o valor do select
+document.getElementById('mySelect').addEventListener('change', updateFieldState);
+
+
+$(document).ready(function() {
+    // Inicializando o Select2 para todos os selects com a classe 'mySelectAusencias'
+    $('.mySelectAusencias select').select2({
+        minimumResultsForSearch: -1  // Remove a caixa de pesquisa
+    });
+
+    // Chama a função updateFieldState sempre que o valor mudar
+    $('.mySelectAusencias select').on('change', function() {
+        updateFieldState();
+    });
+});
 
 
     </script>

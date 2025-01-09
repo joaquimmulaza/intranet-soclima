@@ -1626,18 +1626,18 @@ button:active{
     border-bottom: none !important;
 }
 
-thead th:hover tbody td {
+/* thead th:hover tbody td {
     background-color: red;
-  }
+  } */
 
 .fc-scroller {
     overflow: hidden !important;
     height: 100% !important;
 }
 
-.fc-content-skeleton td:hover {
+/* .fc-content-skeleton td:hover {
     background-color: red !important;
-}
+} */
 
 .filterContainer{
     position: relative;
@@ -1647,7 +1647,6 @@ thead th:hover tbody td {
     background-color: #fff !important;
    box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.45) !important;
    border-radius: 5px !important;
-   
 }
 
 .filterContainer .modalOpt{
@@ -1821,7 +1820,7 @@ input[type="file"] {
     height: 38px;
     display: flex;
     align-items: center;
-    background-color: #eee;
+    background-color: #f3f3f3;
     color: #ABABAB;
     padding-left: 17px;
     font-size: 14px;
@@ -2318,6 +2317,7 @@ input[type="file"] {
     align-items: center;
     gap: 13px;
     position: relative;
+    width: 217px;
 }
 
 #feriasRestantesChart{
@@ -2351,7 +2351,7 @@ input[type="file"] {
     color: #ABABAB;
 }
 
-#modalFerias .modal-content {
+.modalFerias .modal-content{
     width: 537px !important;
     height: 367px !important;
     border-radius: 5px !important;
@@ -2360,7 +2360,14 @@ input[type="file"] {
     justify-content: space-between;
 }
 
-#modalFerias .modal-header {
+.modalFerias .modal-content form{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.modalFerias .modal-header {
     border-bottom-color: #CECECE !important;
 }
 
@@ -2417,7 +2424,7 @@ input[type="file"] {
     border-radius: 5px;
 }
 
-#modalFerias .close{
+.modalFerias .close{
     padding: 0 !important;
 }
 
@@ -2506,4 +2513,198 @@ input[type="file"] {
 .historico_periodo span{
     font-weight: 500 !important;
     font-size: 14px !important;
+}
+
+.changePageBtn{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.changePageBtn a {
+    width: 126px;
+    height: 32px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.ChangeBtnFerias{
+    font-weight: 400 !important;
+    background: var(--Surface-surface-pressed, #009AC1);
+    color: #fff;
+}
+
+.ChangeBtnFerias:hover{
+    color: #fff !important;
+}
+
+.ChangeBtnFaltas{
+    background-color: #fff;
+    color: var(--Textos-Texto-primrio, #555);
+    font-weight: 400 !important;
+}
+
+.ChangeBtnFaltas:hover{
+    color: #555;
+}
+
+.container_start_date, .container_end_date {
+    display: flex;
+    flex-direction: column;
+}
+.container_set_date {
+    display: flex;
+    justify-content: start;
+    gap: 22px;
+}
+
+.container_set_date input {
+    color: #7B7B7B !important;
+    width: 208px;
+    height: 38px;
+    padding-left: 40px;
+    border-radius: 5px;
+    outline: none;
+    border: 0.75px solid #ABABAB;
+}
+
+.container_end_date input{
+    width: 58px !important;
+    color: #7B7B7B !important;
+    padding-left: 23px;
+}
+
+.container_input_end_date {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+}
+
+.container_input_end_date span {
+    color: #7B7B7B;
+    font-size: 14px;
+
+}
+
+.ausencias_container_btn {
+    display: flex;
+    justify-content: end;
+    gap: 20.4px;
+}
+
+.ausencias_container_btn button:nth-of-type(2){
+    background: #009AC1 !important;
+    color: #fff;
+}
+
+
+.radio_foul{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background-color: #eee;
+    height: 36px;
+    padding: 6px 14px;
+    border-radius: 5px;
+}
+
+.container_radio_foul {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.container_radio_foul label {
+    font-size: 14px !important;
+    color: #7B7B7B !important;
+    font-weight: 400 !important; 
+}
+
+.description_label {
+    color: #555; /* Cor padrão dos textos */
+}
+
+#input_hours {
+    color: #555; /* Cor padrão do input */
+}
+
+/* Estilo desabilitado */
+.disabled-label {
+    color: rgba(171, 171, 171, 0.44)!important; /* Texto desabilitado */
+}
+
+#input_hours:disabled {
+    color: rgba(171, 171, 171, 0.44) !important; /* Texto do input desabilitado */
+    border-color: rgba(171, 171, 171, 0.44) !important; /* Borda do input desabilitado */
+}
+
+#input_hours:disabled::placeholder {
+    color: rgba(171, 171, 171, 0.44)!important; /* Placeholder do input desabilitado */
+}
+
+  option:hover{
+    background-color: #000 !important;
+  }
+
+  .mySelectAusencias{
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mySelectAusencias .select2-container--default .select2-selection--single {
+    width: 449px;
+    height: 38px;
+    position: relative;
+    outline: none !important;
+    outline-color: #555 !important;
+    border-color: rgba(171, 171, 171, 1) !important;
+    border-radius: 5px !important;
+}
+
+.mySelectAusencias .select2-container--default .select2-selection__rendered {
+    color: #555 !important; /* Cor do texto dentro do select */
+    font-weight: 400 !important;
+    font-size: 14px !important;
+}
+
+/* Remover a seta padrão do Select2 */
+.mySelectAusencias .select2-selection__arrow b {
+    display: none !important;  /* Remove a seta padrão */
+}
+
+.mySelectAusencias .select2-selection__arrow::before {
+    content: none !important;  /* Remover qualquer conteúdo padrão da seta */
+}
+
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: #eee !important;
+    font-weight: 700 !important;
+    color: #555 !important;
+    /* border-top-left-radius: 5px !important;
+    border-top-right-radius: 5px !important;
+    border-bottom-right-radius: 0 !important;
+    border-bottom-left-radius: 0 !important; */
+    height: 38px !important;
+    border-radius: none !important;
+}
+
+.select2-results__option[aria-selected]{
+    background-color: #ffffff00 !important;
+    border-radius: 5px;
+}
+
+.select2-results__option[aria-selected] {
+    background-color: #fff !important;
+    font-size: 14px;
+    padding-left: 20px;
+    color: #555 !important;
+    height: 38px !important;
+}
+
+.select2-container--default .select2-dropdown.select2-dropdown--below {
+    margin-top: 8px !important;
+    border: 1px solid #ababab !important;
+    border-radius: 5px !important;
 }

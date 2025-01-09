@@ -10,6 +10,7 @@ use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class FeriaController extends Controller
 {
@@ -103,19 +104,21 @@ class FeriaController extends Controller
         return redirect()->route('ferias.index')->with('success', 'Pedido de férias atualizado com sucesso!');
     }
 
-    public function updateDiasFerias(Request $request, $userId) {
+    public function updateDiasFerias(Request $request)
+    {
         $request->validate([
             'dias_disponiveis' => 'required|integer|min:0',
+            'user_id' => 'required|exists:users,id',
         ]);
-    
-        $user = User::findOrFail($userId);
-    
+
+        $user = User::findOrFail($request->user_id);
+
         $user->diasFerias()->updateOrCreate(
             ['user_id' => $user->id],
             ['dias_disponiveis' => $request->dias_disponiveis]
         );
-    
-        return back()->with('success', 'Dias de férias atualizados com sucesso.');
+
+        return redirect()->back()->with('success', 'Dias de férias atualizados com sucesso.');
     }
 
     public function showDiasFeriasForm($userId)
@@ -130,46 +133,45 @@ class FeriaController extends Controller
 
     
 
-    // Função para calcular os dias úteis solicitados
-    public function diasSolicitados($dataInicio, $dataFim)
-    {
-        $dataInicio = Carbon::parse($dataInicio);
-        $dataFim = Carbon::parse($dataFim);
-
-        // Calcular a diferença de dias, desconsiderando finais de semana e feriados
-        $diasSolicitados = 0;
-        $feriados = Feriado::pluck('data')->toArray(); // Obter feriados
-
-        while ($dataInicio->lte($dataFim)) {
-            if (!$dataInicio->isWeekend() && !in_array($dataInicio->format('Y-m-d'), $feriados)) {
-                $diasSolicitados++;
-            }
-            $dataInicio->addDay();
-        }
-
-        return $diasSolicitados;
-    }
+   
     
 
-    // Função para calcular a data de retorno prevista
-    public function calcularDataRetorno($dataInicio, $diasSolicitados) {
-        $data = Carbon::parse($dataInicio);
-        $feriados = Feriado::pluck('data')->toArray(); // Obtém feriados da tabela feriados
-    
-        $diasUteisContados = 0;
-    
-        // Loop para contar os dias úteis, excluindo finais de semana e feriados
-        while ($diasUteisContados < $diasSolicitados) {
-            $data->addDay();
-    
-            if (!$data->isWeekend() && !in_array($data->format('Y-m-d'), $feriados)) {
-                $diasUteisContados++;
+    public function calcularDataRetorno($dataInicio, $dataFim)
+{
+    \Log::info("Data de Início: {$dataInicio}");
+
+    // Definindo a data de início e data fim
+    $dataInicio = Carbon::parse($dataInicio);
+    $dataFim = Carbon::parse($dataFim);
+
+    // Adicionando log
+    \Log::info("Data final: {$dataFim}");
+
+    // Itera até que a data de retorno caia no dia útil correto
+    while ($dataInicio->lte($dataFim)) {
+        \Log::info("Verificando data: " . $dataInicio->toDateString());
+
+        if ($dataInicio->isWeekend()) {
+            \Log::info("Data é final de semana: " . $dataInicio->toDateString());
+            // Se for sábado ou domingo, avance para a segunda-feira
+            if ($dataInicio->isSaturday()) {
+                $dataInicio->addDays(2); // Avançar para segunda-feira
+            } elseif ($dataInicio->isSunday()) {
+                $dataInicio->addDay(); // Avançar para segunda-feira
             }
         }
-    
-        return $data->format('Y-m-d');
+
+        // Adiciona um dia de cada vez
+        $dataInicio->addDay();
     }
 
+    return $dataInicio->toDateString();
+}
+
+    
+
+
+ 
     public function aprovar($id)
     {
         $feria = Feria::findOrFail($id);
@@ -254,18 +256,28 @@ class FeriaController extends Controller
     {
         // Buscar o funcionário pelo ID
         $funcionario = User::findOrFail($id);
-        
+        // Verificar se o registro na tabela `dias_ferias` existe para o usuário
+        if (!$funcionario->diasFerias) {
+            // Criar o registro com o valor padrão de 22 dias disponíveis
+            $funcionario->diasFerias()->create([
+                'dias_disponiveis' => 22,
+            ]);
+        }
 
         // Buscar os dados de férias do funcionário
         $ferias = Feria::where('user_id', $id)
-        ->where('status', 'Aprovado')  // Filtra apenas férias aprovadas
-        ->get();
+            ->where('status', 'Aprovado')  // Filtra apenas férias aprovadas
+            ->get();
 
-        // Calcular informações adicionais
-        $feriasAnuais = 22; // Quantidade padrão de dias de férias anuais
+        // Obter os dias de férias anuais atualizados
+        $feriasAnuais = $funcionario->diasFerias->dias_disponiveis ?? 22; // Usa o valor da relação ou 22 como padrão
+
+        // Calcular os dias de férias já gozados
         $feriasGozadas = $ferias->sum(function ($feria) {
             return $this->diasSolicitados($feria->data_inicio, $feria->data_fim);
         });
+
+        // Calcular os dias de férias restantes
         $feriasRestantes = max($feriasAnuais - $feriasGozadas, 0);
 
         // Formatar os períodos de férias para exibição
@@ -279,6 +291,7 @@ class FeriaController extends Controller
         });
 
         // Enviar os dados para a view
-        return view('ferias.show', compact('funcionario', 'feriasAnuais', 'feriasGozadas', 'feriasRestantes', 'historicoFerias', ));
+        return view('ferias.show', compact('funcionario', 'feriasAnuais', 'feriasGozadas', 'feriasRestantes', 'historicoFerias'));
     }
+
 }
