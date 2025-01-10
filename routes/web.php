@@ -376,4 +376,3 @@ Route::middleware(['auth',])->group(function () {
     Route::post('/admin/document-request/{id}/upload', [AdminDocumentRequestController::class, 'uploadDocument'])->name('admin.document-request.upload');
     Route::post('/admin/document-request/{id}/complete', [AdminDocumentRequestController::class, 'markAsComplete'])->name('document-request.complete');
 });
-

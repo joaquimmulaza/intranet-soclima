@@ -12,8 +12,8 @@
             </div>
 
             <div class="changePageBtn">
-                <a href="#" class="ChangeBtnFaltas">Faltas</a>
-                <a href="#" class="ChangeBtnFerias ">Férias</a>
+                <a href="#" class="ChangeBtnFaltas" id="btnFaltas">Faltas</a>
+                <a href="#" class="ChangeBtnFerias" id="btnFerias">Férias</a>
             </div>
         </div>
     </div>
@@ -81,5 +81,6 @@
         },
     });
 });
+
 </script>
 @endsection

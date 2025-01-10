@@ -2532,12 +2532,8 @@ input[type="file"] {
 
 .ChangeBtnFerias{
     font-weight: 400 !important;
-    background: var(--Surface-surface-pressed, #009AC1);
-    color: #fff;
-}
-
-.ChangeBtnFerias:hover{
-    color: #fff !important;
+    background: #fff;
+    color: rgba(85, 85, 85, 1);
 }
 
 .ChangeBtnFaltas{
@@ -2707,4 +2703,64 @@ input[type="file"] {
     margin-top: 8px !important;
     border: 1px solid #ababab !important;
     border-radius: 5px !important;
+}
+
+#contentFerias,
+#contentFaltas {
+    visibility: hidden;
+}
+
+#contentFaltas {
+    visibility: visible;
+    position: relative;
+}
+
+.containerBtnAusencias {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.containerBtnAusencias a {
+    width: 169px;
+    height: 34px;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    border: 1px solid var(--border-border, #009AC1);
+    color: rgba(0, 154, 193, 1);
+    font-size: 14px !important;
+}
+
+.containerBtnAusencias a:hover{
+    background-color: rgba(238, 247, 255, 1);
+    font-size: 14px;
+    color: var(--Textos-Primrio, #009AC1);
+}
+
+.short_info {
+    font-size: 11px;
+    color: rgba(85, 85, 85, 1);
+    text-align: center;
+    padding-top: 20px;
+    font-weight: 400;
+}
+.changePageBtn a.active {
+    background-color: #009AC1;
+    color: #fff;
+}
+
+/* Estilo básico para os conteúdos */
+.content {
+    opacity: 0;
+    
+    transition: all 0.5s ease-in-out;
+}
+
+/* Quando o conteúdo está visível */
+.visible {
+    opacity: 1;
 }
