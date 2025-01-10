@@ -77,9 +77,29 @@
 
     <!-- Conteúdo para Injustificada -->
     <div id="content-injustificada" class="content hidden">
-        <h3>Falta Injustificada</h3>
-        <p>Insira os detalhes sobre a falta injustificada.</p>
-        <!-- Você pode adicionar mais conteúdo específico aqui -->
+    <div class="document-inputs">
+                <div class="form-group">
+                    <label for="recipient">Nome completo</label>
+                    <div class="destinatário">
+                    <input type="hidden" name="recipient" value="Recursos Humanos" />
+                        <span>Nome User</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="recipient">Função</label>
+                    <div class="destinatário">
+                    <input type="hidden" name="recipient" value="Recursos Humanos" />
+                        <span>Designer</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="recipient">Departamento</label>
+                    <div class="destinatário">
+                    <input type="hidden" name="recipient" value="Recursos Humanos" />
+                        <span>Marketing</span>
+                    </div>
+                </div>
+    </div>
     </div>
 
     <div class="main_container doc_container content visible" id="content-justificada">
@@ -518,12 +538,13 @@ function toggleContent(radio) {
     });
 
     // Exibir o conteúdo correspondente ao radio selecionado
-    const selectedContent = document.getElementById(`content-${radio.value}`);
+    const selectedContent = document.getElementById(`content-${radio.value.toLowerCase()}`);
     if (selectedContent) {
         selectedContent.classList.remove('hidden');
         selectedContent.classList.add('visible');
     }
 }
+
 
 
 
