@@ -2618,22 +2618,30 @@ input[type="file"] {
     font-weight: 400 !important; 
 }
 
-.description_label {
+.description_label, .ocultado {
     color: #555; /* Cor padrão dos textos */
 }
 
-#input_hours {
+.input_hours, #input_hours {
     color: #555; /* Cor padrão do input */
 }
 
 /* Estilo desabilitado */
-.disabled-label {
+.disabled-label, .ocultado {
     color: rgba(171, 171, 171, 0.44)!important; /* Texto desabilitado */
 }
 
+.input_hours:disabled {
+    color: rgba(171, 171, 171, 0.44) !important; /* Texto do input desabilitado */
+    border-color: rgba(171, 171, 171, 0.44) !important; /* Borda do input desabilitado */
+}
 #input_hours:disabled {
     color: rgba(171, 171, 171, 0.44) !important; /* Texto do input desabilitado */
     border-color: rgba(171, 171, 171, 0.44) !important; /* Borda do input desabilitado */
+}
+
+.input_hours:disabled::placeholder {
+    color: rgba(171, 171, 171, 0.44)!important; /* Placeholder do input desabilitado */
 }
 
 #input_hours:disabled::placeholder {
@@ -2770,4 +2778,53 @@ input[type="file"] {
 #content-injustificada{
     background-color: #fff;
     border-radius: 5px;
+}
+
+#content-injustificada{
+    padding: 51px 80px;
+}
+
+.form-injustificada{
+    display: flex;
+    gap: 20px;
+}
+
+
+
+.form-injustificada-input{
+    width: 449.053px;
+    height: 38px;
+    border-radius: 5px;
+    outline: none;
+    border: 0.75px solid #ABABAB;
+    padding-left: 17px;
+    color: var(--Textos-Secundrio, #ABABAB);
+    
+}
+
+.form_ausencias{
+    display: flex;
+    justify-content: center;
+    gap: 36px;
+}
+
+.descontar_nasFerias{
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    gap: 18px;
+    font-size: 14px;
+    color: var(--Textos-Secundrio, #ABABAB);
+  
+   
+}
+
+.descontar_nasFerias p{
+    margin-bottom: 0 !important;
+}
+
+.radio_descontar{
+    display: flex;
+    align-items: center;
+    gap: 20px;
 }

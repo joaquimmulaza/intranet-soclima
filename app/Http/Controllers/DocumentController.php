@@ -10,7 +10,8 @@ class DocumentController extends Controller
     public function index()
     {
         $documents = Document::all();
-        return view('documents.index', compact('documents'));
+        $id = auth()->id(); // Pegando o ID do usuário logado, caso isso seja o esperado
+        return view('documents.index', compact('documents','id'));
     }
 
     public function store(Request $request)

@@ -291,7 +291,7 @@ class FeriaController extends Controller
         });
 
         // Enviar os dados para a view
-        return view('ferias.show', compact('funcionario', 'feriasAnuais', 'feriasGozadas', 'feriasRestantes', 'historicoFerias'));
+        return view('ferias.show', compact('funcionario', 'feriasAnuais', 'feriasGozadas', 'feriasRestantes', 'historicoFerias', 'id'));
     }
 
 }

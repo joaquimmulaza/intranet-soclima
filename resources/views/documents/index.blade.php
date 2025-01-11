@@ -52,8 +52,8 @@
 </div>
 <hr>
 <div class="containerBtnAusencias">
-    <a href="#">Consultar Férias</a>
-    <a href="#">Solicitar Férias</a>
+    <a href="{{ route('ferias.show', ['id' => $id]) }}">Consultar Férias</a>
+    <a href="{{ route('ferias.marcar') }}">Solicitar Férias</a>
 </div>
 
 <div id="contentFaltas">
@@ -74,136 +74,185 @@
         </div>
         <!-- <a href="#">Gerenciar</a> -->
     </div>
-
+    <form method="POST" class="formDocs" action="{{ route('documents.store') }}" enctype="multipart/form-data">
     <!-- Conteúdo para Injustificada -->
-    <div id="content-injustificada" class="content hidden">
-    <div class="document-inputs">
-                <div class="form-group">
-                    <label for="recipient">Nome completo</label>
-                    <div class="destinatário">
-                    <input type="hidden" name="recipient" value="Recursos Humanos" />
-                        <span>Nome User</span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="recipient">Função</label>
-                    <div class="destinatário">
-                    <input type="hidden" name="recipient" value="Recursos Humanos" />
-                        <span>Designer</span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="recipient">Departamento</label>
-                    <div class="destinatário">
-                    <input type="hidden" name="recipient" value="Recursos Humanos" />
-                        <span>Marketing</span>
-                    </div>
-                </div>
-    </div>
-    </div>
-
-    <div class="main_container doc_container content visible" id="content-justificada">
-        <form method="POST" class="formDocs" action="{{ route('documents.store') }}" enctype="multipart/form-data">
-            @csrf
-            <div class="form-group">
-                <!-- Área de Drop e Seleção de Arquivo -->
-                <div class="drop-area_docs" id="drop-area_docs">
-                    <div class="drop-icon">
-                        <img src="logo/img/icon/upload_file.svg" alt="Upload Icon">
-                    </div>
-                    <p>Insira ou arrasta</p>
-                    <input type="file" id="file-upload" name="file" required />
-                </div>
-    
-                <!-- Cartão de Upload com a Barra de Progresso -->
-                <div class="upload-card" id="upload-card" style="display: none;">
-                    <div class="upload-icon">
-                    <img src="logo/img/icon/upload_file.svg" alt="Upload Icon">
-                        <div style="overflow: hidden; text-overflow: ellipsis; font-size: 11px;">
-    
-                            <strong id="file-name">untitled</strong>
-                        </div>
-                    </div>
-                    <span class="close-btn" onclick="resetUpload()"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z" fill="#555555"/>
-                    </svg>
-                    </span>
-                    <div class="progress-container">
-                        <div class="progress-bar" id="progress-bar"></div>
-                    </div>
-                </div>
-            </div>
-    
+        <div id="content-injustificada" class="content hidden">
             <div class="document-inputs">
-                <div class="form-group">
-                    <label for="recipient">Nome completo</label>
-                    <div class="destinatário">
-                    <input type="hidden" name="recipient" value="Recursos Humanos" />
-                        <span>Nome User</span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="recipient">Função</label>
-                    <div class="destinatário">
-                    <input type="hidden" name="recipient" value="Recursos Humanos" />
-                        <span>Designer</span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="recipient">Departamento</label>
-                    <div class="destinatário">
-                    <input type="hidden" name="recipient" value="Recursos Humanos" />
-                        <span>Marketing</span>
-                    </div>
-                </div>
-    
-                <div class="form-group mySelectAusencias">
-                    <label for="document_type">Tipo de registo</label>
-                    <select name="document_type" class="form-control" id="mySelect" required>
-                        <option value="Dia Justificado">Dia Justificado</option>
-                        <option value="Desconto por atraso">Desconto por atraso</option>
-                        <span class="select2-selection__arrow" role="presentation">
-          <b role="presentation"></b> <!-- Esta é a seta interna -->
-        </span>
-                    </select>
-                </div>
-    
-                <div class="form-group mySelectAusencias">
-                    <label for="document_type">Motivo</label>
-                    <select name="document_type" class="form-control" id="document_type" required>
-                        <option style=" border-bottom-right-radius: 0 !important;
-        border-bottom-left-radius: 0 !important;" value="Cópia do bilhete de identidade">Assistência membro familiar</option>
-                        <option value="Contrato de trabalho">Doença</option>
-                        <option value="Contrato de trabalho">Justificação de filhos</option>
-                        <option value="Contrato de trabalho">Licença matrimónio</option>
-                        <option value="Contrato de trabalho">Óbito</option>
-                    </select>
-                </div>
-    
-    
-                <div class="form-group container_set_date" style="position: relative;">
-                    <div class="container_start_date">
-                        <label for="description" >Data que faltou</label>
-                        <input type="date">
-                    </div>
-                    <div class="container_end_date">
-                        <label for="description" class="description_label ocultado">Faltou apenas</label>
-                        <div class="container_input_end_date">
-                            <input type="number" id="input_hours" class="description_label ocultado" placeholder="0">
-                            <span class="description_label ocultado">Horas</span>
+                <div class="form-injustificada">
+                    <div class="form-group">
+                        <label for="recipient">Nome completo</label>
+                        <div class="destinatário">
+                            <span>Nome User</span>
                         </div>
                     </div>
-                    <!-- <span id="char-count" style="position: absolute; bottom: 5px; right: 10px; color: #888;">200</span> -->
+                
+                    <div class="form-group">
+                        <label for="recipient">Função</label>
+                        <div class="destinatário">
+                            <span>Designer</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-injustificada">
+                    <div class="form-group">
+                        <label for="recipient">Departamento</label>
+                        <div class="destinatário">
+                            <span>Marketing</span>
+                        </div>
+                    </div>
+                    <div class="form-group mySelectAusencias">
+                        <label for="document_type">Tipo de registo</label>
+                        <select name="tipo_registo" class=" form-control" id="mySelect3" required>
+                            <option value="Dia Justificado">Dia Injustificado</option>
+                            <option value="Desconto por atraso">Desconto por atraso</option>
+                            <span class="select2-selection__arrow" role="presentation">
+                            <b role="presentation"></b> <!-- Esta é a seta interna -->
+                            </span>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-injustificada">
+                    <div class="form-group mySelectAusencias">
+                        <label for="motivo">Motivo</label>
+                        <input type="text" name="motivo" class="form-injustificada-input">
+                    </div>
+                    <div class="form-group container_set_date" style="position: relative;">
+                        <div class="container_start_date">
+                            <label for="description">Data que faltou</label>
+                            <input type="date" name="data_inicio">
+                        </div>
+                        <div class="container_end_date container_end_date2">
+                            <label for="description" class="ocultado">Faltou apenas</label>
+                            <div class="container_input_end_date">
+                                <input type="number" name="horas" id="input_hours" class="ocultado" placeholder="0">
+                                <span class="ocultado">Horas</span>
+                            </div>
+                        </div>
+                        
+                        <!-- <span id="char-count" style="position: absolute; bottom: 5px; right: 10px; color: #888;">200</span> -->
+                    </div>
+                    
+                    
+                </div>
+                <div class="descontar_nasFerias">
+                    <p>Desejo que seja descontado nas férias anuais</p>
+
+                    <div class="radio_descontar">
+                    <div class="radio-docs">
+                    <input type="radio" name="tipo_falta" id="justificada" value="justificada" checked onchange="toggleContent(this)">
+                    <label for="justificada">Sim</label>
+                </div>
+                
+                <div class="radio-docs">
+                    <input type="radio" name="tipo_falta" id="injustificada" value="Injustificada" onchange="toggleContent(this)">
+                    <label for="injustificada">Não</label>
+                </div>
+                    </div>
                 </div>
                 <div class="ausencias_container_btn">
                     <button type="submit">Cancelar</button>
-                    <button type="submit">Enviar</button>
+                    <button type="submit">Justificar</button>
                 </div>
             </div>
-        </form>
+            
+        </div>
+
+    <div class="main_container doc_container content visible" id="content-justificada">
+        
+            <div class="form_ausencias">
+                @csrf
+                <div class="form-group">
+                    <!-- Área de Drop e Seleção de Arquivo -->
+                    <div class="drop-area_docs" id="drop-area_docs">
+                        <div class="drop-icon">
+                            <img src="logo/img/icon/upload_file.svg" alt="Upload Icon">
+                        </div>
+                        <p>Insira ou arrasta</p>
+                        <input type="file" id="file-upload" name="arquivo_comprovativo" required />
+                    </div>
+                    <!-- Cartão de Upload com a Barra de Progresso -->
+                    <div class="upload-card" id="upload-card" style="display: none;">
+                        <div class="upload-icon">
+                        <img src="logo/img/icon/upload_file.svg" alt="Upload Icon">
+                            <div style="overflow: hidden; text-overflow: ellipsis; font-size: 11px;">
+                                <strong id="file-name">untitled</strong>
+                            </div>
+                        </div>
+                        <span class="close-btn" onclick="resetUpload()"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z" fill="#555555"/>
+                        </svg>
+                        </span>
+                        <div class="progress-container">
+                            <div class="progress-bar" id="progress-bar"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="document-inputs">
+                    <div class="form-group">
+                        <label for="recipient">Nome completo</label>
+                        <div class="destinatário">
+                            <span>Nome User</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="recipient">Função</label>
+                        <div class="destinatário">
+                            <span>Designer</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="recipient">Departamento</label>
+                        <div class="destinatário">
+                            <span>Marketing</span>
+                        </div>
+                    </div>
+                    <div class="form-group mySelectAusencias">
+                        <label for="document_type">Tipo de registo</label>
+                        <select name="tipo_registo" class="mySelect form-control" id="mySelect" required>
+                            <option value="Dia Justificado">Dia Justificado</option>
+                            <option value="Desconto por atraso">Desconto por atraso</option>
+                            <span class="select2-selection__arrow" role="presentation">
+                            <b role="presentation"></b> <!-- Esta é a seta interna -->
+                            </span>
+                        </select>
+                    </div>
+                    <div class="form-group mySelectAusencias">
+                        <label for="document_type">Motivo</label>
+                        <select name="motivo" class="form-control" id="document_type" required>
+                            <option style=" border-bottom-right-radius: 0 !important;
+                            border-bottom-left-radius: 0 !important;" value="Assistência membro familiar">Assistência membro familiar</option>
+                            <option value="Doença">Doença</option>
+                            <option value="Justificação de filhos">Justificação de filhos</option>
+                            <option value="Licença matrimónio">Licença matrimónio</option>
+                            <option value="Óbito">Óbito</option>
+                        </select>
+                    </div>
+                    <div class="form-group container_set_date" style="position: relative;">
+                        <div class="container_start_date">
+                            <label for="description" >Data que faltou</label>
+                            <input type="date" name="data_inicio">
+                        </div>
+                        <div class="container_end_date">
+                            <label for="description" class="description_label">Faltou apenas</label>
+                            <div class="container_input_end_date">
+                                <input type="number" name="horas" class="input_hours description_label " placeholder="0">
+                                <span class="description_label">Horas</span>
+                            </div>
+                        </div>
+                        <!-- <span id="char-count" style="position: absolute; bottom: 5px; right: 10px; color: #888;">200</span> -->
+                    </div>
+                    <div class="ausencias_container_btn">
+                        <button type="submit">Cancelar</button>
+                        <button type="submit">Justificar</button>
+                    </div>
+                </div>
+            </div>
+        
     </div>
-    <p class="short_info">Faltas sem qualquer comunicação prévia serão consideradas injustificadas, caso não seja apresentado o devido justificativo</p>
+   
 </div>
+ <p class="short_info">Faltas sem qualquer comunicação prévia serão consideradas injustificadas, caso não seja apresentado o devido justificativo</p>
+</form>
 
 
 <div id="contentFerias">
@@ -422,24 +471,78 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 function updateFieldState() {
-    const select = $('#mySelect');  // Seleciona o elemento usando jQuery Select2
+    const selects = document.querySelectorAll('.mySelect'); // Seleciona todos os selects com a classe
+    const inputHoursElements = document.querySelectorAll('.input_hours'); // Seleciona todos os inputs de horas
+    const descriptionLabels = document.querySelectorAll(".description_label"); // Seleciona todos os labels de descrição
+
+    // Itera sobre todos os selects para aplicar a lógica
+    selects.forEach(select => {
+        const value = $(select).val(); // Obtém o valor do select (mantém compatibilidade com Select2)
+
+        if (value === 'Dia Justificado') {
+            inputHoursElements.forEach(input => {
+                input.disabled = true; // Desabilita o input
+            });
+            descriptionLabels.forEach(label => {
+                label.classList.add('disabled-label'); // Adiciona estilo desabilitado
+            });
+        } else {
+            inputHoursElements.forEach(input => {
+                input.disabled = false; // Habilita o input
+            });
+            descriptionLabels.forEach(label => {
+                label.classList.remove('disabled-label'); // Remove estilo desabilitado
+            });
+        }
+    });
+}
+
+function atualizarEstadoCampos() {
+    const select = $('#mySelect3');  // Seleciona o elemento usando jQuery Select2
     const inputHours = document.getElementById('input_hours');
-    const descriptionLabels = document.querySelectorAll(".description_label");
-    const btnAusencias = document.querySelector('.containerBtnAusencias');
+    const descriptionLabels = document.querySelectorAll(".container_end_date2 label, .container_end_date2 span"); // Seleciona o label e o span
+    const containerInputEndDate = document.querySelector(".container_input_end_date"); // Seleciona o contêiner do input
 
     // Usando o valor do select através do Select2
     if (select.val() === 'Dia Justificado') {
         inputHours.disabled = true; // Desabilita o input
+        // Adiciona a classe 'ocultado' tanto no label quanto no span e no input
         descriptionLabels.forEach(label => {
-            label.classList.add('disabled-label'); // Aplica estilo desabilitado
+            label.classList.add('ocultado');
         });
+        containerInputEndDate.classList.add('ocultado'); // Oculta o contêiner do input
     } else {
         inputHours.disabled = false; // Habilita o input
+        // Remove a classe 'ocultado' para tornar o label, span e input visíveis
         descriptionLabels.forEach(label => {
-            label.classList.remove('disabled-label'); // Remove estilo desabilitado
+            label.classList.remove('ocultado');
         });
+        containerInputEndDate.classList.remove('ocultado'); // Exibe o contêiner do input
     }
 }
+
+// Atualiza o estado ao carregar a página
+document.addEventListener('DOMContentLoaded', atualizarEstadoCampos);
+
+// Atualiza o estado ao mudar o valor do select
+document.getElementById('mySelect3').addEventListener('change', atualizarEstadoCampos);
+
+$(document).ready(function() {
+    // Inicializando o Select2 para o select com o id 'mySelect3'
+    $('#mySelect3').select2({
+        minimumResultsForSearch: -1  // Remove a caixa de pesquisa
+    });
+
+    // Chama a função atualizarEstadoCampos sempre que o valor mudar
+    $('#mySelect3').on('change', function() {
+        atualizarEstadoCampos();
+    });
+});
+
+
+
+
+
 
 
 // Atualiza o estado ao carregar a página
@@ -516,13 +619,14 @@ function showContent(type) {
     if (type === 'faltas') {
         document.getElementById('contentFaltas').style.visibility = 'visible';
         document.getElementById('contentFaltas').style.position = 'relative';
-        btnAusencias.style.display = 'flex'; 
+
+        btnAusencias.style.display = 'none'; // Oculta o botão
         document.getElementById('btnFaltas').classList.add('active');
         document.getElementById('btnFerias').classList.remove('active');
     } else if (type === 'ferias') {
         document.getElementById('contentFerias').style.visibility = 'visible';
         document.getElementById('contentFerias').style.position = 'relative';
-        btnAusencias.style.display = 'none'; // Oculta o botão
+        btnAusencias.style.display = 'flex'; 
         document.getElementById('btnFerias').classList.add('active');
         document.getElementById('btnFaltas').classList.remove('active');
     }
