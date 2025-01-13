@@ -1,11 +1,5 @@
 /**
  * Created by Rafael on 08/08/2020.
- *
- *
- *
- *
- *
- * NÃO ESTA EM USO - USEI NO FRONTEND/LOGIN/SCRIPT
  */
 $(function(){
     $('form[name="formLogin"]').submit(function(event){

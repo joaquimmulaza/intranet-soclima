@@ -103,3 +103,14 @@ mix.
     'public/public/plugins/sweetalert2/sweetalert2.all.min.js')
 
     .version();
+
+mix.browserSync({
+    proxy: '127.0.0.1:8000', // O endereço do seu servidor Laravel
+    files: [
+        'resources/views/**/*.blade.php', // Atualizar ao modificar views
+        'public/**/*.(css|js)',           // Atualizar ao modificar CSS/JS
+        'resources/js/**/*.js',          // Atualizar ao modificar arquivos JS
+        'resources/css/**/*.css',        // Atualizar ao modificar arquivos CSS
+    ],
+});
+    

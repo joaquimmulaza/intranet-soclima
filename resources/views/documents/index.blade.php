@@ -12,10 +12,10 @@
         background-size: contain !important;
         background-repeat: no-repeat !important;
         background-position: center !important;
-        width: 20px !important;
-        height: 20px !important;
+        width: 32px !important;
+        height: 32px !important;
         position: absolute !important;
-        top: 10px !important;
+        top: 4px !important;
         right: 10px !important;
     }
 
@@ -25,10 +25,10 @@
     background-size: contain !important;
     background-repeat: no-repeat !important;
     background-position: center !important;
-    width: 20px !important;
-    height: 20px !important;
+    width: 32px !important;
+    height: 32px !important;
     position: absolute !important;
-    top: 10px !important;
+    top: 4px !important;
     right: 10px !important;
 }
 </style>
@@ -82,14 +82,14 @@
                     <div class="form-group">
                         <label for="recipient">Nome completo</label>
                         <div class="destinatário">
-                            <span>Nome User</span>
+                            <span>{{ Auth::user()->name }}</span>
                         </div>
                     </div>
                 
                     <div class="form-group">
                         <label for="recipient">Função</label>
                         <div class="destinatário">
-                            <span>Designer</span>
+                            <span>{{ Auth::user()->cargo->titulo }}</span>
                         </div>
                     </div>
                 </div>
@@ -97,7 +97,7 @@
                     <div class="form-group">
                         <label for="recipient">Departamento</label>
                         <div class="destinatário">
-                            <span>Marketing</span>
+                            <span>{{ Auth::user()->unidade->titulo }}</span>
                         </div>
                     </div>
                     <div class="form-group mySelectAusencias">
@@ -134,18 +134,19 @@
                     
                     
                 </div>
-                <div class="descontar_nasFerias">
-                    <p>Desejo que seja descontado nas férias anuais</p>
-
-                    <div class="radio_descontar">
-                    <div class="radio-docs">
-                    <input type="radio" name="tipo_falta" id="justificada" value="justificada" checked onchange="toggleContent(this)">
-                    <label for="justificada">Sim</label>
+                <div class="container_descontar_ferias">
+                    <div class="descontar_nasFerias">
+                        <p>Desejo que seja descontado nas férias anuais</p>
+                        <div class="radio_descontar">
+                        <div class="radio-docs">
+                        <input type="radio" name="descontar_nas_ferias" id="sim" value="Sim" checked>
+                        <label for="sim">Sim</label>
+                    </div>
                 </div>
                 
                 <div class="radio-docs">
-                    <input type="radio" name="tipo_falta" id="injustificada" value="Injustificada" onchange="toggleContent(this)">
-                    <label for="injustificada">Não</label>
+                    <input type="radio" name="descontar_nas_ferias" id="não" value="Não">
+                    <label for="não">Não</label>
                 </div>
                     </div>
                 </div>
@@ -191,19 +192,19 @@
                     <div class="form-group">
                         <label for="recipient">Nome completo</label>
                         <div class="destinatário">
-                            <span>Nome User</span>
+                            <span>{{ Auth::user()->name }}</span>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="recipient">Função</label>
                         <div class="destinatário">
-                            <span>Designer</span>
+                            <span>{{ Auth::user()->cargo->titulo }}</span>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="recipient">Departamento</label>
                         <div class="destinatário">
-                            <span>Marketing</span>
+                            <span>{{ Auth::user()->unidade->titulo }}</span>
                         </div>
                     </div>
                     <div class="form-group mySelectAusencias">

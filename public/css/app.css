@@ -1829,6 +1829,19 @@ input[type="file"] {
     border: 0.75px solid #ABABAB;
 }
 
+.auto_preenchimento{
+    height: 38px;
+    display: flex;
+    align-items: center;
+    background-color: #f3f3f3;
+    color: #ABABAB;
+    padding-left: 17px;
+    font-size: 14px;
+    font-weight: 400;
+    border-radius: 5px;
+    border: 0.75px solid #ABABAB;
+}
+
 .document-inputs label{
     font-size: 14px;
     font-weight: 400 !important;
@@ -2674,7 +2687,7 @@ input[type="file"] {
 }
 
 /* Remover a seta padrão do Select2 */
-.mySelectAusencias .select2-selection__arrow b {
+.mySelectAusencias .select2-selection__arrow b, .container_select2_ferias  .select2-selection__arrow b{
     display: none !important;  /* Remove a seta padrão */
 }
 
@@ -2808,15 +2821,19 @@ input[type="file"] {
     gap: 36px;
 }
 
+.container_descontar_ferias{
+    display: flex;
+    justify-content: end;
+}
+
 .descontar_nasFerias{
     display: flex;
     align-items: center;
-    justify-content: end;
+    justify-content: space-between;
     gap: 18px;
     font-size: 14px;
     color: var(--Textos-Secundrio, #ABABAB);
-  
-   
+    width: 449.053px;
 }
 
 .descontar_nasFerias p{
@@ -2828,3 +2845,32 @@ input[type="file"] {
     align-items: center;
     gap: 20px;
 }
+
+.container_double_input{
+    display: flex;
+    width: 449.05px;
+    gap: 20px;
+}
+
+.container_double_input input{
+    width: 146px;
+    height: 38px;
+    border: 0.75px solid #ABABAB !important;
+    border-radius: 5px;
+}
+
+.mySelect2Global{
+    width: 200px !important;
+}
+
+.container_select2_ferias{
+    width: 200px;
+}
+
+.container_select2_ferias .select2-container--default .select2-selection--single{
+    height: 38px !important;
+    width: 145.94px;
+    border-radius: 5px !important;
+    border: 0.75px solid #ABABAB !important;
+}
+

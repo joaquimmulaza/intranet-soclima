@@ -4,6 +4,7 @@
         
 
         @include('master.partials_master._head')
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
     </head>
 @if(Auth::user() != null)
     <body class="hold-transition sidebar-mini {{Route::current()->getName() == 'post.show' || 'home' ? 'sidebar-collapse' : 'layout-fixed'}}">
@@ -38,7 +39,8 @@
     @yield('partialspost_js')
     {{-- --}}
     <script src="{{ asset('js/mdb.js') }}"></script>
-
     <script src="{{ asset('js/dashboard.js') }}"></script>
+    <script src="{{ asset('js/select2.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 </body>
 </html>
