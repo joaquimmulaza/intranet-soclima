@@ -12,18 +12,16 @@ class Ausencia extends Model
     protected $fillable = [
         'user_id',
         'tipo_falta',
+        'tipo_registo',
         'motivo',
-        'arquivo_comprovativo',
         'data_inicio',
-        'data_fim',
+        'horas',
+        'descontar_nas_ferias',
+        'arquivo_comprovativo',
     ];
 
-    /**
-     * Relacionamento com o usuário.
-     */
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 }
-

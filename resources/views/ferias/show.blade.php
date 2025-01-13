@@ -98,7 +98,7 @@
                 <div id="historico" class="historico hidden">
                 <div class="container_periodo">
                 @if ($historicoFerias->isEmpty())
-                    <p><strong>Sem férias marcadas</strong></p>
+                    <p><strong>Sem histórico de férias</strong></p>
                 @else
                     @foreach ($historicoFerias as $feria)
                         <div class="historico_periodo">

@@ -7,12 +7,12 @@ use App\Document;
 
 class DocumentController extends Controller
 {
-    public function index()
-    {
-        $documents = Document::all();
-        $id = auth()->id(); // Pegando o ID do usuário logado, caso isso seja o esperado
-        return view('documents.index', compact('documents','id'));
-    }
+    // public function index()
+    // {
+    //     $documents = Document::all();
+    //     $id = auth()->id(); // Pegando o ID do usuário logado, caso isso seja o esperado
+    //     return view('documents.index', compact('documents','id'));
+    // }
 
     public function store(Request $request)
     {
@@ -38,28 +38,28 @@ class DocumentController extends Controller
         return redirect()->back()->with('success', 'Documento enviado com sucesso.');
     }
 
-    public function showDocuments()
-    {
-        $documents = Document::with('user') // Certifique-se de que há um relacionamento com o modelo User.
-                        ->orderBy('created_at', 'desc')
-                        ->get();
+    // public function showDocuments()
+    // {
+    //     $documents = Document::with('user') // Certifique-se de que há um relacionamento com o modelo User.
+    //                     ->orderBy('created_at', 'desc')
+    //                     ->get();
 
-        return view('documents.show', compact('documents'));
-    }
+    //     return view('documents.show', compact('documents'));
+    // }
 
-    public function destroy($id)
-    {
-        $document = Document::findOrFail($id);
+    // public function destroy($id)
+    // {
+    //     $document = Document::findOrFail($id);
 
-        // Remover o arquivo do armazenamento
-        if (\Storage::disk('public')->exists($document->file_path)) {
-            \Storage::disk('public')->delete($document->file_path);
-        }
+    //     // Remover o arquivo do armazenamento
+    //     if (\Storage::disk('public')->exists($document->file_path)) {
+    //         \Storage::disk('public')->delete($document->file_path);
+    //     }
 
-        // Remover do banco de dados
-        $document->delete();
+    //     // Remover do banco de dados
+    //     $document->delete();
 
-        return redirect()->route('documents.show')->with('success', 'Documento eliminado com sucesso.');
-    }
+    //     return redirect()->route('documents.show')->with('success', 'Documento eliminado com sucesso.');
+    // }
 }
 

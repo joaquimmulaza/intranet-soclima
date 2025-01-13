@@ -13,6 +13,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\DocumentRequestController;
 use App\Http\Controllers\AdminDocumentRequestController;
+use App\Http\Controllers\AusenciaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -357,8 +358,15 @@ Route::get('/calendar', function () {
 
 Route::get('/telefones/search', [TelefoneController::class, 'search'])->name('telefones.search');
 
-Route::get('/documents', [DocumentController::class, 'index'])->name('documents.index');
-Route::post('/documents', [DocumentController::class, 'store'])->name('documents.store');
+Route::middleware('auth')->group(function () {
+    Route::get('/documents', [AusenciaController::class, 'index'])->name('documents.index');
+    Route::post('/documents', [AusenciaController::class, 'store'])->name('documents.store');
+    Route::get('/documents/{id}', [AusenciaController::class, 'show'])->name('documents.show');
+    Route::delete('/ausencias/{id}', [AusenciaController::class, 'destroy'])->name('ausencias.destroy');
+
+
+    
+});
 Route::get('/ferias/{id}', [FeriaController::class, 'show'])->name('ferias.show');
 Route::get('/documents/show', [DocumentController::class, 'showDocuments'])->name('documents.show');
 Route::post('/documents/pedidos', [DocumentRequestController::class, 'store'])->name('document-request.store');

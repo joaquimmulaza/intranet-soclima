@@ -2020,15 +2020,17 @@ input[type="file"] {
     border-radius: 5px !important;
 }
 
+/*Para ajustar os espaçamentos na tabela ausências > faltas > justificativos mexer aqui em baixo!*/
+
 .docs_table th{
     color: var(--Textos-Texto-primrio, #555);
     font-size: 13px;
     font-weight: 400;
-    width: 39%;
+    /* width: 39%; */
 }
 
 .OptDocs .containerOpt{
-    left: 20px;
+    left: -10px;
 }
 
 .data_documents{
@@ -2775,8 +2777,8 @@ input[type="file"] {
 }
 
 /* Estilo básico para os conteúdos */
-.content {
-    opacity: 0 ; 
+.content_ausencia {
+    opacity: 0; 
     transition: all 0.5s ease-in-out !important;
     
 }
