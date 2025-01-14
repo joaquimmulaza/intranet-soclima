@@ -363,10 +363,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/documents', [AusenciaController::class, 'store'])->name('documents.store');
     Route::get('/documents/{id}', [AusenciaController::class, 'show'])->name('documents.show');
     Route::delete('/ausencias/{id}', [AusenciaController::class, 'destroy'])->name('ausencias.destroy');
-
-
-    
+    Route::get('baixar/{id}', [AusenciaController::class, 'downloadFile'])->name('downloadFile');
+    Route::get('/ausencias/view/{id}', [AusenciaController::class, 'showById'])->name('documents.visualizar');
 });
+
+
 Route::get('/ferias/{id}', [FeriaController::class, 'show'])->name('ferias.show');
 Route::get('/documents/show', [DocumentController::class, 'showDocuments'])->name('documents.show');
 Route::post('/documents/pedidos', [DocumentRequestController::class, 'store'])->name('document-request.store');

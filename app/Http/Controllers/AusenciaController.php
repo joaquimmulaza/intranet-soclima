@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Ausencia;
+use App\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -26,10 +28,25 @@ class AusenciaController extends Controller
     public function show($id)
 {
     $ausencias = Ausencia::with('user')->get();  // ou você pode pegar as ausências para o usuário específico se necessário
+    $tipo_falta = $ausencias->first()->tipo_falta ?? null;
     return view('documents.show', [
-        'ausencias' => $ausencias,'document'
+        'ausencias' => $ausencias,'document',
+        'tipo_falta' => $tipo_falta,
     ]);
 }
+
+public function showById($id)
+{
+    // Busca a ausência pelo ID, com os dados do usuário relacionado
+    $ausencia = Ausencia::with('user')->findOrFail($id);
+    $ausencia->data_inicio = Carbon::parse($ausencia->data_inicio);
+
+    // Retorna a view para exibir os detalhes de uma ausência específica
+    return view('documents.visualizar', [
+        'ausencia' => $ausencia,
+    ]);
+}
+
 
     public function store(Request $request)
     {
@@ -47,11 +64,17 @@ class AusenciaController extends Controller
             'arquivo_comprovativo' => 'nullable',
         ]);
 
+        $user = Auth::user();
+
         // Salvar arquivo se enviado
         $path = null;
         if ($request->hasFile('arquivo_comprovativo')) {
-            $path = $request->file('arquivo_comprovativo')->store('ausencias', 'public');
+            $fileName = $user->name . '_' . 'justificativos'. '.'. $request->file('arquivo_comprovativo')->getClientOriginalExtension();
+            $path = $request->file('arquivo_comprovativo')->storeAs('ausencias', $fileName, 'public');
         }
+
+        // Gera o URL público
+        $publicUrl = $path ? Storage::url($path) : null;
 
         // Criar registro de ausência
         Ausencia::create([
@@ -67,6 +90,19 @@ class AusenciaController extends Controller
 
         return redirect()->back()->with('success', 'Ausência registrada com sucesso.',);
     }
+
+    public function downloadFile($id)
+    {
+        $ausencia = Ausencia::findOrFail($id);
+        $file = storage_path('app/public/' . $ausencia->arquivo_comprovativo);
+
+        if (file_exists($file)) {
+            return response()->download($file);
+        } else {
+            return redirect()->route('documents.index')->with('error', 'Arquivo não encontrado.');
+        }
+    }
+
 
     public function destroy($id)
     {
