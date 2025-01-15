@@ -42,5 +42,6 @@
     <script src="{{ asset('js/dashboard.js') }}"></script>
     <script src="{{ asset('js/select2.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    
 </body>
 </html>

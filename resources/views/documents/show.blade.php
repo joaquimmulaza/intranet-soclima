@@ -22,11 +22,7 @@
                 <th></th>
                 <th>Nome do Trabalhador</th>
                 <th >Departamento</th>
-                <th>Motivo<svg class="hidden width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M3 18H9V16H3V18ZM3 6V8H21V6H3ZM3 13H15V11H3V13Z" fill="#555555"/>
-                </svg>
-                
-                </th>
+                <th>Motivo</th>
                 <th>Tipo de registo</th>
                 <th ></th>
             </tr>
@@ -68,11 +64,12 @@
                 <td class="OptDocs">
                     
                     <div class="containerOpt">
-                        <button class="btnOpt"  data-toggle="modal" data-target="#modalOptPhone-{{ $ausencia->id }}" style="margin: 0 !important; padding: 0 !important;"><svg width="18" height="34" viewBox="0 0 18 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <ellipse cx="8.5" cy="9.90277" rx="1.5" ry="1.40278" fill="#555555"/>
-                            <ellipse cx="8.5" cy="16.9164" rx="1.5" ry="1.40278" fill="#555555"/>
-                            <ellipse cx="8.5" cy="23.9306" rx="1.5" ry="1.40278" fill="#555555"/>
-                            </svg>  
+                        <button class="btnOpt btn-popup"  data-toggle="modal" data-target="#modalOptPhone-{{ $ausencia->id }}" style="margin: 0 !important; padding: 0 !important;"><svg width="11" height="15" viewBox="0 0 11 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+<ellipse cx="5.67236" cy="1.16876" rx="1" ry="1.16876" fill="#555555"/>
+<ellipse cx="5.67236" cy="7.01251" rx="1" ry="1.16876" fill="#555555"/>
+<ellipse cx="5.67236" cy="12.8563" rx="1" ry="1.16876" fill="#555555"/>
+</svg>
+
                         </button>
                         <div class="modal fade modalOpt" id="modalOptPhone-{{ $ausencia->id }}" tabindex="-1" aria-labelledby="modalOptLabel" aria-hidden="true" data-backdrop="true" data-keyboard="true">
                             <div class="modal-dialog">
@@ -82,17 +79,17 @@
                                             @can('app.dashboard')
                                             <button type="button" data-toggle="modal" data-target="#EditContact" style="border-bottom: none;border-top-right-radius: 5px;    border-top-left-radius: 5px;" class="btnPosts"  data-id="">
                                             @if($ausencia->arquivo_comprovativo)
-                                                <a href="{{ route('downloadFile', $ausencia->id) }}" class="btnPosts" target="_blank">Download</a>
+                                                <a href="{{ route('downloadFile', $ausencia->id) }}" class="btnPosts .btn-popup" target="_blank">Download</a>
                                             @else
                                             N/A
                                             @endif
                                             </button>
                                             
-                                            <button style="    border-bottom-right-radius: 5px;    border-bottom-left-radius: 5px;" type="button" class="btnPosts" onClick="deleteData({{ $ausencia->id }})">
+                                            <button style="border-bottom-right-radius: 5px;    border-bottom-left-radius: 5px;" type="button" class="btnPosts btnPostsDelete "  data-id="{{ $ausencia->id }}">
                                                 Eliminar
                                             </button>
                                             <form id="delete-form-{{ $ausencia->id }}"
-                                                    action="{{ route('ausencias.destroy', $ausencia->id) }}" method="POST" style="display: none;">
+                                                    action="{{ route('ausencias.destroy', $ausencia->id) }}" method="POST" style="display: none;" class="btn-popup">
                                                 @csrf()
                                                 @method('DELETE')
                                             </form>
@@ -139,6 +136,70 @@
         console.error(`Formulário com ID delete-form-${id} não encontrado.`);
     }
 }
+
+document.querySelectorAll('.view_justificativos .btn-popup').forEach(button => {
+    button.addEventListener('click', function(event) {
+        event.preventDefault();
+    });
+
+    function deleteData(event, id) {
+    event.stopPropagation(); // Impede que o clique no botão acione o evento no <a>
+    event.preventDefault(); // Opcional, caso queira evitar comportamentos padrões de envio ou navegação
+
+    // Lógica para deletar o dado
+    console.log(`Deletando dado com ID: ${id}`);
+    alert(`Confirma exclusão do item ${id}?`);
+    // Faça a requisição de exclusão ou qualquer outra ação aqui
+}
+});
+
+document.querySelectorAll('.btnPostsDelete').forEach(function(button) {
+    button.addEventListener('click', function(event) {
+        event.stopPropagation(); // Impede que o clique se propague para o link pai
+        event.preventDefault();   // Impede o comportamento padrão de navegação
+
+        var id = button.getAttribute('data-id'); // Obtém o ID do atributo data-id
+        
+        if (confirm('Tem certeza que deseja excluir?')) {
+            deleteData(id); // Chama a função de exclusão
+        }
+    });
+});
+
+function deleteData(id) {
+    console.log('Deletando item com ID:', id); // Log para ver o ID no console
+    
+    // Aqui, você pode fazer a chamada AJAX ou redirecionar, dependendo de como você quer excluir o item
+    // Exemplo de chamada AJAX usando fetch:
+    fetch(`/ausencias/${id}`, {
+    method: 'DELETE',
+    headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+    }
+})
+.then(response => {
+    if (response.ok) {
+        return response.json(); // A resposta agora será um JSON
+    } else {
+        return Promise.reject('Falha ao excluir o item.'); // Caso o status não seja 2xx
+    }
+})
+.then(data => {
+    console.log('Item deletado com sucesso:', data.message);
+    location.reload();
+    // Aqui você pode realizar ações como remover o item da lista na UI
+})
+.catch(error => {
+    console.error('Erro:', error);
+    alert('Erro ao tentar excluir o item.');
+});
+
+}
+
+
+
+
 
 </script>
 

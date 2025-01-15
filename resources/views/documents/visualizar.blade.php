@@ -29,31 +29,31 @@
 <div class="main_container doc_container content_ausencia visible" id="content-justificada">
         
                 <div class="form_ausencias">
-                    <div class="form-group">
+                    <div class="form-group" >
                         <!-- Área de Drop e Seleção de Arquivo -->
-                        <div class="drop-area_docs" id="drop-area_docs">
+                        <div class="drop-area_docs" data-toggle="modal" data-target="#modalJustificativo"  id="drop-area_docs">
                             <div class="drop-icon">
                                 <img src="{{asset('logo/img/icon/view_file.svg')}}" alt="Upload Icon">
                             </div>
                             <p>Visualizar ficheiro</p>
-                            <input type="file" id="file-upload" name="arquivo_comprovativo"  />
+                            <!-- <input type="file" id="file-upload" name="arquivo_comprovativo"  /> -->
                         </div>
                         <!-- Cartão de Upload com a Barra de Progresso -->
-                        <div class="upload-card" id="upload-card" style="display: none;">
+                        <!-- <div class="upload-card"  id="upload-card" style="display: none;">
                             <div class="upload-icon">
                             <img src="logo/img/icon/upload_file.svg" alt="Upload Icon">
                                 <div style="overflow: hidden; text-overflow: ellipsis; font-size: 11px;">
                                     <strong id="file-name">untitled</strong>
                                 </div>
                             </div> 
-                            <span class="close-btn" onclick="resetUpload()"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <span class="close-btn" ><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z" fill="#555555"/>
                             </svg>
                             </span>
                             <div class="progress-container">
                                 <div class="progress-bar" id="progress-bar"></div>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="document-inputs">
                         <div class="form-group">
@@ -94,14 +94,50 @@
                     </div>
                 </div>
         </div>
-      
-        <div>
-            @if($ausencia->arquivo_comprovativo)
-                <div id="pdfViewer"></div>
-            @else
-                <p>Nenhum arquivo comprovativo enviado.</p>
-            @endif
+
+        <div class="modal escurecer fade modalJustificativo" id="modalJustificativo" tabindex="-1" aria-labelledby="modalJustificativoLabel" aria-hidden="true" data-backdrop="true" data-keyboard="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                    <div class="container_popUp_Justificativo">
+                    <div class="testando">
+                        <div class="modal-header modal_header_justificativos">
+                        <div class="modal_header_justificativos_content">
+                            <a href="{{ route('downloadFile', $ausencia->id) }}">
+                                <svg width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M0 6.45833C0 2.89149 2.89149 0 6.45833 0H24.5417C28.1085 0 31 2.89149 31 6.45833V24.5417C31 28.1085 28.1085 31 24.5417 31H6.45833C2.89149 31 0 28.1085 0 24.5417V6.45833Z" fill="white"/>
+                                <path d="M23.2498 19.3748V23.2498H7.74984V19.3748H5.1665V23.2498C5.1665 24.6707 6.329 25.8332 7.74984 25.8332H23.2498C24.6707 25.8332 25.8332 24.6707 25.8332 23.2498V19.3748H23.2498ZM21.9582 14.2082L20.1369 12.3869L16.7915 15.7194V5.1665H14.2082V15.7194L10.8628 12.3869L9.0415 14.2082L15.4998 20.6665L21.9582 14.2082Z" fill="#009AC1"/>
+                                </svg>
+                            </a>
+                                            <button type="button" class="" data-dismiss="modal" aria-label="Fechar">
+                            <span aria-hidden="true">
+                                <svg width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M0 6.45833C0 2.8915 2.89149 0 6.45833 0H24.5417C28.1085 0 31 2.89149 31 6.45833V24.5417C31 28.1085 28.1085 31 24.5417 31H6.45833C2.8915 31 0 28.1085 0 24.5417V6.45833Z" fill="white"/>
+                                <path d="M24.5418 8.27975L22.7206 6.4585L15.5002 13.6789L8.27975 6.4585L6.4585 8.27975L13.6789 15.5002L6.4585 22.7206L8.27975 24.5418L15.5002 17.3214L22.7206 24.5418L24.5418 22.7206L17.3214 15.5002L24.5418 8.27975Z" fill="#009AC1"/>
+                                </svg>
+                            </span>
+                                            </button>
+                        </div>
+                                    </div>
+                            @if($ausencia->arquivo_comprovativo)
+                                <div id="pdfViewer" class="zoom-image"
+                                onclick="toggleZoom(this)"></div>
+                        
+                            @else
+                                <p>Nenhum arquivo comprovativo enviado.</p>
+                            @endif
+                            </div>
+                    </div>
+                        
+                </div>
+            </div>
         </div>
+        <div>
+                           
+                            </div>
+                        </div>
+      
+        
   
         <!-- Adicionando PDF.js --> 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs"></script>
@@ -110,6 +146,20 @@
 
 
 <script>
+    $('.modalJustificativo').on('show.bs.modal', function () {
+        $('body').addClass('modal-open-no-backdrop');
+    });
+
+    $('.modalJustificativo').on('hidden.bs.modal', function () {
+        $('body').removeClass('modal-open-no-backdrop');
+    });
+
+    $(document).on('click', function (event) {
+        const $modal = $('.modalJustificativo');
+        if ($modal.is(':visible') && !$(event.target).closest('.modal-content').length) {
+            $modal.modal('hide');
+        }
+    });
     document.addEventListener('DOMContentLoaded', function() {
         @if($ausencia->arquivo_comprovativo)
             const url = "{{ asset('storage/' . $ausencia->arquivo_comprovativo) }}";
@@ -137,5 +187,62 @@
             });
         @endif
     });
+
+
+    let isDragging = false; // Rastreamento do arrasto
+let startX, startY; // Posição inicial do mouse
+let offsetX = 0, offsetY = 0; // Offset da imagem
+
+// Função para alternar o zoom
+function toggleZoom(image) {
+  if (!image.classList.contains('zoom-active')) {
+    image.classList.add('zoom-active');
+    image.style.transform = 'scale(3) translate(0, 0)'; // Garante o zoom inicial centralizado
+  } else {
+    image.classList.remove('zoom-active');
+    resetPosition(image); // Reseta a posição ao desativar o zoom
+  }
+}
+
+// Reseta a posição da imagem ao desativar o zoom
+function resetPosition(image) {
+  image.style.transform = 'scale(1) translate(0, 0)';
+  offsetX = 0;
+  offsetY = 0;
+}
+
+// Adiciona eventos para arrastar a imagem
+const image = document.querySelector('.zoom-image');
+
+image.addEventListener('mousedown', (e) => {
+  if (image.classList.contains('zoom-active')) {
+    isDragging = true;
+    startX = e.clientX - offsetX;
+    startY = e.clientY - offsetY;
+    image.style.cursor = 'grabbing';
+  }
+});
+
+image.addEventListener('mousemove', (e) => {
+  if (isDragging) {
+    e.preventDefault(); // Evita seleção de texto
+    offsetX = e.clientX - startX;
+    offsetY = e.clientY - startY;
+    image.style.transform = `scale(3) translate(${offsetX}px, ${offsetY}px)`;
+  }
+});
+
+image.addEventListener('mouseup', () => {
+  isDragging = false;
+  image.style.cursor = 'grab';
+});
+
+image.addEventListener('mouseleave', () => {
+  if (isDragging) {
+    isDragging = false;
+    image.style.cursor = 'grab';
+  }
+});
+
 </script>
 @endsection

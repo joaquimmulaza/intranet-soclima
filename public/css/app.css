@@ -2005,7 +2005,7 @@ input[type="file"] {
 } */
 .docs_table {
     width: 100%;
-    margin-bottom: 20px; /* Garante o espaçamento entre tabelas */
+
 }
 
 /* .docs_table tr{
@@ -2031,10 +2031,16 @@ input[type="file"] {
     /* width: 39%; */
 }
 
+.view_justificativos .containerOpt {
+    width: 10px;
+}
+
 .OptDocs .containerOpt{
     position: relative;
     left: 140px;
     z-index: 99999;
+ 
+    
 }
 
 .data_documents{
@@ -2060,6 +2066,7 @@ input[type="file"] {
     font-weight: 400;
     
 }
+
 
 .view_justificativos .docs_table tbody:hover{
     background-color: rgba(238, 238, 238, 1) !important;
@@ -2938,3 +2945,107 @@ backup estilo acima
     width: 100%;
     height: 900px;
 }
+
+.container_popUp_Justificativo{
+    position: relative !important;
+    width: 100% !important;
+    height: 100% !important;
+    overflow: auto;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.container_popUp_Justificativo::-webkit-scrollbar {
+    width: 7px !important;
+    height: 10px !important;
+}
+
+.container_popUp_Justificativo::-webkit-scrollbar-thumb {
+    background: #ABABAB;
+    border-radius: 10px;
+}
+
+.container_popUp_Justificativo::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.container_popUp_Justificativo::-webkit-scrollbar-track {
+    background: #f3f3f3;
+    border-radius: 10px;
+}
+
+.modalJustificativo .modal_header_justificativos, .modalJustificativo .modal-content{
+    /* width: 584px !important; */
+    background-color: transparent !important;
+    box-shadow: none !important;
+    margin: 0 auto;
+}
+
+.modal_header_justificativos_content{
+    display: flex !important;
+    justify-content: end !important;
+    position: absolute !important;
+    /* right: 15px; */
+    width: 445px;
+    gap: 20px;
+    bottom: -1px;
+}
+
+.modal_header_justificativos {
+    position: relative !important;
+    border-bottom: none !important;
+    width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+    margin-bottom: 20px !important;
+    display: flex;
+    justify-content: center;
+}
+
+.modal_header_justificativos button {
+    border: none !important;
+    outline: none !important;
+    background: none !important;
+}
+
+.modalJustificativo .modal-dialog {
+    max-width: 100%;
+}
+
+#pdfViewer canvas{
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+}
+
+#pdfViewer{
+    max-width: 100% !important;
+    height: 630px !important;
+    display: flex !important;
+    justify-content: center;
+    overflow: auto !important;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden; /* Esconde qualquer conteúdo que ultrapasse os limites */
+    cursor: zoom-in; /* Cursor de lupa */
+    transition: transform 0.3s ease; /* Suavidade no zoom */
+}
+
+.testando{
+    width: 100% !important;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.zoom-image {
+    transition: transform 0.3s ease;
+    cursor: grab;
+  }
+  .zoom-image.zoom-active {
+    cursor: grab;
+    overflow: hidden;
+  }
+  

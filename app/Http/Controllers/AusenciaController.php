@@ -106,19 +106,17 @@ public function showById($id)
 
     public function destroy($id)
     {
-       
+        // Encontrar o documento ou retornar um erro 404
         $document = Ausencia::findOrFail($id);
-
-        if (!$document) {
-            return redirect()->route('documents.index')->with('error', 'Documento não encontrado.');
-        }
-
+    
         // Excluir o arquivo do sistema
         Storage::disk('public')->delete($document->file_path);
-
+    
         // Excluir o registro do banco de dados
         $document->delete();
-
-        return redirect()->route('documents.show')->with('success', 'Documento eliminado com sucesso.');
+    
+        // Retornar uma resposta JSON de sucesso
+        return response()->json(['message' => 'Documento eliminado com sucesso.'], 200);
     }
+    
 }
