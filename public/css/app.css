@@ -1843,7 +1843,7 @@ input[type="file"] {
     display: flex;
     align-items: center;
     background-color: #f3f3f3;
-    color: #ABABAB;
+    color: #ABABAB !important;
     padding-left: 17px;
     font-size: 14px;
     font-weight: 400;
@@ -3097,4 +3097,22 @@ backup estilo acima
     position: relative;
     right: 20px;
     top: 1px;
+}
+
+.select_in_view{
+    display: flex;
+    flex-direction: row !important;
+    align-items: center;
+    justify-content: start;
+    gap: 21px;
+}
+
+.inputs_no_dropUpload{
+    display: flex;
+    align-items: center;
+    gap: 21px;
+}
+
+.aprovacao_container_justificativos{
+    background-color: red !important;
 }

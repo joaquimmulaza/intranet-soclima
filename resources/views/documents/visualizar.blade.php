@@ -29,77 +29,96 @@
 <div class="main_container doc_container content_ausencia visible" id="content-justificada">
         
                 <div class="form_ausencias">
-                    <div class="form-group" >
-                        <!-- Área de Drop e Seleção de Arquivo -->
-                        <div class="drop-area_docs" data-toggle="modal" data-target="#modalJustificativo"  id="drop-area_docs">
-                            <div class="drop-icon">
-                                <img src="{{asset('logo/img/icon/view_file.svg')}}" alt="Upload Icon">
-                            </div>
-                            <p>Visualizar ficheiro</p>
-                            <!-- <input type="file" id="file-upload" name="arquivo_comprovativo"  /> -->
-                        </div>
-                        <!-- Cartão de Upload com a Barra de Progresso -->
-                        <!-- <div class="upload-card"  id="upload-card" style="display: none;">
-                            <div class="upload-icon">
-                            <img src="logo/img/icon/upload_file.svg" alt="Upload Icon">
-                                <div style="overflow: hidden; text-overflow: ellipsis; font-size: 11px;">
-                                    <strong id="file-name">untitled</strong>
+                    @if($ausencia->arquivo_comprovativo)
+                        <div class="form-group hidden_injustificado_item">
+                            <!-- Área de Drop e Seleção de Arquivo -->
+                            <div class="drop-area_docs" data-toggle="modal" data-target="#modalJustificativo"  id="drop-area_docs">
+                                <div class="drop-icon">
+                                    <img src="{{asset('logo/img/icon/view_file.svg')}}" alt="Upload Icon">
                                 </div>
-                            </div> 
-                            <span class="close-btn" ><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z" fill="#555555"/>
-                            </svg>
-                            </span>
-                            <div class="progress-container">
-                                <div class="progress-bar" id="progress-bar"></div>
+                                <p>Visualizar ficheiro</p>
+                                <!-- <input type="file" id="file-upload" name="arquivo_comprovativo"  /> -->
                             </div>
-                        </div> -->
-                    </div>
-                    <div class="document-inputs">
-                        <div class="form-group">
-                            <label for="recipient">Tipo de falta</label>
-                            <div class="destinatário">
-                                <span>{{ $ausencia->tipo_falta}}</span>
+                            <!-- Cartão de Upload com a Barra de Progresso -->
+                            <!-- <div class="upload-card"  id="upload-card" style="display: none;">
+                                <div class="upload-icon">
+                                <img src="logo/img/icon/upload_file.svg" alt="Upload Icon">
+                                    <div style="overflow: hidden; text-overflow: ellipsis; font-size: 11px;">
+                                        <strong id="file-name">untitled</strong>
+                                    </div>
+                                </div> 
+                                <span class="close-btn" ><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z" fill="#555555"/>
+                                </svg>
+                                </span>
+                                <div class="progress-container">
+                                    <div class="progress-bar" id="progress-bar"></div>
+                                </div>
+                            </div> -->
+                        </div>
+                        <div class="document-inputs">
+                        <div class="">
+                            <div class="form-group">
+                                <label for="recipient">Tipo de falta</label>
+                                <div class="destinatário">
+                                    <span>{{ $ausencia->tipo_falta}}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="recipient">Motivo</label>
+                                <div class="destinatário">
+                                    <span>{{ $ausencia->motivo }}</span>
+                                </div>
                             </div>
                         </div>
+
                         <div class="form-group">
                             <label for="recipient">Tipo de registo</label>
                             <div class="destinatário">
                                 <span>{{ $ausencia->tipo_registo }}</span>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="recipient">Motivo</label>
-                            <div class="destinatário">
-                                <span>{{ $ausencia->motivo }}</span>
+                        <div class="form-group mySelectAusencias select_in_view">
+                            <div>
+                                <label for="document_type">Data que faltou</label>
+                                <div class="destinatário" style="width: 208px;  padding:0;">
+                                <span style="width: 208px; text-align: center; padding:0;">{{ $ausencia->data_inicio->format('d/m/Y') }}</span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group mySelectAusencias">
-                            <label for="document_type">Data que faltou</label>
-                            <div class="destinatário" style="width: 208px;  padding:0;">
-                            <span style="width: 208px; text-align: center; padding:0;">{{ $ausencia->data_inicio->format('d/m/Y') }}</span>
+                            @if($ausencia->horas)
+                            <div class="">
+                                <label for="description" class="description_label">Faltou apenas</label>
+                                <div class="">
+                                <div class="destinatário" style="width: 110px;  padding:0;">
+                                <span style="width: 208px; text-align: center; padding:0;">{{ $ausencia->horas}} horas</span>
+                                </div>
+                                </div>
                             </div>
+                            @else
+                            @endif
+                            
                         </div>
                         <hr>
-                        <form action="{{ route('ausencias.aprovarRejeitar', $ausencia->id) }}" method="POST">
-                            @csrf
-                            @method('PUT') <!-- Usar o PUT, já que estamos atualizando o status -->
+                        <div class="aprovacao_container_justificativos">
+                            <form  action="{{ route('ausencias.aprovarRejeitar', $ausencia->id) }}" method="POST">
+                                @csrf
+                                @method('PUT') <!-- Usar o PUT, já que estamos atualizando o status -->
                             
-                            <!-- Campo de Observação -->
-                            <div class="form-group mySelectAusencias">
-                                <label for="document_type">Adicionar observação</label>
-                                <input type="text" name="observacao" class="form-injustificada-input">
-                            </div>
-
-                            <!-- Botões de Aprovar e Rejeitar -->
-                            <div class="ausencias_container_btn">
-                                <!-- Botão Rejeitar -->
-                                <button type="button" id="btnRejeitar" class="btnRejeitar">Rejeitar</button>
-
-                                <!-- Botão Aprovar -->
-                                <button type="submit" id="btnAprovar" class="btnAprovar">Aprovar</button>
-                            </div>
-                        </form>
+                                <!-- Campo de Observação -->
+                                <div class="form-group mySelectAusencias">
+                                    <label for="document_type">Adicionar observação</label>
+                                    <input type="text" name="observacao" class="form-injustificada-input">
+                                </div>
+                                <!-- Botões de Aprovar e Rejeitar -->
+                                <div class="ausencias_container_btn">
+                                    <!-- Botão Rejeitar -->
+                                    <button type="button" id="btnRejeitar" class="btnRejeitar">Rejeitar</button>
+                                    <!-- Botão Aprovar -->
+                                    <button type="submit" id="btnAprovar" class="btnAprovar">Aprovar</button>
+                                </div>
+                            </form>
+                        </div>
 
                         <!-- <div class="form-group mySelectAusencias">
                             <label for="document_type">Adicionar observação</label>
@@ -112,7 +131,90 @@
                             <button type="submit" id="justificar-injustificada">Aprovar</button>
                         </div> -->
                     </div>
+                    @else
+                    <div class="document-inputs">
+                        <div class="inputs_no_dropUpload">
+                            <div class="form-group">
+                                <label for="recipient">Tipo de falta</label>
+                                <div class="destinatário">
+                                    <span>{{ $ausencia->tipo_falta}}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="recipient">Motivo</label>
+                                <div class="destinatário">
+                                    <span>{{ $ausencia->motivo }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="inputs_no_dropUpload">
+                            <div class="form-group">
+                                <label for="recipient">Tipo de registo</label>
+                                <div class="destinatário">
+                                    <span>{{ $ausencia->tipo_registo }}</span>
+                                </div>
+                            </div>
+                            <div class="form-group mySelectAusencias inputs_no_dropUpload select_in_view ">
+                                <div>
+                                    <label for="document_type">Data que faltou</label>
+                                    <div class="destinatário" style="width: 208px;  padding:0;">
+                                    <span style="width: 208px; text-align: center; padding:0;">{{ $ausencia->data_inicio->format('d/m/Y') }}</span>
+                                    </div>
+                                </div>
+                                @if($ausencia->horas)
+                                <div class="">
+                                    <label for="description" class="description_label">Faltou apenas</label>
+                                    <div class="">
+                                    <div class="destinatário" style="width: 110px;  padding:0;">
+                                    <span style="width: 208px; text-align: center; padding:0;">{{ $ausencia->horas}} horas</span>
+                                    </div>
+                                    </div>
+                                </div>
+                                @else
+                                @endif
+                            
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="aprovacao_container_justificativos">
+                            <div class="|">
+                                <form action="{{ route('ausencias.aprovarRejeitar', $ausencia->id) }}" method="POST">
+                                    @csrf
+                                    @method('PUT') <!-- Usar o PUT, já que estamos atualizando o status -->
+                            
+                                    <!-- Campo de Observação -->
+                                    <div class="form-group mySelectAusencias">
+                                        <label for="document_type">Adicionar observação</label>
+                                        <input type="text" name="observacao" class="form-injustificada-input">
+                                    </div>
+                                    <!-- Botões de Aprovar e Rejeitar -->
+                                    <div class="ausencias_container_btn">
+                                        <!-- Botão Rejeitar -->
+                                        <button type="button" id="btnRejeitar" class="btnRejeitar">Rejeitar</button>
+                                        <!-- Botão Aprovar -->
+                                        <button type="submit" id="btnAprovar" class="btnAprovar">Aprovar</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- <div class="form-group mySelectAusencias">
+                            <label for="document_type">Adicionar observação</label>
+                            <input type="text" name="observacao" class="form-injustificada-input">
+                        </div>
+                        
+                     
+                        <div class="ausencias_container_btn">
+                            <button type="button">Rejeitar</button>
+                            <button type="submit" id="justificar-injustificada">Aprovar</button>
+                        </div> -->
+                    </div>
+                    @endif
+                    
                 </div>
+                
         </div>
 
         <div class="modal escurecer fade modalJustificativo" id="modalJustificativo" tabindex="-1" aria-labelledby="modalJustificativoLabel" aria-hidden="true" data-backdrop="true" data-keyboard="true">
