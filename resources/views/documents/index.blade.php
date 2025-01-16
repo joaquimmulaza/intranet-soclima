@@ -1,5 +1,5 @@
 @extends('master.layout')
-@section('title', 'Lista Telefônica')
+@section('title', 'Ausências')
 
 @section('content')
 
@@ -76,7 +76,7 @@
                     </div>
                 </div>
             </div>
-            <!-- <a href="#">Gerenciar</a> -->
+            <a href="{{ route('documents.show') }}" class="globalBtn_with_border">Justificativos</a>
         </div>
         <!-- Conteúdo para Injustificada -->
             <div id="content-injustificada" class="content_ausencia hidden">
@@ -126,7 +126,7 @@
                             </div>
                             <div class="container_end_date container_end_date2">
                                 <label for="description" class="ocultado">Faltou apenas</label>
-                                <div class="container_input_end_date">
+                                <div class="container_input_end_date_select3">
                                     <input type="number" name="horas" id="input_hours" class="ocultado" placeholder="0">
                                     <span class="ocultado">Horas</span>
                                 </div>
@@ -418,10 +418,10 @@ function atualizarEstadoCampos() {
     const select = $('#mySelect3');  // Seleciona o elemento usando jQuery Select2
     const inputHours = document.getElementById('input_hours');
     const descriptionLabels = document.querySelectorAll(".container_end_date2 label, .container_end_date2 span"); // Seleciona o label e o span
-    const containerInputEndDate = document.querySelector(".container_input_end_date"); // Seleciona o contêiner do input
+    const containerInputEndDate = document.querySelector(".container_input_end_date_select3"); // Seleciona o contêiner do input
 
     // Usando o valor do select através do Select2
-    if (select.val() === 'Dia Justificado') {
+    if (select.val() === 'Dia Injustificado') {
         inputHours.disabled = true; // Desabilita o input
         // Adiciona a classe 'ocultado' tanto no label quanto no span e no input
         descriptionLabels.forEach(label => {
@@ -590,4 +590,5 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 </script>
+
 @endsection

@@ -42,6 +42,43 @@
     <script src="{{ asset('js/dashboard.js') }}"></script>
     <script src="{{ asset('js/select2.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @if(session('success'))
+    <script>
+        Swal.fire({
+            timer: 6000,
+            position: "bottom-start",
+            imageUrl: "{{asset('logo/img/icon/verified.gif')}}",
+            imageAlt: "Custom image",
+            imageWidth: 40,
+            title: '{{ session('success') }}',
+            showConfirmButton: false,
+            width: 225,
+            customClass: {
+                popup: 'container_sweet_justificativos',
+                icon: 'icon_sweet_justificativos',
+                title: 'title_sweet_justificativos',
+                image: 'img_sweet_justificativos'
+            }
+        });
+    </script>
+@endif
+
+@if(session('error'))
+    <script>
+        Swal.fire({
+            timer: 6000,
+            width: 225,
+            position: "bottom-start",
+            icon: 'error',
+            title: '{{ session('error') }}',
+            showConfirmButton: false,
+            customClass: {
+                popup: 'container_sweet_justificativos',
+            }
+        });
+    </script>
+@endif
+
 </body>
 </html>

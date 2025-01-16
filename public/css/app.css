@@ -8,6 +8,21 @@
     --main-bg: #E7ECEB;
 }
 
+
+
+.globalBtn_with_border{
+    padding: 9px 43px;
+    background-color: #ffff;
+    border: 1px solid var(--border-border, #009AC1);
+    border-radius: var(--radious-geral, 5px);
+    color: var(--Textos-Primrio, #009AC1) !important;
+}
+
+.globalBtn_with_border:hover{
+    background: rgba(238, 247, 255, 1) !important;
+    
+}
+
 .responsavel-nome {
     font-weight: bold !important;
 }
@@ -714,7 +729,13 @@ body{
 
   .containerOpt{
     position: relative;
-    z-index: 9999999;
+  }
+
+  .more_opt{
+    background: none !important;
+    outline: none !important;
+    outline-color: #fff !important;
+    border: none;
   }
 
   .btnOpt{
@@ -2615,13 +2636,13 @@ backup estilo acima
     padding-left: 23px;
 }
 
-.container_input_end_date {
+.container_input_end_date, .container_input_end_date_select3 {
     display: flex;
     align-items: center;
     gap: 9px;
 }
 
-.container_input_end_date span {
+.container_input_end_date span, .container_input_end_date_select3 span{
     color: #7B7B7B;
     font-size: 14px;
 
@@ -3049,3 +3070,31 @@ backup estilo acima
     overflow: hidden;
   }
   
+.container_sweet_justificativos{
+    display: flex !important;
+    align-items: center !important;
+    justify-content: start !important;
+    height: 49px;
+    margin-left: 30px;
+}
+
+.icon_sweet_justificativos{
+    margin-left: 40px;
+    padding: 0 !important;
+}
+
+.title_sweet_justificativos{
+    padding: 0;
+    margin: 0;
+    font-weight: 400;
+    font-size: 14px;
+    position: relative;
+    right: 45px;
+    top: 9px;
+}
+
+.img_sweet_justificativos{
+    position: relative;
+    right: 20px;
+    top: 1px;
+}

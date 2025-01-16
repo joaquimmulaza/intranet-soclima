@@ -34,7 +34,6 @@ class NotificationController extends Controller
         return view('notifications.index', compact('naoLidas', 'lidas'));
     }
 
-
     public function showNavbar()
     {
         $userId = Auth::id();
@@ -50,23 +49,17 @@ class NotificationController extends Controller
 
     public function markAsRead($id)
     {
-        
         $notificacao = NotificationUsers::where('id', $id)
             ->where('user_id', auth()->id())
             ->first();
-
         if ($notificacao) {
             $notificacao->lida = true;
             $notificacao->save();
-
             return response()->json(['success' => true, 'message' => 'Notificação marcada como lida.']);
         }
         Log::warning('Notificação não encontrada ou não pertence ao usuário.', ['id' => $id, 'user_id' => auth()->id()]);
         return response()->json(['success' => false, 'message' => 'Notificação não encontrada.'], 404);
     }
-
-
-
 
     public static function criar($tipo, $titulo, $descricao, $rota = null, $userId = null)
     {
@@ -79,8 +72,6 @@ class NotificationController extends Controller
             'vista' => false, // Notificação criada como "não vista"
         ]);
     }
-
-
  
 
 public function obterNotificacoes()

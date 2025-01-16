@@ -77,7 +77,7 @@ public function showById($id)
         $publicUrl = $path ? Storage::url($path) : null;
 
         // Criar registro de ausência
-        Ausencia::create([
+        $novaAusencia = Ausencia::create([
             'user_id' => Auth::id(),
             'tipo_falta' => $validated['tipo_falta'], 
             'tipo_registo' => $validated['tipo_registo'],
@@ -86,10 +86,78 @@ public function showById($id)
             'horas' => $validated['horas'] ?? null,
             'descontar_nas_ferias' => $validated['descontar_nas_ferias'] ?? null,
             'arquivo_comprovativo' => $path,
+            'status' => 'Pendente', // Status inicial
+            'observacao' => null,   // Inicialmente sem observação
         ]);
 
-        return redirect()->back()->with('success', 'Ausência registrada com sucesso.',);
+         // Notificar o próprio usuário
+        NotificationController::criar(
+            'justificativa', 
+            'Justificativa Enviada',
+            'O seu justificativo foi enviado e está em revisão pelo Departamento de Recursos Humanos.',
+            '', // Link para visualização
+            $user->id // Notificar o usuário que criou o justificativo
+        );
+
+         // Notificar o admin
+        NotificationController::criar(
+            'justificativa', 
+            'Solicitação',
+            $user->name . ' Enviou um justificativo',
+            route('documents.visualizar', ['id' => $novaAusencia->id]), // Ajuste para a URL da justificativa
+            User::where('role_id', '1')->first()->id // Notificar o admin
+        );
+
+        return redirect()->back()->with('success', 'Justificativo Enviado',);
     }
+
+    public function aprovarRejeitar($id, Request $request)
+    {
+        $ausencia = Ausencia::findOrFail($id);
+
+        // Validar a entrada do status (aprovada ou rejeitada) e a observação
+        $validated = $request->validate([
+            'status' => 'required|in:Aprovado,Rejeitado',
+            'observacao' => 'nullable|string',
+        ]);
+
+        // Atualizar o status e a observação
+        $ausencia->status = $validated['status'];
+        $ausencia->observacao = $validated['observacao'] ?? null; // A observação será opcional
+        $ausencia->save();
+
+        // Criar a mensagem da notificação com base no status e na observação
+        $mensagem = '';
+
+        if ($ausencia->status == 'Pendente') {
+            $mensagem = 'O seu justificativo foi enviado e está em revisão pelo Departamento de Recursos Humanos.';
+        } elseif ($ausencia->status == 'Rejeitado') {
+            if ($ausencia->observacao) {
+                $mensagem = 'Recursos Humanos rejeitou e adicionou uma observação à sua justificação de falta: "' . $ausencia->observacao . '"';
+            } else {
+                $mensagem = 'Recursos Humanos rejeitou o seu justificativo de falta.';
+            }
+        } elseif ($ausencia->status == 'Aprovado') {
+            if ($ausencia->observacao) {
+                $mensagem = 'Recursos Humanos aprovou e adicionou uma observação à sua justificação de falta: "' . $ausencia->observacao . '"';
+            } else {
+                $mensagem = 'Recursos Humanos aprovou o seu justificativo de falta.';
+            }
+        }
+
+        // Notificar o solicitante sobre a decisão
+        NotificationController::criar(
+            'justificativa', 
+            'Aprovação',
+            $mensagem,
+            '',
+            // route('ausencias.show', ['id' => $ausencia->id]),
+            $ausencia->user_id // Notificar o solicitante
+        );
+
+        return redirect()->route('documents.show')->with('success', 'Justificativa ' . $validated['status'] . ' com sucesso.');
+    }
+
 
     public function downloadFile($id)
     {

@@ -365,6 +365,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/ausencias/{id}', [AusenciaController::class, 'destroy'])->name('ausencias.destroy');
     Route::get('baixar/{id}', [AusenciaController::class, 'downloadFile'])->name('downloadFile');
     Route::get('/ausencias/view/{id}', [AusenciaController::class, 'showById'])->name('documents.visualizar');
+    Route::put('/ausencias/{id}/aprovar-rejeitar', [AusenciaController::class, 'aprovarRejeitar'])->name('ausencias.aprovarRejeitar');
 });
 
 

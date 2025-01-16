@@ -81,16 +81,36 @@
                             </div>
                         </div>
                         <hr>
-                        <div class="form-group mySelectAusencias">
+                        <form action="{{ route('ausencias.aprovarRejeitar', $ausencia->id) }}" method="POST">
+                            @csrf
+                            @method('PUT') <!-- Usar o PUT, já que estamos atualizando o status -->
+                            
+                            <!-- Campo de Observação -->
+                            <div class="form-group mySelectAusencias">
+                                <label for="document_type">Adicionar observação</label>
+                                <input type="text" name="observacao" class="form-injustificada-input">
+                            </div>
+
+                            <!-- Botões de Aprovar e Rejeitar -->
+                            <div class="ausencias_container_btn">
+                                <!-- Botão Rejeitar -->
+                                <button type="button" id="btnRejeitar" class="btnRejeitar">Rejeitar</button>
+
+                                <!-- Botão Aprovar -->
+                                <button type="submit" id="btnAprovar" class="btnAprovar">Aprovar</button>
+                            </div>
+                        </form>
+
+                        <!-- <div class="form-group mySelectAusencias">
                             <label for="document_type">Adicionar observação</label>
-                            <input type="text" name="motivo" class="form-injustificada-input">
+                            <input type="text" name="observacao" class="form-injustificada-input">
                         </div>
                         
                      
                         <div class="ausencias_container_btn">
                             <button type="button">Rejeitar</button>
                             <button type="submit" id="justificar-injustificada">Aprovar</button>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
         </div>
@@ -243,6 +263,33 @@ image.addEventListener('mouseleave', () => {
     image.style.cursor = 'grab';
   }
 });
+
+document.getElementById('btnRejeitar').addEventListener('click', function() {
+    // Adiciona o valor 'rejeitada' ao campo de status
+    var form = this.closest('form');
+    var statusInput = document.createElement('input');
+    statusInput.setAttribute('type', 'hidden');
+    statusInput.setAttribute('name', 'status');
+    statusInput.setAttribute('value', 'Rejeitado');
+    form.appendChild(statusInput);
+
+    // Enviar o formulário
+    form.submit();
+});
+
+document.getElementById('btnAprovar').addEventListener('click', function() {
+    // Adiciona o valor 'aprovada' ao campo de status
+    var form = this.closest('form');
+    var statusInput = document.createElement('input');
+    statusInput.setAttribute('type', 'hidden');
+    statusInput.setAttribute('name', 'status');
+    statusInput.setAttribute('value', 'Aprovado');
+    form.appendChild(statusInput);
+
+    // Enviar o formulário
+    form.submit();
+});
+
 
 </script>
 @endsection

@@ -13,6 +13,9 @@
     </div>
     <hr>
 </div>
+<div class="main_container manager_doc justify-content-end">
+            <a href="{{ route('documents.index') }}" class="globalBtn_with_border right_side">Voltar</a>
+        </div>
 <div class="main_container docs_container">
 @foreach ($ausencias as $ausencia)
 <a class="view_justificativos" href="{{ route('documents.visualizar', $ausencia->id) }}">
@@ -33,6 +36,7 @@
             <tr>
                 
                 <td class="iconDocsTable">
+                  
                     <svg  width="43" height="55" viewBox="0 0 43 55" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M42.1509 11.5566L41.4197 10.8255L31.8469 1.25267L31.1158 0.521552C30.7848 0.190603 30.3259 0 29.8565 0H2.3356C1.21095 0 0 0.868621 0 2.77466V36.9828V52.6644V53.1034C0 53.8972 0.798449 54.6709 1.74293 54.9147C1.79035 54.927 1.83586 54.945 1.88517 54.9545C2.0331 54.9839 2.18388 55 2.3356 55H40.3368C40.4885 55 40.6393 54.9839 40.7872 54.9545C40.8366 54.945 40.8821 54.927 40.9295 54.9147C41.874 54.6709 42.6724 53.8972 42.6724 53.1034V52.6644V36.9828V13.255C42.6724 12.5277 42.5852 11.9909 42.1509 11.5566ZM39.2918 11.3793H31.2931V3.3806L39.2918 11.3793ZM2.3356 53.1034C2.26828 53.1034 2.20759 53.0788 2.14785 53.057C1.99991 52.9868 1.89655 52.8389 1.89655 52.6644V38.8793H40.7759V52.6644C40.7759 52.8389 40.6725 52.9859 40.5246 53.057C40.4648 53.0788 40.4041 53.1034 40.3368 53.1034H2.3356ZM1.89655 36.9828V2.77466C1.89655 2.56888 1.92785 1.89655 2.3356 1.89655H29.4516C29.4203 2.01603 29.3966 2.13931 29.3966 2.26733V13.2759H40.4051C40.5331 13.2759 40.6554 13.2522 40.7749 13.2209C40.7749 13.2351 40.7759 13.2408 40.7759 13.255V36.9828H1.89655Z" fill="#555555"/>
                             <path d="M14.7379 42.4297C14.4221 42.1708 14.0655 41.9755 13.6682 41.8465C13.2709 41.7166 12.8688 41.6521 12.4629 41.6521H9.71484V51.2069H11.271V47.758H12.425C12.9257 47.758 13.3847 47.685 13.7991 47.538C14.2135 47.3911 14.5681 47.1834 14.8621 46.916C15.156 46.6486 15.3846 46.3176 15.5496 45.9241C15.7136 45.5305 15.7961 45.0924 15.7961 44.6079C15.7961 44.1499 15.6985 43.7374 15.5041 43.3694C15.3097 43.0015 15.0536 42.6895 14.7379 42.4297ZM14.148 45.5865C14.0523 45.8501 13.928 46.0549 13.7725 46.2019C13.617 46.3489 13.4463 46.4551 13.2604 46.5196C13.0746 46.5841 12.8859 46.6173 12.6962 46.6173H11.27V42.8318H12.4364C12.8337 42.8318 13.1533 42.8943 13.3961 43.0195C13.6379 43.1447 13.8256 43.3002 13.9603 43.4861C14.094 43.6719 14.1822 43.8663 14.2258 44.0693C14.2685 44.2722 14.2903 44.4514 14.2903 44.6069C14.2903 44.9967 14.2429 45.3229 14.148 45.5865Z" fill="#555555"/>
@@ -64,12 +68,9 @@
                 <td class="OptDocs">
                     
                     <div class="containerOpt">
-                        <button class="btnOpt btn-popup"  data-toggle="modal" data-target="#modalOptPhone-{{ $ausencia->id }}" style="margin: 0 !important; padding: 0 !important;"><svg width="11" height="15" viewBox="0 0 11 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-<ellipse cx="5.67236" cy="1.16876" rx="1" ry="1.16876" fill="#555555"/>
-<ellipse cx="5.67236" cy="7.01251" rx="1" ry="1.16876" fill="#555555"/>
-<ellipse cx="5.67236" cy="12.8563" rx="1" ry="1.16876" fill="#555555"/>
-</svg>
-
+                        <!-- class .btnOpt removida -->
+                        <button class=" more_opt btn-popup"  data-toggle="modal" data-target="#modalOptPhone-{{ $ausencia->id }}" style="margin: 0 !important; padding: 0 !important;">
+                            <img src="{{asset('logo/img/icon/more_opt.svg')}}" alt="">
                         </button>
                         <div class="modal fade modalOpt" id="modalOptPhone-{{ $ausencia->id }}" tabindex="-1" aria-labelledby="modalOptLabel" aria-hidden="true" data-backdrop="true" data-keyboard="true">
                             <div class="modal-dialog">
