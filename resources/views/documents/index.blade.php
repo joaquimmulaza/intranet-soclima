@@ -76,7 +76,9 @@
                     </div>
                 </div>
             </div>
+            @can('app.dashboard')
             <a href="{{ route('documents.show') }}" class="globalBtn_with_border">Justificativos</a>
+            @endcan
         </div>
         <!-- Conteúdo para Injustificada -->
             <div id="content-injustificada" class="content_ausencia hidden">
@@ -139,7 +141,7 @@
                     </div>
                     <div class="container_descontar_ferias">
                         <div class="descontar_nasFerias">
-                            <p>Desejo que seja descontado nas férias anuais</p>
+                            <p>Subtrair nas férias anuais</p>
                             <div class="radio_descontar">
                             <div class="radio-docs">
                             <input type="radio" name="descontar_nas_ferias" id="sim" value="Sim" checked>

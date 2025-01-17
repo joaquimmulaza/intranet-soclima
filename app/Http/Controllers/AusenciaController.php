@@ -29,6 +29,7 @@ class AusenciaController extends Controller
 {
     $ausencias = Ausencia::with('user')->get();  // ou você pode pegar as ausências para o usuário específico se necessário
     $tipo_falta = $ausencias->first()->tipo_falta ?? null;
+    
     return view('documents.show', [
         'ausencias' => $ausencias,'document',
         'tipo_falta' => $tipo_falta,
@@ -95,7 +96,7 @@ public function showById($id)
             'justificativa', 
             'Justificativa Enviada',
             'O seu justificativo foi enviado e está em revisão pelo Departamento de Recursos Humanos.',
-            '', // Link para visualização
+            route('documents.visualizar', ['id' => $novaAusencia->id]), // Link para visualização
             $user->id // Notificar o usuário que criou o justificativo
         );
 
@@ -133,15 +134,15 @@ public function showById($id)
             $mensagem = 'O seu justificativo foi enviado e está em revisão pelo Departamento de Recursos Humanos.';
         } elseif ($ausencia->status == 'Rejeitado') {
             if ($ausencia->observacao) {
-                $mensagem = 'Recursos Humanos rejeitou e adicionou uma observação à sua justificação de falta: "' . $ausencia->observacao . '"';
+                $mensagem = '<strong>Recursos Humanos</strong> rejeitou e adicionou uma observação à sua justificação de falta: "' . $ausencia->observacao . '"';
             } else {
-                $mensagem = 'Recursos Humanos rejeitou o seu justificativo de falta.';
+                $mensagem = '<strong>Recursos Humanos</strong> rejeitou o seu justificativo de falta.';
             }
         } elseif ($ausencia->status == 'Aprovado') {
             if ($ausencia->observacao) {
-                $mensagem = 'Recursos Humanos aprovou e adicionou uma observação à sua justificação de falta: "' . $ausencia->observacao . '"';
+                $mensagem = '<strong>Recursos Humanos</strong> aprovou e adicionou uma observação à sua justificação de falta: "' . $ausencia->observacao . '"';
             } else {
-                $mensagem = 'Recursos Humanos aprovou o seu justificativo de falta.';
+                $mensagem = '<strong>Recursos Humanos</strong> aprovou o seu justificativo de falta.';
             }
         }
 
@@ -155,7 +156,17 @@ public function showById($id)
             $ausencia->user_id // Notificar o solicitante
         );
 
-        return redirect()->route('documents.show')->with('success', 'Justificativa ' . $validated['status'] . ' com sucesso.');
+        if ($validated['status'] == 'Aprovado') {
+            return redirect()->route('documents.show')->with([
+                'success' => 'Comprovativo aprovado',
+            ]);
+        }
+    
+        if ($validated['status'] == 'Rejeitado') {
+            return redirect()->route('documents.show')->with([
+                'error' => 'Comprovativo rejeitado',
+            ]);
+        }
     }
 
 

@@ -24,7 +24,7 @@
                     </div>
                 </div>
             </div>
-            <!-- <a href="#">Gerenciar</a> -->
+            <a href="{{ route('documents.show') }}" class="globalBtn_with_border right_side">Voltar</a>
         </div>
 <div class="main_container doc_container content_ausencia visible" id="content-justificada">
         
@@ -97,10 +97,22 @@
                             </div>
                             @else
                             @endif
+
+                            @if($ausencia->descontar_nas_ferias)
+                            <div class="">
+                                <label for="description" class="description_label">Faltou apenas</label>
+                                <div class="">
+                                <div class="destinatário" style="width: 110px;  padding:0;">
+                                <span style="width: 208px; text-align: center; padding:0;">{{ $ausencia->descontar_nas_ferias}} horas</span>
+                                </div>
+                                </div>
+                            </div>
+                            @else
+                            ff
+                            @endif
                             
                         </div>
-                        <hr>
-                        <div class="aprovacao_container_justificativos">
+                        <div class="aprovacao_container_justificativos aprovacao_container_injustificada">
                             <form  action="{{ route('ausencias.aprovarRejeitar', $ausencia->id) }}" method="POST">
                                 @csrf
                                 @method('PUT') <!-- Usar o PUT, já que estamos atualizando o status -->
@@ -111,12 +123,16 @@
                                     <input type="text" name="observacao" class="form-injustificada-input">
                                 </div>
                                 <!-- Botões de Aprovar e Rejeitar -->
+                                @if($ausencia->status === 'Pendente')
                                 <div class="ausencias_container_btn">
                                     <!-- Botão Rejeitar -->
                                     <button type="button" id="btnRejeitar" class="btnRejeitar">Rejeitar</button>
                                     <!-- Botão Aprovar -->
                                     <button type="submit" id="btnAprovar" class="btnAprovar">Aprovar</button>
                                 </div>
+                                @else
+                          
+                                @endif
                             </form>
                         </div>
 
@@ -177,7 +193,7 @@
                             
                             </div>
                         </div>
-                        <hr>
+                        
                         <div class="aprovacao_container_justificativos">
                             <div class="|">
                                 <form action="{{ route('ausencias.aprovarRejeitar', $ausencia->id) }}" method="POST">
@@ -190,12 +206,15 @@
                                         <input type="text" name="observacao" class="form-injustificada-input">
                                     </div>
                                     <!-- Botões de Aprovar e Rejeitar -->
+                                    @if($ausencia->status === 'Pendente')
                                     <div class="ausencias_container_btn">
                                         <!-- Botão Rejeitar -->
                                         <button type="button" id="btnRejeitar" class="btnRejeitar">Rejeitar</button>
                                         <!-- Botão Aprovar -->
                                         <button type="submit" id="btnAprovar" class="btnAprovar">Aprovar</button>
                                     </div>
+                                    @else
+                                    @endif
                                 </form>
                             </div>
                         </div>
@@ -311,60 +330,60 @@
     });
 
 
-    let isDragging = false; // Rastreamento do arrasto
-let startX, startY; // Posição inicial do mouse
-let offsetX = 0, offsetY = 0; // Offset da imagem
+//     let isDragging = false; // Rastreamento do arrasto
+// let startX, startY; // Posição inicial do mouse
+// let offsetX = 0, offsetY = 0; // Offset da imagem
 
-// Função para alternar o zoom
-function toggleZoom(image) {
-  if (!image.classList.contains('zoom-active')) {
-    image.classList.add('zoom-active');
-    image.style.transform = 'scale(3) translate(0, 0)'; // Garante o zoom inicial centralizado
-  } else {
-    image.classList.remove('zoom-active');
-    resetPosition(image); // Reseta a posição ao desativar o zoom
-  }
-}
+// // Função para alternar o zoom
+// function toggleZoom(image) {
+//   if (!image.classList.contains('zoom-active')) {
+//     image.classList.add('zoom-active');
+//     image.style.transform = 'scale(3) translate(0, 0)'; // Garante o zoom inicial centralizado
+//   } else {
+//     image.classList.remove('zoom-active');
+//     resetPosition(image); // Reseta a posição ao desativar o zoom
+//   }
+// }
 
-// Reseta a posição da imagem ao desativar o zoom
-function resetPosition(image) {
-  image.style.transform = 'scale(1) translate(0, 0)';
-  offsetX = 0;
-  offsetY = 0;
-}
+// // Reseta a posição da imagem ao desativar o zoom
+// function resetPosition(image) {
+//   image.style.transform = 'scale(1) translate(0, 0)';
+//   offsetX = 0;
+//   offsetY = 0;
+// }
 
-// Adiciona eventos para arrastar a imagem
-const image = document.querySelector('.zoom-image');
+// // Adiciona eventos para arrastar a imagem
+// const image = document.querySelector('.zoom-image');
 
-image.addEventListener('mousedown', (e) => {
-  if (image.classList.contains('zoom-active')) {
-    isDragging = true;
-    startX = e.clientX - offsetX;
-    startY = e.clientY - offsetY;
-    image.style.cursor = 'grabbing';
-  }
-});
+// image.addEventListener('mousedown', (e) => {
+//   if (image.classList.contains('zoom-active')) {
+//     isDragging = true;
+//     startX = e.clientX - offsetX;
+//     startY = e.clientY - offsetY;
+//     image.style.cursor = 'grabbing';
+//   }
+// });
 
-image.addEventListener('mousemove', (e) => {
-  if (isDragging) {
-    e.preventDefault(); // Evita seleção de texto
-    offsetX = e.clientX - startX;
-    offsetY = e.clientY - startY;
-    image.style.transform = `scale(3) translate(${offsetX}px, ${offsetY}px)`;
-  }
-});
+// image.addEventListener('mousemove', (e) => {
+//   if (isDragging) {
+//     e.preventDefault(); // Evita seleção de texto
+//     offsetX = e.clientX - startX;
+//     offsetY = e.clientY - startY;
+//     image.style.transform = `scale(3) translate(${offsetX}px, ${offsetY}px)`;
+//   }
+// });
 
-image.addEventListener('mouseup', () => {
-  isDragging = false;
-  image.style.cursor = 'grab';
-});
+// image.addEventListener('mouseup', () => {
+//   isDragging = false;
+//   image.style.cursor = 'grab';
+// });
 
-image.addEventListener('mouseleave', () => {
-  if (isDragging) {
-    isDragging = false;
-    image.style.cursor = 'grab';
-  }
-});
+// image.addEventListener('mouseleave', () => {
+//   if (isDragging) {
+//     isDragging = false;
+//     image.style.cursor = 'grab';
+//   }
+// });
 
 document.getElementById('btnRejeitar').addEventListener('click', function() {
     // Adiciona o valor 'rejeitada' ao campo de status
@@ -378,6 +397,7 @@ document.getElementById('btnRejeitar').addEventListener('click', function() {
     // Enviar o formulário
     form.submit();
 });
+
 
 document.getElementById('btnAprovar').addEventListener('click', function() {
     // Adiciona o valor 'aprovada' ao campo de status

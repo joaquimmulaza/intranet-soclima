@@ -779,11 +779,31 @@ body{
     position: relative;
   }
 
+  .containerBtnOpt_justificativos{
+    display: flex;
+    flex-direction: column;
+    border-radius: 5px !important;
+  }
+
   .containerBtnOpt{
     height: 65px !important;
     display: flex;
     flex-direction: column;
     border-radius: 5px !important;
+  }
+  
+  .containerBtnOpt_justificativos button, .containerBtnOpt_justificativos .button_a{
+    height: 32.5px !important;
+    border: 1px solid #ABABAB;
+    outline: none !important;
+    outline-color: #ABABAB !important;
+    font-size: 10px;
+    font-weight: bold;
+    color: #555555 !important;
+    box-shadow: none !important;
+    background-color: #fff !important;
+    border-right-color: #ABABAB !important;
+    display: flex; justify-content: center; align-items: center;
   }
 
   .containerBtnOpt button, .containerBtnOpt .button_a{
@@ -1287,6 +1307,7 @@ button:active{
     width: 1080px;
     border-radius: 5px;
     margin: 0 auto;
+    filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.08));
 }
 
 .table-container, .table-container table{
@@ -1894,7 +1915,8 @@ input[type="file"] {
 }
 
 .doc_container{
-    padding: 43px 0 24px 0;
+    padding: 43px 0 43px 0;
+    position: relative !important;
 }
 
 .card-user-info{
@@ -2026,7 +2048,6 @@ input[type="file"] {
 } */
 .docs_table {
     width: 100%;
-
 }
 
 /* .docs_table tr{
@@ -2058,16 +2079,14 @@ input[type="file"] {
 
 .OptDocs .containerOpt{
     position: relative;
-    left: 140px;
-    z-index: 99999;
+    left: 121px;
  
-    
 }
 
 .data_documents{
     color: var(--Text-highlighted, #555);
-    font-size: 11px;
-    font-weight: 400; 
+    font-size: 13px !important;
+    font-weight: 400 !important; 
 }
 
 .docs_table td:nth-of-type(2), .docs_table td:nth-of-type(1){
@@ -2077,7 +2096,8 @@ input[type="file"] {
 }
 
 .docs_table td {
-    width: 100px !important;
+    width: 16% !important;
+    text-align: left;
     color: var(--Text-highlighted, #555) !important;
 }
 
@@ -2091,6 +2111,19 @@ input[type="file"] {
 
 .view_justificativos .docs_table tbody:hover{
     background-color: rgba(238, 238, 238, 1) !important;
+}
+
+.view_justificativos .docs_table tbody tr #show_when_hover:hover{
+    display: none !important;
+}
+
+#show_when_hover:hover{
+    display: none;
+}
+
+.view_justificativos:first-of-type thead tr{
+    position: relative;
+    top: -25px;
 }
 
 
@@ -3089,7 +3122,7 @@ backup estilo acima
     font-weight: 400;
     font-size: 14px;
     position: relative;
-    right: 45px;
+    right: 25px;
     top: 9px;
 }
 
@@ -3114,5 +3147,101 @@ backup estilo acima
 }
 
 .aprovacao_container_justificativos{
-    background-color: red !important;
+    margin-top: 30px;
+    background-color: rgba(243, 243, 243, 1) !important;
+    width: 1080px !important;
+    padding: 24px 80px;
+    position: absolute;
+    left: 0;
+    display: flex;
+    justify-content: end;
+    filter: drop-shadow(0px 1px 2px rgba(0, 0, 0, 0.08));
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.aprovacao_container_injustificada {
+    padding-right: 192px !important;
+}
+
+/*
+
+.th_justificativos {
+    position: relative;
+    left: -50px;
+}
+
+
+ */
+
+ .th_tipo_registo_justificativos{
+    position: relative !important;
+    right: -70px !important;
+}
+ .td_tipo_registo_justificativos{
+    position: absolute;
+    margin-top: 27px;
+    width: 500px !important;
+    margin-left: 70px;
+}
+
+
+.custom_hr_justificativos {
+    position: relative;
+    top: 20px;
+    background-color: #CECECE;
+}
+
+/* Esconde o status por padrão */
+.iconDocsTable .show_when_hover {
+    display: none;
+}
+
+/* Exibe o ícone por padrão */
+.iconDocsTable svg {
+    display: block;
+}
+
+/* Quando o mouse passa por um item da tabela, esconde o ícone e mostra o status */
+.view_justificativos tbody tr:hover .iconDocsTable svg {
+    display: none;
+}
+
+.view_justificativos tbody tr:hover .iconDocsTable .show_when_hover {
+    display: inline-block;
+}
+
+.Pendente{
+    background-color: rgba(243, 243, 243, 1) !important;
+    font-size: 13px !important;
+    font-weight: 400 !important;
+    padding: 3px 7px !important;
+    border-radius: 5px !important;
+}
+
+.Aprovado{
+    background-color: rgba(205, 204, 0, 1);
+    border-radius: 5px !important;
+    font-size: 13px !important;
+    font-weight: 400 !important;
+    padding: 3px 7px !important;
+}
+
+.Rejeitado{
+    background-color: rgba(243, 243, 243, 1);
+    color: rgba(231, 88, 69, 1);
+    border-radius: 5px !important;
+    font-size: 13px !important;
+    font-weight: 400 !important;
+    padding: 3px 7px !important;
+}
+
+.modalOpt_justificativos{
+    width: 176px !important;
+    height: 126px !important;
+}
+
+.modalOpt_justificativos button{
+    width: 100%;
+    position: relative;
 }

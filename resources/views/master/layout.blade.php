@@ -68,13 +68,17 @@
     <script>
         Swal.fire({
             timer: 6000,
-            width: 225,
             position: "bottom-start",
-            icon: 'error',
+            imageUrl: "{{asset('logo/img/icon/failed.svg')}}",
+            imageAlt: "Custom image",
             title: '{{ session('error') }}',
             showConfirmButton: false,
+            width: 225,
             customClass: {
                 popup: 'container_sweet_justificativos',
+                icon: 'icon_sweet_justificativos',
+                title: 'title_sweet_justificativos',
+                image: 'img_sweet_justificativos'
             }
         });
     </script>
