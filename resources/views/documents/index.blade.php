@@ -124,12 +124,17 @@
                         <div class="form-group container_set_date" style="position: relative;">
                             <div class="container_start_date">
                                 <label for="description">Data que faltou</label>
-                                <input type="date" name="data_inicio">
+                                <input type="date" name="data_inicio" class="@error('data_inicio') is-invalid @enderror">
+                                @error('data_inicio')
+                                    <div class="invalid-feedback" style="color: red;">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
                             </div>
                             <div class="container_end_date container_end_date2">
                                 <label for="description" class="ocultado">Faltou apenas</label>
                                 <div class="container_input_end_date_select3">
-                                    <input type="number" name="horas" id="input_hours" class="ocultado" placeholder="0">
+                                    <input type="number" name="horas" id="input_hours" class="ocultado" placeholder="0" min="1" max="10">
                                     <span class="ocultado">Horas</span>
                                 </div>
                             </div>
@@ -143,16 +148,16 @@
                         <div class="descontar_nasFerias">
                             <p>Subtrair nas férias anuais</p>
                             <div class="radio_descontar">
-                            <div class="radio-docs">
-                            <input type="radio" name="descontar_nas_ferias" id="sim" value="Sim" checked>
-                            <label for="sim">Sim</label>
-                        </div>
-                    </div>
+                                <div class="radio-docs">
+                                    <input type="radio" name="descontar_nas_ferias" id="sim" value="Sim" checked>
+                                    <label for="sim">Sim</label>
+                                </div>
+                            </div>
         
-                    <div class="radio-docs">
-                        <input type="radio" name="descontar_nas_ferias" id="não" value="Não">
-                        <label for="não">Não</label>
-                    </div>
+                            <div class="radio-docs">
+                                <input type="radio" name="descontar_nas_ferias" id="não" value="Não">
+                                <label for="não">Não</label>
+                            </div>
                         </div>
                     </div>
                     <div class="ausencias_container_btn">
@@ -234,12 +239,17 @@
                         <div class="form-group container_set_date" style="position: relative;">
                             <div class="container_start_date">
                                 <label for="description" >Data que faltou</label>
-                                <input type="date" name="data_inicio">
+                                <input type="date" name="data_inicio" class="@error('data_inicio') is-invalid @enderror">
+                                @error('data_inicio')
+                                    <div class="invalid-feedback" style="color: red;">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
                             </div>
                             <div class="container_end_date">
                                 <label for="description" class="description_label">Faltou apenas</label>
                                 <div class="container_input_end_date">
-                                    <input type="number" name="horas" class="input_hours description_label " placeholder="0">
+                                    <input type="number" name="horas" class="input_hours description_label " placeholder="0"  min="1" max="10">
                                     <span class="description_label">Horas</span>
                                 </div>
                             </div>

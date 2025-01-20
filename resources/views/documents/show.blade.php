@@ -25,7 +25,7 @@
     <table class="docs_table">
         <thead>
             <tr>
-                <th>Status</th>
+                <th style="position: relative; left: 14px;">Status</th>
                 <th class="th_justificativos">Nome do Trabalhador</th>
                 <th >Departamento</th>
                 <th>Motivo</th>
@@ -240,14 +240,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 const documentId = this.getAttribute('data-id');
 
                 Swal.fire({
-                    title: 'Tem certeza?',
-                    text: "Você não poderá desfazer essa ação!",
-                    icon: 'warning',
+                    title: 'Apagar da lista',
+                    text: "Tem certeza que deseja apagar este item da lista?",
                     showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Sim, deletar!',
-                    cancelButtonText: 'Cancelar'
+                    confirmButtonColor: '#fff',
+                    cancelButtonColor: '#fff',
+                    confirmButtonText: 'Sim',
+                    cancelButtonText: 'Não',
+                    customClass: {
+                    confirmButtonColor: 'deleteButton_alert',
+                    cancelButtonColor: 'cancelButton_alert',
+                    title: 'title_delete_alert',
+                    popup: 'popup_delete_alert',
+                    },	
                 }).then((result) => {
                     if (result.isConfirmed) {
                         // Fazer a requisição de exclusão via AJAX
@@ -265,16 +270,36 @@ document.addEventListener('DOMContentLoaded', function () {
                     'Content-Type': 'application/json',
                 }
             })
-            .then(response => response.json())
+            .then(response => {
+            if (!response.ok) {
+                throw new Error('Erro na requisição');
+            }
+            return response.json();
+            })
             .then(data => {
-                Swal.fire(
-                    'Deletado!',
-                    data.message,
-                    'success'
-                );
+                Swal.fire({
+                    title: data.message,
+                    timer: 6000,
+                    position: "bottom-start",
+                    imageUrl: "{{asset('logo/img/icon/verified.gif')}}",
+                    imageAlt: "Custom image",
+                    imageWidth: 40,
+                    showConfirmButton: false,
+                    width: 225,
+                    backdrop: false,
+                    customClass: {
+                        popup: 'container_sweet_justificativos',
+                        icon: 'icon_sweet_justificativos',
+                        title: 'title_sweet_justificativos',
+                        image: 'img_sweet_justificativos',
+                        
+                    }
+                });
 
-                // Opcional: Atualizar a página ou remover o elemento da lista
-                location.reload();
+                // Atualizar a página ou remover o elemento da lista
+                setTimeout(() => {
+                    location.reload();
+                }, 1500);
             })
             .catch(error => {
                 Swal.fire(

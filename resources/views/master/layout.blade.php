@@ -54,6 +54,7 @@
             title: '{{ session('success') }}',
             showConfirmButton: false,
             width: 225,
+            backdrop: false,
             customClass: {
                 popup: 'container_sweet_justificativos',
                 icon: 'icon_sweet_justificativos',
@@ -74,6 +75,7 @@
             title: '{{ session('error') }}',
             showConfirmButton: false,
             width: 225,
+            backdrop: false,
             customClass: {
                 popup: 'container_sweet_justificativos',
                 icon: 'icon_sweet_justificativos',

@@ -27,7 +27,7 @@ class AusenciaController extends Controller
 
     public function show($id)
 {
-    $ausencias = Ausencia::with('user')->get();  // ou você pode pegar as ausências para o usuário específico se necessário
+    $ausencias = Ausencia::with('user')->orderBy('created_at', 'desc')->get();// ou você pode pegar as ausências para o usuário específico se necessário
     $tipo_falta = $ausencias->first()->tipo_falta ?? null;
     
     return view('documents.show', [
@@ -63,6 +63,9 @@ public function showById($id)
             'horas' => 'nullable|integer',
             'descontar_nas_ferias' => 'nullable|string|in:Sim,Não',
             'arquivo_comprovativo' => 'nullable',
+        ],[
+            'data_inicio.required' => 'Por favor, preencha este campo.',
+            'data_inicio.date' => 'Data inválida.',
         ]);
 
         $user = Auth::user();
@@ -94,7 +97,7 @@ public function showById($id)
          // Notificar o próprio usuário
         NotificationController::criar(
             'justificativa', 
-            'Justificativa Enviada',
+            'Justificativo Enviado',
             'O seu justificativo foi enviado e está em revisão pelo Departamento de Recursos Humanos.',
             route('documents.visualizar', ['id' => $novaAusencia->id]), // Link para visualização
             $user->id // Notificar o usuário que criou o justificativo
@@ -109,7 +112,7 @@ public function showById($id)
             User::where('role_id', '1')->first()->id // Notificar o admin
         );
 
-        return redirect()->back()->with('success', 'Justificativo Enviado',);
+        return redirect()->back()->with('success', 'Justificativo Enviado');
     }
 
     public function aprovarRejeitar($id, Request $request)
@@ -151,7 +154,7 @@ public function showById($id)
             'justificativa', 
             'Aprovação',
             $mensagem,
-            '',
+            route('documents.visualizar', ['id' => $ausencia->id]),
             // route('ausencias.show', ['id' => $ausencia->id]),
             $ausencia->user_id // Notificar o solicitante
         );
@@ -195,7 +198,7 @@ public function showById($id)
         $document->delete();
     
         // Retornar uma resposta JSON de sucesso
-        return response()->json(['message' => 'Documento eliminado com sucesso.'], 200);
+        return response()->json(['message' => 'Justificativo apagado'], 200);
     }
     
 }

@@ -75,15 +75,22 @@
                     data-id="{{ $notification_user->id }}" 
                     data-lida="{{ $notification_user->lida ? 'true' : 'false' }}" 
                     data-vista="{{ $notification_user->vista ? 'true' : 'false' }}">
+                   
                     <div class="notification-content">
                             @php
                                 $imageSrc = ($notification_user->titulo === 'Aniversariantes do dia' || $notification_user->titulo === 'Aniversário')
                                     ? asset('logo/img/icon/birthday_icon.svg')
                                     : asset('public/avatar_users/' . ($notification_user->user->avatar ?? 'default.png'));
+                                $imageSrc = ($notification_user->titulo === 'Justificativo Enviado')
+                                    ? asset('logo/img/icon/communication.svg')
+                                    : asset('public/avatar_users/' . ($notification_user->user->avatar ?? 'default.png'));
                             @endphp
-                            <img class="img-notification" src="{{ $imageSrc }}" alt="Ícone Notificação">
+                            @if($notification_user->titulo === 'Aniversariantes do dia' || $notification_user->titulo === 'Aniversário' || $notification_user->titulo === 'Justificativo Enviado')
+                            <img class="img-notification"  src="{{ $imageSrc }}" alt="Ícone Notificação">
+                            @else
+                            <img class="img-notification" style="border-radius: 50%;" src="{{ $imageSrc }}" alt="Ícone Notificação">
+                            @endif
                             <p>{!! $notification_user->descricao !!}</p>
-                        
                     </div>
                     <div class="time-notification"><small>{{ $notification_user->tempo_decorrido_formatado }}</small></div>
                 </a>
@@ -102,12 +109,19 @@
                     <a class="text-notification notification-item lida" href="{{ $notification_user->rota ?? '#' }}"
                     data-id="{{ $notification_user->id }}" data-lida="true" data-vista="true">
                         <div class="notification-content">
-                        @php
+                            @php
                                 $imageSrc = ($notification_user->titulo === 'Aniversariantes do dia' || $notification_user->titulo === 'Aniversário')
                                     ? asset('logo/img/icon/birthday_icon.svg')
                                     : asset('public/avatar_users/' . ($notification_user->user->avatar ?? 'default.png'));
+                                $imageSrc = ($notification_user->titulo === 'Justificativo Enviado')
+                                    ? asset('logo/img/icon/communication.svg')
+                                    : asset('public/avatar_users/' . ($notification_user->user->avatar ?? 'default.png'));
                             @endphp
-                            <img class="img-notification" src="{{ $imageSrc }}" alt="Ícone Notificação">
+                            @if($notification_user->titulo === 'Aniversariantes do dia' || $notification_user->titulo === 'Aniversário' || $notification_user->titulo === 'Justificativo Enviado')
+                            <img class="img-notification"  src="{{ $imageSrc }}" alt="Ícone Notificação">
+                            @else
+                            <img class="img-notification" style="border-radius: 50%;" src="{{ $imageSrc }}" alt="Ícone Notificação">
+                            @endif
                             <p>{!! $notification_user->descricao !!}</p>
                         </div>
                         <div class="time-notification"><small>{{ $notification_user->tempo_decorrido_formatado }}</small></div>
@@ -371,7 +385,7 @@
                                 <a href="#"><img src="logo/img/icon/recibos-icon.svg" alt="">Recibos</a>
                                 <a href="#"><img src="logo/img/icon/justificativo-icon.svg" alt="">Justificativos</a>
                                 <a class="{{Route::current()->getName() === 'telefones.index' ? 'menu-open' : ''}}" href="{{route('telefones.index')}}"><img src="logo/img/icon/list-phone.svg" alt="">Lista telefônica</a>
-                                <a href="#"><img src="logo/img/icon/ferias-icon.svg" alt="">Férias</a>
+                                <a href="{{route('documents.index')}}"><img src="logo/img/icon/ferias-icon.svg" alt="">Ausências</a>
                             </div>
                         </div>
                 </li>

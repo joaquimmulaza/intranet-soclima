@@ -13,19 +13,30 @@
 </div>
 <hr>
 <div class="main_container manager_doc">
-            <div class="detail_user_justificativo">
-                <div>
-                    <img src="{{URL::to('/')}}/public/avatar_users/{{Auth::user()->avatar}}" alt="">
-                </div>
-                <div class="content_detail_user_justificativo">
-                    <span class="content_detail_user_name">{{  $ausencia->user->name  }} </span>
-                    <div class="content_detail_user_work">
-                        <span>{{  $ausencia->user->unidade->titulo  }} </span>|<span> {{$ausencia->user->cargo->titulo  }}</span>
-                    </div>
+    <div class="detail_user_justificativo">
+        <div class="container_detail_user_justificativo">
+            <span class="globla_status_style {{ $ausencia->status }}">{{  $ausencia->status }}</span>
+            <div>
+                <img src="{{URL::to('/')}}/public/avatar_users/{{Auth::user()->avatar}}" alt="">
+            </div>
+            <div class="content_detail_user_justificativo">
+                <span class="content_detail_user_name">{{  $ausencia->user->name  }} </span>
+                <div class="content_detail_user_work">
+                    <span>{{  $ausencia->user->unidade->titulo  }} </span>|<span> {{$ausencia->user->cargo->titulo  }}</span>
                 </div>
             </div>
-            <a href="{{ route('documents.show') }}" class="globalBtn_with_border right_side">Voltar</a>
         </div>
+    </div>
+    @if($ausencia->user->role_id == 1)
+    <a href="{{ route('documents.show') }}" class="globalBtn_with_border right_side">Voltar</a>
+    @else
+    <a href="{{ route('documents.index') }}" class="globalBtn_with_border right_side">Voltar em Ausências</a>
+    @endif
+   
+    
+
+    
+</div>
 <div class="main_container doc_container content_ausencia visible" id="content-justificada">
         
                 <div class="form_ausencias">
@@ -97,19 +108,9 @@
                             </div>
                             @else
                             @endif
+                            
 
-                            @if($ausencia->descontar_nas_ferias)
-                            <div class="">
-                                <label for="description" class="description_label">Faltou apenas</label>
-                                <div class="">
-                                <div class="destinatário" style="width: 110px;  padding:0;">
-                                <span style="width: 208px; text-align: center; padding:0;">{{ $ausencia->descontar_nas_ferias}} horas</span>
-                                </div>
-                                </div>
-                            </div>
-                            @else
-                            ff
-                            @endif
+                            
                             
                         </div>
                         <div class="aprovacao_container_justificativos aprovacao_container_injustificada">
@@ -118,21 +119,39 @@
                                 @method('PUT') <!-- Usar o PUT, já que estamos atualizando o status -->
                             
                                 <!-- Campo de Observação -->
-                                <div class="form-group mySelectAusencias">
-                                    <label for="document_type">Adicionar observação</label>
-                                    <input type="text" name="observacao" class="form-injustificada-input">
-                                </div>
+
+                                
+                                    @if(($ausencia->status === 'Pendente'))
+                                    @can('app.dashboard')
+                                    <div class="form-group mySelectAusencias">
+                                        <label for="document_type">Adicionar observação</label>
+                                        <input type="text" name="observacao" class="form-injustificada-input">
+                                    </div>
+                                    @endcan
+                                    @elseif(!empty($ausencia->observacao))
+                                        <div class="container_obs_desc">
+                                            <span>A tua observação</span>
+                                            <span>{{ $ausencia->observacao}}</span>
+                                        </div>
+                                    @else
+                                    <div class="container_obs"><span class="text_sem_obs">Sem observação adicionada!</span></div>
+                                    @endif
+                                   
                                 <!-- Botões de Aprovar e Rejeitar -->
+                                
                                 @if($ausencia->status === 'Pendente')
+                                @can('app.dashboard')
                                 <div class="ausencias_container_btn">
                                     <!-- Botão Rejeitar -->
                                     <button type="button" id="btnRejeitar" class="btnRejeitar">Rejeitar</button>
                                     <!-- Botão Aprovar -->
                                     <button type="submit" id="btnAprovar" class="btnAprovar">Aprovar</button>
                                 </div>
+                                @endcan
                                 @else
                           
                                 @endif
+                                
                             </form>
                         </div>
 
@@ -173,23 +192,55 @@
                                 </div>
                             </div>
                             <div class="form-group mySelectAusencias inputs_no_dropUpload select_in_view ">
+                            @if($ausencia->descontar_nas_ferias || $ausencia->horas)
                                 <div>
+                                    <label for="document_type">Data que faltou</label>
+                                    <div class="destinatário" style="width: 145.94px;  padding:0;">
+                                    <span style="width: 145.94px; text-align: center; padding:0;">{{ $ausencia->data_inicio->format('d/m/Y') }}</span>
+                                    </div>
+                                </div>
+                            @else
+                            <div>
                                     <label for="document_type">Data que faltou</label>
                                     <div class="destinatário" style="width: 208px;  padding:0;">
                                     <span style="width: 208px; text-align: center; padding:0;">{{ $ausencia->data_inicio->format('d/m/Y') }}</span>
                                     </div>
                                 </div>
-                                @if($ausencia->horas)
+                            @endif
+                            @if( $ausencia->horas)
                                 <div class="">
                                     <label for="description" class="description_label">Faltou apenas</label>
                                     <div class="">
-                                    <div class="destinatário" style="width: 110px;  padding:0;">
+                                    <div class="destinatário" style="width: 90px;  padding:0;">
                                     <span style="width: 208px; text-align: center; padding:0;">{{ $ausencia->horas}} horas</span>
                                     </div>
                                     </div>
                                 </div>
+                                    @if($ausencia->descontar_nas_ferias)
+                                        <div class="">
+                                            <label for="description" class="description_label">Subtrair nas férias anuais</label>
+                                            <div class="">
+                                            <div class="destinatário" style="width: 110px;  padding:0;">
+                                            <span style="width: 208px; text-align: center; padding:0;">{{ $ausencia->descontar_nas_ferias}}</span>
+                                            </div>
+                                            </div>
+                                        </div>
+                                    @else
+                                    @endif
                                 @else
+                                @if($ausencia->descontar_nas_ferias)
+                                        <div class="">
+                                            <label for="description" class="description_label">Subtrair nas férias anuais</label>
+                                            <div class="">
+                                            <div class="destinatário" style="width: 100%;  padding:0;">
+                                            <span style="width: 208px; text-align: center; padding:0;">{{ $ausencia->descontar_nas_ferias}}</span>
+                                            </div>
+                                            </div>
+                                        </div>
+                                    @else
+                                    @endif
                                 @endif
+                                
                             
                             </div>
                         </div>
@@ -201,18 +252,33 @@
                                     @method('PUT') <!-- Usar o PUT, já que estamos atualizando o status -->
                             
                                     <!-- Campo de Observação -->
+                                    
+                                    @if(($ausencia->status === 'Pendente'))
+                                    @can('app.dashboard')
                                     <div class="form-group mySelectAusencias">
                                         <label for="document_type">Adicionar observação</label>
                                         <input type="text" name="observacao" class="form-injustificada-input">
                                     </div>
+                                    @endcan
+                                    @elseif(!empty($ausencia->observacao))
+                                        <div class="container_obs_desc">
+                                            <span>A tua observação</span>
+                                            <span>{{ $ausencia->observacao}}</span>
+                                        </div>
+                                    @else
+                                    <div class="container_obs"><span class="text_sem_obs">Sem observação adicionada!</span></div>
+                                    @endif
+                                    
                                     <!-- Botões de Aprovar e Rejeitar -->
                                     @if($ausencia->status === 'Pendente')
+                                    @can('app.dashboard')
                                     <div class="ausencias_container_btn">
                                         <!-- Botão Rejeitar -->
                                         <button type="button" id="btnRejeitar" class="btnRejeitar">Rejeitar</button>
                                         <!-- Botão Aprovar -->
                                         <button type="submit" id="btnAprovar" class="btnAprovar">Aprovar</button>
                                     </div>
+                                    @endcan
                                     @else
                                     @endif
                                 </form>

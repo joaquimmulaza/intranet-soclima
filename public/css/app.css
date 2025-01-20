@@ -108,7 +108,6 @@
 .img-notification{
     width: 32px;
     height: 32px;
- 
 }
 
 .text-notification {
@@ -117,7 +116,7 @@
     justify-content: center !important;
     align-items: center !important;
     background-color: #C9F0FA;
-    height: 50px;
+    /* height: 50px; */
     border-color: #009AC1 !important;
     margin: 0 0 7px !important;
 }
@@ -1580,7 +1579,7 @@ button:active{
     gap: 10px;
     align-items: center;
     width: 350px;
-    padding: 10px;
+    /* padding: 10px; */
     transition: background-color 0.3s;
     border-radius: 5px;
 }
@@ -2913,7 +2912,7 @@ backup estilo acima
 .descontar_nasFerias{
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: start;
     gap: 18px;
     font-size: 14px;
     color: var(--Textos-Secundrio, #ABABAB);
@@ -2922,6 +2921,7 @@ backup estilo acima
 
 .descontar_nasFerias p{
     margin-bottom: 0 !important;
+    color: #7B7B7B;
 }
 
 .radio_descontar{
@@ -3109,6 +3109,7 @@ backup estilo acima
     justify-content: start !important;
     height: 49px;
     margin-left: 30px;
+    box-shadow: 0px 0.796px 1.592px 0px rgba(0, 0, 0, 0.08) !important;
 }
 
 .icon_sweet_justificativos{
@@ -3128,7 +3129,7 @@ backup estilo acima
 
 .img_sweet_justificativos{
     position: relative;
-    right: 20px;
+    right: 15px;
     top: 1px;
 }
 
@@ -3229,7 +3230,7 @@ backup estilo acima
 
 .Rejeitado{
     background-color: rgba(243, 243, 243, 1);
-    color: rgba(231, 88, 69, 1);
+    color: rgba(231, 88, 69, 1) !important;
     border-radius: 5px !important;
     font-size: 13px !important;
     font-weight: 400 !important;
@@ -3244,4 +3245,125 @@ backup estilo acima
 .modalOpt_justificativos button{
     width: 100%;
     position: relative;
+}
+
+.text_sem_obs{
+    color: var(--Textos-Secundrio, #ABABAB) !important;
+    font-size: 14px !important;
+    font-weight: 400 !important;   
+}
+
+.container_obs,.container_obs_desc {
+    width: 449px;
+}
+
+.container_obs_desc{
+    display: flex;
+    flex-direction: column;
+}
+
+.container_obs_desc span:nth-of-type(1) {
+    color: #7B7B7B;
+    font-size: 14px;
+    font-weight: 400 !important;
+    margin-bottom: 7px;
+}
+
+.container_obs_desc span:nth-of-type(2) {
+    background-color: #fff;
+    color: var(--Textos-Secundrio, #ABABAB);
+    font-size: 13px;
+    font-weight: 500 !important;
+    padding: 12px 20px;
+    border-radius: 5px;
+    border: 0.75px solid #ABABAB;
+}
+
+.container_detail_user_justificativo {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.deleteButton_alert{
+    background-color: red !important;
+}
+
+.title_delete_alert{
+    font-size: 14px !important;
+    border-bottom: 1px solid #DBDBDB !important;
+    width: 100%;
+    padding: 14px 0 14px 0 !important;
+    font-weight: 700 !important;
+}
+
+.popup_delete_alert{
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    padding: 0;
+    gap: 20px;
+    border-radius: 5px !important;
+    width: 361px;
+}
+
+.popup_delete_alert .swal2-confirm, .popup_delete_alert .swal2-cancel{
+    color: #555 !important;
+    font-size: 14px;
+    margin: 0;  
+    width: 100%;
+    border-radius: 0 !important;
+}
+
+.popup_delete_alert .swal2-confirm {
+    border-bottom-left-radius: 5px !important;
+}
+
+.popup_delete_alert .swal2-confirm:active{
+    background-color: rgba(238, 238, 238, 1) !important;
+}
+.popup_delete_alert .swal2-confirm:hover{
+    background-color: rgba(238, 238, 238, 1) !important;
+}
+
+.popup_delete_alert .swal2-cancel:active{
+    background-color: rgba(238, 238, 238, 1) !important;
+}
+
+.popup_delete_alert .swal2-cancel:hover{
+    background-color: rgba(238, 238, 238, 1) !important;
+}
+
+.popup_delete_alert .swal2-cancel{
+    border-bottom-right-radius: 5px !important;
+}
+
+.popup_delete_alert #swal2-html-container{
+    color: #555 !important;
+    font-size: 13px;
+    width: 215px !important;
+    margin: 0 auto;
+    padding: 0 !important;
+}
+
+.popup_delete_alert .swal2-actions{
+    margin: 0 !important;
+    border-top: 1px solid #DBDBDB !important;
+    width: 100%;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: flex;
+    flex-direction: row !important;
+    flex-wrap: nowrap;
+}
+
+input.is-invalid {
+    border-color: #f00;
+}
+
+.invalid-feedback {
+    font-size: 11px;
+    color: rgba(255, 59, 48, 1);
+    margin-top: 9px;
+    font-weight: 400 !important;
 }
