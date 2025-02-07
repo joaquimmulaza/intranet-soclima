@@ -146,6 +146,7 @@
                                 @endforeach
                             </tbody>
                         </table>
+                        
                         @else
                             <div class="mt-5 mb-5 text-center">
                                 <h3 class="text-black-50 font-weight-bold">Não há pedidos de férias pendentes!</h3>
@@ -153,6 +154,15 @@
                         @endif
                     </div>
                 </div>
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
                 @if($ferias->count() > 0)
                     <div class="footer">
                         <a type="button" class="btn btn-md btn-outline-danger waves-effect" href="{{ route('pdf.pedidos') }}" target="_blank">

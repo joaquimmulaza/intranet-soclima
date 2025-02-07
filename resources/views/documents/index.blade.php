@@ -58,7 +58,7 @@
 
 <div id="contentFaltas">
    
-    <form method="POST" class="formDocs" action="{{ route('documents.store') }}" enctype="multipart/form-data">
+    <form method="POST" class="formDocs" action="{{ route('documents.store') }}" enctype="multipart/form-data" id="ausenciaForm">
     @csrf
     <div class="">
         
@@ -110,26 +110,25 @@
                             <select name="tipo_registo" class=" form-control" id="mySelect3" >
                                 <option value="Dia Injustificado">Dia Injustificado</option>
                                 <option value="Desconto por atraso">Desconto por atraso</option>
-                                <span class="select2-selection__arrow" role="presentation">
-                                <b role="presentation"></b> <!-- Esta é a seta interna -->
-                                </span>
+                               
                             </select>
                         </div>
                     </div>
-                    <div class="form-injustificada">
-                        <div class="form-group mySelectAusencias">
-                            <label for="motivo">Motivo</label>
-                            <input type="text" name="motivo" class="form-injustificada-input">
+                    <div class="form-injustificada" id="data_falta_injustificada">
+                        <div class="form-group mySelectAusencias error_motivo" id="motivo_input">
+                            <label for="motivo" class="@error('data_inicio') error_color @enderror">Motivo</label>
+                            <input type="text" name="motivo" class="form-injustificada-input  teste_class @error('data_inicio') is-invalid @enderror">
+                            <div class="invalid-feedback">
+                                @error('motivo') {{ $message }} @enderror
+                            </div>
                         </div>
-                        <div class="form-group container_set_date" style="position: relative;">
-                            <div class="container_start_date">
-                                <label for="description">Data que faltou</label>
-                                <input type="date" name="data_inicio" class="@error('data_inicio') is-invalid @enderror">
-                                @error('data_inicio')
-                                    <div class="invalid-feedback" style="color: red;">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
+                        <div class="form-group container_set_date" style="position: relative;" >
+                            <div class="container_start_date data_falta_injustificada" >
+                                <label for="description" class="@error('data_inicio') error_color @enderror">Data que faltou</label>
+                                <input type="date" name="data_inicio" class=" teste_class @error('data_inicio') is-invalid @enderror" min="2024-01-31" max="{{ now()->format('Y-m-d') }}" style="display: block !important;">
+                                <div class="invalid-feedback">
+                                @error('data_inicio') {{ $message }} @enderror
+                                </div>
                             </div>
                             <div class="container_end_date container_end_date2">
                                 <label for="description" class="ocultado">Faltou apenas</label>
@@ -181,18 +180,20 @@
                         </div>
                         <!-- Cartão de Upload com a Barra de Progresso -->
                         <div class="upload-card" id="upload-card" style="display: none;">
-                            <div class="upload-icon">
-                            <img src="logo/img/icon/upload_file.svg" alt="Upload Icon">
-                                <div style="overflow: hidden; text-overflow: ellipsis; font-size: 11px;">
-                                    <strong id="file-name">untitled</strong>
+                            <div class="container_upload_card">
+                                <div class="upload-icon">
+                                    <img src="logo/img/icon/upload_file.svg" alt="Upload Icon">
+                                    <div style="overflow: hidden; text-overflow: ellipsis; font-size: 11px;">
+                                        <strong id="file-name">untitled</strong>
+                                    </div>
                                 </div>
-                            </div>
-                            <span class="close-btn" onclick="resetUpload()"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z" fill="#555555"/>
-                            </svg>
-                            </span>
-                            <div class="progress-container">
-                                <div class="progress-bar" id="progress-bar"></div>
+                                <span class="close-btn" onclick="resetUpload()"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z" fill="#555555"/>
+                                </svg>
+                                </span>
+                                <div class="progress-container">
+                                    <div class="progress-bar" id="progress-bar"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -220,9 +221,7 @@
                             <select name="tipo_registo" class="mySelect form-control" id="mySelect" >
                                 <option value="Dia Justificado">Dia Justificado</option>
                                 <option value="Desconto por atraso">Desconto por atraso</option>
-                                <span class="select2-selection__arrow" role="presentation">
-                                <b role="presentation"></b> <!-- Esta é a seta interna -->
-                                </span>
+                               
                             </select>
                         </div>
                         <div class="form-group mySelectAusencias">
@@ -236,19 +235,17 @@
                                 <option value="Óbito">Óbito</option>
                             </select>
                         </div>
-                        <div class="form-group container_set_date" style="position: relative;">
-                            <div class="container_start_date">
-                                <label for="description" >Data que faltou</label>
-                                <input type="date" name="data_inicio" class="@error('data_inicio') is-invalid @enderror">
-                                @error('data_inicio')
-                                    <div class="invalid-feedback" style="color: red;">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
+                        <div class="form-group container_set_date" style="position: relative;" >
+                            <div class="container_start_date data_falta_justificada" id="data_falta_justificada">
+                                <label for="data_inicio" class="@error('data_inicio') error_color @enderror">Data que faltou</label>
+                                <input type="date" name="data_inicio" class=" teste_class @error('data_inicio') is-invalid @enderror" min="2024-01-31" max="{{ now()->format('Y-m-d') }}" id="data_inicio" style="display: block !important;">
+                                <div class="invalid-feedback">
+                                @error('data_inicio') {{ $message }} @enderror
+                            </div>
                             </div>
                             <div class="container_end_date">
                                 <label for="description" class="description_label">Faltou apenas</label>
-                                <div class="container_input_end_date">
+                                <div class="container_input_end_date erro_falta_justificada">
                                     <input type="number" name="horas" class="input_hours description_label " placeholder="0"  min="1" max="10">
                                     <span class="description_label">Horas</span>
                                 </div>
@@ -600,6 +597,77 @@ document.addEventListener("DOMContentLoaded", function () {
         toggleFields();
     });
 });
+
+
+
+// $(document).ready(function () {
+//     $('#ausenciaForm').on('submit', function (e) {
+//         e.preventDefault();
+
+//         // Limpar mensagens de erro e classes de validação sem remover elementos
+//         $('.invalid-feedback').text(''); // Limpa mensagens de erro
+//         $('.is-invalid').removeClass('is-invalid'); // Remove classes de erro nos campos
+//         $('label').removeClass('error_color'); // Remove classes de erro nas labels
+
+//         let formData = new FormData(this);
+
+//         $.ajax({
+//             url: "{{ route('documents.store') }}",
+//             method: "POST",
+//             data: formData,
+//             processData: false,
+//             contentType: false,
+//             success: function (response) {
+           
+//                 Swal.fire({
+//                     timer: 6000,
+//                     position: "bottom-start",
+//                     imageUrl: "{{asset('logo/img/icon/verified.gif')}}",
+//                     imageAlt: "Custom image",
+//                     imageWidth: 40,
+//                     title: 'Justificativo enviado',
+//                     showConfirmButton: false,
+//                     width: 225,
+//                     backdrop: false,
+//                     customClass: {
+//                         popup: 'container_sweet_justificativos',
+//                         icon: 'icon_sweet_justificativos',
+//                         title: 'title_sweet_justificativos',
+//                         image: 'img_sweet_justificativos'
+//                     }
+//                  }).then(() => {
+//                      window.location.reload();
+//                  });
+
+//             },
+//             error: function (xhr) {
+//                 if (xhr.status === 422) {
+//                     let errors = xhr.responseJSON.errors;
+
+//                     // Iterar pelos erros retornados
+//                     for (let field in errors) {
+//                         // Selecionar todos os inputs com o atributo name igual ao campo de erro
+//                         let inputFields = $(`[name="${field}"]`);
+
+//                         inputFields.each(function () {
+//                             let container = $(this).closest('div');
+
+//                             // Adicionar classes e mensagens de erro ao input e à sua div
+//                             $(this).addClass('is-invalid');
+//                             container.find('label').addClass('error_color');
+//                             container.find('.invalid-feedback').text(errors[field][0]);
+//                         });
+//                     }
+//                 } else {
+//                     alert('Ocorreu um erro inesperado.');
+//                 }
+//             }
+//         });
+//     });
+// });
+
+
+
 
 </script>
 

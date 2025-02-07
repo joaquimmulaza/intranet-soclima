@@ -151,7 +151,7 @@
 }
 .dropdown-content a {
     color: #555;
-    padding: 12px 15px;
+    padding: 10px 14px;
     text-decoration: none;
     display: flex;
     align-items: center;
@@ -1751,6 +1751,13 @@ button:active{
     font-family: Arial, sans-serif;
 }
 
+.container_upload_card{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+}
+
 /* Área de arrastar ou selecionar */
 .drop-area_docs {
     border-radius: 3px;
@@ -1967,6 +1974,13 @@ input[type="file"] {
     font-size: var(--Label-Large-Size, 14px);
     color: #fff;
     border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btnFerias:hover{
+    color: #fff;
 }
 
 .dias-ferias{
@@ -3366,4 +3380,59 @@ input.is-invalid {
     color: rgba(255, 59, 48, 1);
     margin-top: 9px;
     font-weight: 400 !important;
+    display: block !important;
+    border-color: #f00;
+}
+
+.error_color{
+    color: rgba(255, 59, 48, 1) !important;
+}
+
+.menuOpt a:hover{
+    background-color: rgba(238, 238, 238, 1) !important;
+}
+
+.container_checkbox{
+    margin-top: 20px;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 35px;
+}
+
+.container_checkbox label{
+    color: #555;
+    font-size: 14px;
+    font-weight: 400;
+    margin-bottom: 0;
+}
+
+.container_checkbox input{
+    width: 18px;
+    height: 20px;
+}
+
+#checkbox_container {
+    transition: opacity 0.5s ease-in-out;
+}
+
+.msg_error{
+    background-color: rgba(254, 30, 0, 0.20) !important;
+    font-size: 14px !important;
+    color: #E75845;
+    font-weight: 400 !important;
+    border-color: #E75845;
+    padding: 11px 15px 11px 20px !important;
+}
+
+.msg_error ul{
+    margin-bottom: 0 !important;
+    list-style: none;
+}
+
+.msg_error ul li{
+    display: flex;
+    align-items: center;
+    gap: 3px;
 }

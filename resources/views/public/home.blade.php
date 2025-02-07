@@ -75,7 +75,7 @@
                 </li>
                 <li>
                     <img src="logo/img/icon/feed.svg" alt="">
-                    <a href="#">Pedido de documento</a>
+                    <a href="">Pedido de documento</a>
                 </li>
                 <li>
                     <img src="logo/img/icon/gmail_groups.svg" alt="">
@@ -178,7 +178,6 @@
                                             <img src="logo/img/icon/event-icon.svg" alt="Ícone PDF" class="icon"> <!-- Ícone PDF -->
                                             Criar Evento
                                         </label>
-                                        
                                 
                                 </div>
 

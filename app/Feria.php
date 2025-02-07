@@ -11,7 +11,8 @@ class Feria extends Model
     protected $table = 'ferias'; // Define a tabela associada
     protected $fillable = ['user_id', 'responsavel_id', 'data_inicio', 'data_fim', 'status']; // Campos permitidos para inserção
 
-    // Definindo o relacionamento com o usuário (User)
+   
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
@@ -31,7 +32,7 @@ class Feria extends Model
         $diasSolicitados = 0;
         $feriados = Feriado::pluck('data')->toArray(); // Obter feriados
     
-        while ($dataInicio->lte($dataFim)) {
+        while ($dataInicio->lt($dataFim)) {
             if (!$dataInicio->isWeekend() && !in_array($dataInicio->format('Y-m-d'), $feriados)) {
                 $diasSolicitados++;
             }
@@ -39,30 +40,33 @@ class Feria extends Model
         }
     
         return $diasSolicitados;
-    }
+    } 
 
     public function calcularDataRetorno($dataInicio, $diasSolicitados) {
+        // Garantir que $diasSolicitados seja um número inteiro
+        $diasSolicitados = (int) $diasSolicitados;
+    
         $data = Carbon::parse($dataInicio);
-        $feriados = Feriado::pluck('data')->toArray(); // Obtemos os feriados cadastrados
+        $feriados = Feriado::pluck('data')->toArray();
     
         $diasUteisContados = 0;
     
-        // Loop para contar os dias úteis
         while ($diasUteisContados < $diasSolicitados) {
-            $data->addDay(); // Adiciona um dia à data
+            $data->addDay();
     
-            // Verifica se o dia é útil (não é final de semana ou feriado)
             if (!$data->isWeekend() && !in_array($data->format('Y-m-d'), $feriados)) {
                 $diasUteisContados++;
             }
         }
     
-        // Retorno ocorre no próximo dia útil após o último dia de férias
+        // Depois de contar os dias úteis, avançar até o próximo dia útil após o último dia de férias
         while ($data->isWeekend() || in_array($data->format('Y-m-d'), $feriados)) {
-            $data->addDay(); // Avança para o próximo dia útil
+            $data->addDay();
         }
     
-        return $data->format('Y-m-d'); // Retorna a data de retorno prevista
-    }    
+        // Retorna a data de retorno em formato 'Y-m-d'
+        return $data->format('Y-m-d');
+    }
+     
     
 }

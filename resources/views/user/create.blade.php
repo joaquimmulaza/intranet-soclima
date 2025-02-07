@@ -28,7 +28,7 @@
         <div class="container-fluid">
            
 
-            <form action="{{ isset($user) ? route('user.update', $user->id) : route('user.store') }}" method="POST">
+            <form action="{{ isset($user) ? route('user.update', $user->id) : route('user.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             @if (isset($user))
                 @method('PUT') <!-- Método PUT para edição -->
@@ -42,11 +42,12 @@
                             {{--MOSTRA AVATAR --}}
                             <div id="upload" class="cardAvatar file-upload-wrapper">
                             <img id="output"
-                                src="{{URL::to('/')}}/public/avatar_users/{{isset($user) ? $user->avatar : 'cardAvatar.svg'}}"
+                                src="{{asset('logo/img/icon/Photo-icon.svg')}}"
                                 alt="imagem do usuario"
                                 onclick="document.getElementById('avatar').click()"
                                 style="cursor: pointer; width: 131px; object-fit: cover;">
                                 <input type="file" id="avatar" name="avatar" style="display: none;" accept="image/*" onchange="loadFile(event)">
+                                
                             </div>
 
                             <div class="card-body box-profile">

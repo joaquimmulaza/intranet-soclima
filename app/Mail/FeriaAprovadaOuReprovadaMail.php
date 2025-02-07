@@ -23,7 +23,7 @@ class FeriaAprovadaOuReprovadaMail extends Mailable
 
     public function build()
     {
-        $subject = $this->status === 'aprovada!'
+        $subject = $this->status === 'Aprovado'
             ? 'Sua solicitação de férias foi reprovada!'
             : 'Sua solicitação de férias foi aprovada!';
 

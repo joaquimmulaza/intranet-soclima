@@ -370,6 +370,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         @if($ausencia->arquivo_comprovativo)
             const url = "{{ asset('storage/' . $ausencia->arquivo_comprovativo) }}";
+            console.log('URL do PDF:', url);
             const pdfjsLib = window['pdfjs-dist/build/pdf'];
 
             pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://mozilla.github.io/pdf.js/build/pdf.worker.js';

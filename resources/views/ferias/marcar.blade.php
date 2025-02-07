@@ -71,8 +71,10 @@
             <button type="submit" class="btn btn-primary">Solicitar</button>
         </form>
     </div>
-
+   
     <div id="content-injustificada" class="main_container">
+        <form action="{{ route('ferias.store') }}" method="POST">
+        @csrf
         <div class="document-inputs">
             <div class="form-injustificada">
                 <div class="form-group">
@@ -86,7 +88,7 @@
                         <label for="recipient">A solicitar a</label>
                         <div class="destinatário">
                             <span>@if(Auth::user()->responsavel_id)
-                                {{ Auth::user()->responsavel_id }}
+                                {{ Auth::user()->responsavel->name}}
                             @else
                                 Sem Chefe de departamento
                             @endif</span>
@@ -120,24 +122,42 @@
                     </div>
                     <div class="form-group container_select2_ferias">
                         <label for="motivo">Férias relativas ao ano</label>
-                        <select name="tipo_registo" class="mySelect2Global" required>
+                        <div class="destinatário" style="width: 146px;">
+                        <span>
+                            @if($anoDesconto)
+                                {{ $anoDesconto }}
+                            @else
+                                Sem saldo de férias disponível
+                            @endif
+                        </span>
+                    </div>
+                        <!-- <select name="tipo_registo" class="mySelect2Global">
                             <option value="Dia Justificado">2025</option>
                             <option value="Desconto por atraso">2024</option>
                             <span class="select2-selection__arrow" role="presentation">
-                            <b role="presentation"></b> <!-- Esta é a seta interna -->
+                            <b role="presentation"></b>
                             </span>
-                        </select>
+                        </select> -->
+                        
                     </div>
                 </div>
+
                 <div class="form-group container_set_date" style="position: relative;">
+
                     <div class="container_start_date">
                         <label for="description">Data de inicio</label>
-                        <input type="date" name="data_inicio">
+                        <input type="date" id="one_day" name="data_inicio" min="{{ now()->format('Y-m-d')}}">
+                        <div class="container_checkbox" style="display: none;" id="checkbox_container">
+                            <input type="checkbox" name="data_fim" id="todo_dia" value="">
+                            <label for="data_inicio">Ausentar-se todo o dia</label>
+                        </div>
+                        
                     </div>
+
                     <div>
-                        <label for="description">Data de fim</label>
+                        <label for="description" id="label_hidden">Data de fim</label>
                         <div class="container_start_date">
-                            <input type="date" name="horas">
+                            <input type="date" id="when_one_day" name="data_fim" min="{{ \Carbon\Carbon::tomorrow()->format('Y-m-d') }}" style="color: red;">
                         </div>
                     </div>
                     
@@ -146,13 +166,27 @@
                 
                 
             </div>
+            @if ($errors->any())
+                    <div class="alert alert-danger msg_error">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>
+                                    <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M9.5 5.13824L15.4612 15.4378H3.53875L9.5 5.13824ZM9.5 1.97949L0.791664 17.0212H18.2083L9.5 1.97949ZM10.2917 13.0628H8.70833V14.6462H10.2917V13.0628ZM10.2917 8.31283H8.70833V11.4795H10.2917V8.31283Z" fill="#FF0000"/>
+                                    </svg>
+                                    <strong>Erro: </strong>{{ $error }}
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
             
             <div class="ausencias_container_btn">
-                <button type="submit">Cancelar</button>
-                <button type="submit">Justificar</button>
+                <button >Cancelar</button>
+                <button type="submit">Solicitar</button>
             </div>
         </div>
-        
+        </form>
     </div>
 
 <script>
@@ -168,5 +202,84 @@ function initializeSelect2(selector) {
 $(document).ready(function () {
     initializeSelect2('.mySelect2Global');
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+    let oneDayInput = document.getElementById("one_day");
+    let labelColor = document.getElementById("label_hidden");
+    let todoDiaCheckbox = document.getElementById("todo_dia");
+    let whenOneDayInput = document.getElementById("when_one_day");
+    let checkboxContainer = document.getElementById("checkbox_container");
+    
+
+    // Esconder o checkbox inicialmente
+    checkboxContainer.style.display = "none";
+
+    // Exibir checkbox quando a data for escolhida
+    oneDayInput.addEventListener("change", function () {
+        if (oneDayInput.value) {
+            checkboxContainer.style.display = "flex"; // Aparece suavemente
+            checkboxContainer.style.opacity = 0;
+            checkboxContainer.disabled = false;
+            setTimeout(() => {
+                checkboxContainer.style.opacity = 1;
+                checkboxContainer.style.transition = "opacity 0.5s";
+            }, 10);
+        } else {
+            checkboxContainer.style.display = "none";
+            checkboxContainer.disabled = true;
+        }
+         // Se o checkbox já estiver marcado, atualiza o value
+         if (todoDiaCheckbox.checked) {
+            todoDiaCheckbox.value = oneDayInput.value;
+        }
+        
+    });
+
+    // Atribuir a data ao checkbox apenas quando ele for selecionado
+    todoDiaCheckbox.addEventListener("change", function () {
+        if (todoDiaCheckbox.checked) {
+            todoDiaCheckbox.value = oneDayInput.value; // Define o valor do checkbox
+        } else {
+            todoDiaCheckbox.value = ""; // Limpa o valor se for desmarcado
+        }
+    });
+
+    whenOneDayInput.addEventListener("change", function () {
+        if(whenOneDayInput.value) {
+            checkboxContainer.style.display = "none";
+            checkboxContainer.disabled = true;
+        } else {
+            checkboxContainer.style.display = "flex"; // Aparece suavemente
+            checkboxContainer.style.opacity = 0;
+            checkboxContainer.disabled = false;
+            setTimeout(() => {
+                checkboxContainer.style.opacity = 1;
+                checkboxContainer.style.transition = "opacity 0.5s";
+            }, 10);
+        }
+
+       
+    })
+
+    // Desativar/ocultar o campo de data de fim se "Todo dia" for marcado
+    todoDiaCheckbox.addEventListener("change", function () {
+        if (todoDiaCheckbox.checked) {
+            whenOneDayInput.style.borderColor = "#ababab70";
+            labelColor.style.color = "#ababab70";
+            whenOneDayInput.disabled = true;
+            whenOneDayInput.style.setProperty('color', '#ababab70', 'important');
+        } else {
+            labelColor.style.color = "#7B7B7B";
+            whenOneDayInput.style.display = "block";
+            whenOneDayInput.disabled = false;
+            whenOneDayInput.style.borderColor = "#ABABAB"
+            whenOneDayInput.style.setProperty('color', '#7B7B7B', 'important');
+        }
+    });
+
+});
+
+    
+
 </script>
 @endsection

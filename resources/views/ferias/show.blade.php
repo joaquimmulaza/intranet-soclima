@@ -17,10 +17,15 @@
 </div>
 <div class="main_container">
     <div class="column justify-content-center">
-        <div class="d-flex justify-content-end align-items-center" style="width: 95%; margin: 0 auto; position: relative; top: 29px;">
-            <button data-toggle="modal" data-target="#modalFerias-{{ $funcionario->id }}" class="btnFerias">Atualizar férias</button>
+        <div class="d-flex justify-content-end align-items-center hidden" style="width: 95%; margin: 0 auto; position: relative; top: 29px;">
+            <button class="hidden" data-toggle="modal" data-target="#modalFerias-{{ $funcionario->id }}" class="btnFerias">Atualizar férias</button>
         </div>
+       
+        <div class="d-flex justify-content-end align-items-center" style="width: 95%; margin: 0 auto; position: relative; top: 29px;">
         
+        <a class="btnFerias" href="{{ route('ferias.marcar') }}">Solicitar Férias</a>
+        
+        </div>
         <div class="row justify-content-around MainContainerFerias">
         
             <!-- Coluna Esquerda: Informações do Funcionário -->
@@ -28,9 +33,9 @@
                 <div class="card-user-info">
                     <div class="card-body text-center">
                         @if($funcionario && $funcionario->avatar)
-                            <img style="width: 161px; border-radius: 8px;" src="{{ URL::to('/') }}/public/avatar_users/{{ $funcionario->avatar }}" alt="">
+                            <img class="img_user_check_ferias" style="width: 161px; border-radius: 8px;" src="{{ URL::to('/') }}/public/avatar_users/{{ $funcionario->avatar }}" alt="">
                         @else
-                            <img style="width: 161px; border-radius: 8px;" src="{{ URL::to('/public/avatar_users/default-avatar.png') }}" alt="">
+                            <img class="img_user_check_ferias" style="width: 161px; border-radius: 8px;" src="{{ URL::to('/public/avatar_users/default-avatar.png') }}" alt="">
                         @endif
 
                         <div class="info-name-img">
@@ -58,19 +63,27 @@
                         <div class="dias-ferias">
                             <p>
                                 <span>Férias anuais:</span> 
-                                <span class="totalDias">{{ $feriasAnuais }} dias </span>
+                                <span class="totalDias">22 dias </span>
                                 <span class="uteis">úteis</span>
                             </p>
                             <p>
                                 <span>Férias acumuladas:</span> 
-                                <span class="totalDias">0 dias </span>
-                                <span class="uteis">úteis</span>
+                                <span class="totalDias">
+                                    @if($diasAcumulados == 1)
+                                    {{ $diasAcumulados }} dia
+                                    @else
+                                    {{ $diasAcumulados }} dias
+                                    @endif
+                                </span>
+                                <span class="uteis">
+                                    úteis
+                                </span>
                             </p>
                         </div>
                         <div class="dias-ferias ferias-restantes">
                             <p>
                                 <span>Férias restantes:</span> 
-                                <span>{{ $feriasRestantes }} dias</span>
+                                <span>{{ $feriasAnuais }} dias</span>
                             </p>
                         </div>
                     </div>
@@ -100,7 +113,7 @@
                 @if ($historicoFerias->isEmpty())
                     <p><strong>Sem histórico de férias</strong></p>
                 @else
-                    @foreach ($historicoFerias as $feria)
+                    @foreach ($historicoFerias->reverse() as $feria)
                         <div class="historico_periodo">
                             <p>Período {{ $feria['periodo'] }}:</p>
                             <span>de {{ $feria['data_inicio'] }} a {{ $feria['data_fim'] }}</span>
@@ -134,7 +147,7 @@
                         </div>
                         <div class="historico_periodo">
                             <p><strong>Data de retorno prevista:</strong> </p>
-                            <span>{{ $feria['data_retorno'] }}</span>
+                            <span>{{$feria['data_retorno']}}</span>
                         </div>
                     @endforeach
                 @endif
@@ -159,7 +172,13 @@
         </div>
         <canvas id="feriasRestantesChart" width="50" height="50"></canvas>
         <div class="chart-description">
-            <span>{{ $feriasRestantes }} dias</span>
+            <span>
+                @if($totalDiasFerias == 1)
+                {{ $totalDiasFerias }} dia
+                @else
+                {{ $totalDiasFerias }} dias
+                @endif
+            </span>
         </div>
     </div>
     <div class="btn_ferias">
@@ -331,38 +350,58 @@
 <script>
     const feriasGozadasData = {
         datasets: [{
-            data: [{{ $feriasGozadas }}, {{ $feriasAnuais - $feriasGozadas }}],
+            data: [{{ $feriasGozadas  }}, {{ $totalDiasFerias - $feriasGozadas }}],    
             backgroundColor: ['#CD0000', 'rgba(205, 204, 0, 0.25)']
         }]
     };
 
     const feriasRestantesData = {
         datasets: [{
-            data: [{{ $feriasRestantes }}, {{ $feriasAnuais - $feriasRestantes }}],
+            data: [{{ $totalDiasFerias - $feriasGozadas }}, {{ $feriasGozadas }}],
             backgroundColor: ['#CDCC00', '#E2E2E2'],
         }]
     };
 
     const feriasGozadasConfig = {
-        type: 'doughnut',
-        data: feriasGozadasData,
-        options: {
-            cutout: 75,
-            responsive: true,
+    type: 'doughnut',
+    data: feriasGozadasData,
+    options: {
+        cutout: 75,
+        responsive: true,
+        plugins: {
+            tooltip: {
+                enabled: false, // Desabilitar tooltip para facilitar o teste visual
+            }
+        },
+        animation: {
+            animateRotate: true, // Garantir animação de rotação
+            animateScale: true, // Garantir animação de escala
         }
-    };
-
-    const feriasRestantesConfig = {
-        type: 'doughnut',
-        data: feriasRestantesData,
-        options: {
-            cutout: 75,
-            responsive: true,
+    }
+};
+const feriasRestantesConfig = {
+    type: 'doughnut',
+    data: feriasRestantesData,
+    options: {
+        cutout: 75,
+        responsive: true,
+        plugins: {
+            tooltip: {
+                enabled: false, // Desabilitar tooltip para facilitar o teste visual
+            }
+        },
+        animation: {
+            animateRotate: true, // Garantir animação de rotação
+            animateScale: true, // Garantir animação de escala
         }
-    };
+    }
+};
 
     const feriasGozadasChart = new Chart(document.getElementById('feriasGozadasChart'), feriasGozadasConfig);
     const feriasRestantesChart = new Chart(document.getElementById('feriasRestantesChart'), feriasRestantesConfig);
+
+    console.log(feriasGozadasData);
+console.log(feriasRestantesData);
 
     document.addEventListener('DOMContentLoaded', () => {
     const btnHistorico = document.getElementById('btn-historico');

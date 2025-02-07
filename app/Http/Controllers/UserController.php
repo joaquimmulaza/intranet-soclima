@@ -15,6 +15,8 @@ use App\Role;
 use App\Survey;
 use App\Unidade;
 use App\User;
+use App\DiasFerias;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -26,6 +28,8 @@ use RealRashid\SweetAlert\Facades\Alert;
 use \Illuminate\Support\Str;
 use Vonage\Client;
 use Vonage\Client\Credentials\Basic;
+use App\Imports\FeriasImport;
+use Illuminate\Support\Facades\Log; // Importação do Log
 
 class UserController extends Controller
 {
@@ -182,6 +186,9 @@ class UserController extends Controller
             }
 
             $user->save();
+            // Aqui começa a parte do cálculo de férias
+            $this->calcularFeriasAnoAdmissao($user); 
+
             // dd('SALVO USER');
             $phoneNumber = $user->fone;
             if (strpos($phoneNumber, '+') !== 0) {
@@ -202,6 +209,40 @@ class UserController extends Controller
             return redirect()->back();
         }
     }
+
+        public function calcularFeriasAnoAdmissao(User $user)
+    {
+        // Obter a data de admissão do usuário
+        $dataAdmissao = Carbon::parse($user->data_admissao);
+        $dataAtual = Carbon::now();  // Data atual
+
+        // Calcular a diferença em meses completos
+        $mesesTrabalhados = $dataAdmissao->diffInMonths($dataAtual);
+
+        // Calcular os dias de férias proporcionais (2 dias por mês, no máximo 22 dias)
+        $diasFeriasProporcionais = min($mesesTrabalhados * 2, 22);  // 2 dias úteis por mês, com limite máximo de 22 dias
+
+        // Verificar se já existe um registro de dias de férias para o ano de admissão
+        $anoAdmissao = $dataAdmissao->year;
+
+        $diasFerias = $user->diasFerias()->where('ano', $anoAdmissao)->first();
+
+        if (!$diasFerias) {
+            // Se não existir, cria o registro de dias de férias para o ano de admissão
+            $diasFerias = new DiasFerias();
+            $diasFerias->user_id = $user->id;
+            $diasFerias->ano = $anoAdmissao;
+            $diasFerias->dias_disponiveis = $diasFeriasProporcionais;
+            $diasFerias->save();
+        } else {
+            // Se já existir, apenas atualiza os dias de férias
+            $diasFerias->dias_disponiveis = $diasFeriasProporcionais;
+            $diasFerias->save();
+        }
+
+        return $diasFerias;
+    }
+
 
     private function sendWelcomeMessage(User $user, $temporaryPassword, $phoneNumber)
     {
@@ -303,6 +344,7 @@ class UserController extends Controller
             $user->fone = $request->fone;
             $user->genero = $request->genero;
             $user->responsavel_id = $request->responsavel_id;
+          
             if(!empty($request->password)){
                 $user->password = Hash::make($request->password);
             }
@@ -332,18 +374,33 @@ class UserController extends Controller
 
             //dd($user);
 
-            if($request->hasFile('avatar')){
-                $avatar = $request->file('avatar');
-                $filename = $user->id . "_" . time() . '.' . $avatar->getClientOriginalExtension();
-                Image::make($avatar)->resize(300, 300)->save(public_path('public/avatar_users/' . $filename));
+            // Atualizar avatar
+        if ($request->hasFile('avatar')) {
+            $avatar = $request->file('avatar');
+            $filename = $user->id . "_" . time() . '.' . $avatar->getClientOriginalExtension();
 
-                if($user->avatar !== 'default.jpg'){
-                    File::delete(public_path('public/avatar_users/' . $user->avatar));
-                }
-                $user->avatar =  $filename;
+            // Definir o caminho onde a imagem será salva
+            $path = public_path('public/avatar_users');
+
+            // Criar o diretório se ele não existir
+            if (!file_exists($path)) {
+                mkdir($path, 0777, true);
             }
 
-            $user->save();
+            // Salvar a imagem no diretório 'public/uploads/avatar_users'
+            $avatar->move($path, $filename);
+
+            // Deletar o avatar anterior, se não for o padrão
+            if ($user->avatar !== 'default.jpg' && file_exists(public_path('uploads/avatar_users/' . $user->avatar))) {
+                unlink(public_path('uploads/avatar_users/' . $user->avatar));
+            }
+
+            // Atualizar o campo 'avatar' no banco de dados
+            $user->avatar = $filename;
+        }
+
+        // Salvar alterações no banco de dados
+        $user->save();
 
             notify()->success("Usuário editado com sucesso!","Success","bottomRight");
             return redirect()->route('user.index', compact('user'));
@@ -357,7 +414,6 @@ class UserController extends Controller
             notify()->error("Ocorreu um erro ao tentar editar um usuário!","Error","bottomRight");
             return redirect()->back();
         }
-
     }
 
     public function destroy(User $user)
@@ -388,4 +444,45 @@ class UserController extends Controller
     public function exportPedidos(){
         return Excel::download(new PedidosExport, 'Lista_pedidos.xlsx');
     }
+
+    public function showUploadForm()
+    {
+        return view('user.upload');  // Aqui você cria uma view para o upload do Excel
+    }
+
+
+    public function importarFerias(Request $request)
+{
+    // Validação do arquivo enviado
+    $request->validate([
+        'file' => 'required|file|mimes:xlsx,csv',  // Valida se é um arquivo Excel ou CSV
+    ]);
+
+    // Verifica se o arquivo foi enviado
+    if ($request->hasFile('file')) {
+        // Salva o arquivo na pasta "laravel-excel" (padrão do pacote)
+        $file = $request->file('file');
+        $path = $file->store('framework/laravel-excel');  // O arquivo será salvo nesta pasta
+
+        // Obtém o caminho do arquivo armazenado
+        $filePath = $path; // Isso pega o caminho completo
+
+        // Aqui você pode usar o pacote Excel para importar os dados
+        try {
+            // Passa o caminho do arquivo gerado dinamicamente
+            Excel::import(new FeriasImport, $filePath);
+
+            
+
+            return redirect()->back()->with('success', 'Férias importadas com sucesso!');
+        } catch (\Exception $e) {
+            // Log de erro caso haja algum problema com a importação
+            Log::error('Erro ao importar férias:', ['error' => $e->getMessage()]);
+            return redirect()->back()->with('error', 'Erro ao importar o arquivo de férias!');
+        }
+    }
+
+    return redirect()->back()->with('error', 'Erro ao fazer upload do arquivo!');
+}
+
 }

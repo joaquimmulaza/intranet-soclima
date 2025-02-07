@@ -8,7 +8,7 @@ class DiasFerias extends Model
 {
     protected $table = 'dias_ferias';
 
-    protected $fillable = ['user_id', 'dias_disponiveis'];
+    protected $fillable = ['user_id', 'ano', 'dias_disponiveis'];
 
     public function user()
     {

@@ -62,10 +62,6 @@
                             <label for="email">Envio por E-mail</label>
                         </div>
                         <div class="radio-docs">
-                            <input type="radio" id="fisica" name="forma_entrega" value="fisica">
-                            <label for="fisica">Entrega física no RH</label>
-                        </div>
-                        <div class="radio-docs">
                             <input type="radio" id="intranet" name="forma_entrega" value="intranet">
                             <label for="intranet">Envio na intranet</label>
                         </div>

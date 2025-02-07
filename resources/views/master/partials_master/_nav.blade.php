@@ -376,14 +376,16 @@
                             
                                     <img src="logo/img/icon/managerUser.svg" alt="">Gerir usuários</a>
                                     @endcan
-                                <a href="#"><img src="logo/img/icon/holiday-icon.svg" alt="">Pedidos férias</a>
+                                <a href="{{route('ferias.pedidos')}}"><img src="logo/img/icon/holiday-icon.svg" alt="">Pedidos férias</a>
                                 <a href="#"><img src="logo/img/icon/feeds.svg" alt="">Publicações e atividades</a>
                             </div>
 
                             <div class="menuOpt">
                                 <span>Geral</span>
                                 <a href="#"><img src="logo/img/icon/recibos-icon.svg" alt="">Recibos</a>
-                                <a href="#"><img src="logo/img/icon/justificativo-icon.svg" alt="">Justificativos</a>
+                                @can('app.dashboard')
+                                <a href="{{route('documents.show')}}"><img src="logo/img/icon/justificativo-icon.svg" alt="">Justificativos</a>
+                                @endcan
                                 <a class="{{Route::current()->getName() === 'telefones.index' ? 'menu-open' : ''}}" href="{{route('telefones.index')}}"><img src="logo/img/icon/list-phone.svg" alt="">Lista telefônica</a>
                                 <a href="{{route('documents.index')}}"><img src="logo/img/icon/ferias-icon.svg" alt="">Ausências</a>
                             </div>

@@ -58,14 +58,15 @@ public function showById($id)
         $validated = $request->validate([
             'tipo_falta' => 'required|string',
             'tipo_registo' => 'required|string',
-            'motivo' => 'nullable|string',
-            'data_inicio' => 'required|date',
+            'motivo' => 'required|string',
+            'data_inicio' => 'required|date|before_or_equal:today',
             'horas' => 'nullable|integer',
             'descontar_nas_ferias' => 'nullable|string|in:Sim,Não',
             'arquivo_comprovativo' => 'nullable',
         ],[
             'data_inicio.required' => 'Por favor, preencha este campo.',
             'data_inicio.date' => 'Data inválida.',
+            'motivo.required' => 'Por favor, preencha este campo.',
         ]);
 
         $user = Auth::user();
@@ -112,7 +113,10 @@ public function showById($id)
             User::where('role_id', '1')->first()->id // Notificar o admin
         );
 
+       
         return redirect()->back()->with('success', 'Justificativo Enviado');
+
+        
     }
 
     public function aprovarRejeitar($id, Request $request)
