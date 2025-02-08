@@ -27,7 +27,7 @@
                     <div class="cardPhoneHeader">
                         <button class="add-button" data-toggle="modal" data-target="#addContact">Adicionar</button>
                         <div class="filterContainer">
-                            <input id="searchInput" class=" backgroundInput" placeholder="Pesquisar" type="text">
+                            <input id="searchInput" class="backgroundInput" placeholder="Pesquisar" type="text">
                             <button data-toggle="modal" data-target="#filtrar" class="filter"><img src="logo/img/icon/filter.svg" alt=""></button>
                             <div class="modal fade modalOpt" id="filtrar" tabindex="-1" aria-labelledby="modalOptLabel" aria-hidden="true" data-backdrop="true" data-keyboard="true">
                                 <div class="modal-dialog">

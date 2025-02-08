@@ -150,21 +150,27 @@ class FeriaController extends Controller
         $dataInicio = Carbon::parse($request->data_inicio);
         $dataFim = Carbon::parse($request->data_fim);
         $user = Auth::user();
+        $diasFerias = DiasFerias::where('user_id', Auth::id())->first();
 
-        // Verifica se a data de início ou fim já existe em outro pedido de férias (pendente ou aprovado)
-            $conflitoFérias = Feria::whereIn('status', ['pendente', 'aprovado'])  // Verifica pendente ou aprovado
-            ->where(function($query) use ($dataInicio, $dataFim) {
-                $query->whereBetween('data_inicio', [$dataInicio, $dataFim])
-                    ->orWhereBetween('data_fim', [$dataInicio, $dataFim])
-                    ->orWhere(function($query) use ($dataInicio, $dataFim) {
-                        $query->where('data_inicio', '<=', $dataFim)
-                                ->where('data_fim', '>=', $dataInicio);
-                    });
-            })
-            ->exists();
+        if (!$diasFerias) {
+            return redirect()->back()->withErrors('Você não possui dias de férias disponíveis no sistema.');
+        }
+
+        // Verifica se o usuário já tem um pedido de férias no período (pendente ou aprovado)
+        $conflitoFérias = Feria::where('user_id', $user->id) // Filtra apenas as férias do usuário autenticado
+        ->whereIn('status', ['pendente', 'aprovado'])  // Considera apenas férias pendentes ou aprovadas
+        ->where(function ($query) use ($dataInicio, $dataFim) {
+            $query->whereBetween('data_inicio', [$dataInicio, $dataFim])
+                ->orWhereBetween('data_fim', [$dataInicio, $dataFim])
+                ->orWhere(function ($query) use ($dataInicio, $dataFim) {
+                    $query->where('data_inicio', '<=', $dataFim)
+                        ->where('data_fim', '>=', $dataInicio);
+                });
+        })
+        ->exists();
 
         if ($conflitoFérias) {
-        return redirect()->back()->withErrors('Já existem férias marcadas para este período.');
+        return redirect()->back()->withErrors('Você já tem férias marcadas para este período.');
         }
 
          // Verifica se a data de início é um final de semana ou feriado
@@ -217,6 +223,11 @@ class FeriaController extends Controller
         if (!$diasFerias || $diasFerias->dias_disponiveis <= 0) {
             $anoReferencia = $dataInicio->year; // Usar o ano atual
             $diasFerias = $user->diasFerias()->where('ano', $anoReferencia)->first();
+        }
+
+        // Garante que $diasFerias não é null antes de acessar
+        if (!$diasFerias) {
+            return redirect()->back()->withErrors("Nenhum saldo de férias encontrado para o período selecionado.");
         }
      
 
@@ -489,8 +500,13 @@ class FeriaController extends Controller
         ->where('status', 'Aprovado')  // Filtra apenas férias aprovadas
         ->orderBy('data_inicio', 'desc') // Ordena pela data de início mais recente
         ->get();  // Executa a consulta
-// Obter os dias de férias anuais atualizados
-$feriasAnuais = $funcionario->diasFerias->dias_disponiveis ?? 22; // Usa o valor da relação ou 22 como padrão
+        
+$anoAtual = now()->year;
+
+$feriasAnuais = DB::table('dias_ferias')
+    ->where('user_id', $funcionario->id)
+    ->where('ano', $anoAtual)
+    ->value('dias_disponiveis') ?? 0;
 
 // Pega a férias mais recente em curso, baseada na data de início
 
