@@ -123,6 +123,7 @@
                                 
                                     @if(($ausencia->status === 'Pendente'))
                                     @can('app.dashboard')
+                                  
                                     <div class="form-group mySelectAusencias">
                                         <label for="document_type">Adicionar observação</label>
                                         <input type="text" name="observacao" class="form-injustificada-input">
@@ -268,6 +269,8 @@
                                     @else
                                     <div class="container_obs"><span class="text_sem_obs">Sem observação adicionada!</span></div>
                                     @endif
+
+                                    <input type="hidden" name="descontar_nas_ferias" value="{{ $ausencia->descontar_nas_ferias }}">
                                     
                                     <!-- Botões de Aprovar e Rejeitar -->
                                     @if($ausencia->status === 'Pendente')

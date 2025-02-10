@@ -28,9 +28,10 @@
                             @foreach($ferias as $feria)
                                 <div class="containerPrincipal ContainerFerias">
                                     <div class="boxStatusFerias">
-                                        <span class="status">Pendente</span>
+                                        <span class="{{$feria->status}}">{{$feria->status}}</span>
                                         <div class="contentboxStatus">
                                             <span class="nameUser">
+                                                
                                                 @if ($feria->user)
                                                     {{ $feria->user->name }}
                                                 @else
@@ -57,15 +58,15 @@
                                 </div>
                             @endforeach
                         
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
                         @else
                             <div style="text-align: center; width: 1080px; margin: 0 auto;">
                                 <div class="imgEmptyPage">
-                                    <img src="logo/img/icon/holiday_icon.svg" alt="">
+                                    <img src="{{asset('logo/img/icon/holiday_icon.svg')}}" alt="">
                                 </div>
                                 <div class="textEmptyPage">
                                     <h3>De momento não há solicitações de férias</h3>
@@ -77,7 +78,7 @@
 
 
 
-<section class="containerPrincipal" style="display: none;">
+<section class="containerPrincipal">
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
@@ -108,8 +109,9 @@
                                         </th>
                                         <th class="text-center">{{ $feria->data_inicio }}</th>
                                         <th class="text-center">{{ $feria->data_fim }}</th>
-                                        <th class="text-center">{{ $feria->diasSolicitados() }}</th>
+                                        <th class="text-center">{{ $feria->diasSolicitados($feria->data_inicio, $feria->data_fim) }}</th>
                                         <th class="text-center">{{ $feria->data_retorno_prevista }}</th>
+                                       
                                         <th class="text-center">
                                             <span class="badge badge-warning">{{ $feria->status }}</span>
                                         </th>

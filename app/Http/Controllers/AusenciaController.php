@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Ausencia;
 use App\User;
+use App\Feria;
+use App\DiasFerias;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -121,17 +123,23 @@ public function showById($id)
 
     public function aprovarRejeitar($id, Request $request)
     {
+
         $ausencia = Ausencia::findOrFail($id);
 
         // Validar a entrada do status (aprovada ou rejeitada) e a observação
-        $validated = $request->validate([
-            'status' => 'required|in:Aprovado,Rejeitado',
-            'observacao' => 'nullable|string',
+    
+        $ausencia->update([
+            'status' => $request->status,
+            'observacao' => $request->observacao ?? $ausencia->observacao,
+            'descontar_nas_ferias' => $request->descontar_nas_ferias ?? $ausencia->descontar_nas_ferias, // Mantém o valor
         ]);
 
+
         // Atualizar o status e a observação
-        $ausencia->status = $validated['status'];
-        $ausencia->observacao = $validated['observacao'] ?? null; // A observação será opcional
+        $ausencia->status = $request['status'];
+        $ausencia->observacao = $request['observacao'] ?? null;
+        $ausencia->descontar_nas_ferias = $request['descontar_nas_ferias'] ?? null;
+         // A observação será opcional
         $ausencia->save();
 
         // Criar a mensagem da notificação com base no status e na observação
@@ -163,17 +171,27 @@ public function showById($id)
             $ausencia->user_id // Notificar o solicitante
         );
 
-        if ($validated['status'] == 'Aprovado') {
-            return redirect()->route('documents.show')->with([
-                'success' => 'Comprovativo aprovado',
-            ]);
-        }
-    
-        if ($validated['status'] == 'Rejeitado') {
+        
+      
+        if ($request['status'] == 'Rejeitado') {
             return redirect()->route('documents.show')->with([
                 'error' => 'Comprovativo rejeitado',
             ]);
         }
+
+        \Log::info('Status atualizado para: ' . $ausencia->status);
+        \Log::info('Descontar nas férias: ' . ($request['descontar_nas_ferias'] ?? 'Nao'));
+
+        if ($request['status'] == 'Aprovado' && ($request['descontar_nas_ferias'] ?? 'Nao') == 'Sim') {
+            FeriaController::descontarFeria($ausencia->user_id, 1);
+        }
+        
+
+    // Agora o redirecionamento acontece apenas no final
+    return redirect()->route('documents.show')->with([
+        $request['status'] == 'Aprovado' ? 'success' : 'error' => 
+        $request['status'] == 'Aprovado' ? 'Comprovativo aprovado' : 'Comprovativo rejeitado'
+    ]);
     }
 
 

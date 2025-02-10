@@ -24,23 +24,32 @@ class Feria extends Model
         return $this->belongsTo(User::class, 'responsavel_id');
     }
 
-    public function diasSolicitados() {
-        $dataInicio = Carbon::parse($this->data_inicio);
-        $dataFim = Carbon::parse($this->data_fim);
-    
-        // Calcular a diferença de dias, desconsiderando finais de semana e feriados
+    public function diasSolicitados($dataInicio, $dataFim)
+    {
+        $dataInicio = Carbon::parse($dataInicio);
+        $dataFim = Carbon::parse($dataFim);
+
+        
+        
+        // Calcular a diferença de dias úteis entre dataInicio e dataFim
         $diasSolicitados = 0;
-        $feriados = Feriado::pluck('data')->toArray(); // Obter feriados
-    
-        while ($dataInicio->lt($dataFim)) {
-            if (!$dataInicio->isWeekend() && !in_array($dataInicio->format('Y-m-d'), $feriados)) {
+        $feriados = Feriado::pluck('data')->toArray(); // Obter feriados cadastrados
+        
+        // Loop para contar os dias úteis
+        while ($dataInicio->lte($dataFim)) {
+            if ($dataInicio->isWeekend()) {
+                Log::warning("Data é fim de semana: " . $dataInicio->toDateString());
+            } elseif (in_array($dataInicio->format('Y-m-d'), $feriados)) {
+                Log::warning("Data é feriado: " . $dataInicio->toDateString());
+            } else {
                 $diasSolicitados++;
             }
-            $dataInicio->addDay();
+            $dataInicio->addDay(); // Avançar para o próximo dia
         }
+       
     
         return $diasSolicitados;
-    } 
+    }
 
     public function calcularDataRetorno($dataInicio, $diasSolicitados) {
         // Garantir que $diasSolicitados seja um número inteiro

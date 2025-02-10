@@ -51,7 +51,7 @@
    
 </div>
 <hr>
-<div class="containerBtnAusencias">
+<div class="containerBtnAusencias" style="display: none;">
     <a href="{{ route('ferias.show', ['id' => $id]) }}">Consultar Férias</a>
     <a href="{{ route('ferias.marcar') }}">Solicitar Férias</a>
 </div>
@@ -543,6 +543,7 @@ function showContent(type) {
     document.querySelector('.short_info').style.display = 'block';
     document.getElementById('contentFerias').style.position = 'absolute';
 
+    btnAusencias.style.display = 'none';
     // Exibe o conteúdo selecionado
     if (type === 'faltas') {
         document.getElementById('contentFaltas').style.visibility = 'visible';

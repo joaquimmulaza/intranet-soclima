@@ -8,6 +8,7 @@ use App\Feria;
 use App\Feriado;
 use App\User;
 use App\DiasFerias;
+use App\Aunsencia;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,8 +27,15 @@ class FeriaController extends Controller
         $ferias = Feria::where('status', 'pendente')
                     ->where('responsavel_id', $responsavelId)
                     ->get();
+        
+        // Criar um array associativo para armazenar os dias solicitados de cada pedido
+    $diasSolicitados = [];
 
-        return view('user.pedidos', compact('ferias'));
+    foreach ($ferias as $feria) {
+        $diasSolicitados[$feria->id] = $feria->diasSolicitados($feria->data_inicio, $feria->data_fim);
+    }
+
+        return view('user.pedidos', compact('ferias', 'diasSolicitados'));
     }
 
     public function create()
@@ -482,6 +490,26 @@ class FeriaController extends Controller
         return response()->json($events);  // Retorna os eventos no formato JSON
     }
 
+    public static function descontarFeria($user_id, $dias)
+    {
+        $ferias = DiasFerias::where('user_id', $user_id)
+            ->orderBy('ano', 'asc') // Seleciona o ano mais antigo
+            ->first();
+
+        if ($ferias) {
+            $ferias->dias_disponiveis -= $dias;
+
+            // Evita que os dias disponíveis fiquem negativos
+            if ($ferias->dias_disponiveis < 0) {
+                $ferias->dias_disponiveis = 0;
+            }
+
+            $ferias->save();
+        }
+    }
+
+
+
     public function show($id)
 {
     // Buscar o funcionário pelo ID
@@ -500,7 +528,7 @@ class FeriaController extends Controller
         ->where('status', 'Aprovado')  // Filtra apenas férias aprovadas
         ->orderBy('data_inicio', 'desc') // Ordena pela data de início mais recente
         ->get();  // Executa a consulta
-        
+
 $anoAtual = now()->year;
 
 $feriasAnuais = DB::table('dias_ferias')
