@@ -1352,6 +1352,15 @@ button:active{
 }
 
 
+.containerTableFerias{
+    /* border: 0.75px solid #ABABAB; */
+    width: 100%;
+    border-radius: 5px; 
+    border-collapse: separate; 
+    border-spacing: 0;  
+    margin-bottom: 20px;
+    padding: 26px 24px
+}
 .containerTable{
     border: 0.75px solid #ABABAB;
     width: 100%;
@@ -1929,13 +1938,18 @@ input[type="file"] {
     position: relative !important;
 }
 
+.card-user {
+    position: relative;
+    bottom: 79px;
+}
+
 .card-user-info{
     /* border-right: 1px solid #CECECE; */
-    width: 427px;
+    width: 372px;
 }
 
 .card-user-info img{
-    padding-bottom: 40px;
+    padding-bottom: 22px;
 }
 
 .card-user-info h4 {
@@ -1947,26 +1961,36 @@ input[type="file"] {
     text-align: left;
 }
 
+.outros-dados p:nth-of-type(1){
+   font-size: 16px;
+}
+
 .outros-dados p {
     display: flex;
+    font-size: 13px;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid #CECECE;
+    border: 1px solid #ababab;
     padding-bottom: 8px;
+    border-radius: 5px;
     color: #555;
+    padding: 7px 20px;
+}
+
+.outros-dados strong{
+    font-weight: 700;
 }
 
 .card-user-info button{
-    font-size: var(--Label-Large-Size, 14px);
+    font-size: var(--Label-Large-Size, 14px) !important;
     border-radius: 5px ;
     font-weight: 400;
     background: #009AC1;
-    width: 157px;
+    width: 100%;
     height: 34px;
-    justify-content: center;
-    align-items: center;color: #fff;
+    padding: 5px 20px;
+    color: #fff;
     border: none;
-    margin-top: 79px;
 }
 
 .btnFerias{
@@ -2016,6 +2040,13 @@ input[type="file"] {
 
 .card-body{
     padding: 0 !important;
+}
+
+.card-body h5{
+    margin-top: 20px;
+    font-size: 20px !important;
+    color: var(--Textos-Primrio, #555);
+    font-weight: 400 !important;
 }
 
 .MainContainerFerias{
@@ -2402,9 +2433,11 @@ backup estilo acima
 }
 
 .graphics_ferias{
-    margin-top: 21px;
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
+    border: 0.75px solid var(--border-border, #ABABAB);
+    border-radius: 5px;
 }
 
 .graphics_ferias p{
@@ -2416,7 +2449,7 @@ backup estilo acima
 
 .graphics_ferias span {
     color: #555;
-    font-size: 32px;
+    font-size: 30px;
     margin-bottom: 0 !important;
 }
 
@@ -2435,14 +2468,14 @@ backup estilo acima
 }
 
 #feriasRestantesChart{
-    width: 100px !important;
-    height: 100px !important;
+    width: 64px !important;
+    height: 64px !important;
     float: right;
 }
 
 #feriasGozadasChart{
-    width: 100px !important;
-    height: 100px !important;
+    width: 64px !important;
+    height: 64px !important;
     float: left;
 }
 
@@ -2454,7 +2487,7 @@ backup estilo acima
 .square-chart{
     position: absolute;
     top: 0;
-    right: 0;
+    right: 40px;
     display: flex;
     align-items: baseline;
     gap: 4px;
@@ -2549,22 +2582,22 @@ backup estilo acima
     width: 100%;
 }
 
-.container_periodo::-webkit-scrollbar {
+.dropdown_container::-webkit-scrollbar {
     width: 7px !important;
     position: absolute;
     left: 19px;
 }
 
-.container_periodo::-webkit-scrollbar-thumb {
+.dropdown_container::-webkit-scrollbar-thumb {
     background: #ABABAB;
     border-radius: 10px;
 }
 
-.container_periodo::-webkit-scrollbar-thumb:hover {
+.dropdown_container::-webkit-scrollbar-thumb:hover {
     background: #555;
 }
 
-.container_periodo::-webkit-scrollbar-track {
+.dropdown_container::-webkit-scrollbar-track {
     background: #f3f3f3;
     border-radius: 10px;
    
@@ -2621,12 +2654,41 @@ backup estilo acima
 .historico_periodo{
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    align-items: start;
+    flex-direction: column;
+    border: 1px solid var(--border-border, #ABABAB);
+    border-radius: 5px;
+    padding: 6px 9px;
+    margin-bottom: 20px;
 }
 
 .historico_periodo span{
-    font-weight: 500 !important;
-    font-size: 14px !important;
+    font-weight: 400 !important;
+    font-size: 13px !important;
+}
+
+.historico_periodo p{
+    margin-bottom: 0;
+    font-size: 13px;
+    color: #555;
+    font-weight: 600 !important;
+}
+
+.containerPeriodoFerias{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.containerPeriodoFerias a{
+    color: #555;
+    cursor: pointer;
+    width: 100%;
+    font-size: 13px;
+}
+.containerPeriodoFerias a:hover{
+    color: #555;
 }
 
 .changePageBtn{
@@ -3127,6 +3189,10 @@ backup estilo acima
     justify-content: start !important;
     height: 49px;
     margin-left: 30px;
+    gap: 10px;
+    width: 320px !important;
+   padding: 8px !important;
+   margin-bottom: 20px;
     box-shadow: 0px 0.796px 1.592px 0px rgba(0, 0, 0, 0.08) !important;
 }
 
@@ -3140,15 +3206,16 @@ backup estilo acima
     margin: 0;
     font-weight: 400;
     font-size: 14px;
-    position: relative;
+    /* position: relative;
     right: 25px;
-    top: 9px;
+    top: 9px; */
 }
 
 .img_sweet_justificativos{
-    position: relative;
+    /* position: relative;
     right: 15px;
-    top: 1px;
+    top: 1px; */
+    margin: 0 !important;
 }
 
 .select_in_view{
@@ -3359,9 +3426,9 @@ backup estilo acima
 .popup_delete_alert #swal2-html-container{
     color: #555 !important;
     font-size: 13px;
-    width: 215px !important;
+    width: auto !important;
     margin: 0 auto;
-    padding: 0 !important;
+    padding: 11px !important;
 }
 
 .popup_delete_alert .swal2-actions{
@@ -3421,6 +3488,10 @@ input.is-invalid {
     transition: opacity 0.5s ease-in-out;
 }
 
+.transition_animation{
+    transition: opacity 0.5s ease-in-out;
+}
+
 .msg_error{
     background-color: rgba(254, 30, 0, 0.20) !important;
     font-size: 14px !important;
@@ -3439,4 +3510,146 @@ input.is-invalid {
     display: flex;
     align-items: center;
     gap: 3px;
+}
+
+.table_ferias th, .table_ferias td{
+    padding-left: 24px;
+}
+
+.table_ferias .OptDocs .containerOpt {
+    left: 107px;
+}
+
+.containerSaldoFerias{
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    background: linear-gradient(91deg, #009AC1 0.77%, #CDCC00 156.69%);
+    height: 158px;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    gap: 20px;
+    position: relative;
+}
+
+.header_saldo_ferias{
+    display: flex;
+    background-color: #fff;
+    width: 431px;
+    height: 114px;
+    margin-right: 110px;
+    border-radius: 5px;
+    padding: 16px 20px;
+    position: relative;
+}
+
+.header_saldo_ferias .btnFerias{
+    background-color: #fff;
+    color: var(--Textos-Nome-user, #009AC1);
+    border: 1px solid #009ac1 !important;
+    float: right;
+    width: 131px;
+    position: absolute;
+    right: 0;
+}
+
+.header_saldo_ferias .btnFerias:hover{
+    background-color: #EEF7FF;
+}
+
+.totalSaldo{
+    color: #009AC1;
+    font-size: 32px;
+    font-weight: 700;
+}
+
+.containerContentHeaderFeiras span:nth-of-type(1){
+    font-size: 14px !important;
+    color: var(--Textos-Primrio, #555);
+    font-weight: 400 !important;
+}
+
+.containerContentHeaderFeiras span:nth-of-type(3){
+    color: var(--G90, #ABABAB);
+    font-size: 14px;
+    width: 363px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.containerContentHeaderFeiras{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.containerHeaderBtnFerias{
+    position: relative;
+}
+
+.outros-dados{
+    background: var(--G10, #F3F3F3);
+    padding: 20px 16px;
+    border-radius: 5px;
+}
+
+.container_graphics{
+    display: flex;
+    border-bottom: 1px solid #CECECE;
+    padding: 19px;
+    width: 431px;
+}
+
+.totalDiasSolicitados{
+    font-size: 14px !important;
+    color: #555;
+    font-weight: 700;
+    text-align: right;
+    padding: 16px;
+}
+
+.btnFeriasAcumuladas, .btnFeriasGozadas{
+    background-color: #fff;
+    color: #555;
+    font-size: 14px;
+    padding: 13px 20px;
+    width: 431px;
+    outline: none;
+    border: 0.75px solid #ABABAB;
+    display: flex;
+    justify-content: space-between;
+    border-radius: 5px;
+}
+
+.btnFeriasGozadas{
+    margin-top: 20px;
+}
+
+.right-column{
+    margin-top: 55px;
+}
+
+.container_column {
+    gap: 59px
+}
+
+.dropdown_container {
+    display: none;
+    overflow-y: auto;
+    margin-top: 3px;
+    margin-bottom: 20px;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 5px;
+    background: var(--G10, #F3F3F3);
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.dropdown_container.open{
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
 }

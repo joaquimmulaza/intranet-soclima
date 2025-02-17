@@ -23,19 +23,31 @@ class FeriaController extends Controller
         // Obtém o ID do responsável logado
         $responsavelId = Auth::id();
 
+       
+      
+
         // Recupera apenas as férias pendentes do responsável logado
         $ferias = Feria::where('status', 'pendente')
                     ->where('responsavel_id', $responsavelId)
                     ->get();
+
+        // Recupera as férias de todos os usuários (independente do status)
+        $feriasUsuarios = Feria::where('user_id', Auth::id())->get();
+
+        // Recupera os dados do usuário logado (se precisar passá-los para a view)
+        $user = Auth::user();
         
         // Criar um array associativo para armazenar os dias solicitados de cada pedido
-    $diasSolicitados = [];
+        $diasSolicitados = [];
+        // Criar um array para armazenar os usuários associados às féria
 
-    foreach ($ferias as $feria) {
-        $diasSolicitados[$feria->id] = $feria->diasSolicitados($feria->data_inicio, $feria->data_fim);
-    }
+        foreach ($ferias as $feria) {
+            $diasSolicitados[$feria->id] = $feria->diasSolicitados($feria->data_inicio, $feria->data_fim);
+        }
 
-        return view('user.pedidos', compact('ferias', 'diasSolicitados'));
+       
+
+        return view('user.pedidos', compact('ferias', 'diasSolicitados', 'feriasUsuarios', 'user', 'responsavelId', ));
     }
 
     public function create()
@@ -431,7 +443,7 @@ class FeriaController extends Controller
     );
 
     // Redirecionar com sucesso
-    return redirect()->route('user.pedidos')->with('success', 'Férias Aprovadas');
+    return redirect()->route('user.pedido')->with('success', 'Férias Aprovadas');
 }
 
     
@@ -463,7 +475,7 @@ class FeriaController extends Controller
         );
 
 
-        return redirect()->route('user.pedidos')->with('success', 'Ferias Rejeitadas');
+        return redirect()->route('user.pedido')->with('success', 'Ferias Rejeitadas');
     }
 
     public function getEventos()
@@ -529,73 +541,118 @@ class FeriaController extends Controller
         ->orderBy('data_inicio', 'desc') // Ordena pela data de início mais recente
         ->get();  // Executa a consulta
 
-$anoAtual = now()->year;
+    $anoAtual = now()->year;
 
-$feriasAnuais = DB::table('dias_ferias')
-    ->where('user_id', $funcionario->id)
-    ->where('ano', $anoAtual)
-    ->value('dias_disponiveis') ?? 0;
-
-// Pega a férias mais recente em curso, baseada na data de início
-
-$diasAcumulados = DB::table('dias_ferias')
+    $feriasAnuais = DB::table('dias_ferias')
         ->where('user_id', $funcionario->id)
-        ->where('ano', '<', now()->year)
-        ->sum('dias_disponiveis');
+        ->where('ano', $anoAtual)
+        ->value('dias_disponiveis') ?? 0;
 
-$feriasAtual = $ferias
-    ->where('data_inicio', '<=', now())  // Já começou
-    ->where('data_fim', '>=', now())    // Ainda não terminou
-    ->first();                         // Pega a mais recente (em curso)
+        $anosDisponiveis = DB::table('dias_ferias')
+        ->where('user_id', $funcionario->id)
+        ->where('ano', '<', now()->year) // Exclui o ano atual
+        ->select('ano', 'dias_disponiveis') // Busca ambos os campos
+        ->get(); // Retorna uma coleção de objetos
+    
+        $totalDiasDisponiveis = $anosDisponiveis->sum('dias_disponiveis');
 
-// Se não houver férias em curso, pegar a próxima férias futura
-if (!$feriasAtual) {
+    // Pega a férias mais recente em curso, baseada na data de início
+
+    $diasAcumulados = DB::table('dias_ferias')
+            ->where('user_id', $funcionario->id)
+            ->where('ano', '<', now()->year)
+            ->sum('dias_disponiveis');
+
+    $feriasEmCursoEFuturas = $ferias->filter(function ($feria) {
+        return ($feria->data_inicio <= now() && $feria->data_fim >= now()) || ($feria->data_inicio > now());
+    });
+
+    $feriasGozadasHistorico = $ferias->filter(function ($feria) {
+        return $feria->data_fim < now(); // Férias já terminadas
+    });
+
+    $feriasMarcadas =  $feriasEmCursoEFuturas->first();
+
+    // Se não houver férias em curso, pegar a próxima férias futura
+    if (!$feriasMarcadas) {
+        $feriasAtual = $feriasEmCursoEFuturas->sortBy('data_inicio')->first(); // Pega a próxima futura
+    }
+    
+
     $feriasAtual = $ferias
-        ->where('data_inicio', '>', now())  // Férias que ainda não começaram
-        ->sortBy(function ($feria) {
-            return \Carbon\Carbon::parse($feria->data_inicio);  // Ordena pela data de início, convertendo para Carbon
-        })
-        ->first();                          // Pega a mais próxima
-}
+        ->where('data_inicio', '<=', now())  // Já começou
+        ->where('data_fim', '>=', now())    // Ainda não terminou
+        ->first();                         // Pega a mais recente (em curso)
 
-$feriasGozadas = 0;
-$feriasRestantes = 0;
-$totalDiasFerias = 0;
+    // Se não houver férias em curso, pegar a próxima férias futura
+    if (!$feriasAtual) {
+        $feriasAtual = $ferias
+            ->where('data_inicio', '>', now())  // Férias que ainda não começaram
+            ->sortBy(function ($feria) {
+                return \Carbon\Carbon::parse($feria->data_inicio);  // Ordena pela data de início, convertendo para Carbon
+            })
+            ->first();                          // Pega a mais próxima
+    }
 
-if ($feriasAtual) {
-    // Definir datas relevantes
-    $dataInicio = $feriasAtual->data_inicio;
-    $dataFim = $feriasAtual->data_fim;
-    $dataAtual = now();
+    $feriasGozadas = 0;
+    $feriasRestantes = 0;
+    $totalDiasFerias = 0;
 
-    // Dias já aproveitados (do início até hoje)
-    $feriasGozadas = $this->diasSolicitados($dataInicio, min($dataAtual, $dataFim));
+    if ($feriasAtual) {
+        // Definir datas relevantes
+        $dataInicio = $feriasAtual->data_inicio;
+        $dataFim = $feriasAtual->data_fim;
+        $dataAtual = now();
 
-    // Total de dias dessa férias
-    $totalDiasFerias = $this->diasSolicitados($dataInicio, $dataFim);
+        // Dias já aproveitados (do início até hoje)
+        $feriasGozadas = $this->diasSolicitados($dataInicio, min($dataAtual, $dataFim));
 
-    // Dias restantes (total - já usados)
-    $feriasRestantes = max($totalDiasFerias - $feriasGozadas, 0);
-}
+        // Total de dias dessa férias
+        $totalDiasFerias = $this->diasSolicitados($dataInicio, $dataFim);
 
-// Calcular os dias de férias restantes
-$feriasRestantes = max($feriasAnuais - $feriasGozadas, 0);
+        // Dias restantes (total - já usados)
+        $feriasRestantes = max($totalDiasFerias - $feriasGozadas, 0);
+    }
+
+    // Calcular os dias de férias restantes
+    $feriasRestantes = max($feriasAnuais - $feriasGozadas, 0);
 
 
 
     // Formatar os períodos de férias para exibição
-    $historicoFerias = $ferias->reverse()->map(function ($feria, $index) {
+    $historicoFerias = $feriasGozadasHistorico->map(function ($feria, $index) {
+        $dataInicio = Carbon::parse($feria->data_inicio);
+        $dataFim = Carbon::parse($feria->data_fim);
+    
+        // Calcula corretamente os dias gozados
+        $diasGozados = $dataInicio->diffInDays($dataFim) + 1; // +1 para incluir o último dia
+    
         return [
             'periodo' => $index + 1,
             'data_inicio' => Carbon::parse($feria->data_inicio)->format('d/m/Y'),
             'data_fim' => Carbon::parse($feria->data_fim)->format('d/m/Y'),
             'data_retorno' => Carbon::parse($feria->data_retorno_prevista)->format('d/m/Y'), // Data de retorno prevista
+            'dias_gozados' => $diasGozados, // Adiciona total de dias gozados no período
         ];
     });
     
+    // Soma total dos dias gozados
+    $totalDiasGozados = $historicoFerias->sum('dias_gozados');
 
     // Enviar os dados para a view
-    return view('ferias.show', compact('funcionario', 'feriasAnuais', 'feriasGozadas', 'feriasRestantes', 'historicoFerias', 'totalDiasFerias', 'diasAcumulados', 'id'));
+    return view('ferias.show', compact('funcionario', 'feriasAnuais', 'feriasGozadas', 'feriasRestantes', 'historicoFerias', 'totalDiasFerias', 'diasAcumulados', 'id', 'feriasEmCursoEFuturas', 'feriasGozadasHistorico', 'feriasMarcadas', 'anosDisponiveis', 'totalDiasDisponiveis', 'totalDiasGozados'));
 }
+
+public function showByUser($user_id)
+{
+    $ferias = Feria::where('user_id', $user_id)->get();
+
+    if ($ferias->isEmpty()) {
+        return redirect()->back()->with('error', 'Nenhuma férias encontrada para este usuário.');
+    }
+
+    return view('user.pedidos', compact('ferias'));
+}
+
 
 }

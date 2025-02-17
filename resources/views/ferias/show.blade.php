@@ -21,12 +21,25 @@
             <button class="hidden" data-toggle="modal" data-target="#modalFerias-{{ $funcionario->id }}" class="btnFerias">Atualizar férias</button>
         </div>
        
-        <div class="d-flex justify-content-end align-items-center" style="width: 95%; margin: 0 auto; position: relative; top: 29px;">
-        
-        <a class="btnFerias" href="{{ route('ferias.marcar') }}">Solicitar Férias</a>
-        
+        <div class=" containerSaldoFerias" id="scrollHere" style="width: 100%; margin: 0 auto; position: relative;">
+            <div class="header_saldo_ferias">
+                <div class="containerContentHeaderFeiras">
+                    <span>Saldo disponível</span>
+                    <span class="totalSaldo">22 dias úteis</span>
+                    <span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 15 15" fill="none">
+  <path d="M6.89648 5.04492C6.89648 4.71094 7.16895 4.46191 7.49707 4.46191C7.83105 4.46191 8.10352 4.71094 8.10352 5.04492C8.10352 5.37891 7.83105 5.63086 7.49707 5.63086C7.16895 5.63086 6.89648 5.37891 6.89648 5.04492ZM6.9375 6.09082H8.05664V10.3125H6.9375V6.09082Z" fill="#7B7B7B"/>
+  <path d="M7.5 2.22656C8.90918 2.22656 10.2334 2.77441 11.2295 3.77051C12.2256 4.7666 12.7734 6.09082 12.7734 7.5C12.7734 8.90918 12.2256 10.2334 11.2295 11.2295C10.2334 12.2256 8.90918 12.7734 7.5 12.7734C6.09082 12.7734 4.7666 12.2256 3.77051 11.2295C2.77441 10.2334 2.22656 8.90918 2.22656 7.5C2.22656 6.09082 2.77441 4.7666 3.77051 3.77051C4.7666 2.77441 6.09082 2.22656 7.5 2.22656ZM7.5 1.40625C4.13379 1.40625 1.40625 4.13379 1.40625 7.5C1.40625 10.8662 4.13379 13.5938 7.5 13.5938C10.8662 13.5938 13.5938 10.8662 13.5938 7.5C13.5938 4.13379 10.8662 1.40625 7.5 1.40625Z" fill="#7B7B7B"/>
+</svg>
+                        Inclui todas as férias acumuladas dos anos anteriores.
+                    </span>
+                </div>
+                <div class="containerHeaderBtnFerias">
+                    <a class="btnFerias" href="{{ route('ferias.marcar') }}">Solicitar Férias</a>
+                </div>
+            </div>
         </div>
-        <div class="row justify-content-around MainContainerFerias">
+        <div class="row justify-content-center container_column ">
         
             <!-- Coluna Esquerda: Informações do Funcionário -->
             <div class="card-user">
@@ -38,29 +51,149 @@
                             <img class="img_user_check_ferias" style="width: 161px; border-radius: 8px;" src="{{ URL::to('/public/avatar_users/default-avatar.png') }}" alt="">
                         @endif
 
-                        <div class="info-name-img">
-                            <h4 class="card-title">{{ $funcionario->name }}</h4>
-                        </div><br>
+                       
         
                         <div class="outros-dados">
-                            <p><strong>Cargo:</strong> {{ $funcionario->cargo->titulo }}</p>
-                            <p><strong>Área:</strong> {{ $funcionario->unidade->titulo }}</p>
-                            <p><strong>Nº mecanográfico:</strong> {{ $funcionario->numero_mecanografico }}</p>
+                    
+                            <p><strong>{{ $funcionario->name }}</strong></p>
+                 
+                            <p>Função<strong>{{ $funcionario->cargo->titulo }}</strong></p>
+                            <p>Departamento <strong>{{ $funcionario->unidade->titulo }}</strong></p>
+                            <p>Nº mecanográfico <strong>{{ $funcionario->numero_mecanografico }}</strong></p>
+                            <button data-toggle="modal" data-target="#cardUserViewNav-{{ $funcionario->id }}" class="">Exibir todos os dados</button>
                         </div>
-                        <button data-toggle="modal" data-target="#cardUserViewNav-{{ $funcionario->id }}" class="">Exibir todos os dados</button>
+                        
                     </div>
                 </div>
             </div>
-            <svg width="1" height="644" viewBox="0 0 1 644" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <line x1="0.5" y1="0" x2="0.5" y2="644" stroke="#CECECE"/>
-            </svg>
+            
             
             <!-- Coluna Direita: Informações de Férias -->
             <div class="right-column">
                 <div class="card-body">
                     <div class="column">
                         <!-- Informações principais -->
-                        <div class="dias-ferias">
+                        <button class="btnFeriasAcumuladas btn_dropdown_ferias" data-target="feriasAcumuladas">
+                            Ver histórico de férias acumuladas
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M7 9.5L12 14.5L17 9.5H7Z" fill="#555555"/>
+                            </svg>
+                        </button>
+                        <div id="feriasAcumuladas" class="dropdown_container">
+                            @if($anosDisponiveis->isNotEmpty())
+                                @foreach($anosDisponiveis as $ano)
+                                    <div class="historico_periodo" style="padding: 7px 20px;">
+                                        <div class="containerPeriodoFerias">
+                                            <span>{{$ano->ano}}</span>
+                                            <p>
+                                                @if($ano->dias_disponiveis == 1)
+                                                    {{$ano->dias_disponiveis}} dia
+                                                @else
+                                                    {{$ano->dias_disponiveis}} dias
+                                                @endif
+                                                
+                                            </p>
+                                        </div>
+                                
+                                    </div>
+                                @endforeach
+                                
+                            @else
+                                <p><strong>Sem férias acumulada</strong></p>
+                            @endif
+                            <div class="historico_periodo" style="padding: 7px 20px">
+                                <div class="containerPeriodoFerias">
+                                    <span>Total de férias acumuladas:</span>
+                                    <p>{{$totalDiasDisponiveis}} dias</p>
+                                </div>
+                            </div>
+                            <div class="historico_periodo" style="background: #fff; padding: 7px 20px;">
+                                <div class="containerPeriodoFerias">
+                                    <a href="#scrollHere">Saldo disponível após solicitação:</a>
+                                    <p>23</p>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btnFeriasGozadas btn_dropdown_ferias" data-target="feriasGozadas">
+                            Total de férias gozadas
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M7 9.5L12 14.5L17 9.5H7Z" fill="#555555"/>
+                            </svg>
+                        </button>
+                        <div id="feriasGozadas" class="dropdown_container">
+                        @if ($historicoFerias->isEmpty())
+                            <p><strong>Sem férias gozadas</strong></p>
+                        @else
+                            @foreach ($historicoFerias as $feria)
+                                <div class="historico_periodo">
+                                    <div class="containerPeriodoFerias">
+                                        <p>Período {{ $feria['periodo'] }}:</p>
+                                        <span>{{ $feria['data_inicio'] }} - {{ $feria['data_fim'] }}</span>
+                                        
+                                    </div>
+                                    <div class="containerPeriodoFerias">
+                                        <p>Total gozado: </p>
+                                        <span>{{$totalDiasGozados }}</span>
+                                    </div>
+                                </div>
+                            @endforeach
+                        @endif
+                        </div>
+                        <div class="btn_ferias hidden">
+                                    <button id="btn-historico">Histórico</button>
+                                </div>
+                                <div class="container-historico">
+                                    <div id="historico" class="historico hidden">
+                                        <div class="container_periodo">
+                                            @if ($historicoFerias->isEmpty())
+                                                <p><strong>Sem histórico de férias</strong></p>
+                                            @else
+                                                @foreach ($historicoFerias as $feria)
+                                                    <div class="historico_periodo">
+                                                        <p>Período {{ $feria['periodo'] }}:</p>
+                                                        <span>de {{ $feria['data_inicio'] }} a {{ $feria['data_fim'] }}</span>
+                                                    </div>
+                                                @endforeach
+                                            @endif
+                                        </div>
+                                        <button id="btn-fechar-historico" class="btn-fechar">
+                                            <svg width="33" height="33" viewBox="0 0 33 33" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <rect y="33" width="33" height="33" rx="3" transform="rotate(-90 0 33)" fill="#ABABAB" fill-opacity="0.14"/>
+                                                <path d="M8.25 19.6557L10.1887 21.5945L16.5 15.297L22.8113 21.5945L24.75 19.6557L16.5 11.4057L8.25 19.6557Z" fill="#555555"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <div id="proximas-ferias" class="proximas hidden">
+                                        <div class="container_periodo">
+                                            @if ($feriasEmCursoEFuturas->isEmpty())
+                                                <p><strong>Sem férias marcadas</strong></p>
+                                            @else
+                                            @foreach ($feriasEmCursoEFuturas as $feria)
+                                                <div class="historico_periodo">
+                                                    <p><strong>Início de férias:</strong></p>
+                                                    <span>{{ \Carbon\Carbon::parse($feria->data_inicio)->format('d/m/Y') }}</span>
+                                                </div>
+                                                <div class="historico_periodo">
+                                                    <p><strong>Fim de férias:</strong></p>
+                                                    <span>{{ \Carbon\Carbon::parse($feria->data_fim)->format('d/m/Y') }}</span>
+                                                </div>
+                                                <div class="historico_periodo">
+                                                    <p><strong>Data de retorno prevista:</strong></p>
+                                                    <span>{{ \Carbon\Carbon::parse($feria->data_retorno_prevista)->format('d/m/Y') }}</span>
+                                                </div>
+                                            @endforeach
+                                            @endif
+                                        </div>
+                                        <button id="btn-fechar-proximas" class="btn-fechar">
+                                            <svg width="33" height="33" viewBox="0 0 33 33" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <rect y="33" width="33" height="33" rx="3" transform="rotate(-90 0 33)" fill="#ABABAB" fill-opacity="0.14"/>
+                                                <path d="M8.25 19.6557L10.1887 21.5945L16.5 15.297L22.8113 21.5945L24.75 19.6557L16.5 11.4057L8.25 19.6557Z" fill="#555555"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                        <!-- <div class="dias-ferias hidden">
+                            
                             <p>
                                 <span>Férias anuais:</span> 
                                 <span class="totalDias">22 dias </span>
@@ -79,114 +212,68 @@
                                     úteis
                                 </span>
                             </p>
-                        </div>
-                        <div class="dias-ferias ferias-restantes">
+                        </div> -->
+                        <!-- <div class="dias-ferias ferias-restantes">
                             <p>
                                 <span>Férias restantes:</span> 
                                 <span>{{ $feriasAnuais }} dias</span>
                             </p>
-                        </div>
+                        </div> -->
                     </div>
 
                     <!-- Gráficos -->
+                    <h5>Férias em andamento</h5>
                     <div class="graphics_ferias">
-                    <div class="graphic_gozadas">
-                <div class="graphic_ferias">
-                    <div class="square-chart">
-                        <svg width="6" height="8" viewBox="0 0 6 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <rect width="6" height="8" transform="matrix(-1 0 0 1 6 0)" fill="#CD0000"/>
-                        </svg>
-                        <span>Férias gozadas:</span>
+                        
+                        <div class="container_graphics">
+                            <div class="graphic_gozadas">
+                                <div class="graphic_ferias">
+                                    <div class="square-chart">
+                                        <svg width="6" height="8" viewBox="0 0 6 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <rect width="6" height="8" transform="matrix(-1 0 0 1 6 0)" fill="#CD0000"/>
+                                        </svg>
+                                        <span>Dias gozados:</span>
+                                    </div>
+                                    <canvas id="feriasGozadasChart" width="50" height="50"></canvas>
+                                    <div class="chart-description">
+                                        <span id="feriasGozadasCount">
+                                            @if($feriasGozadas == 1)
+                                                {{ $feriasGozadas }} dia
+                                            @else
+                                                {{ $feriasGozadas }} dias
+                                            @endif
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <div class="graphic_restantes">
+                                <div class="graphic_ferias">
+                                    <div class="square-chart" style="width: 98.73px">
+                                        <svg width="6" height="8" viewBox="0 0 6 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <rect width="6" height="8" transform="matrix(-1 0 0 1 6 0)" fill="#CDCC00"/>
+                                        </svg>
+                                        <span style="">Dias a gozar:</span>
+                                    </div>
+                                    <canvas id="feriasRestantesChart" width="50" height="50"></canvas>
+                                    <div class="chart-description">
+                                        <span>
+                                            @if($totalDiasFerias - $feriasGozadas == 1)
+                                            {{ $totalDiasFerias - $feriasGozadas}} dia
+                                            @else
+                                            {{ $totalDiasFerias - $feriasGozadas  }} dias
+                                            @endif
+                                        </span>
+                                    </div>
+                                </div>
+                            
+                                <div class="btn_ferias hidden">
+                                    <button id="btn-proximas-ferias">Próximas férias</button>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="totalDiasSolicitados">Total de dias solicitados: 0</span>
                     </div>
-                    <canvas id="feriasGozadasChart" width="50" height="50"></canvas>
-                    <div class="chart-description">
-                        <span id="feriasGozadasCount">{{ $feriasGozadas }} dias</span>
-                    </div>
-                </div>
-            
-                <div class="btn_ferias">
-                    <button id="btn-historico">Histórico</button>
-                </div>
-            <div class="container-historico">
-                <div id="historico" class="historico hidden">
-                <div class="container_periodo">
-                @if ($historicoFerias->isEmpty())
-                    <p><strong>Sem histórico de férias</strong></p>
-                @else
-                    @foreach ($historicoFerias->reverse() as $feria)
-                        <div class="historico_periodo">
-                            <p>Período {{ $feria['periodo'] }}:</p>
-                            <span>de {{ $feria['data_inicio'] }} a {{ $feria['data_fim'] }}</span>
-                        </div>
-                    @endforeach
-                @endif
-                </div>
-                        <button id="btn-fechar-historico" class="btn-fechar">
-                            <svg width="33" height="33" viewBox="0 0 33 33" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <rect y="33" width="33" height="33" rx="3" transform="rotate(-90 0 33)" fill="#ABABAB" fill-opacity="0.14"/>
-                                <path d="M8.25 19.6557L10.1887 21.5945L16.5 15.297L22.8113 21.5945L24.75 19.6557L16.5 11.4057L8.25 19.6557Z" fill="#555555"/>
-                            </svg>
-                        </button>
-                </div>
-                <div id="proximas-ferias" class="proximas hidden">
-                <div class="container_periodo">
-                @if ($historicoFerias->isEmpty())
-                    <p><strong>Sem férias marcadas</strong></p>
-                @else
-                    @foreach ($historicoFerias as $feria)
-                        <div class="historico_periodo">
-                            <p>Período {{ $feria['periodo'] }}:</p>
-                        </div>
-                        <div class="historico_periodo">
-                        <p><strong>Início de férias:</strong></p>
-                        <span>{{ $feria['data_inicio'] }}</span>
-                        </div>
-                        <div class="historico_periodo">
-                            <p><strong>Fim de férias:</strong> </p>
-                            <span>{{ $feria['data_fim'] }}</span>
-                        </div>
-                        <div class="historico_periodo">
-                            <p><strong>Data de retorno prevista:</strong> </p>
-                            <span>{{$feria['data_retorno']}}</span>
-                        </div>
-                    @endforeach
-                @endif
-                </div>
-                    <button id="btn-fechar-proximas" class="btn-fechar">
-                        <svg width="33" height="33" viewBox="0 0 33 33" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <rect y="33" width="33" height="33" rx="3" transform="rotate(-90 0 33)" fill="#ABABAB" fill-opacity="0.14"/>
-                            <path d="M8.25 19.6557L10.1887 21.5945L16.5 15.297L22.8113 21.5945L24.75 19.6557L16.5 11.4057L8.25 19.6557Z" fill="#555555"/>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-<div class="graphic_restantes">
-    <div class="graphic_ferias">
-        <div class="square-chart" style="width: 109px">
-            <svg width="6" height="8" viewBox="0 0 6 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect width="6" height="8" transform="matrix(-1 0 0 1 6 0)" fill="#CDCC00"/>
-            </svg>
-            <span>Férias para<br>gozar:</span>
-        </div>
-        <canvas id="feriasRestantesChart" width="50" height="50"></canvas>
-        <div class="chart-description">
-            <span>
-                @if($totalDiasFerias == 1)
-                {{ $totalDiasFerias }} dia
-                @else
-                {{ $totalDiasFerias }} dias
-                @endif
-            </span>
-        </div>
-    </div>
-    <div class="btn_ferias">
-        <button id="btn-proximas-ferias">Próximas férias</button>
-    </div>
-</div>
-
-</div>
 
                 </div>
             </div>
@@ -513,6 +600,38 @@ console.log(feriasRestantesData);
             }
         }
     }
+
+    document.addEventListener("DOMContentLoaded", function () {
+            const buttons = document.querySelectorAll(".btn_dropdown_ferias");
+            const dropdowns = document.querySelectorAll(".dropdown_container");
+
+            buttons.forEach(button => {
+                button.addEventListener("click", function () {
+                    const targetId = this.getAttribute("data-target");
+                    const targetDropdown = document.getElementById(targetId);
+
+                    dropdowns.forEach(dropdown => {
+                        if (dropdown !== targetDropdown) {
+                            dropdown.classList.remove("open");
+                            setTimeout(() => {
+                                dropdown.style.display = "none";
+                            }, 10); // Tempo da animação
+                        }
+                    });
+                    if (targetDropdown.classList.contains("open")) {
+                        targetDropdown.classList.remove("open");
+                        setTimeout(() => {
+                            targetDropdown.style.display = "none";
+                        }, 10);
+                    } else {
+                        targetDropdown.style.display = "block";
+                        setTimeout(() => {
+                            targetDropdown.classList.add("open");
+                        }, 10); // Pequeno delay para ativar a transição
+                    }
+                });
+            });
+        });
 
     // Iniciar a animação de contagem
     // animateCounter('feriasGozadasCount', 0, , 3000);

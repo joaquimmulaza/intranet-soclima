@@ -144,19 +144,19 @@
 
                 <div class="form-group container_set_date" style="position: relative;">
 
-                    <div class="container_start_date">
+                    <div class="container_start_date ">
                         <label for="description">Data de inicio</label>
                         <input type="date" id="one_day" name="data_inicio" min="{{ now()->format('Y-m-d')}}">
-                        <div class="container_checkbox" style="display: none;" id="checkbox_container">
+                        <div class="container_checkbox " id="checkbox_container" style="opacity: 0.2;">
                             <input type="checkbox" name="data_fim" id="todo_dia" value="">
                             <label for="data_inicio">Ausentar-se todo o dia</label>
                         </div>
                         
                     </div>
 
-                    <div>
+                    <div class="transition_animation">
                         <label for="description" id="label_hidden">Data de fim</label>
-                        <div class="container_start_date">
+                        <div class="container_start_date transition_animation">
                             <input type="date" id="when_one_day" name="data_fim" min="{{ \Carbon\Carbon::tomorrow()->format('Y-m-d') }}" style="color: red;">
                         </div>
                     </div>
@@ -212,7 +212,8 @@ document.addEventListener("DOMContentLoaded", function () {
     
 
     // Esconder o checkbox inicialmente
-    checkboxContainer.style.display = "none";
+    checkboxContainer.style.opacity = 0.2
+    todoDiaCheckbox.disabled = true;
 
     // Exibir checkbox quando a data for escolhida
     oneDayInput.addEventListener("change", function () {
@@ -220,12 +221,13 @@ document.addEventListener("DOMContentLoaded", function () {
             checkboxContainer.style.display = "flex"; // Aparece suavemente
             checkboxContainer.style.opacity = 0;
             checkboxContainer.disabled = false;
+            todoDiaCheckbox.disabled = false;
             setTimeout(() => {
                 checkboxContainer.style.opacity = 1;
                 checkboxContainer.style.transition = "opacity 0.5s";
             }, 10);
         } else {
-            checkboxContainer.style.display = "none";
+            checkboxContainer.style.opacity = 0.2
             checkboxContainer.disabled = true;
         }
          // Se o checkbox já estiver marcado, atualiza o value
@@ -246,14 +248,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
     whenOneDayInput.addEventListener("change", function () {
         if(whenOneDayInput.value) {
-            checkboxContainer.style.display = "none";
+            checkboxContainer.style.display = "flex";
+            checkboxContainer.style.opacity = 0.2
             checkboxContainer.disabled = true;
         } else {
             checkboxContainer.style.display = "flex"; // Aparece suavemente
             checkboxContainer.style.opacity = 0;
             checkboxContainer.disabled = false;
             setTimeout(() => {
-                checkboxContainer.style.opacity = 1;
+                checkboxContainer.style.opacity = 0;
                 checkboxContainer.style.transition = "opacity 0.5s";
             }, 10);
         }
@@ -265,12 +268,15 @@ document.addEventListener("DOMContentLoaded", function () {
     todoDiaCheckbox.addEventListener("change", function () {
         if (todoDiaCheckbox.checked) {
             whenOneDayInput.style.borderColor = "#ababab70";
+            checkboxContainer.style.opacity = 1;
             labelColor.style.color = "#ababab70";
             whenOneDayInput.disabled = true;
+            whenOneDayInput.value="";
             whenOneDayInput.style.setProperty('color', '#ababab70', 'important');
         } else {
             labelColor.style.color = "#7B7B7B";
             whenOneDayInput.style.display = "block";
+            checkboxContainer.style.opacity = 0.2
             whenOneDayInput.disabled = false;
             whenOneDayInput.style.borderColor = "#ABABAB"
             whenOneDayInput.style.setProperty('color', '#7B7B7B', 'important');

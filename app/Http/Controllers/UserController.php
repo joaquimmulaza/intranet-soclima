@@ -76,15 +76,31 @@ class UserController extends Controller
 
     public function pedidos()
     {
-        // Obtém o ID do responsável logado
         $responsavelId = Auth::id();
+      
 
         // Recupera apenas as férias pendentes do responsável logado
         $ferias = Feria::where('status', 'pendente')
                     ->where('responsavel_id', $responsavelId)
                     ->get();
 
-        return view('user.pedidos', compact('ferias'));
+        // Recupera as férias de todos os usuários (independente do status)
+        $feriasUsuarios = Feria::where('responsavel_id', $responsavelId)->get();
+
+        // Recupera os dados do usuário logado (se precisar passá-los para a view)
+        $user = Auth::user();
+        
+        // Criar um array associativo para armazenar os dias solicitados de cada pedido
+        $diasSolicitados = [];
+        // Criar um array para armazenar os usuários associados às féria
+
+        foreach ($ferias as $feria) {
+            $diasSolicitados[$feria->id] = $feria->diasSolicitados($feria->data_inicio, $feria->data_fim);
+        }
+
+       
+
+        return view('user.pedidos', compact('ferias', 'diasSolicitados', 'feriasUsuarios', 'user', 'responsavelId'));
     }
 
     public function liberaPedido(User $user){

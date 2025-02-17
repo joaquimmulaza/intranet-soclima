@@ -5,7 +5,7 @@
 
 <body id="intro-login" class="hold-transition login-page">
     <div class="bg-image"></div>
-    <div class="login-box">
+    <div class="login-box" style="width: auto;">
         
 
         <!-- FORM LOGIN -->
@@ -48,13 +48,13 @@
                     <div class="divSenha fullContainer">
                         <a href="#">Esqueceu a sua palavra-passe?</a>
                     </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <button type="submit" class="colorSizeBtn">
+                    <div class="row" style="width: 100%;">
+                        <div class="" style="width: 100%;">
+                            <button type="submit" class="colorSizeBtn" style="width: 100%;">
                                 {{-- <span class="btn-icon-wrapper pr-2 opacity-7">
                                     <i class="fas fa-sign-in-alt"></i>
                                 </span> --}}
-                                Entrar
+                                Iniciar sessão
                             </button>
                         </div>
                     </div>

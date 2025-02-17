@@ -368,6 +368,9 @@ Route::middleware('auth')->group(function () {
     Route::put('/ausencias/{id}/aprovar-rejeitar', [AusenciaController::class, 'aprovarRejeitar'])->name('ausencias.aprovarRejeitar');
 });
 
+Route::get('/ferias/user/{user_id}', [FeriaController::class, 'showByUser'])->name('ferias.show');
+
+
 
 Route::get('/ferias/{id}', [FeriaController::class, 'show'])->name('ferias.show');
 Route::get('/documents/show', [DocumentController::class, 'showDocuments'])->name('documents.show');

@@ -38,7 +38,7 @@ class Feria extends Model
         // Loop para contar os dias úteis
         while ($dataInicio->lte($dataFim)) {
             if ($dataInicio->isWeekend()) {
-                Log::warning("Data é fim de semana: " . $dataInicio->toDateString());
+                // Log::warning("Data é fim de semana: " . $dataInicio->toDateString());
             } elseif (in_array($dataInicio->format('Y-m-d'), $feriados)) {
                 Log::warning("Data é feriado: " . $dataInicio->toDateString());
             } else {
