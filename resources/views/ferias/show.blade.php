@@ -15,6 +15,15 @@
     </div>
     <hr>
 </div>
+<div class="main_container manager_doc managerFerias">
+    <p>Veja os status das suas solicitações de férias</p>
+    
+    @if($user->responsavel_id)
+    <a href="{{route('ferias.pedidos')}}" >Consultar</a>
+    @else
+    <a href="{{route('ferias.pedidos')}}" >Gerenciar</a>
+    @endif
+</div>
 <div class="main_container">
     <div class="column justify-content-center">
         <div class="d-flex justify-content-end align-items-center hidden" style="width: 95%; margin: 0 auto; position: relative; top: 29px;">
@@ -25,7 +34,7 @@
             <div class="header_saldo_ferias">
                 <div class="containerContentHeaderFeiras">
                     <span>Saldo disponível</span>
-                    <span class="totalSaldo">22 dias úteis</span>
+                    <span class="totalSaldo">{{$diasAcumulados}} dias úteis</span>
                     <span>
                     <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 15 15" fill="none">
   <path d="M6.89648 5.04492C6.89648 4.71094 7.16895 4.46191 7.49707 4.46191C7.83105 4.46191 8.10352 4.71094 8.10352 5.04492C8.10352 5.37891 7.83105 5.63086 7.49707 5.63086C7.16895 5.63086 6.89648 5.37891 6.89648 5.04492ZM6.9375 6.09082H8.05664V10.3125H6.9375V6.09082Z" fill="#7B7B7B"/>
@@ -94,12 +103,10 @@
                                                 
                                             </p>
                                         </div>
-                                
                                     </div>
                                 @endforeach
-                                
                             @else
-                                <p><strong>Sem férias acumulada</strong></p>
+                                <p style="color: #555;"><strong>Sem férias acumuladas</strong></p>
                             @endif
                             <div class="historico_periodo" style="padding: 7px 20px">
                                 <div class="containerPeriodoFerias">
@@ -110,7 +117,7 @@
                             <div class="historico_periodo" style="background: #fff; padding: 7px 20px;">
                                 <div class="containerPeriodoFerias">
                                     <a href="#scrollHere">Saldo disponível após solicitação:</a>
-                                    <p>23</p>
+                                    <p>{{$diasAcumulados}} dias</p>
                                 </div>
                             </div>
                         </div>
@@ -122,7 +129,7 @@
                         </button>
                         <div id="feriasGozadas" class="dropdown_container">
                         @if ($historicoFerias->isEmpty())
-                            <p><strong>Sem férias gozadas</strong></p>
+                            <p style="margin: 0; color: #555;"><strong>Sem férias gozadas</strong></p>
                         @else
                             @foreach ($historicoFerias as $feria)
                                 <div class="historico_periodo">
@@ -133,7 +140,7 @@
                                     </div>
                                     <div class="containerPeriodoFerias">
                                         <p>Total gozado: </p>
-                                        <span>{{$totalDiasGozados }}</span>
+                                        <span>{{ $feria['dias_gozados'] }}</span>
                                     </div>
                                 </div>
                             @endforeach
@@ -272,7 +279,18 @@
                                 </div>
                             </div>
                         </div>
-                        <span class="totalDiasSolicitados">Total de dias solicitados: 0</span>
+                        @php
+                            use Carbon\Carbon;
+                        @endphp
+                        <span class="totalDiasSolicitados">
+
+                            @if($feriasEmCursoEFuturas->isEmpty())
+                                <p style="font-size: 14px; font-weight: 700 !important; float: right; width: 100%;">Total de dias solicitados: 0</p>
+                            @else
+                                <p>{{ Carbon::parse($feria->data_inicio)->format('d/m/Y') }} a {{ Carbon::parse($feria->data_fim)->format('d/m/Y') }}</p>
+                                <p>Total de dias solicitados: {{ $totalDiasFerias }}</p>
+                            @endif
+                        </span>
                     </div>
 
                 </div>

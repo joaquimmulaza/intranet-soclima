@@ -2684,7 +2684,7 @@ backup estilo acima
 .containerPeriodoFerias a{
     color: #555;
     cursor: pointer;
-    width: 100%;
+    width: auto;
     font-size: 13px;
 }
 .containerPeriodoFerias a:hover{
@@ -3607,6 +3607,22 @@ input.is-invalid {
     font-weight: 700;
     text-align: right;
     padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.totalDiasSolicitados p:nth-of-type(1){
+    font-size: 13px;
+    color: #555;
+    font-weight: 400;
+}
+
+.totalDiasSolicitados p:nth-of-type(2){
+    font-size: 14px;
+    color: #555;
+    font-weight: 700;
+    
 }
 
 .btnFeriasAcumuladas, .btnFeriasGozadas{
@@ -3652,4 +3668,18 @@ input.is-invalid {
     display: block;
     opacity: 1;
     transform: translateY(0);
+}
+
+#feriasAcumuladas .historico_periodo:last-child{
+    margin-bottom: 0 !important;
+}
+
+.managerFerias p{
+    margin-bottom: 0 !important;
+    font-size: 14px;
+    color: var(--Text-highlighted, #555);
+}
+
+.manager_doc a:hover{
+    color: var(--Text-highlighted, #555);
 }

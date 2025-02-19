@@ -33,6 +33,7 @@
 }
 </style>
 {{-- CABEÇALHO BREADCRUMB --}}
+
 <div class="content-header header-crumb">
     <div class="container-fluid">
         <div class="row mb-2 justify-content-between">
@@ -54,6 +55,15 @@
 <div class="containerBtnAusencias" style="display: none;">
     <a href="{{ route('ferias.show', ['id' => $id]) }}">Consultar Férias</a>
     <a href="{{ route('ferias.marcar') }}">Solicitar Férias</a>
+</div>
+<div class="main_container manager_doc managerFerias containerBtnFerias"  style="display: none;">
+    @if($numeroSolicitacoes == 0)
+        <p>Nenhuma solicitação de férias recebida.</p>
+    @else
+    <p>{{ $numeroSolicitacoes }} colega(s) solicitaram férias.</p>
+    <a href="{{route('ferias.pedidos')}}" >Consultar</a>
+    <a href="{{route('ferias.pedidos')}}" >Gerenciar</a>
+    @endif
 </div>
 
 <div id="contentFaltas">
@@ -534,6 +544,7 @@ $(document).ready(function() {
 
 function showContent(type) {
     const btnAusencias = document.querySelector('.containerBtnAusencias');
+    const containerGerir = document.querySelector('.containerBtnFerias');
     const short_info = document.querySelector('.short_info');
     // Esconde ambos os conteúdos
     document.getElementById('contentFaltas').style.visibility = 'hidden';
@@ -544,18 +555,21 @@ function showContent(type) {
     document.getElementById('contentFerias').style.position = 'absolute';
 
     btnAusencias.style.display = 'none';
+    containerGerir.style.display ='none';
     // Exibe o conteúdo selecionado
     if (type === 'faltas') {
         document.getElementById('contentFaltas').style.visibility = 'visible';
         document.getElementById('contentFaltas').style.position = 'relative';
 
         btnAusencias.style.display = 'none'; // Oculta o botão
+        containerGerir.style.display = 'none'; // Oculta o botão
         document.getElementById('btnFaltas').classList.add('active');
         document.getElementById('btnFerias').classList.remove('active');
     } else if (type === 'ferias') {
         document.getElementById('contentFerias').style.visibility = 'visible';
         document.getElementById('contentFerias').style.position = 'relative';
         btnAusencias.style.display = 'flex'; 
+        containerGerir.style.display = 'flex'; 
         document.querySelector('.short_info').style.display = 'none';
         document.getElementById('btnFerias').classList.add('active');
         document.getElementById('btnFaltas').classList.remove('active');

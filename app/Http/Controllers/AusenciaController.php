@@ -18,12 +18,17 @@ class AusenciaController extends Controller
     {
         // Exibe o formulário de ausência
         $ausencias = Ausencia::with('user')->get();
-        
+        $user = Auth::user();
+        $ferias = Feria::where('status', 'pendente')->get();
+
+        $numeroSolicitacoes = $ferias->count();
     
         $id = auth()->id();
         return view('documents.index', [
             'id' => $id,
             'ausencias' => $ausencias,
+            'user' => $user, 
+            'numeroSolicitacoes'=>$numeroSolicitacoes,
         ]);
     }
 
