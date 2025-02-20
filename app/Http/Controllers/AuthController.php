@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Post;
 use App\Questionaire;
 use App\User;
+use App\Feria;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -44,7 +45,18 @@ class AuthController extends Controller
             $post = $posts->isNotEmpty() ? collect($posts)->last() : null; // Verifica se há posts
     
             $dataHoje = Carbon::now();
+
+            $hoje = Carbon::today();
+
+            //Buscar funcionarios com férias
+
+            $feriasEmCurso = Feria::where('status', 'aprovado')
+                ->whereDate('data_inicio', '<=', $hoje)
+                ->whereDate('data_fim', '>=', $hoje)
+                ->with('user')
+                ->get();
     
+           
             // Se houver pelo menos um post, busca os outros posts com base nas condições
             // if ($post) {
             //     $posts = Post::where('id', '!=', $post->id)
@@ -63,7 +75,7 @@ class AuthController extends Controller
                 ->paginate(10);
     
             // Retorna a view com os dados
-            return view('public.home', compact('posts', 'post', 'questionarios'));
+            return view('public.home', compact('posts', 'post', 'questionarios', 'feriasEmCurso'));
         }
         return redirect()->route('admin.login');
     }

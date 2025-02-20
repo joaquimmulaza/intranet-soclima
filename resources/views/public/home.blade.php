@@ -458,10 +458,24 @@
             <div class="eventsContainer">
                 <img src="logo/img/icon/GroupF.svg" alt="">
                 <div class="aniversariosBody">
-                
-                    <h2 style="margin: 0 !important; padding: 0 !important;">Alfredo Mário e mais 6 pessoas</h2>
-                    <p style="margin: 0 !important; padding: 0 !important;">Estão desfrutando de merecidas férias.</p>
-                
+                @if ($feriasEmCurso->isEmpty())
+                    <p style="margin: 0 !important;">Ninguém está de férias no momento</p>
+                @else
+                    @php
+                        $nomes = $feriasEmCurso->pluck('user.name');
+                        $primeiroNome = $nomes->first();
+                        $quantidadeRestante = $nomes->count() - 1;
+                    @endphp
+
+                    @if ($quantidadeRestante == 0)
+                        <p style="margin: 0 !important;">{{ $primeiroNome }}</p>
+                        <p style="margin: 0 !important; padding: 0 !important;">Está desfrutando de merecidas férias.</p>
+                    @else
+                        <p style="margin: 0 !important;">{{ $primeiroNome }} e mais {{ $quantidadeRestante }} pessoas</p>
+                        <p style="margin: 0 !important;">{{ $quantidadeRestante > 1 ? 's' : '' }}Estão desfrutando de merecidas férias</p>
+                    @endif
+                @endif
+
                 </div>
             </div>
         </div>

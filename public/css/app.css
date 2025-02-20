@@ -3683,3 +3683,85 @@ input.is-invalid {
 .manager_doc a:hover{
     color: var(--Text-highlighted, #555);
 }
+
+.modalFeriasResumo .modal-content{
+    padding: 24px;
+}
+
+.modalFeriasResumo .modal-header {
+    padding: 0;
+}
+
+.modalFeriasResumo .modal-title{
+    font-size: 20px !important;
+    color: #555;
+    margin-bottom: 16px;
+    font-weight: 700;
+}
+
+.content_header_resumo_ferias{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+.cargo_resumo_ferias{
+    display: flex;
+    flex-direction: column;
+}
+
+.container_body_resumo_ferias{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.container_body_resumo_ferias img{
+    width: 60px;
+    border-radius: 5px;
+}
+
+.container_body_resumo_ferias h3{
+    font-size: 14px;
+    color: #009AC1;
+    font-weight: 700;
+    margin-bottom: 0;
+}
+
+.container_body_resumo_ferias span {
+    font-size: 13px;
+    color: #555;
+    font-weight: 400;
+}
+
+.modalFeriasResumo .modal-footer{
+    border-top: none;
+}
+
+.container_body_resumo_ferias p
+{
+    margin-bottom: 0;
+    color: #555;
+    font-size: 14px;
+    font-weight: 400;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.datas_resumo_ferias span{
+    padding: 9px 47px;
+    font-size: 14px;
+    color: var(--Textos-Primrio, #555);
+    font-weight: 400;
+    border: 0.75px solid #ABABAB;
+    border-radius: 5px;
+}
+
+.datas_resumo_ferias{
+    color: #555;
+    font-size: 14px;
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}

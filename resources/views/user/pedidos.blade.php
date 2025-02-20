@@ -10,7 +10,7 @@
         <div class="row mb-2">
             <div class="col-sm-12">
                 <ol class="breadcrumb float-sm-right">
-                @if($user->responsavel_id)
+                @if($user->role_id == 2)
                     <li class="breadcrumb-item active">Suas solicitações de férias</li>
                 @else
                     <li class="breadcrumb-item active">Gerenciar pedidos de férias</li>
@@ -53,7 +53,7 @@
                 <div class="main_container docs_container">
                 <hr class="custom_hr_justificativos">
 
-        <a class="view_justificativos" href="#">
+        <a class="view_justificativos" href="#" data-toggle="modal" data-target="#modalFeriasResumo-{{ $feria->id }}">
             
             <table class="docs_table table_ferias">
                 <thead>
@@ -102,6 +102,7 @@
                                             <div class="modal-body modal-bodyOpt">
                                                 <div class="containerBtnOpt_justificativos">
                                                 @if($feria->status === 'Pendente')
+                                                @can('app.dashboard')
                                                 <form action="" method="POST" class="">
                                                     @csrf
                                                     @method('PUT')
@@ -111,6 +112,7 @@
                                                     </button>
                                                 </form>
                                                 
+                                                
                                                 <form action="" method="POST" class="">
                                                     @csrf
                                                     @method('PUT')
@@ -119,6 +121,7 @@
                                                     <a  href="{{ route('ferias.rejeitar', $feria->id) }}">Rejeitar</a>
                                                     </button>
                                                 </form>
+                                                @endcan
                                                 <button style="border-bottom-right-radius: 5px;    border-bottom-left-radius: 5px;" type="button" class="btnPosts btnPostsDelete "  data-id="{{ $feria->id }}">
                                                     <a href="{{ route('ferias.show', $feria->user_id) }}">
                                                         Consultar férias
@@ -126,7 +129,7 @@
                                                     </button>
                                                 
                                                 @else
-                                                <button style="border-radius: 5px;" type="button" class="btnPosts btnPostsDelete "  data-id="{{ $ausencia->id }}">
+                                                <button style="border-radius: 5px;" type="button" class="btnPosts btnPostsDelete "  ">
                                                         Consultar férias
                                                     </button>
                                                 
@@ -144,24 +147,25 @@
                 </tbody>
             </table>
         </a>
-            <div style="margin-bottom: 20px;"></div> <!-- Espaçamento explícito entre tabelas -->
+            <div style="margin-bottom: 20px;"></div>
+          
+</div> <!-- Espaçamento explícito entre tabelas -->
         @endforeach
         @foreach($ferias as $feria)   
                 <div class="main_container docs_container">
                 <hr class="custom_hr_justificativos">
 
-        <a class="view_justificativos" href="#">
+        <a class="view_justificativos" href="#" class="btn-popup" >
             
             <table class="docs_table table_ferias">
                 <thead>
                     <tr>
-                    <th class="">Status</th>
-                    <th class="">Nome do trabalhador</th>
-                    <th class="">Período solicitado</th>
-                    <th class="">Dias úteis a gozar</th>
-                    <th class="">Data Retorno Prevista</th>
+                        <th class="">Status</th>
+                        <th class="">Nome do trabalhador</th>
+                        <th class="">Período solicitado</th>
+                        <th class="">Dias úteis a gozar</th>
+                        <th class="">Data Retorno Prevista</th>
                     </tr>
-                    
                 </thead>
                 
                 <tbody>
@@ -199,14 +203,20 @@
                                             <div class="modal-body modal-bodyOpt">
                                                 <div class="containerBtnOpt_justificativos">
                                                 @if($feria->status === 'Pendente')
+                                               
                                                 <form action="" method="POST" class="">
                                                     @csrf
                                                     @method('PUT')
                                                     <input type="hidden" name="status" value="Aprovado">
+                                                    
                                                     <button style="border-bottom: none;border-top-right-radius: 5px;    border-top-left-radius: 5px;" type="submit" class="btnPosts">
+                                                   
                                                     <a href="{{ route('ferias.aprovar', $feria->id) }}">Aceitar</a>
+                                                   
                                                     </button>
+                                                    
                                                 </form>
+                                                
                                                 
                                                 <form action="" method="POST" class="">
                                                     @csrf
@@ -223,7 +233,7 @@
                                                     </button>
                                                 
                                                 @else
-                                                <button style="border-radius: 5px;" type="button" class="btnPosts btnPostsDelete "  data-id="{{ $ausencia->id }}">
+                                                <button style="border-radius: 5px;" type="button" class="btnPosts btnPostsDelete "  ">
                                                         Consultar férias
                                                     </button>
                                                 
@@ -241,11 +251,12 @@
                 </tbody>
             </table>
         </a>
-            <div style="margin-bottom: 20px;"></div> <!-- Espaçamento explícito entre tabelas -->
+            <div style="margin-bottom: 20px;"></div> 
+            <!-- Espaçamento explícito entre tabelas -->
         @endforeach
     @else
         @foreach($ferias  as $feria)
-            <a class="view_justificativos" href="#">
+            <a class="view_justificativos" href="#" >
                 
                 <table class="docs_table table_ferias">
                     <thead>
@@ -366,8 +377,57 @@
     </div>
 </section>
 
+<div class="modal fade modalFeriasResumo" id="modalFeriasResumo-{{ $feria->id }}" tabindex="-1" aria-labelledby="modalTesteLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTesteLabel">Resumo de solicitação</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+               <div class="container_body_resumo_ferias">
+                    <div class="content_header_resumo_ferias">
+                        <img src="{{URL::to('/')}}/public/avatar_users/{{$user->avatar}}" alt="">
+                        <div class="cargo_resumo_ferias">
+                            <h3>{{$feria->user->name}}</h3>
+                            <span>{{$feria->user->unidade->titulo}}</span>
+                            <span>{{$feria->user->cargo->titulo}}</span>
+                        </div>
+                    </div>
+                    <p>Período solicitado:</p>
 
+                    <div class="datas_resumo_ferias">
+                        <span>{{$feria->data_inicio}}</span>
+                        a
+                        <span>{{$feria->data_fim}}</span>
+                    </div>
+                    <p>Dias utéis a gozar: @if($feria->diasSolicitados($feria->data_inicio, $feria->data_fim) == 1)
+                                    {{ $feria->diasSolicitados($feria->data_inicio, $feria->data_fim) }} dia
+                                @else
+                                dias
+                                @endif</p>
+                    <p>Data de retorno prevista: {{ $feria->data_retorno_prevista }}</p>
 
+                    <p>
+                        Status do pedido: 
+                        @if($feria->status == 'pendente')
+                            <strong>Pendente de aprovação!</strong>
+                        @else
+                            <strong>{{$feria->status}}</strong>
+                        @endif
+                    </p>
+               </div>
+            </div>
+            <div class="modal-footer">
+                
+            </div>
+        </div>
+    </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
       $('.modalOpt').on('show.bs.modal', function () {
         $('body').addClass('modal-open-no-backdrop');

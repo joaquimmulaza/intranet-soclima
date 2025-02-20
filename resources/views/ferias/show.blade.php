@@ -15,15 +15,14 @@
     </div>
     <hr>
 </div>
+@if($user->role_id == 2)
 <div class="main_container manager_doc managerFerias">
     <p>Veja os status das suas solicitações de férias</p>
-    
-    @if($user->responsavel_id)
+
     <a href="{{route('ferias.pedidos')}}" >Consultar</a>
-    @else
-    <a href="{{route('ferias.pedidos')}}" >Gerenciar</a>
-    @endif
 </div>
+@else
+@endif
 <div class="main_container">
     <div class="column justify-content-center">
         <div class="d-flex justify-content-end align-items-center hidden" style="width: 95%; margin: 0 auto; position: relative; top: 29px;">
@@ -44,7 +43,10 @@
                     </span>
                 </div>
                 <div class="containerHeaderBtnFerias">
+                    @if($user->role_id == 2)
                     <a class="btnFerias" href="{{ route('ferias.marcar') }}">Solicitar Férias</a>
+                    @else
+                    @endif
                 </div>
             </div>
         </div>
@@ -90,15 +92,15 @@
                         </button>
                         <div id="feriasAcumuladas" class="dropdown_container">
                             @if($anosDisponiveis->isNotEmpty())
-                                @foreach($anosDisponiveis as $ano)
+                                @foreach($feriasFixas as $ano => $dias)
                                     <div class="historico_periodo" style="padding: 7px 20px;">
                                         <div class="containerPeriodoFerias">
-                                            <span>{{$ano->ano}}</span>
+                                            <span>{{$ano}}</span>
                                             <p>
-                                                @if($ano->dias_disponiveis == 1)
-                                                    {{$ano->dias_disponiveis}} dia
+                                                @if($dias  == 1)
+                                                    {{$dias }} dia
                                                 @else
-                                                    {{$ano->dias_disponiveis}} dias
+                                                    {{$dias }} dias
                                                 @endif
                                                 
                                             </p>
@@ -111,7 +113,7 @@
                             <div class="historico_periodo" style="padding: 7px 20px">
                                 <div class="containerPeriodoFerias">
                                     <span>Total de férias acumuladas:</span>
-                                    <p>{{$totalDiasDisponiveis}} dias</p>
+                                    <p>{{array_sum($feriasFixas) }} dias</p>
                                 </div>
                             </div>
                             <div class="historico_periodo" style="background: #fff; padding: 7px 20px;">
@@ -455,14 +457,17 @@
 <script>
     const feriasGozadasData = {
         datasets: [{
-            data: [{{ $feriasGozadas  }}, {{ $totalDiasFerias - $feriasGozadas }}],    
+            data: [
+
+                {{ $feriasGozadas }},
+                {{ $totalDiasFerias - $feriasGozadas }} > 0 ? {{ $totalDiasFerias - $feriasGozadas }} : 0.01],    
             backgroundColor: ['#CD0000', 'rgba(205, 204, 0, 0.25)']
         }]
     };
 
     const feriasRestantesData = {
         datasets: [{
-            data: [{{ $totalDiasFerias - $feriasGozadas }}, {{ $feriasGozadas }}],
+            data: [{{ $totalDiasFerias - $feriasGozadas }}, {{ $feriasGozadas }} > 0 ? {{$feriasGozadas}} : 0.01],
             backgroundColor: ['#CDCC00', '#E2E2E2'],
         }]
     };

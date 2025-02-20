@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Mail\FeriaSolicitadaMail;
 use App\Mail\FeriaAprovadaOuReprovadaMail;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Cache;
 use App\Feria;
 use App\Feriado;
 use App\User;
@@ -441,12 +442,12 @@ class FeriaController extends Controller
         'aprovacao_pedido',
         'Pedido de Férias Aprovado',
         'Seu pedido de férias foi aprovado por <strong>' . $responsavelNome . '</strong>.',
-        route('user.pedidos'),
+        route('ferias.pedidos'),
         $feria->user_id
     );
 
     // Redirecionar com sucesso
-    return redirect()->route('user.pedido')->with('success', 'Férias Aprovadas');
+    return redirect()->route('user.pedidos')->with('success', 'Férias Aprovadas');
 }
 
     
@@ -473,12 +474,12 @@ class FeriaController extends Controller
             'rejeicao_pedido',
             'Pedido de Férias Rejeitado',
             'Seu pedido de férias foi rejeitado por <strong>'. $responsavelNome . '</strong>.',
-            route('user.pedidos'),
+            route('ferias.pedidos'),
             $feria->user_id // ID do usuário que fez o pedido
         );
 
 
-        return redirect()->route('user.pedido')->with('success', 'Ferias Rejeitadas');
+        return redirect()->route('user.pedidos')->with('success', 'Ferias Rejeitadas');
     }
 
     public function getEventos()
@@ -537,7 +538,7 @@ class FeriaController extends Controller
             'dias_disponiveis' => 22,
         ]);
     }
-
+    $feriasFixas = $this->getFeriasPorAno($id);
     // Buscar os dados de férias do funcionário com ordenação
     $ferias = Feria::where('user_id', $id)
         ->where('status', 'Aprovado')  // Filtra apenas férias aprovadas
@@ -651,7 +652,7 @@ class FeriaController extends Controller
     $totalDiasGozados = $historicoFerias->sum('dias_gozados');
 
     // Enviar os dados para a view
-    return view('ferias.show', compact('funcionario', 'feriasAnuais', 'feriasGozadas', 'feriasRestantes', 'historicoFerias', 'totalDiasFerias', 'diasAcumulados', 'id', 'feriasEmCursoEFuturas', 'feriasGozadasHistorico', 'feriasMarcadas', 'anosDisponiveis', 'totalDiasDisponiveis', 'totalDiasGozados', 'totalDiasFeriasEmCursoEFuturas', 'user',));
+    return view('ferias.show', compact('funcionario', 'feriasAnuais', 'feriasGozadas', 'feriasRestantes', 'historicoFerias', 'totalDiasFerias', 'diasAcumulados', 'id', 'feriasEmCursoEFuturas', 'feriasGozadasHistorico', 'feriasMarcadas', 'anosDisponiveis', 'totalDiasDisponiveis', 'totalDiasGozados', 'totalDiasFeriasEmCursoEFuturas', 'user', 'feriasFixas',));
 }
 
 public function showByUser($user_id)
@@ -666,4 +667,39 @@ public function showByUser($user_id)
 }
 
 
+public function getFeriasPorAno($id)
+{
+    $anoAtual = Carbon::now()->year;
+    $anos = DB::table('dias_ferias')
+    ->where('user_id', $id)
+    ->where('ano', '<', $anoAtual) // Exclui o ano atual
+    ->selectRaw('ano, SUM(dias_disponiveis) as dias')
+    ->groupBy('ano')
+    ->orderByDesc('ano')
+    ->get();
+
+    $feriasFixas = [];
+
+    foreach ($anos as $ano) {
+        $cacheKey = "ferias_{$id}_{$ano->ano}";
+
+        // Se ainda não existir no cache, armazena os valores congelados
+        if (!Cache::has($cacheKey)) {
+            Cache::put($cacheKey, $ano->dias, now()->endOfYear());
+        }
+
+        // Recupera os valores congelados do cache
+        $feriasFixas[$ano->ano] = Cache::get($cacheKey);
+    }
+
+    return $feriasFixas;
+}
+
+    public function exibirFerias()
+    {
+        $id = auth()->id();
+        $feriasFixas = $this->getFeriasPorAno($id);
+
+        return view('ferias.show', compact('feriasFixas'));
+    }
 }

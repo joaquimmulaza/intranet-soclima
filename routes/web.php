@@ -373,6 +373,7 @@ Route::get('/ferias/user/{user_id}', [FeriaController::class, 'showByUser'])->na
 
 
 Route::get('/ferias/{id}', [FeriaController::class, 'show'])->name('ferias.show');
+
 Route::get('/documents/show', [DocumentController::class, 'showDocuments'])->name('documents.show');
 Route::post('/documents/pedidos', [DocumentRequestController::class, 'store'])->name('document-request.store');
 Route::get('/documents/pedidos', [DocumentRequestController::class, 'create'])->name('document-request.create');

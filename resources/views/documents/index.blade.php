@@ -31,6 +31,7 @@
     top: 4px !important;
     right: 10px !important;
 }
+
 </style>
 {{-- CABEÇALHO BREADCRUMB --}}
 
@@ -56,16 +57,22 @@
     <a href="{{ route('ferias.show', ['id' => $id]) }}">Consultar Férias</a>
     <a href="{{ route('ferias.marcar') }}">Solicitar Férias</a>
 </div>
+@if($user->role_id == 1)
 <div class="main_container manager_doc managerFerias containerBtnFerias"  style="display: none;">
     @if($numeroSolicitacoes == 0)
         <p>Nenhuma solicitação de férias recebida.</p>
-    @else
-    <p>{{ $numeroSolicitacoes }} colega(s) solicitaram férias.</p>
-    <a href="{{route('ferias.pedidos')}}" >Consultar</a>
+    @elseif($numeroSolicitacoes == 1)
+    <p>{{ $numeroSolicitacoes }} solicitação de férias.</p>
     <a href="{{route('ferias.pedidos')}}" >Gerenciar</a>
+    @else
+    <p>{{ $numeroSolicitacoes }} solicitações férias.</p>
     @endif
 </div>
-
+@else
+<div class="containerBtnFerias"  style="display: none;">
+ 
+</div>
+@endif
 <div id="contentFaltas">
    
     <form method="POST" class="formDocs" action="{{ route('documents.store') }}" enctype="multipart/form-data" id="ausenciaForm">
