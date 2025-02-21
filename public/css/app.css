@@ -2121,6 +2121,19 @@ input[type="file"] {
     /* width: 39%; */
 }
 
+.view_ferias{
+    display: flex;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+}
+
+.containerOptFerias{
+    position: absolute;
+    right: 26px;
+    top: 42px;
+}
+
 .view_justificativos .containerOpt {
     width: 10px;
 }
@@ -2178,7 +2191,11 @@ input[type="file"] {
 .view_justificativos:not(:first-of-type) thead tr{
     color: #fff !important;
     opacity: 0 !important;
-    display: none;
+    display: none !important;
+}
+
+.view_justificativos:not(:first-of-type) .containerOpt{
+    top: 24px;
 }
 
 /*
@@ -3686,10 +3703,12 @@ input.is-invalid {
 
 .modalFeriasResumo .modal-content{
     padding: 24px;
+    width: 534px;
 }
 
 .modalFeriasResumo .modal-header {
     padding: 0;
+    border-bottom-color: #cecece;
 }
 
 .modalFeriasResumo .modal-title{
@@ -3764,4 +3783,48 @@ input.is-invalid {
     display: flex;
     align-items: center;
     gap: 12px;
+}
+
+.corNota{
+    color: #ABABAB !important;
+   font-size: 11px !important;
+}
+
+.btnResumeFerias{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.btnResumeFerias a:last-child{
+    background: var(--Surface-surface-pressed, #009AC1);
+    color: var(--Textos-texto-sobre-boto, #FFF);
+    
+}
+
+.btnResumeFerias a {
+    padding: 9px 34px;
+    background-color: #fff;
+    font-size: 14px;
+    border: 1px solid var(--border-border, #009AC1);
+    border-radius: 5px !important;
+    color: var(--Textos-Primrio, #009AC1);
+}
+
+.modalFeriasResumo .modal-footer{
+    padding: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.btnOptFerias a{
+    width: 100%;
+    color: #555;
+    font-size: 14px;  
+    font-weight: 700;
+}
+
+.btnOptFerias a:hover{
+    color: #555;
 }

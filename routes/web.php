@@ -393,3 +393,5 @@ Route::middleware(['auth',])->group(function () {
 
 Route::get('/upload', [UserController::class, 'showUploadForm']);
 Route::post('/upload', [UserController::class, 'importarFerias'])->name('user.upload');
+
+Route::post('/calcular-ferias', [FeriaController::class, 'calcularFerias']);

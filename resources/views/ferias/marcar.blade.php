@@ -186,9 +186,60 @@
                 <button type="submit">Solicitar</button>
             </div>
         </div>
+        <button type="button" id="btnAbrirModal" data-toggle="modal" data-target="#modalFeriasResumo">Ver Resumo</button>
         </form>
+        <button  data-toggle="modal" data-target="#modalFeriasResumo">Teste</button>
     </div>
 
+    <div class="modal fade modalFeriasResumo" id="modalFeriasResumo" tabindex="-1" aria-labelledby="modalTesteLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTesteLabel">Resumo da solicitação</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                    <span aria-hidden="true">
+                        <svg width="26" height="24" viewBox="0 0 26 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20.3667 6.41L18.9226 5L13.197 10.59L7.47153 5L6.02734 6.41L11.7529 12L6.02734 17.59L7.47153 19L13.197 13.41L18.9226 19L20.3667 17.59L14.6412 12L20.3667 6.41Z" fill="#555555"/>
+                        </svg>
+                    </span>
+                </button>
+            </div>
+            <div class="modal-body">
+               <div class="container_body_resumo_ferias">
+                    <div class="content_header_resumo_ferias">
+                        <img src="{{URL::to('/')}}/public/avatar_users/{{$user->avatar}}" alt="">
+                        <div class="cargo_resumo_ferias">
+                            <h3>{{$user->name}}</h3>
+                            <span>{{$user->unidade->titulo}}</span>
+                            <span>{{$user->cargo->titulo}}</span>
+                        </div>
+                    </div>
+                    <p>Período solicitado:</p>
+
+                    <div class="datas_resumo_ferias">
+                    <span id="resumo_data_inicio"></span> a <span id="resumo_data_fim"></span>
+                    </div>
+                    <p>Dias úteis a gozar: <span id="resumo_dias_uteis"></span></p>
+                    <p>Data de retorno prevista: <span id="resumo_data_retorno"></span></p>
+               </div>
+            </div>
+            
+            <div class="modal-footer">
+                <div class="btnResumeFerias">
+                @if($user->role_id == 1)
+                    <a href="#">Consultar férias</a>
+                    <a href="#">Rejeitar</a>
+                    <a href="#">Aprovar</a>
+                @else
+                <a href="#" data-dismiss="modal" aria-label="Fechar">Confirmar</a>
+                @endif
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!-- JAVASCRIPT (AJAX) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     // Função genérica para inicializar Select2
 function initializeSelect2(selector) {
@@ -286,6 +337,39 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
     
+$(document).ready(function() {
+    $('#btnAbrirModal').click(function() {
+        let dataInicio = $('#one_day').val();
+        let dataFim = $('#when_one_day').val();
 
+        if (!dataInicio || !dataFim) {
+            alert("Por favor, selecione as datas antes de continuar.");
+            return;
+        }
+
+        // Enviar para o backend via AJAX
+        $.ajax({
+            url: '/calcular-ferias',  // Rota do backend
+            type: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}', // CSRF para segurança
+                data_inicio: dataInicio,
+                data_fim: dataFim
+            },
+            success: function(response) {
+                $('#resumo_data_inicio').text(dataInicio);
+                $('#resumo_data_fim').text(dataFim);
+                $('#resumo_dias_uteis').text(response.dias_uteis);
+                $('#resumo_data_retorno').text(response.data_retorno);
+
+                // Abrir o modal
+                $('#modalFeriasResumo').modal('show');
+            },
+            error: function() {
+                alert("Erro ao calcular os dias úteis. Tente novamente.");
+            }
+        });
+    });
+});
 </script>
 @endsection

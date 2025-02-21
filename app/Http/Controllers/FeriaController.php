@@ -702,4 +702,27 @@ public function getFeriasPorAno($id)
 
         return view('ferias.show', compact('feriasFixas'));
     }
+
+    public function calcularFerias(Request $request)
+{
+    $request->validate([
+        'data_inicio' => 'required|date',
+        'data_fim' => 'required|date|after_or_equal:data_inicio',
+    ]);
+
+    $dataInicio = $request->input('data_inicio');
+    $dataFim = $request->input('data_fim');
+
+    // Calcular os dias úteis a gozar
+    $diasUteis = $this->diasSolicitados($dataInicio, $dataFim);
+
+    // Calcular a data de retorno prevista
+    $dataRetorno = $this->calcularDataRetorno($dataFim, $diasUteis);
+
+    return response()->json([
+        'dias_uteis' => $diasUteis,
+        'data_retorno' => $dataRetorno
+    ]);
+}
+
 }
