@@ -73,7 +73,7 @@
     </div>
    
     <div id="content-injustificada" class="main_container">
-        <form action="{{ route('ferias.store') }}" method="POST">
+        <form id="meuForm" action="{{ route('ferias.store') }}" method="POST">
         @csrf
         <div class="document-inputs">
             <div class="form-injustificada">
@@ -182,13 +182,12 @@
                 @endif
             
             <div class="ausencias_container_btn">
-                <button >Cancelar</button>
-                <button type="submit">Solicitar</button>
+                <button ><a style="color: #555" href="{{route('ferias.show', ['id' => $user->id])}}">Cancelar</a></button>
+                <!-- <button type="submit">Solicitar</button> -->
+                <button type="button" id="btnAbrirModal" data-toggle="modal" data-target="#modalFeriasResumo">Solicitar</button>
             </div>
         </div>
-        <button type="button" id="btnAbrirModal" data-toggle="modal" data-target="#modalFeriasResumo">Ver Resumo</button>
         </form>
-        <button  data-toggle="modal" data-target="#modalFeriasResumo">Teste</button>
     </div>
 
     <div class="modal fade modalFeriasResumo" id="modalFeriasResumo" tabindex="-1" aria-labelledby="modalTesteLabel" aria-hidden="true">
@@ -231,7 +230,7 @@
                     <a href="#">Rejeitar</a>
                     <a href="#">Aprovar</a>
                 @else
-                <a href="#" data-dismiss="modal" aria-label="Fechar">Confirmar</a>
+                <button type="submit" id="btnExterno" data-dismiss="modal" aria-label="Fechar">Confirmar</button>
                 @endif
                 </div>
             </div>
@@ -336,8 +335,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
 });
 
-    
+
+
 $(document).ready(function() {
+    $('#todo_dia').change(function() {
+    let dataInicio = $('#one_day').val(); // Pega o valor de data_inicio
+
+    if ($(this).prop('checked')) { 
+        $('#when_one_day').val(dataInicio).prop('disabled', true);
+    } else {
+        $('#when_one_day').prop('disabled', false);
+    }
+});
+
+// Sempre que a data de início mudar, atualiza `when_one_day` caso o checkbox esteja marcado
+$('#one_day').change(function() {
+    if ($('#todo_dia').prop('checked')) {
+        $('#when_one_day').val($(this).val());
+    }
+});
+
     $('#btnAbrirModal').click(function() {
         let dataInicio = $('#one_day').val();
         let dataFim = $('#when_one_day').val();
@@ -357,10 +374,14 @@ $(document).ready(function() {
                 data_fim: dataFim
             },
             success: function(response) {
-                $('#resumo_data_inicio').text(dataInicio);
-                $('#resumo_data_fim').text(dataFim);
+                // Formatar as datas antes de exibir
+                let dataInicioFormatada = formatarData(dataInicio);
+                let dataFimFormatada = formatarData(dataFim);
+
+                $('#resumo_data_inicio').text(dataInicioFormatada);
+                $('#resumo_data_fim').text(dataFimFormatada);
                 $('#resumo_dias_uteis').text(response.dias_uteis);
-                $('#resumo_data_retorno').text(response.data_retorno);
+                $('#resumo_data_retorno').text(formatarData(response.data_retorno));
 
                 // Abrir o modal
                 $('#modalFeriasResumo').modal('show');
@@ -370,6 +391,19 @@ $(document).ready(function() {
             }
         });
     });
+
+    // Função para formatar datas de YYYY-MM-DD para DD-MM-YYYY
+    function formatarData(dataISO) {
+        let partes = dataISO.split('-'); // Divide a string "YYYY-MM-DD"
+        return `${partes[2]}-${partes[1]}-${partes[0]}`; // Reorganiza para "DD-MM-YYYY"
+    }
 });
+
+const botaoExterno = document.getElementById('btnExterno');
+const formulario = document.getElementById('meuForm');
+
+botaoExterno.addEventListener('click', function() {
+    formulario.submit();
+})
 </script>
 @endsection

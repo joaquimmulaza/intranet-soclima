@@ -2194,7 +2194,13 @@ input[type="file"] {
     display: none !important;
 }
 
-.view_justificativos:not(:first-of-type) .containerOpt{
+.teste:not(:first-of-type) thead tr{
+    color: #fff !important;
+    opacity: 0 !important;
+    display: none !important;
+}
+
+.teste:not(:first-of-type) .containerOpt{
     top: 24px;
 }
 
@@ -3703,7 +3709,12 @@ input.is-invalid {
 
 .modalFeriasResumo .modal-content{
     padding: 24px;
-    width: 534px;
+    width: 549px;
+    margin: 0 auto;
+}
+
+.modalFeriasResumo .modal-dialog{
+    max-width: 100% !important;
 }
 
 .modalFeriasResumo .modal-header {
@@ -3753,9 +3764,6 @@ input.is-invalid {
     font-weight: 400;
 }
 
-.modalFeriasResumo .modal-footer{
-    border-top: none;
-}
 
 .container_body_resumo_ferias p
 {
@@ -3795,15 +3803,20 @@ input.is-invalid {
     align-items: center;
     justify-content: center;
     gap: 20px;
+    padding: 0 28px;
+}
+
+.btnResumeFerias button{
+    background: var(--Surface-surface-pressed, #009AC1) !important;
+    color: var(--Textos-texto-sobre-boto, #FFF) !important;
 }
 
 .btnResumeFerias a:last-child{
-    background: var(--Surface-surface-pressed, #009AC1);
-    color: var(--Textos-texto-sobre-boto, #FFF);
-    
+    background: var(--Surface-surface-pressed, #009AC1) !important;
+    color: var(--Textos-texto-sobre-boto, #FFF) !important;
 }
 
-.btnResumeFerias a {
+.btnResumeFerias a, .btnResumeFerias button {
     padding: 9px 34px;
     background-color: #fff;
     font-size: 14px;
@@ -3816,6 +3829,8 @@ input.is-invalid {
     padding: 0;
     display: flex;
     justify-content: center;
+    margin-top: 58px;
+    border-top: none;
 }
 
 .btnOptFerias a{
@@ -3827,4 +3842,8 @@ input.is-invalid {
 
 .btnOptFerias a:hover{
     color: #555;
+}
+
+.modalFeriasResumo .modal-footer>*{
+    margin: 0;
 }

@@ -169,6 +169,11 @@ class FeriaController extends Controller
         $request->validate([
             'data_inicio' => 'required|date',
             'data_fim' => 'nullable|date|after_or_equal:data_inicio',
+        ], [
+            'data_inicio.required' => 'A data de início é obrigatória.',
+            'data_inicio.date' => 'A data de início deve ser uma data válida.',
+            'data_fim.date' => 'A data de fim deve ser uma data válida.',
+            'data_fim.after_or_equal' => 'A data de fim deve ser maior ou igual à data de início.',
         ]);
 
         $dataInicio = Carbon::parse($request->data_inicio);
@@ -683,6 +688,9 @@ public function getFeriasPorAno($id)
     foreach ($anos as $ano) {
         $cacheKey = "ferias_{$id}_{$ano->ano}";
 
+        // Força a atualização do cache ao remover o cache anterior
+        Cache::forget($cacheKey);
+
         // Se ainda não existir no cache, armazena os valores congelados
         if (!Cache::has($cacheKey)) {
             Cache::put($cacheKey, $ano->dias, now()->endOfYear());
@@ -704,25 +712,24 @@ public function getFeriasPorAno($id)
     }
 
     public function calcularFerias(Request $request)
-{
-    $request->validate([
-        'data_inicio' => 'required|date',
-        'data_fim' => 'required|date|after_or_equal:data_inicio',
-    ]);
+    {
+        $request->validate([
+            'data_inicio' => 'required|date',
+            'data_fim' => 'required|date|after_or_equal:data_inicio',
+        ]);
 
-    $dataInicio = $request->input('data_inicio');
-    $dataFim = $request->input('data_fim');
+        $dataInicio = $request->input('data_inicio');
+        $dataFim = $request->input('data_fim');
 
-    // Calcular os dias úteis a gozar
-    $diasUteis = $this->diasSolicitados($dataInicio, $dataFim);
+        // Calcular os dias úteis a gozar
+        $diasUteis = $this->diasSolicitados($dataInicio, $dataFim);
 
-    // Calcular a data de retorno prevista
-    $dataRetorno = $this->calcularDataRetorno($dataFim, $diasUteis);
+        // Calcular a data de retorno prevista
+        $dataRetorno = $this->calcularDataRetorno($dataInicio, $diasUteis);
 
-    return response()->json([
-        'dias_uteis' => $diasUteis,
-        'data_retorno' => $dataRetorno
-    ]);
-}
-
+        return response()->json([
+            'dias_uteis' => $diasUteis,
+            'data_retorno' => $dataRetorno
+        ]);
+    }
 }

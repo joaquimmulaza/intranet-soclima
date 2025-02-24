@@ -26,7 +26,6 @@ class PostController extends Controller
             $post->views_count = \DB::table('post_views')
                 ->where('post_id', $post->id)
                 ->count();
-            
         }
 
         return view('public.home', compact('posts'));
