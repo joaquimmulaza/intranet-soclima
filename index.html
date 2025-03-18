@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload de Arquivos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+
+        .scroll-container {
+            display: flex;
+            overflow-x: auto;
+            white-space: nowrap;
+            scroll-behavior: smooth;
+            cursor: grab;
+            background-color: #E1E1E1;
+            padding: 10px;
+            gap: 10px;
+        }
+
+        .outroContainer{
+            width: 800px;
+            margin: 0 auto;
+            overflow-x: auto;
+        }
+
+        .scroll-container::-webkit-scrollbar {
+            display: none;
+        }
+        .mainContainer::-webkit-scrollbar {
+            display: none;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            border: 0.75px solid #555;
+            padding: 8px 12px;
+            border-radius: 5px;
+            background-color: #F0F0F0;
+            width: max-content;
+        }
+
+        .mainContainer{
+            width: 100%;
+            margin: 0 auto;
+            overflow-x: auto;
+            min-width: max-content;
+        }
+
+        .font-semibold{
+            color: #555;
+            font-size: 10px;
+            font-weight: 700 !important;
+        }
+
+        .textAbrirContainerPDF{
+            color: #555;
+            font-size: 10px;
+            font-weight: 400;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-6">
+    <div class="outroContainer">
+        <div class="mainContainer">
+            <div class="flex gap-4 mb-4">
+                <label class="cursor-pointer border p-3 rounded-lg shadow bg-white hover:bg-gray-100">
+                    <input type="file" id="pdfInput" accept="application/pdf" class="hidden">
+                    <span class="flex items-center space-x-2 text-red-600">
+                        📄 <span>Upload PDF</span>
+                    </span>
+                </label>
+            </div>
+            <div id="fileContainer" class="scroll-container flex">
+                <!-- Os arquivos aparecerão aqui -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let maxWidth = 0;
+
+const fileContainer = document.getElementById("fileContainer");
+
+// Função para atualizar a largura de todos os arquivos com base no maior nome
+function updateMaxWidth() {
+    const allFiles = document.querySelectorAll(".file-item");
+    maxWidth = 0; // Resetar para recalcular
+    allFiles.forEach(fileItem => {
+        const tempSpan = document.createElement("span");
+        tempSpan.style.visibility = "hidden";
+        tempSpan.style.whiteSpace = "nowrap";
+        tempSpan.textContent = fileItem.querySelector(".font-semibold").textContent;
+        document.body.appendChild(tempSpan);
+        const fileWidth = tempSpan.offsetWidth + 80; // Adiciona o padding adicional
+        document.body.removeChild(tempSpan);
+        if (fileWidth > maxWidth) maxWidth = fileWidth;
+    });
+    allFiles.forEach(el => el.style.width = maxWidth + "px"); // Aplica a largura máxima a todos
+}
+
+fileContainer.addEventListener("mousedown", (e) => {
+    let isDown = true;
+    let startX = e.pageX - fileContainer.offsetLeft;
+    let scrollLeft = fileContainer.scrollLeft;
+    fileContainer.classList.add("active");
+    fileContainer.addEventListener("mousemove", (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - fileContainer.offsetLeft;
+        const walk = (x - startX) * 2;
+        fileContainer.scrollLeft = scrollLeft - walk;
+    });
+    fileContainer.addEventListener("mouseup", () => {
+        isDown = false;
+        fileContainer.classList.remove("active");
+    });
+    fileContainer.addEventListener("mouseleave", () => {
+        isDown = false;
+        fileContainer.classList.remove("active");
+    });
+});
+
+document.getElementById("pdfInput").addEventListener("change", function (event) {
+    handleFileUpload(event);
+});
+
+function handleFileUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    // Criação do item de arquivo
+    const fileItem = document.createElement("div");
+    fileItem.className = "file-item";
+    fileItem.innerHTML = `
+        <div class="flex items-center space-x-3 w-full">
+            <span>
+                <svg width="26" height="34" viewBox="0 0 26 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M25.2905 7.43398L24.8518 6.99531L19.1081 1.2516L18.6695 0.812931C18.4709 0.614362 18.1955 0.5 17.9139 0.5H1.40136C0.726569 0.5 0 1.02117 0 2.16479V22.6897V32.0986V32.3621C0 32.8383 0.479069 33.3026 1.04576 33.4488C1.07421 33.4562 1.10152 33.467 1.1311 33.4727C1.21986 33.4903 1.31033 33.5 1.40136 33.5H24.2021C24.2931 33.5 24.3836 33.4903 24.4723 33.4727C24.5019 33.467 24.5292 33.4562 24.5577 33.4488C25.1244 33.3026 25.6035 32.8383 25.6035 32.3621V32.0986V22.6897V8.453C25.6035 8.0166 25.5511 7.69457 25.2905 7.43398ZM23.5751 7.32759H18.7759V2.52836L23.5751 7.32759ZM1.40136 32.3621C1.36097 32.3621 1.32455 32.3473 1.28871 32.3342C1.19995 32.2921 1.13793 32.2033 1.13793 32.0986V23.8276H24.4655V32.0986C24.4655 32.2033 24.4035 32.2915 24.3147 32.3342C24.2789 32.3473 24.2425 32.3621 24.2021 32.3621H1.40136ZM1.13793 22.6897V2.16479C1.13793 2.04133 1.15671 1.63793 1.40136 1.63793H17.6709C17.6522 1.70962 17.6379 1.78359 17.6379 1.8604V8.46552H24.2431C24.3199 8.46552 24.3933 8.45129 24.465 8.43252C24.465 8.44105 24.4655 8.44447 24.4655 8.453V22.6897H1.13793Z" fill="#555555"/>
+                    <path d="M8.84291 25.9578C8.65345 25.8025 8.43951 25.6853 8.20112 25.6079C7.96272 25.53 7.72148 25.4913 7.47796 25.4913H5.8291V31.2242H6.76277V29.1548H7.4552C7.75562 29.1548 8.031 29.111 8.27964 29.0228C8.52827 28.9347 8.74107 28.81 8.91745 28.6496C9.09382 28.4892 9.23095 28.2906 9.32995 28.0545C9.42838 27.8183 9.47788 27.5555 9.47788 27.2647C9.47788 26.9899 9.41927 26.7424 9.30264 26.5217C9.186 26.3009 9.03238 26.1137 8.84291 25.9578ZM8.48901 27.8519C8.43155 28.0101 8.35701 28.133 8.2637 28.2212C8.17039 28.3094 8.06798 28.3731 7.95646 28.4118C7.84495 28.4505 7.73172 28.4704 7.61793 28.4704H6.7622V26.1991H7.46203C7.70043 26.1991 7.89217 26.2366 8.03783 26.3117C8.18291 26.3868 8.29557 26.4801 8.37636 26.5917C8.45658 26.7032 8.5095 26.8198 8.53567 26.9416C8.56127 27.0633 8.57436 27.1709 8.57436 27.2642C8.57436 27.498 8.54591 27.6937 8.48901 27.8519Z" fill="#555555"/>
+                    <path d="M14.4825 26.3311C14.2413 26.0773 13.938 25.873 13.5722 25.7206C13.2063 25.5681 12.7825 25.4913 12.3005 25.4913H10.5737V31.2242H12.7438C12.816 31.2242 12.9275 31.2151 13.0783 31.1969C13.2285 31.1787 13.3947 31.1377 13.5762 31.0723C13.7577 31.0074 13.9454 30.9101 14.14 30.7804C14.3346 30.6507 14.5093 30.4731 14.6652 30.2473C14.8211 30.0214 14.9491 29.7414 15.0504 29.4069C15.1516 29.0723 15.2023 28.6689 15.2023 28.1973C15.2023 27.8548 15.1425 27.5213 15.0236 27.1976C14.9036 26.8744 14.7238 26.5854 14.4825 26.3311ZM13.802 29.9326C13.5221 30.3372 13.0658 30.5391 12.4331 30.5391H11.5074V26.1985H12.0519C12.498 26.1985 12.861 26.2571 13.1409 26.3737C13.4208 26.4904 13.6427 26.6434 13.806 26.8329C13.9693 27.0224 14.0791 27.2334 14.1366 27.4667C14.1935 27.7 14.2219 27.9361 14.2219 28.1745C14.2219 28.942 14.082 29.5287 13.802 29.9326Z" fill="#555555"/>
+                    <path d="M16.5557 31.2242H17.5047V28.6416H19.9006V28.0038H17.5047V26.1991H20.1413V25.4913H16.5557V31.2242Z" fill="#555555"/>
+                    <path d="M18.1661 13.5641C17.6432 13.5641 17.0014 13.6323 16.2555 13.7678C15.2143 12.6628 14.1276 11.0492 13.3606 9.46524C14.1213 6.26253 13.7407 5.80907 13.5729 5.59514C13.3942 5.36755 13.1422 4.99829 12.8554 4.99829C12.7353 4.99829 12.4076 5.05291 12.2773 5.09615C11.9496 5.20539 11.7732 5.45802 11.6321 5.78745C11.2299 6.72795 11.7818 8.33129 12.3496 9.56708C11.8643 11.4976 11.0501 13.8082 10.1943 15.6835C8.03796 16.6712 6.89264 17.6413 6.78908 18.567C6.75153 18.9038 6.83119 19.3982 7.42348 19.8426C7.58564 19.9638 7.77567 20.0281 7.97367 20.0281C8.47152 20.0281 8.97448 19.6469 9.55653 18.8293C9.98098 18.233 10.4367 17.4199 10.9124 16.4106C12.4361 15.7443 14.321 15.1424 15.9352 14.805C16.8342 15.6681 17.6393 16.1051 18.3311 16.1051C18.8409 16.1051 19.2779 15.8707 19.5942 15.4274C19.9237 14.966 19.9988 14.5529 19.8161 14.1985C19.5971 13.7723 19.0571 13.5641 18.1661 13.5641ZM7.98619 19.0677C7.71991 18.8634 7.73527 18.7257 7.74096 18.6739C7.77624 18.3576 8.27181 17.796 9.48769 17.1127C8.56596 18.815 8.07096 19.0409 7.98619 19.0677ZM12.6517 6.02584C12.6762 6.01788 13.2463 6.65227 12.7063 7.85564C11.895 7.02552 12.5959 6.04462 12.6517 6.02584ZM11.4757 15.1441C12.0532 13.7678 12.5903 12.248 12.9971 10.8404C13.636 11.9886 14.4036 13.1026 15.1717 13.9948C13.9575 14.2798 12.6648 14.6821 11.4757 15.1441ZM18.8159 14.8715C18.6406 15.1168 18.2606 15.1225 18.1274 15.1225C17.8242 15.1225 17.7109 14.9421 17.2472 14.5854C17.6296 14.5364 17.9903 14.5239 18.2776 14.5239C18.7834 14.5239 18.8762 14.5984 18.9462 14.636C18.9337 14.6764 18.9007 14.7526 18.8159 14.8715Z" fill="#555555"/>
+                </svg>
+            </span>
+            <div class="flex-1">
+                <p class="font-semibold truncate">${file.name}</p>
+                <p class="textAbrirContainerPDF">Toque para abrir o ficheiro</p>
+            </div>
+            <button onclick="removeFile(this)">
+                <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M19.6035 6.41L18.1935 5L12.6035 10.59L7.01352 5L5.60352 6.41L11.1935 12L5.60352 17.59L7.01352 19L12.6035 13.41L18.1935 19L19.6035 17.59L14.0135 12L19.6035 6.41Z" fill="#555555"/>
+                </svg>
+            </button>
+        </div>
+    `;
+    fileContainer.appendChild(fileItem);
+    updateMaxWidth(); // Atualiza a largura de todos os itens
+}
+
+function removeFile(button) {
+    button.parentElement.parentElement.remove();
+    updateMaxWidth(); // Atualiza a largura após remover
+}
+    </script>
+</body>
+</html>

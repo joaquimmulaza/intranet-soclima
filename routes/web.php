@@ -14,7 +14,7 @@ use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\DocumentRequestController;
 use App\Http\Controllers\AdminDocumentRequestController;
 use App\Http\Controllers\AusenciaController;
-
+use Illuminate\Http\Request;
 /*
 |--------------------------------------------------------------------------
 | TESTES UNIDADE - Auth::routes();
@@ -40,7 +40,7 @@ Route::get('/admin', 'AuthController@dashboard')->name('admin');
 Route::get('/admin/login', 'AuthController@loginForm')->name('admin.login');
 Route::get('/admin/logout', 'AuthController@logout')->name('admin.logout');
 Route::post('/admin/login/do', 'AuthController@login')->name('admin.login.do');
-Route::post('/event/store', [EventController::class, 'store'])->name('event.store');
+// Route::post('/event/store', [EventController::class, 'store'])->name('event.store');
 
 
 

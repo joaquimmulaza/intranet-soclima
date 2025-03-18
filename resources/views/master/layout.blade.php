@@ -4,7 +4,7 @@
         
 
         @include('master.partials_master._head')
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+       
     </head>
 @if(Auth::user() != null)
     <body class="hold-transition sidebar-mini {{Route::current()->getName() == 'post.show' || 'home' ? 'sidebar-collapse' : 'layout-fixed'}}">

@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class PostController extends Controller
 {
@@ -55,26 +57,41 @@ class PostController extends Controller
 
             // Verificando se há upload de arquivo PDF
             if($request->hasFile('arquivo_pdf')) {
-                $pdf = $request->file('arquivo_pdf');
-                $pdfNome = time() . '.' . $pdf->getClientOriginalExtension();
-                $pdfPath = "uploads/pdfs/" . $pdfNome;
-                $pdf->move(public_path('uploads/pdfs'), $pdfNome);
-                $post->arquivo_pdf = $pdfPath;
+                $pdfPaths = [];
+                foreach ($request->file('arquivo_pdf') as $pdf) {
+                    $pdfNome = time() . '_' . $pdf->getClientOriginalName();
+                    $pdfPath = "uploads/pdfs/" . $pdfNome;
+                    $pdf->move(public_path('uploads/pdfs'), $pdfNome);
+                    $pdfPaths[] = $pdfPath;
+                }
+                $post->arquivo_pdf = json_encode($pdfPaths); // Armazena os caminhos dos PDFs como JSON
             }
 
             $user = Auth::user();
             $user->posts()->save($post);
 
-            notify()->success("Comunicado ou evento criado com sucesso!", "Success", "bottomRight");
-            return redirect()->route('home');
+           // Retornar uma resposta JSON de sucesso
+        return response()->json([
+            'success' => true,
+            'message' => 'Comunicado ou evento criado com sucesso!',
+            'post' => $post // Inclui os dados do post criado
+        ], 200);
+
         } catch (\Exception $e) {
-            flash($e->getMessage())->warning();
-            return redirect()->back();
+            // Retornar uma resposta JSON de erro
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
         }
     }
 
-    public function edit(Post $post){
-        return view('post.create', compact('post'));
+    public function edit(Post $post)
+    {
+        return response()->json([
+            'success' => true,
+            'post' => $post
+        ]);
     }
 
     public function listPosts(){
@@ -102,29 +119,79 @@ class PostController extends Controller
                 $post->arquivo_imagem = $imagemPath;
             }
 
-            // Atualizando arquivo PDF
-            if ($request->hasFile('arquivo_pdf')) {
-                if ($post->arquivo_pdf) {
-                    File::delete(public_path($post->arquivo_pdf));
+        // Removendo PDFs selecionados pelo usuário
+        if ($request->has('removed_pdfs')) {
+            $removedPdfs = json_decode($request->input('removed_pdfs'), true) ?? [];
+            
+            // Carregar PDFs existentes
+            $existingPdfs = json_decode($post->arquivo_pdf, true) ?? [];
+            Log::debug('PDFs existentes antes da remoção: ', $existingPdfs);
+            Log::debug('PDFs removidos enviados: ', $removedPdfs);
+
+            // Filtrar PDFs restantes e excluir arquivos físicos
+            $existingPdfs = array_filter($existingPdfs, function ($path) use ($removedPdfs) {
+                $fileName = basename($path);
+                if (in_array($fileName, $removedPdfs)) {
+                    if (File::exists(public_path($path))) {
+                        File::delete(public_path($path)); // Apagar o arquivo do diretório
+                        Log::debug("Arquivo deletado: " . $path);
+                    }
+                    return false; // Remove do array de PDFs existentes
                 }
+                return true; // Mantém os arquivos restantes
+            });
 
-                $pdf = $request->file('arquivo_pdf');
-                $pdfNome = time() . '.' . $pdf->getClientOriginalExtension();
-                $pdfPath = "uploads/pdfs/" . $pdfNome;
-                $pdf->move(public_path('uploads/pdfs'), $pdfNome);
-                $post->arquivo_pdf = $pdfPath;
-            }
-
-            $post->save();
-
-            notify()->success("Comunicado ou evento atualizado com sucesso!", "Success", "bottomRight");
-            return redirect()->route('post.show', $post);
-        } catch (\Exception $e) {
-            flash($e->getMessage())->warning();
-            return redirect()->back();
+            $existingPdfs = array_values($existingPdfs); // Reindexa o array de PDFs
+            Log::debug('PDFs após a remoção: ', $existingPdfs);
+            $post->arquivo_pdf = json_encode($existingPdfs);
         }
 
+        // Adicionar novos PDFs
+        if ($request->hasFile('arquivo_pdf')) {
+            $existingPdfs = json_decode($post->arquivo_pdf, true) ?? [];
+            Log::debug('PDFs antes de adicionar novos: ', $existingPdfs);
+
+            foreach ($request->file('arquivo_pdf') as $pdf) {
+                $pdfNome = uniqid() . '_' . $pdf->getClientOriginalName();
+                $pdfPath = "uploads/pdfs/" . $pdfNome;
+
+                // Verificar se o arquivo já existe na lista
+                if (!in_array($pdfPath, $existingPdfs)) {
+                    Log::debug("Novo PDF adicionado: " . $pdfPath);
+                    try {
+                        $pdf->move(public_path('uploads/pdfs'), $pdfNome);
+                        $existingPdfs[] = $pdfPath;
+                    } catch (\Exception $e) {
+                        Log::error('Erro ao mover o arquivo PDF: ' . $e->getMessage());
+                        return response()->json([
+                            'success' => false,
+                            'message' => 'Erro ao mover o arquivo PDF. ' . $e->getMessage()
+                        ], 500);
+                    }
+                } else {
+                    Log::debug("PDF já existente, não adicionado: " . $pdfPath);
+                }
+            }
+
+            // Atualiza o campo 'arquivo_pdf' com a lista final de arquivos
+            Log::debug('PDFs após adicionar novos: ', $existingPdfs);
+            $post->arquivo_pdf = json_encode(array_values($existingPdfs));
+        }
         
+        $post->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Comunicado ou evento atualizado com sucesso!',
+            'post' => $post
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => $e->getMessage()
+        ], 500);
+    }
+
     }
 
     public function show(Post $post)
@@ -166,6 +233,35 @@ class PostController extends Controller
 
     }
 
+    public function deletePdf(Request $request, $postId)
+{
+    // Buscar o post
+    $post = Post::findOrFail($postId);
+
+    // Decodificar os PDFs armazenados no campo do banco de dados
+    $pdfs = json_decode($post->pdfs, true); // Certifique-se que o campo 'pdfs' é JSON
+
+    // Caminho do PDF que será removido
+    $pdfToRemove = $request->input('pdf');
+
+    // Remover apenas o PDF específico
+    if (($key = array_search($pdfToRemove, $pdfs)) !== false) {
+        unset($pdfs[$key]);
+
+        // Remover o arquivo do armazenamento (opcional)
+        Storage::delete($pdfToRemove);
+    }
+
+    // Reindexar o array para evitar problemas ao reconverter para JSON
+    $pdfs = array_values($pdfs);
+
+    // Atualizar o post com a nova lista de PDFs
+    $post->pdfs = json_encode($pdfs);
+    $post->save();
+
+    return response()->json(['message' => 'PDF removido com sucesso!']);
+}
+
 
     public function destroy(Post $post){
         try {
@@ -177,7 +273,7 @@ class PostController extends Controller
             }
             $post->delete();
 
-            notify()->success("Comunicado ou evento excluído com sucesso!", "Success", "bottomRight");
+            notify()->success("Publicação apagada", "Success", "bottomRight");
             return redirect()->route('post.home');
         } catch (\Exception $e) {
             flash($e->getMessage())->warning();

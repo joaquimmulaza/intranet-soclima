@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comunicações Gerais</title>
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f5f5f5;
+}
+
+.communication-container {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.sender-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.user-icon {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+    border-radius: 50%;
+}
+
+.comment {
+    color: #0066cc;
+    font-size: 0.9em;
+    margin-left: 10px;
+}
+
+.content {
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+.file-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.pdf-button, .upload-button {
+    padding: 10px 20px;
+    background-color: #0066cc;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.pdf-button:hover, .upload-button:hover {
+    background-color: #0052a3;
+}
+
+.pdf-preview {
+    display: none;
+    margin-top: 10px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    max-width: 100%;
+    height: 400px;
+    overflow: auto;
+}
+
+.file-carousel {
+    display: flex;
+    overflow-x: hidden;
+    gap: 10px;
+    margin-top: 10px;
+    touch-action: pan-x; /* Para dispositivos móveis */
+}
+
+.file-item {
+    min-width: 200px;
+    height: 100px;
+    background-color: #e0e0e0;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: grab;
+    user-select: none;
+}
+
+.file-item.dragging {
+    opacity: 0.5;
+}
+    </style>
+</head>
+<body>
+    <div class="communication-container">
+        <h2>Comunicações gerais</h2>
+        <div class="sender-info">
+            <img src="user-icon.png" alt="Ícone do usuário" class="user-icon">
+            <span>Recursos Humanos Soclima <span class="comment">Todos podem comentar</span></span>
+        </div>
+        <div class="content">
+            <h3>Comunicação Interna Férias anos 2024-2025</h3>
+            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
+        </div>
+        <div class="file-section">
+            <button class="pdf-button" onclick="showPDFPreview()">PDF</button>
+            <input type="file" id="fileUpload" accept=".pdf" onchange="handleFileUpload(event)" style="display: none;">
+            <label for="fileUpload" class="upload-button">Upload</label>
+            <div class="pdf-preview" id="pdfPreview"></div>
+            <div class="file-carousel" id="fileCarousel">
+                <!-- Arquivos adicionados dinamicamente aqui -->
+            </div>
+        </div>
+    </div>
+    <script>
+        // Função para mostrar o preview do PDF (simulação, usando um PDF de exemplo)
+function showPDFPreview() {
+    const pdfPreview = document.getElementById('pdfPreview');
+    pdfPreview.innerHTML = '<iframe src="https://example.com/sample.pdf" width="100%" height="100%"></iframe>';
+    pdfPreview.style.display = 'block';
+}
+
+// Função para lidar com o upload de arquivos
+function handleFileUpload(event) {
+    const files = event.target.files;
+    const fileCarousel = document.getElementById('fileCarousel');
+
+    for (let file of files) {
+        if (file.type === 'application/pdf') {
+            const fileItem = document.createElement('div');
+            fileItem.className = 'file-item';
+            fileItem.textContent = file.name;
+            fileItem.draggable = true;
+
+            // Adicionar evento de arrastar
+            fileItem.addEventListener('dragstart', dragStart);
+            fileItem.addEventListener('dragover', dragOver);
+            fileItem.addEventListener('drop', drop);
+            fileItem.addEventListener('dragend', dragEnd);
+
+            fileCarousel.appendChild(fileItem);
+        }
+    }
+}
+
+// Variáveis para o arrastar
+let draggedItem = null;
+
+function dragStart(e) {
+    draggedItem = e.target;
+    e.target.classList.add('dragging');
+}
+
+function dragOver(e) {
+    e.preventDefault();
+}
+
+function drop(e) {
+    e.preventDefault();
+    const afterElement = getDragAfterElement(e.clientX);
+    const fileCarousel = document.getElementById('fileCarousel');
+    
+    if (afterElement == null) {
+        fileCarousel.appendChild(draggedItem);
+    } else {
+        fileCarousel.insertBefore(draggedItem, afterElement);
+    }
+}
+
+function dragEnd(e) {
+    e.target.classList.remove('dragging');
+    draggedItem = null;
+}
+
+// Função auxiliar para determinar onde soltar o item
+function getDragAfterElement(x) {
+    const draggableElements = [...document.querySelectorAll('.file-item:not(.dragging)')];
+    return draggableElements.reduce((closest, child) => {
+        const box = child.getBoundingClientRect();
+        const offset = x - box.left - box.width / 2;
+        if (offset < 0 && offset > closest.offset) {
+            return { offset: offset, element: child };
+        } else {
+            return closest;
+        }
+    }, { offset: Number.NEGATIVE_INFINITY }).element;
+}
+
+// Adicionar evento ao label para disparar o input file
+document.querySelector('.upload-button').addEventListener('click', () => {
+    document.getElementById('fileUpload').click();
+});
+    </script>
+</body>
+</html>

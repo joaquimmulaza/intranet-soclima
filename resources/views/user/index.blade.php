@@ -395,6 +395,14 @@
     });
 }
 
+function deleteData(userId) {
+    var form = document.getElementById('delete-form-' + userId);
+    if (confirm("Tem certeza que deseja eliminar este usuário?")) {
+        form.submit();  // Envia o formulário
+    }
+}
+
+
     </script>
 
     <script src="{{ asset('sweetalerta/app-sweetalert.js') }}"></script>

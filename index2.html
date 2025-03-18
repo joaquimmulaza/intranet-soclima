@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload de Imagens</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        .mainContainerPreviewImg{
+            width: 946px !important;
+            height: 645px !important;
+        }
+
+        .containerShowPreview{
+            width: 503px !important;
+            height: 100% !important;
+            background-color: #343434;
+            border-top-left-radius: 5px;
+            border-bottom-left-radius: 5px;
+        }
+
+        .containerSidesPreview{
+            display: flex;
+            justify-content: space-between;
+            height: 100%;
+        }
+
+        .leftSideContainerPreview{
+           position: relative;
+            height: 100%;
+        }
+
+        .rightSideContainerPreview{
+            width: 100%;
+            padding: 18px 24px;
+        }
+
+        .rightSideContainerPreview hr{
+            margin-bottom: 16px;
+        }
+
+        .rightSideContainerPreview h2{
+            color: #555;
+            font-size: 20px;
+            margin: 0 !important;
+            padding: 0 !important;
+            font-weight: 400;
+        }
+
+        .closeAndTitleContainerPreview{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .headerContainerPreviewRightSide{
+            display: flex;
+            gap: 7px;
+            align-items: center;
+        }
+
+        .contentTextHeaderPreviewRightSide{
+            display: flex;
+            flex-direction: column;
+        }
+
+        .contentTextHeaderPreviewRightSide span:nth-of-type(1){
+            font-size: 16px;
+            color: #009AC1;
+            font-weight: 700;
+        }
+
+        .contentTextHeaderPreviewRightSide span:nth-of-type(2){
+            font-size: 13px;
+            color: #7B7B7B;
+            font-weight: 400 !important;
+        }
+
+        .containerBodyInputs{
+            background: rgba(242, 242, 242, 0.80);
+            margin-top: 16px;
+            height: 417px;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            padding: 15px 8px;
+        }
+
+        .containerBodyInputs input{
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 16px;
+           outline: none;
+            font-weight: 400;
+        }
+
+        .containerBodyInputs textarea{
+            padding-top: 16px;
+            outline: none;
+            height: 100%;
+        }
+
+        .containerBodyInputs textarea, .containerBodyInputs input{
+            background-color: transparent !important;
+            font-size: 14px;
+            color: #ABABAB;
+        }
+
+        .containerBtnPreview{
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-top: 24px;
+        }
+
+        .containerBtnPreview button:nth-of-type(2){
+            background-color: #ddd;
+            width: 92px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 5px;
+            color: var(--Textos-Primrio, #555);
+            font-size: 14px;
+            outline: none !important;
+        }
+
+        .containerBtnPreview button:nth-of-type(1){
+            background-color: transparent;
+            width: 64px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 5px;
+            border: 1px solid #ABABAB;
+            outline: none !important;
+        }
+
+        #preview{
+            width: 100%;
+            height: 646px;
+
+        }
+
+        .miniaturaContainer{
+            position: absolute;
+            z-index: 1;
+            left: 0;
+            padding: 8px;
+            width: 100%;
+            background: #343434;
+        }
+
+        .miniaturaContainer img{
+            border-radius: 5px;
+        }
+
+        .imgMainPreview{
+            object-fit: contain;
+        }
+
+        .nextPrevBtnPreview{
+            background-color: rgba(255, 255, 255, 0.59);
+            width: 33px;
+            height: 33px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(85, 85, 85, 1);
+            border-radius: 2px;
+        }
+
+        .deleteBtnPreview{
+            bottom: 20px;
+            right: 24px;
+            background-color: #fff;
+            width: 41px;
+            height: 41px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+
+    <div class="bg-white rounded-lg shadow-lg mainContainerPreviewImg">
+         <div class="containerSidesPreview">
+             <div class="leftSideContainerPreview">
+                    <!-- Miniaturas -->
+                    <div id="thumbnails" class="flex gap-2 miniaturaContainer overflow-x-auto"></div>
+                            <!-- Área de Visualização -->
+                    <div class="containerShowPreview relative w-full h-52 border-dashed flex items-center justify-center">
+                        <input type="file" id="fileInput" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer " multiple>
+                        <div id="preview" class="text-gray-400 text-sm text-center relative">
+                          
+                        </div>
+                        <button id="prevBtn" class="absolute left-2 hidden nextPrevBtnPreview">&#10094;</button>
+                        <button id="nextBtn" class="absolute right-2 hidden nextPrevBtnPreview">&#10095;</button>
+                        <button id="deleteBtn" class="absolute deleteBtnPreview hidden"><svg width="29" height="29" viewBox="0 0 29 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M22.7363 7.97693L21.0592 6.2998L14.4101 12.9488L7.76111 6.2998L6.08398 7.97693L12.733 14.626L6.08398 21.275L7.76111 22.9521L14.4101 16.3031L21.0592 22.9521L22.7363 21.275L16.0873 14.626L22.7363 7.97693Z" fill="#555555"/>
+                            </svg>
+                            </button>
+                    </div>
+             </div>
+                     
+                    
+                     
+            <!-- Botões -->
+            <div class="rightSideContainerPreview">
+                <div class="closeAndTitleContainerPreview">
+                    <h2>Comunicações gerais</h2>
+                    <span>X</span>
+                </div>
+                <hr>
+                <div class="headerContainerPreviewRightSide">
+                    <svg width="46" height="45" viewBox="0 0 46 45" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="46" height="45" rx="22.5" fill="#ABABAB"/>
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M29.9008 18C29.9008 21.7279 26.8115 24.75 23.0008 24.75C19.19 24.75 16.1008 21.7279 16.1008 18C16.1008 14.2721 19.19 11.25 23.0008 11.25C26.8115 11.25 29.9008 14.2721 29.9008 18ZM27.6008 18C27.6008 20.4853 25.5413 22.5 23.0008 22.5C20.4603 22.5 18.4008 20.4853 18.4008 18C18.4008 15.5147 20.4603 13.5 23.0008 13.5C25.5413 13.5 27.6008 15.5147 27.6008 18Z" fill="white"/>
+                        <path d="M23.0008 28.125C15.5552 28.125 9.21143 32.432 6.79492 38.466C7.3836 39.0379 8.00373 39.5788 8.65255 40.0861C10.452 34.5462 16.097 30.375 23.0008 30.375C29.9046 30.375 35.5495 34.5462 37.349 40.0861C37.9978 39.5788 38.6179 39.0379 39.2066 38.4661C36.7901 32.432 30.4463 28.125 23.0008 28.125Z" fill="white"/>
+                        </svg>
+                        
+                    <div class="contentTextHeaderPreviewRightSide">
+                        <span>Recursos Humanos Soclima</span>
+                        <span>Todos podem comentar</span>
+                    </div>
+                </div>
+
+                <div class="containerBodyInputs">
+                    <input type="text" placeholder="Adiciona um título ao comunicado" name="title">
+                    <textarea name="content" placeholder="Comece a escrever aqui!" id=""></textarea>
+                </div>
+                <div class="containerBtnPreview">
+                    <button id="addMoreBtn" class="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg"><svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M19 13.5H13V19.5H11V13.5H5V11.5H11V5.5H13V11.5H19V13.5Z" fill="#555555"/>
+                        </svg>
+                        </button>
+                    <button id="uploadBtn">Publicar</button>
+                </div>
+            </div>
+         </div>
+    </div>
+
+    <script>
+       let images = [];
+let currentIndex = 0;
+const fileInput = document.getElementById("fileInput");
+const preview = document.getElementById("preview");
+const thumbnails = document.getElementById("thumbnails");
+const prevBtn = document.getElementById("prevBtn");
+const nextBtn = document.getElementById("nextBtn");
+const addMoreBtn = document.getElementById("addMoreBtn");
+const deleteBtn = document.getElementById("deleteBtn");
+
+fileInput.addEventListener("change", handleFiles);
+prevBtn.addEventListener("click", () => changeImage(-1));
+nextBtn.addEventListener("click", () => changeImage(1));
+deleteBtn.addEventListener("click", deleteImage);
+
+addMoreBtn.addEventListener("click", () => {
+    fileInput.value = ""; // Reseta o input para garantir que o evento "change" dispare mesmo se o usuário cancelar
+    fileInput.click();
+});
+
+fileInput.addEventListener("click", () => {
+    fileInput.value = ""; // Reseta o input antes de abrir
+});
+
+fileInput.addEventListener("change", (event) => {
+    if (!event.target.files.length) {
+        $("#modalPreviewImagem").modal("hide"); // Fecha o modal caso o usuário cancele o upload
+    }
+});
+
+function handleFiles(event) {
+    const files = event.target.files;
+    
+    if (files.length === 0 && images.length === 0) {
+        // Fecha o modal se nenhum arquivo for selecionado e não houver imagens
+        $("#modalPreviewImagem").modal("hide");
+        return;
+    }
+
+    for (let file of files) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            images.push(e.target.result);
+            updateThumbnails();
+            showImage(images.length - 1);
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+function updateThumbnails() {
+    thumbnails.innerHTML = "";
+    if (images.length > 1) {
+        thumbnails.classList.remove("hidden");
+        images.forEach((imgSrc, index) => {
+            const img = document.createElement("img");
+            img.src = imgSrc;
+            img.className = "w-12 h-12 object-cover cursor-pointer border-2";
+            img.addEventListener("click", () => showImage(index));
+            thumbnails.appendChild(img);
+        });
+    } else {
+        thumbnails.classList.add("hidden");
+    }
+}
+
+function showImage(index) {
+    if (images.length > 0) {
+        currentIndex = index;
+        preview.innerHTML = `<img src="${images[index]}" class="w-full h-full imgMainPreview">`;
+        prevBtn.classList.toggle("hidden", images.length <= 1);
+        nextBtn.classList.toggle("hidden", images.length <= 1);
+        deleteBtn.classList.remove("hidden");
+    }
+}
+
+function changeImage(direction) {
+    let newIndex = currentIndex + direction;
+    if (newIndex >= 0 && newIndex < images.length) {
+        showImage(newIndex);
+    }
+}
+
+function deleteImage() {
+    if (images.length > 0) {
+        images.splice(currentIndex, 1);
+        updateThumbnails();
+        if (images.length > 0) {
+            showImage(0);
+        } else {
+            preview.innerHTML = '';
+            deleteBtn.classList.add("hidden");
+            prevBtn.classList.add("hidden");
+            nextBtn.classList.add("hidden");
+            thumbnails.classList.add("hidden");
+
+            $("#modalPreviewImagem").modal("hide");
+        }
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    const label = document.querySelector(".openModalPreview");
+    const fileInput = document.getElementById("fileInput");
+    const previewContainer = document.getElementById("preview");
+    const modal = document.getElementById("modalPreviewImagem");
+
+    label.addEventListener("click", function (event) {
+        event.preventDefault(); // Evita a abertura padrão do modal
+        fileInput.click(); // Simula o clique no input de arquivo
+    });
+});
+
+    </script>
+
+</body>
+</html>
