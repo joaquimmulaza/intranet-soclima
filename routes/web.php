@@ -188,6 +188,7 @@ Route::get('/teste', 'PostController@summernote')->name('post.note');
 | POST      | comments/{post}                             | comment.store        | CommentController@store
 * */
 Route::post('comments/{post}', 'CommentController@store')->name('comment.store');
+Route::get('comments/{post}', 'CommentController@show')->name('comment.show');
 
 //LIKES
 /*

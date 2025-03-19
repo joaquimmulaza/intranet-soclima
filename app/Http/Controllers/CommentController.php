@@ -31,24 +31,32 @@ class CommentController extends Controller
         //
     }
 
-    public function store(Request $request, Post $post){
-        $this->validate($request, [
-            'comment'=>'required'
+    public function store(Request $request, Post $post)
+    {
+        $request->validate([
+            'comment' => 'required|string|max:1000'
         ]);
 
         $comment = new Comment();
-        $comment->post_id = $post->id;
-        $comment->user_id = Auth::user()->id;
-
         $comment->body = $request->comment;
-
+        $comment->post_id = $post->id;
+        $comment->user_id = auth()->id();
         $comment->save();
-        notify()->success("Comentário realizado com sucesso!","Success","bottomRight");
-        return redirect()->back();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Comentário adicionado com sucesso!'
+        ]);
     }
 
-    public function show(Comment $comment){
-        //
+    public function show(Post $post)
+    {
+        $comments = $post->comments()
+            ->with('user:id,name,avatar')
+            ->orderBy('created_at', 'desc')
+            ->get();
+            
+        return response()->json($comments);
     }
 
     public function edit(Comment $comment){

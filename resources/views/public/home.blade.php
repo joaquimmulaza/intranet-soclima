@@ -20,8 +20,8 @@
 
         /* Reset básico */
 
-
-/* Conteúdo Principal */
+        
+        /* Conteúdo Principal */
 
 
 .search-bar {
@@ -340,7 +340,7 @@
                     <div class="post-body">
                         @if($post->arquivo_imagem)
                             <div class="size_img_post">
-                                <img src="{{ asset($post->arquivo_imagem) }}" alt="Imagem de Capa" style="cursor: pointer;" onclick="openPostPreview('{{ addslashes($post->title) }}', '{{ addslashes($post->content) }}', '{{ asset($post->arquivo_imagem) }}', '{{ $post->user->name }}', '{{ URL::to('/') }}/public/avatar_users/{{ $post->user->avatar }}', '{{date('d/m/Y', strtotime($post->created_at))}}')">
+                                <img src="{{ asset($post->arquivo_imagem) }}" alt="Imagem de Capa" style="cursor: pointer;" onclick="openPostPreview('{{ addslashes($post->title) }}', '{{ addslashes($post->content) }}', '{{ asset($post->arquivo_imagem) }}', '{{ $post->user->name }}', '{{ URL::to('/') }}/public/avatar_users/{{ $post->user->avatar }}', '{{date('d/m/Y', strtotime($post->created_at))}}', '{{$post->id}}')">
                             </div>
                         @endif
                         
@@ -398,16 +398,49 @@
                                 <img src="logo/img/icon/{{ Auth::user()->likes()->where('post_id', $post->id)->exists() && Auth::user()->likes()->where('post_id', $post->id)->first()->like ? 'ThumbsUp_pressed.svg' : 'icon_thumbs.svg' }}" class="like-icon" alt="">
                                 <span class="like-count">{{ likes_post($post->id) }}</span>
                             </span>
-                            </span>
                     
                             <span>
                                 <img src="logo/img/icon/Eye-icon.svg" alt="">
                                 {{ $post->views_count }}0
                             </span>
-                            <span>
+                            <span class="comment-button" style="cursor: pointer;" onclick="toggleComments({{ $post->id }})">
                                 <img src="logo/img/icon/mode_comment2.svg" alt="">
                                 {{ $post->comments()->count() }}
                             </span>
+                        </div>
+                    </div>
+
+                    <!-- Seção de Comentários -->
+                    <div class="comments-section" id="comments-section-{{ $post->id }}" style="display: none;">
+                        <!-- Formulário de Comentário -->
+                        <form action="{{ route('comment.store', $post->id) }}" method="POST" class="comment-form">
+                            @csrf
+                            <div class="comment-input-container">
+                                <img class="comment-avatar" src="{{ url('public/avatar_users/' . Auth::user()->avatar) }}" alt="">
+                                <input type="text" name="comment" class="comment-input" placeholder="Adicionar um comentário" required>
+                            </div>
+                        </form>
+                        <div class="comments-list">
+                            @foreach($post->comments()->orderBy('created_at', 'desc')->get() as $comment)
+                                <div class="comment-item">
+                                    <div class="comment-header">
+                                        <img class="comment-avatar" src="{{ url('public/avatar_users/' . $comment->user->avatar) }}" alt="">
+                                        <div class="comment-info-container">
+                                            <div class="comment-info">
+                                                <span class="comment-author">{{ $comment->user->name }}</span>
+                                                <svg width="4" height="4" viewBox="0 0 4 4" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <circle cx="1.79962" cy="2.20752" r="1.5" fill="#D9D9D9"/>
+                                                </svg>
+                                                <span class="comment-date">{{ date('d/m/Y', strtotime($comment->created_at)) }}</span>
+                                            </div>
+                                            <span class="comment-user-cargo">{{ $comment->user->cargo->titulo }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="comment-content">
+                                        {{ $comment->body }}
+                                    </div>
+                                </div>
+                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -629,9 +662,6 @@
                         
                         <!-- Conteúdo do Post -->
                         <div class="rightSideContainerPreview">
-                            <div class="closeAndTitleContainerPreview">
-                                
-                            </div>
                             
                             <div class="headerContainerPreviewRightSide">
                                 <img class="postUserAvatar" src="" alt="Avatar do Usuário">
@@ -664,34 +694,45 @@
                                 
                                
                             </div>
-                            <div class="containerBodyInputs">
-                                <h4 class="titleInputPost" id="postTitle"></h4>
-                                <p class="contentTextarea" id="postContent"></p>
-                            </div>
-                            <div class="containerComments">
+                            <div class="containerGeralComments">
+                                <div class="containerBodyInputs">
+                                    <h4 class="titleInputPost" id="postTitle"></h4>
+                                    <p class="contentTextarea" id="postContent"></p>
+                                </div>
+                                <div class="containerComments">
                                 
-                            <div class="items-footer" data-postid="{{ $post->id }}">
-                            
-                            <span class="like-button" style="cursor: pointer;">
-                                <img src="logo/img/icon/{{ Auth::user()->likes()->where('post_id', $post->id)->exists() && Auth::user()->likes()->where('post_id', $post->id)->first()->like ? 'ThumbsUp_pressed.svg' : 'icon_thumbs.svg' }}" class="like-icon" alt="">
-                                <span class="like-count">{{ likes_post($post->id) }}</span>
-                            </span>
-                            </span>
-                    
-                            <span>
-                                <img src="logo/img/icon/Eye-icon.svg" alt="">
-                                {{ $post->views_count }}0
-                            </span>
-                            <span>
-                                <img src="logo/img/icon/mode_comment2.svg" alt="">
-                                {{ $post->comments()->count() }}
-                            </span>
-                        </div>
-
-                            <div class="containerEnterComment">
-                            <img class="img_user_post" src="{{ url('public/avatar_users/' . $post->user->avatar) }}" alt="">
-                                <input type="text" placeholder="Adicionar um comentário">
+                                <div class="items-footer" data-postid="{{ $post->id }}">
+                                
+                                <span class="like-button globalHover" style="cursor: pointer;">
+                                    <img src="logo/img/icon/{{ Auth::user()->likes()->where('post_id', $post->id)->exists() && Auth::user()->likes()->where('post_id', $post->id)->first()->like ? 'ThumbsUp_pressed.svg' : 'icon_thumbs.svg' }}" class="like-icon" alt="">
+                                    <span class="like-count">{{ likes_post($post->id) }}</span>
+                                    
+                                </span>
+                        
+                                <span class="globalHover">
+                                    <img src="logo/img/icon/Eye-icon.svg" alt="">
+                                    {{ $post->views_count }}0
+                                </span>
+                                <span class="globalHover">
+                                    <img src="logo/img/icon/mode_comment2.svg" alt="">
+                                    <span class="comment-count">{{ $post->comments()->count() }}</span>
+                                </span>
                             </div>
+                            <form class="comment-form" id="modalCommentForm" action="" method="POST">
+                                        @csrf
+                                        <div class="containerEnterComment">
+                                        <img class="img_user_post" src="{{ URL::to('/') }}/public/avatar_users/{{ Auth::user()->avatar }}" alt="">
+                                            <input type="text" name="comment" placeholder="Adicione um comentário..." required>
+                                        </div>
+                                </form>
+                                    </div>
+                                
+                                <!-- Seção de Comentários -->
+                                <div class="comments-section" id="modalCommentsSection">
+                                    <div class="comments-list" id="modalCommentsList">
+                                        <!-- Os comentários serão carregados dinamicamente aqui -->
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1557,11 +1598,11 @@ function handleFileUpload(event, container = fileContainer, outro = outroContain
         <div class="flex items-center space-x-3 w-full">
             <span>
                 <svg width="26" height="34" viewBox="0 0 26 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M25.2905 7.43398L24.8518 6.99531L19.1081 1.2516L18.6695 0.812931C18.4709 0.614362 18.1955 0.5 17.9139 0.5H1.40136C0.726569 0.5 0 1.02117 0 2.16479V22.6897V32.0986V32.3621C0 32.8383 0.479069 33.3026 1.04576 33.4488C1.07421 33.4562 1.10152 33.467 1.1311 33.4727C1.21986 33.4903 1.31033 33.5 1.40136 33.5H24.2021C24.2931 33.5 24.3836 33.4903 24.4723 33.4727C24.5019 33.467 24.5292 33.4562 24.5577 33.4488C25.1244 33.3026 25.6035 32.8383 25.6035 32.3621V32.0986V22.6897V8.453C25.6035 8.0166 25.5511 7.69457 25.2905 7.43398ZM23.5751 7.32759H18.7759V2.52836L23.5751 7.32759ZM1.40136 32.3621C1.36097 32.3621 1.32455 32.3473 1.28871 32.3342C1.19995 32.2921 1.13793 32.2033 1.13793 32.0986V23.8276H24.4655V32.0986C24.4655 32.2033 24.4035 32.2915 24.3147 32.3342C24.2789 32.3473 24.2425 32.3621 24.2021 32.3621H1.40136ZM1.13793 22.6897V2.16479C1.13793 2.04133 1.15671 1.63793 1.40136 1.63793H17.6709C17.6522 1.70962 17.6379 1.78359 17.6379 1.8604V8.46552H24.2431C24.3199 8.46552 24.3933 8.45129 24.465 8.43252C24.465 8.44105 24.4655 8.44447 24.4655 8.453V22.6897H1.13793Z" fill="#555555"/>
+                <path d="M25.2905 7.43398L24.8518 6.99531L19.1081 1.2516L18.6695 0.812931C18.4709 0.614362 18.1955 0.5 17.9139 0.5H1.40136C0.726569 0.5 0 1.02117 0 2.16479V22.6897V32.0986V32.3621C0 32.8383 0.479069 33.3026 1.04576 33.4488C1.07421 33.4562 1.10152 33.467 1.1311 33.4727C1.21986 33.4903 1.31033 33.5 1.40136 33.5H24.2021C24.2931 33.5 24.3836 33.4903 24.4723 33.4727C24.5019 33.467 24.5292 33.4562 24.5577 33.4488C25.1244 33.3026 25.6035 32.8383 25.6035 32.3621V32.0986V22.6897V8.453C25.6035 8.0166 25.5511 7.69457 25.2905 7.43398ZM23.5751 7.32759H18.7759V2.52836L23.5751 7.32759ZM1.40136 32.3621C1.36097 32.3621 1.32455 32.3473 1.28871 32.3342C1.19995 32.2921 1.13793 32.2033 1.13793 32.0986V23.8276H24.4655V32.0986C24.4655 32.2033 24.4035 32.2915 24.3147 32.3342C24.2789 32.3473 24.2425 32.3621 24.2021 32.3621H1.40136ZM1.13793 22.6897V2.16479C1.13793 2.04133 1.15671 1.63793 1.40136 1.63793H17.6709C17.6522 1.70962 17.6379 1.78359 17.6379 1.8604V8.46552H24.2431C24.3199 8.46552 24.3933 8.45129 24.465 8.43252C24.465 8.44105 24.4655 8.44447 24.4655 8.453V22.6897H1.13793Z" fill="#555555"/>
                     <path d="M8.84291 25.9578C8.65345 25.8025 8.43951 25.6853 8.20112 25.6079C7.96272 25.53 7.72148 25.4913 7.47796 25.4913H5.8291V31.2242H6.76277V29.1548H7.4552C7.75562 29.1548 8.031 29.111 8.27964 29.0228C8.52827 28.9347 8.74107 28.81 8.91745 28.6496C9.09382 28.4892 9.23095 28.2906 9.32995 28.0545C9.42838 27.8183 9.47788 27.5555 9.47788 27.2647C9.47788 26.9899 9.41927 26.7424 9.30264 26.5217C9.186 26.3009 9.03238 26.1137 8.84291 25.9578ZM8.48901 27.8519C8.43155 28.0101 8.35701 28.133 8.2637 28.2212C8.17039 28.3094 8.06798 28.3731 7.95646 28.4118C7.84495 28.4505 7.73172 28.4704 7.61793 28.4704H6.7622V26.1991H7.46203C7.70043 26.1991 7.89217 26.2366 8.03783 26.3117C8.18291 26.3868 8.29557 26.4801 8.37636 26.5917C8.45658 26.7032 8.5095 26.8198 8.53567 26.9416C8.56127 27.0633 8.57436 27.1709 8.57436 27.2642C8.57436 27.498 8.54591 27.6937 8.48901 27.8519Z" fill="#555555"/>
                     <path d="M14.4825 26.3311C14.2413 26.0773 13.938 25.873 13.5722 25.7206C13.2063 25.5681 12.7825 25.4913 12.3005 25.4913H10.5737V31.2242H12.7438C12.816 31.2242 12.9275 31.2151 13.0783 31.1969C13.2285 31.1787 13.3947 31.1377 13.5762 31.0723C13.7577 31.0074 13.9454 30.9101 14.14 30.7804C14.3346 30.6507 14.5093 30.4731 14.6652 30.2473C14.8211 30.0214 14.9491 29.7414 15.0504 29.4069C15.1516 29.0723 15.2023 28.6689 15.2023 28.1973C15.2023 27.8548 15.1425 27.5213 15.0236 27.1976C14.9036 26.8744 14.7238 26.5854 14.4825 26.3311ZM13.802 29.9326C13.5221 30.3372 13.0658 30.5391 12.4331 30.5391H11.5074V26.1985H12.0519C12.498 26.1985 12.861 26.2571 13.1409 26.3737C13.4208 26.4904 13.6427 26.6434 13.806 26.8329C13.9693 27.0224 14.0791 27.2334 14.1366 27.4667C14.1935 27.7 14.2219 27.9361 14.2219 28.1745C14.2219 28.942 14.082 29.5287 13.802 29.9326Z" fill="#555555"/>
-                    <path d="M16.5557 31.2242H17.5047V28.6416H19.9006V28.0038H17.5047V26.1991H20.1413V25.4913H16.5557V31.2242Z" fill="#555555"/>
-                    <path d="M18.1661 13.5641C17.6432 13.5641 17.0014 13.6323 16.2555 13.7678C15.2143 12.6628 14.1276 11.0492 13.3606 9.46524C14.1213 6.26253 13.7407 5.80907 13.5729 5.59514C13.3942 5.36755 13.1422 4.99829 12.8554 4.99829C12.7353 4.99829 12.4076 5.05291 12.2773 5.09615C11.9496 5.20539 11.7732 5.45802 11.6321 5.78745C11.2299 6.72795 11.7818 8.33129 12.3496 9.56708C11.8643 11.4976 11.0501 13.8082 10.1943 15.6835C8.03796 16.6712 6.89264 17.6413 6.78908 18.567C6.75153 18.9038 6.83119 19.3982 7.42348 19.8426C7.58564 19.9638 7.77567 20.0281 7.97367 20.0281C8.47152 20.0281 8.97448 19.6469 9.55653 18.8293C9.98098 18.233 10.4367 17.4199 10.9124 16.4106C12.4361 15.7443 14.321 15.1424 15.9352 14.805C16.8342 15.6681 17.6393 16.1051 18.3311 16.1051C18.8409 16.1051 19.2779 15.8707 19.5942 15.4274C19.9237 14.966 19.9988 14.5529 19.8161 14.1985C19.5971 13.7723 19.0571 13.5641 18.1661 13.5641ZM7.98619 19.0677C7.71991 18.8634 7.73527 18.7257 7.74096 18.6739C7.77624 18.3576 8.27181 17.796 9.48769 17.1127C8.56596 18.815 8.07096 19.0409 7.98619 19.0677ZM12.6517 6.02584C12.6762 6.01788 13.2463 6.65227 12.7063 7.85564C11.895 7.02552 12.5959 6.04462 12.6517 6.02584ZM11.4757 15.1441C12.0532 13.7678 12.5903 12.248 12.9971 10.8404C13.636 11.9886 14.4036 13.1026 15.1717 13.9948C13.9575 14.2798 12.6648 14.6821 11.4757 15.1441ZM18.8159 14.8715C18.6406 15.1168 18.2606 15.1225 18.1274 15.1225C17.8242 15.1225 17.7109 14.9421 17.2472 14.5854C17.6296 14.5364 17.9903 14.5239 18.2776 14.5239C18.7834 14.5239 18.8762 14.5984 18.9462 14.636C18.9337 14.6764 18.9007 14.7526 18.8159 14.8715Z" fill="#555555"/>
+                    <path d="M16.1656 29.7873H17.0922V27.283H19.4317V26.6646H17.0922V24.9145H19.6667V24.2281H16.1656V29.7873Z" fill="#555555"/>
+                    <path d="M17.7378 12.6625C17.2272 12.6625 16.6006 12.7287 15.8722 12.86C14.8556 11.7886 13.7945 10.2239 13.0456 8.68791C13.7883 5.58225 13.4167 5.14253 13.2528 4.93508C13.0783 4.71439 12.8322 4.35632 12.5522 4.35632C12.435 4.35632 12.115 4.40929 11.9878 4.45122C11.6678 4.55715 11.4956 4.80212 11.3578 5.12156C10.965 6.03356 11.5039 7.58832 12.0583 8.78667C11.5845 10.6587 10.7895 12.8992 9.9539 14.7177C7.84834 15.6755 6.73001 16.6162 6.6289 17.5138C6.59223 17.8405 6.67001 18.3199 7.24834 18.7508C7.40667 18.8683 7.59223 18.9307 7.78556 18.9307C8.27167 18.9307 8.76279 18.561 9.33112 17.7682C9.74556 17.19 10.1906 16.4016 10.655 15.4228C12.1428 14.7767 13.9833 14.193 15.5595 13.8658C16.4372 14.7028 17.2233 15.1265 17.8989 15.1265C18.3967 15.1265 18.8233 14.8992 19.1322 14.4694C19.4539 14.022 19.5272 13.6214 19.3489 13.2777C19.135 12.8645 18.6078 12.6625 17.7378 12.6625ZM7.79779 17.9994C7.53779 17.8013 7.55279 17.6678 7.55834 17.6176C7.59279 17.3108 8.07667 16.7663 9.2639 16.1036C8.3639 17.7544 7.88056 17.9734 7.79779 17.9994ZM12.3533 5.35274C12.3772 5.34501 12.9339 5.96019 12.4067 7.12708C11.6145 6.32212 12.2989 5.37094 12.3533 5.35274ZM11.205 14.1947C11.7689 12.86 12.2933 11.3864 12.6906 10.0214C13.3145 11.1348 14.0639 12.2151 14.8139 13.0802C13.6283 13.3566 12.3661 13.7467 11.205 14.1947ZM18.3722 13.9304C18.2011 14.1682 17.83 14.1737 17.7 14.1737C17.4039 14.1737 17.2933 13.9988 16.8406 13.6529C17.2139 13.6054 17.5661 13.5933 17.8467 13.5933C18.3406 13.5933 18.4311 13.6656 18.4995 13.702C18.4872 13.7411 18.455 13.8151 18.3722 13.9304Z" fill="#555555"/>
                 </svg>
             </span>
             <div class="flex-1">
@@ -1752,7 +1793,7 @@ function deleteData(postId) {
     });
 }
 
-function openPostPreview(title, content, imageSrc, userName, userAvatar, datasPosts) {
+function openPostPreview(title, content, imageSrc, userName, userAvatar, datasPosts, postId) {
     // Atualiza os campos do modal de visualização
     document.getElementById('postTitle').textContent = title;
     document.getElementById('postContent').textContent = content;
@@ -1761,8 +1802,55 @@ function openPostPreview(title, content, imageSrc, userName, userAvatar, datasPo
     document.querySelector('.postImage').src = imageSrc;
     document.getElementById('postsDates').textContent = datasPosts;
     
+    // Configura o formulário de comentários
+    const commentForm = document.getElementById('modalCommentForm');
+    commentForm.action = `/comments/${postId}`;
+    
+    // Carrega os comentários existentes
+    fetch(`/comments/${postId}`)
+        .then(response => response.json())
+        .then(data => {
+            const commentsList = document.getElementById('modalCommentsList');
+            commentsList.innerHTML = '';
+            
+            data.forEach(comment => {
+                const commentElement = document.createElement('div');
+                commentElement.className = 'comment-item';
+                commentElement.innerHTML = `
+                    <div class="comment-header">
+                       <img src="{{ url('public/avatar_users/' . $comment->user->avatar) }}" alt="{{ $comment->user->name }}" class="comment-avatar">
+                       
+                        <div class="comment-info-container">
+                            <div class="comment-info">
+                                <span class="comment-author">${comment.user.name}</span>
+                                <svg width="4" height="4" viewBox="0 0 4 4" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="1.79962" cy="2.20752" r="1.5" fill="#D9D9D9"/>
+                                </svg>
+                                <span class="comment-date">${new Date(comment.created_at).toLocaleDateString()}</span>
+                            
+                            </div>
+                            <span class="comment-user-cargo">{{ $comment->user->cargo->titulo }}</span>
+                        </div>
+                        
+                    </div>
+                    <div class="comment-body">
+                        ${comment.body}
+                    </div>
+                `;
+                commentsList.appendChild(commentElement);
+            });
+            // Atualiza a quantidade de comentários
+            document.querySelector('.globalHover .comment-count').textContent = data.comments.length;
+        })
+        .catch(error => console.error('Erro ao carregar comentários:', error));
+    
     // Abre o modal
     $('#modalViewPost').modal('show');
+}
+
+function toggleComments(postId) {
+    const commentsSection = document.getElementById(`comments-section-${postId}`);
+    commentsSection.style.display = commentsSection.style.display === 'none' ? 'block' : 'none';
 }
 </script>
 
@@ -1777,5 +1865,39 @@ function openPostPreview(title, content, imageSrc, userName, userAvatar, datasPo
     <script src="{{ asset('public/plugins/sparklines/sparkline.js') }}"></script>
     
     <script src="{{ asset('public/dist/js/pages/dashboard.js') }}"></script>
+    </script>
+
+    <script>
+
+        // Adicionar evento de submit para o formulário de comentários
+        document.querySelectorAll('.comment-form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(this);
+                const postId = this.action.split('/').pop();
+                
+                fetch(this.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Recarregar a página para mostrar o novo comentário
+                        window.location.reload();
+                    } else {
+                        alert('Erro ao adicionar comentário');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    alert('Erro ao adicionar comentário');
+                });
+            });
+        });
     </script>
 @endsection

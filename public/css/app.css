@@ -4401,13 +4401,14 @@ input.is-invalid {
     gap: 20px;
 }
 
-.containerComments .items-footer{
-   padding-bottom: 14px;
+.containerComments .items-footer .globalHover{
+    padding: 3px 35px;
+    border-radius: 5px;
 }
 
 .containerComments{
     border-bottom: 1px solid #dbdbdb;
-    padding: 14px 0 14px 0;
+    padding: 7px 0 14px 0;
 }
 
 .containerEnterComment {
@@ -4424,9 +4425,120 @@ input.is-invalid {
     outline: none;
 }
 
-.like-button:hover{
-    background-color: red;
-    width: 114px;
-   display: flex;
-   justify-content: center;
+.containerComments .items-footer .globalHover:hover{
+    cursor: pointer;
+    background-color: #EFEFEF;
+    padding: 3px 35px; /* Aumenta a área de hover */
 }
+
+
+/* Estilos para a seção de comentários */
+#modalViewPost .comments-section{
+    padding-left: 0;
+}
+
+.comments-section {
+    padding: 0 15px 15px 15px;
+    background-color: #fff;
+    /* border-top: 1px solid #e9ecef; */
+    margin-bottom: 10px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.comments-list {
+    margin-bottom: 15px;
+}
+
+.comment-item {
+    margin-top: 25px;
+    margin-bottom: 20px;
+    background-color: white;
+}
+
+.comment-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.comment-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.comment-info {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.comment-author {
+    font-size: 14px;
+    font-weight: 700;
+    color: #009ac1;
+}
+
+.comment-date {
+    font-size: 11px;
+    color: #6c757d;
+}
+
+.comment-content {
+    color: #333;
+    line-height: 1.4;
+    margin-left: 45px;
+}
+
+.comment-form {
+    margin-top: 15px;
+}
+
+.comment-input-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid #dbdbdb;
+    padding-bottom: 16px;
+}
+
+.comment-input {
+    flex: 1;
+    border: 1px solid #ababab;
+    border-radius: 5px;
+    padding: 15px 0 15px 15px;
+    width: 100%;
+    outline: none;
+    font-size: 14px;
+}
+
+.comment-user-cargo{
+    font-size: 13px !important;
+    color: #7b7b7b;
+}
+
+.comment-info-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+
+#modalViewPost .rightSideContainerPreview{
+    overflow: auto;
+    position: relative !important;
+    padding-top: 0;
+}
+
+ #modalViewPost .headerContainerPreviewRightSide {
+    position: sticky;
+    top: 0;
+    background-color: #fff;
+    padding-top: 18px;
+ }
+
+ #modalViewPost .comment-body {
+    margin-left: 45px;
+ }
