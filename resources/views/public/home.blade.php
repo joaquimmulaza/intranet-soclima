@@ -392,18 +392,18 @@
                     </div>
                     <hr style="width: 460px; margin: 0 auto;">
                     <div class="post-footer">
-                        <div class="items-footer" data-postid="{{ $post->id }}">
+                        <div class="items-footerLista" data-postid="{{ $post->id }}">
                             
-                            <span class="like-button" style="cursor: pointer;">
+                            <span class="like-button globalHover" style="cursor: pointer;">
                                 <img src="logo/img/icon/{{ Auth::user()->likes()->where('post_id', $post->id)->exists() && Auth::user()->likes()->where('post_id', $post->id)->first()->like ? 'ThumbsUp_pressed.svg' : 'icon_thumbs.svg' }}" class="like-icon" alt="">
                                 <span class="like-count">{{ likes_post($post->id) }}</span>
                             </span>
                     
-                            <span>
+                            <span class="globalHover">
                                 <img src="logo/img/icon/Eye-icon.svg" alt="">
                                 {{ $post->views_count }}0
                             </span>
-                            <span class="comment-button" style="cursor: pointer;" onclick="toggleComments({{ $post->id }})">
+                            <span class="comment-button globalHover" style="cursor: pointer;" onclick="toggleComments({{ $post->id }})">
                                 <img src="logo/img/icon/mode_comment2.svg" alt="">
                                 {{ $post->comments()->count() }}
                             </span>
@@ -701,7 +701,7 @@
                                 </div>
                                 <div class="containerComments">
                                 
-                                <div class="items-footer" data-postid="{{ $post->id }}">
+                                <div class="items-footer" data-postid="">
                                 
                                 <span class="like-button globalHover" style="cursor: pointer;">
                                     <img src="logo/img/icon/{{ Auth::user()->likes()->where('post_id', $post->id)->exists() && Auth::user()->likes()->where('post_id', $post->id)->first()->like ? 'ThumbsUp_pressed.svg' : 'icon_thumbs.svg' }}" class="like-icon" alt="">
@@ -1024,45 +1024,63 @@
     $(document).on('click', '.like-button', function(event) {
         event.preventDefault();
 
-        if (likeInProgress) return; // Impede novas requisições enquanto uma está em andamento
-        likeInProgress = true; // Marca como em progresso
+        if (likeInProgress) return;
+    likeInProgress = true;
 
-        const footer = $(this).closest('.items-footer');
-        const postId = footer.data('postid');
-        const icon = $(this).find('.like-icon');
-        const countElement = $(this).find('.like-count');
-        const isLiked = icon.hasClass('liked');
+    // Verifica se o clique veio da lista ou do modal
+    const footerLista = $(this).closest('.items-footerLista'); // Lista de posts
+    const footerModal = $(this).closest('.items-footer'); // Modal
+    const footer = footerLista.length ? footerLista : footerModal; // Usa o que for encontrado
 
-        console.log('Like button clicked');
+    const postId = footer.attr('data-postid'); // Lê o data-postid com .attr()
 
-        $.ajax({
-            url: '/like',
-            method: 'POST',
-            data: {
-                postId: postId,
-                isLike: !isLiked,
-                _token: '{{ csrf_token() }}'
-            },
-            success: function(response) {
-                if (response.success) {
-                    countElement.text(response.likes_count);
-                    if (isLiked) {
-                        icon.attr('src', 'logo/img/icon/icon_thumbs.svg');
-                        icon.removeClass('liked');
-                    } else {
-                        icon.attr('src', 'logo/img/icon/ThumbsUp_pressed.svg');
-                        icon.addClass('liked');
-                    }
-                } else {
-                    alert(response.message || 'Erro ao registrar a curtida.');
-                }
-            },
-            error: function() {
-                alert('Ocorreu um erro. Tente novamente.');
-            },
-            complete: function() {
-                likeInProgress = false; // Libera a flag no final da requisição
+    console.log('Origem do clique:', footerLista.length ? 'Lista' : 'Modal');
+    console.log('Post ID enviado:', postId);
+
+    if (!postId) {
+        console.error('Post ID indefinido! Verifique o data-postid no elemento.');
+        likeInProgress = false;
+        return;
+    }
+
+    const icon = $(this).find('.like-icon');
+    const countElement = $(this).find('.like-count');
+    const isLiked = icon.hasClass('liked');
+
+    $.ajax({
+        url: '/like',
+        method: 'POST',
+        data: {
+            postId: postId,
+            isLike: !isLiked,
+            _token: '{{ csrf_token() }}'
+        },
+        success: function(response) {
+            if (response.success) {
+                const newCount = response.likes_count;
+                countElement.text(newCount);
+                // Atualiza o contador na lista e no modal
+                $(`.items-footerLista[data-postid="${postId}"] .like-count`).text(newCount);
+                $(`.items-footer[data-postid="${postId}"] .like-count`).text(newCount);
+
+                const newIconSrc = isLiked ? 'logo/img/icon/icon_thumbs.svg' : 'logo/img/icon/ThumbsUp_pressed.svg';
+                const newClassAction = isLiked ? 'removeClass' : 'addClass';
+
+                icon.attr('src', newIconSrc)[newClassAction]('liked');
+                // Atualiza o ícone na lista e no modal
+                $(`.items-footerLista[data-postid="${postId}"] .like-icon`).attr('src', newIconSrc)[newClassAction]('liked');
+                $(`.items-footer[data-postid="${postId}"] .like-icon`).attr('src', newIconSrc)[newClassAction]('liked');
+            } else {
+                alert(response.message || 'Erro ao registrar a curtida.');
             }
+        },
+        error: function(xhr) {
+            console.error('Erro AJAX:', xhr.responseText);
+            alert('Ocorreu um erro. Tente novamente.');
+        },
+        complete: function() {
+            likeInProgress = false;
+        }
         });
     });
 });
@@ -1805,7 +1823,20 @@ function openPostPreview(title, content, imageSrc, userName, userAvatar, datasPo
     // Configura o formulário de comentários
     const commentForm = document.getElementById('modalCommentForm');
     commentForm.action = `/comments/${postId}`;
-    
+
+    const modalFooter = document.querySelector('#modalViewPost .items-footer');
+    modalFooter.setAttribute('data-postid', postId);
+
+   // Sincroniza o estado do botão de like no modal com o estado atual na lista
+   const listIcon = $(`.items-footerLista[data-postid="${postId}"] .like-icon`); // Alterado para .items-footerLista
+    const modalIcon = $(`.items-footer[data-postid="${postId}"] .like-icon`);
+    const listCount = $(`.items-footerLista[data-postid="${postId}"] .like-count`).text();
+    const isLiked = listIcon.hasClass('liked');
+    const iconSrc = isLiked ? 'logo/img/icon/ThumbsUp_pressed.svg' : 'logo/img/icon/icon_thumbs.svg';
+
+    modalIcon.attr('src', iconSrc)[isLiked ? 'addClass' : 'removeClass']('liked');
+    $(`.items-footer[data-postid="${postId}"] .like-count`).text(listCount);
+
     // Carrega os comentários existentes
     fetch(`/comments/${postId}`)
         .then(response => response.json())
