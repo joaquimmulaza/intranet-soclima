@@ -396,3 +396,4 @@ Route::get('/upload', [UserController::class, 'showUploadForm']);
 Route::post('/upload', [UserController::class, 'importarFerias'])->name('user.upload');
 
 Route::post('/calcular-ferias', [FeriaController::class, 'calcularFerias']);
+Route::post('/post/{post}/view', [PostController::class, 'registerView'])->name('post.view');

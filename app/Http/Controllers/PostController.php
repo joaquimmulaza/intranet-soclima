@@ -20,16 +20,31 @@ class PostController extends Controller
         $this->$post = $post;
     }
 
-    public function index(){
+    public function index()
+    {
         $posts = Post::all();
-
-        // Calcula as visualizações de cada post
-        foreach ($posts as $post) {
-            $post->views_count = \DB::table('post_views')
-                ->where('post_id', $post->id)
-                ->count();
+    
+        // Registra a visualização do usuário atual para todos os posts exibidos
+        $userId = Auth::id();
+        if ($userId) {
+            foreach ($posts as $post) {
+                $viewExists = \DB::table('post_views')
+                    ->where('post_id', $post->id)
+                    ->where('user_id', $userId)
+                    ->exists();
+    
+                if (!$viewExists) {
+                    \DB::table('post_views')->insert([
+                        'post_id' => $post->id,
+                        'user_id' => $userId,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                    Log::debug("Visualização registrada para post $post->id por usuário $userId");
+                }
+            }
         }
-
+    
         return view('public.home', compact('posts'));
     }
 
@@ -207,23 +222,7 @@ class PostController extends Controller
             ->paginate(3);
 
         // Verifica se o usuário está logado e se já visualizou o post
-        $userId = Auth::id();
-        if ($userId) {
-            $viewExists = \DB::table('post_views')
-                ->where('post_id', $post->id)
-                ->where('user_id', $userId)
-                ->exists();
-
-            if (!$viewExists) {
-                // Se o usuário ainda não visualizou, salva a visualização
-                \DB::table('post_views')->insert([
-                    'post_id' => $post->id,
-                    'user_id' => $userId,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-            }
-        }
+        $post->views_count = $this->registerPostView($post->id);
         // Retorna a view
         // Obter a contagem de likes
         $likes_count = likes_post($post->id);
@@ -260,6 +259,48 @@ class PostController extends Controller
     $post->save();
 
     return response()->json(['message' => 'PDF removido com sucesso!']);
+}
+
+public function registerView(Post $post, Request $request)
+{
+    try {
+        $views_count = $this->registerPostView($post->id);
+        return response()->json([
+            'success' => true,
+            'views_count' => $views_count
+        ]);
+    } catch (\Exception $e) {
+        Log::error('Erro ao registrar visualização: ' . $e->getMessage());
+        return response()->json([
+            'success' => false,
+            'message' => 'Erro ao registrar visualização.'
+        ], 500);
+    }
+}
+
+private function registerPostView($postId)
+{
+    $userId = Auth::id();
+    if ($userId) {
+        $viewExists = \DB::table('post_views')
+            ->where('post_id', $postId)
+            ->where('user_id', $userId)
+            ->exists();
+
+        if (!$viewExists) {
+            \DB::table('post_views')->insert([
+                'post_id' => $postId,
+                'user_id' => $userId,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+            Log::debug("Visualização registrada para post $postId por usuário $userId");
+        }
+    }
+
+    return \DB::table('post_views')
+        ->where('post_id', $postId)
+        ->count();
 }
 
 

@@ -401,7 +401,7 @@
                     
                             <span class="globalHover">
                                 <img src="logo/img/icon/Eye-icon.svg" alt="">
-                                {{ $post->views_count }}0
+                                <span class="post-views-count" data-postid="{{ $post->id }}">{{ $post->views_count }}</span>
                             </span>
                             <span class="comment-button globalHover" style="cursor: pointer;" onclick="toggleComments({{ $post->id }})">
                                 <img src="logo/img/icon/mode_comment2.svg" alt="">
@@ -711,11 +711,11 @@
                         
                                 <span class="globalHover">
                                     <img src="logo/img/icon/Eye-icon.svg" alt="">
-                                    {{ $post->views_count }}0
+                                    <span class="views-count"></span>
                                 </span>
                                 <span class="globalHover">
                                     <img src="logo/img/icon/mode_comment2.svg" alt="">
-                                    <span class="comment-count">{{ $post->comments()->count() }}</span>
+                                    <span class="comment-count"></span>
                                 </span>
                             </div>
                             <form class="comment-form" id="modalCommentForm" action="" method="POST">
@@ -1810,7 +1810,7 @@ function deleteData(postId) {
         }
     });
 }
-
+console.log('Views count inicial na lista:', $('.post-views-count').text());
 function openPostPreview(title, content, imageSrc, userName, userAvatar, datasPosts, postId) {
     // Atualiza os campos do modal de visualização
     document.getElementById('postTitle').textContent = title;
@@ -1826,6 +1826,27 @@ function openPostPreview(title, content, imageSrc, userName, userAvatar, datasPo
 
     const modalFooter = document.querySelector('#modalViewPost .items-footer');
     modalFooter.setAttribute('data-postid', postId);
+
+    // Registra a visualização do post
+    $.ajax({
+        url: `/post/${postId}/view`,
+        method: 'POST',
+        data: {
+            _token: '{{ csrf_token() }}'
+        },
+        success: function(response) {
+            if (response.success) {
+                const viewsCount = response.views_count;
+                // Atualiza a contagem de visualizações na lista e no modal
+                $(`.items-footerLista[data-postid="${postId}"] .post-views-count`).text(viewsCount);
+                $(`#modalViewPost .items-footer .views-count`).text(viewsCount);
+                console.log(viewsCount)
+            }
+        },
+        error: function(xhr) {
+            console.error('Erro ao registrar visualização:', xhr.responseText);
+        }
+    });
 
    // Sincroniza o estado do botão de like no modal com o estado atual na lista
    const listIcon = $(`.items-footerLista[data-postid="${postId}"] .like-icon`); // Alterado para .items-footerLista
@@ -1871,7 +1892,19 @@ function openPostPreview(title, content, imageSrc, userName, userAvatar, datasPo
                 commentsList.appendChild(commentElement);
             });
             // Atualiza a quantidade de comentários
-            document.querySelector('.globalHover .comment-count').textContent = data.comments.length;
+           // Atualiza a contagem de comentários no modal
+           const commentCountElement = document.querySelector('#modalViewPost .items-footer .comment-count');
+            if (commentCountElement) {
+                commentCountElement.textContent = data.length;
+            } else {
+                console.error('Elemento .comment-count não encontrado no modal!');
+            }
+
+            // Opcional: Atualiza a contagem na lista também, se necessário
+            const listCommentCount = document.querySelector(`.items-footerLista[data-postid="${postId}"] .comment-count`);
+            if (listCommentCount) {
+                listCommentCount.textContent = data.length;
+            }
         })
         .catch(error => console.error('Erro ao carregar comentários:', error));
     
