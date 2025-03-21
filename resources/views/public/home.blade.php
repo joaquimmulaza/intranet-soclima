@@ -399,9 +399,10 @@
                                 <span class="like-count">{{ likes_post($post->id) }}</span>
                             </span>
                     
-                            <span class="globalHover">
+                            <span class="globalHover view-container">
                                 <img src="logo/img/icon/Eye-icon.svg" alt="">
                                 <span class="post-views-count" data-postid="{{ $post->id }}">{{ $post->views_count }}</span>
+                                <div class="views-tooltip"></div>
                             </span>
                             <span class="comment-button globalHover" style="cursor: pointer;" onclick="toggleComments({{ $post->id }})">
                                 <img src="logo/img/icon/mode_comment2.svg" alt="">
@@ -663,70 +664,73 @@
                         <!-- Conteúdo do Post -->
                         <div class="rightSideContainerPreview">
                             
-                            <div class="headerContainerPreviewRightSide">
-                                <img class="postUserAvatar" src="" alt="Avatar do Usuário">
-                                <div class="contentTextHeaderPreviewRightSide">
-                                    <div class="containerHeaderPostView">
-                                        <div class="dateAndUserName">
-                                            <span id="postUserName"></span>
-                                            <svg width="4" height="4" viewBox="0 0 4 4" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <circle cx="1.79962" cy="2.20752" r="1.5" fill="#D9D9D9"/>
-                                            </svg>
-                                            <span id="postsDates"></span>
-                                        </div>
-                                        <div class="optAndCloseBtn">
-                                            <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M12.2974 20.167C11.9017 20.167 11.5643 20.0266 11.2851 19.7457C11.0059 19.4651 10.8664 19.1269 10.8664 18.7312C10.8664 18.3356 11.0067 17.9982 11.2874 17.719C11.5682 17.4398 11.9064 17.3002 12.3019 17.3002C12.6975 17.3002 13.0349 17.4407 13.3141 17.7215C13.5933 18.0022 13.7329 18.3403 13.7329 18.736C13.7329 19.1317 13.5925 19.4691 13.3119 19.7482C13.031 20.0274 12.6929 20.167 12.2974 20.167ZM12.2974 13.4335C11.9017 13.4335 11.5643 13.2932 11.2851 13.0125C11.0059 12.7317 10.8664 12.3935 10.8664 11.998C10.8664 11.6023 11.0067 11.2649 11.2874 10.9857C11.5682 10.7066 11.9064 10.567 12.3019 10.567C12.6975 10.567 13.0349 10.7073 13.3141 10.988C13.5933 11.2688 13.7329 11.607 13.7329 12.0025C13.7329 12.3982 13.5925 12.7356 13.3119 13.0147C13.031 13.2939 12.6929 13.4335 12.2974 13.4335ZM12.2974 6.70025C11.9017 6.70025 11.5643 6.55983 11.2851 6.279C11.0059 5.99833 10.8664 5.66016 10.8664 5.2645C10.8664 4.86883 11.0067 4.53141 11.2874 4.25225C11.5682 3.97308 11.9064 3.8335 12.3019 3.8335C12.6975 3.8335 13.0349 3.97391 13.3141 4.25475C13.5933 4.53541 13.7329 4.87358 13.7329 5.26925C13.7329 5.66491 13.5925 6.00233 13.3119 6.2815C13.031 6.56066 12.6929 6.70025 12.2974 6.70025Z" fill="#5F6368"/>
-                                            </svg>
-
-                                            <span class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true"><svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M19.2996 6.41049L17.8896 5.00049L12.2996 10.5905L6.70962 5.00049L5.29962 6.41049L10.8896 12.0005L5.29962 17.5905L6.70962 19.0005L12.2996 13.4105L17.8896 19.0005L19.2996 17.5905L13.7096 12.0005L19.2996 6.41049Z" fill="#555555"/>
+                            <div class="topHeaderSideContainerPreview">
+                                <div class="headerContainerPreviewRightSide">
+                                    <img class="postUserAvatar" src="" alt="Avatar do Usuário">
+                                    <div class="contentTextHeaderPreviewRightSide">
+                                        <div class="containerHeaderPostView">
+                                            <div class="dateAndUserName">
+                                                <span id="postUserName"></span>
+                                                <svg width="4" height="4" viewBox="0 0 4 4" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <circle cx="1.79962" cy="2.20752" r="1.5" fill="#D9D9D9"/>
                                                 </svg>
+                                                <span id="postsDates"></span>
+                                            </div>
+                                            <div class="optAndCloseBtn">
+                                                <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M12.2974 20.167C11.9017 20.167 11.5643 20.0266 11.2851 19.7457C11.0059 19.4651 10.8664 19.1269 10.8664 18.7312C10.8664 18.3356 11.0067 17.9982 11.2874 17.719C11.5682 17.4398 11.9064 17.3002 12.3019 17.3002C12.6975 17.3002 13.0349 17.4407 13.3141 17.7215C13.5933 18.0022 13.7329 18.3403 13.7329 18.736C13.7329 19.1317 13.5925 19.4691 13.3119 19.7482C13.031 20.0274 12.6929 20.167 12.2974 20.167ZM12.2974 13.4335C11.9017 13.4335 11.5643 13.2932 11.2851 13.0125C11.0059 12.7317 10.8664 12.3935 10.8664 11.998C10.8664 11.6023 11.0067 11.2649 11.2874 10.9857C11.5682 10.7066 11.9064 10.567 12.3019 10.567C12.6975 10.567 13.0349 10.7073 13.3141 10.988C13.5933 11.2688 13.7329 11.607 13.7329 12.0025C13.7329 12.3982 13.5925 12.7356 13.3119 13.0147C13.031 13.2939 12.6929 13.4335 12.2974 13.4335ZM12.2974 6.70025C11.9017 6.70025 11.5643 6.55983 11.2851 6.279C11.0059 5.99833 10.8664 5.66016 10.8664 5.2645C10.8664 4.86883 11.0067 4.53141 11.2874 4.25225C11.5682 3.97308 11.9064 3.8335 12.3019 3.8335C12.6975 3.8335 13.0349 3.97391 13.3141 4.25475C13.5933 4.53541 13.7329 4.87358 13.7329 5.26925C13.7329 5.66491 13.5925 6.00233 13.3119 6.2815C13.031 6.56066 12.6929 6.70025 12.2974 6.70025Z" fill="#5F6368"/>
+                                                </svg>
+                                                <span class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true"><svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M19.2996 6.41049L17.8896 5.00049L12.2996 10.5905L6.70962 5.00049L5.29962 6.41049L10.8896 12.0005L5.29962 17.5905L6.70962 19.0005L12.2996 13.4105L17.8896 19.0005L19.2996 17.5905L13.7096 12.0005L19.2996 6.41049Z" fill="#555555"/>
+                                                    </svg>
+                                                    </span>
                                                 </span>
-                                            </span>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <span>{{$post->user->cargo->titulo}}</span>
-                                    <span class="hidden">Todos podem comentar</span>
-                                </div>
-                               
-                                
-                               
-                            </div>
-                            <div class="containerGeralComments">
-                                <div class="containerBodyInputs">
-                                    <h4 class="titleInputPost" id="postTitle"></h4>
-                                    <p class="contentTextarea" id="postContent"></p>
-                                </div>
-                                <div class="containerComments">
-                                
-                                <div class="items-footer" data-postid="">
-                                
-                                <span class="like-button globalHover" style="cursor: pointer;">
-                                    <img src="logo/img/icon/{{ Auth::user()->likes()->where('post_id', $post->id)->exists() && Auth::user()->likes()->where('post_id', $post->id)->first()->like ? 'ThumbsUp_pressed.svg' : 'icon_thumbs.svg' }}" class="like-icon" alt="">
-                                    <span class="like-count">{{ likes_post($post->id) }}</span>
-                                    
-                                </span>
-                        
-                                <span class="globalHover">
-                                    <img src="logo/img/icon/Eye-icon.svg" alt="">
-                                    <span class="views-count"></span>
-                                </span>
-                                <span class="globalHover">
-                                    <img src="logo/img/icon/mode_comment2.svg" alt="">
-                                    <span class="comment-count"></span>
-                                </span>
-                            </div>
-                            <form class="comment-form" id="modalCommentForm" action="" method="POST">
-                                        @csrf
-                                        <div class="containerEnterComment">
-                                        <img class="img_user_post" src="{{ URL::to('/') }}/public/avatar_users/{{ Auth::user()->avatar }}" alt="">
-                                            <input type="text" name="comment" placeholder="Adicione um comentário..." required>
-                                        </div>
-                                </form>
+                                        <span>{{$post->user->cargo->titulo}}</span>
+                                        <span class="hidden">Todos podem comentar</span>
                                     </div>
                                 
+                                
+                                
+                                </div>
+                                <div class="containerGeralComments">
+                                    <div class="containerBodyInputs">
+                                        <h4 class="titleInputPost" id="postTitle"></h4>
+                                        <p class="contentTextarea" id="postContent"></p>
+                                    </div>
+                                
+                                
+                                
+                                </div>
+                            </div>
+                            <div class="containerComments">
+                                
+                                    <div class="items-footer" data-postid="">
+                                        <span class="like-button globalHover" style="cursor: pointer;">
+                                            <img src="logo/img/icon/{{ Auth::user()->likes()->where('post_id', $post->id)->exists() && Auth::user()->likes()->where('post_id', $post->id)->first()->like ? 'ThumbsUp_pressed.svg' : 'icon_thumbs.svg' }}" class="like-icon" alt="">
+                                            <span class="like-count">{{ likes_post($post->id) }}</span>
+                                            
+                                        </span>
+                                
+                                        <span class="globalHover view-container">
+                                            <img src="logo/img/icon/Eye-icon.svg" alt="">
+                                            <span class="views-count"></span>
+                                            <div class="views-tooltip"></div>
+                                        </span>
+                                        <span class="globalHover">
+                                            <img src="logo/img/icon/mode_comment2.svg" alt="">
+                                            <span class="comment-count"></span>
+                                        </span>
+                                    </div>
+                                    <form class="comment-form" id="modalCommentForm" action="" method="POST">
+                                            @csrf
+                                            <div class="containerEnterComment">
+                                            <img class="img_user_post" src="{{ URL::to('/') }}/public/avatar_users/{{ Auth::user()->avatar }}" alt="">
+                                                <input type="text" name="comment" placeholder="Adicione um comentário..." required>
+                                            </div>
+                                    </form>
                                 <!-- Seção de Comentários -->
                                 <div class="comments-section" id="modalCommentsSection">
                                     <div class="comments-list" id="modalCommentsList">
@@ -734,6 +738,7 @@
                                     </div>
                                 </div>
                             </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -1827,29 +1832,29 @@ function openPostPreview(title, content, imageSrc, userName, userAvatar, datasPo
     const modalFooter = document.querySelector('#modalViewPost .items-footer');
     modalFooter.setAttribute('data-postid', postId);
 
-    // Registra a visualização do post
-    $.ajax({
-        url: `/post/${postId}/view`,
-        method: 'POST',
-        data: {
-            _token: '{{ csrf_token() }}'
-        },
-        success: function(response) {
-            if (response.success) {
-                const viewsCount = response.views_count;
-                // Atualiza a contagem de visualizações na lista e no modal
-                $(`.items-footerLista[data-postid="${postId}"] .post-views-count`).text(viewsCount);
+    // Busca o número atual de visualizações
+    fetch(`/post/${postId}/views-count`)
+            .then(response => response.json())
+            .then(data => {
+                const viewsCount = data.views_count;
                 $(`#modalViewPost .items-footer .views-count`).text(viewsCount);
-                console.log(viewsCount)
-            }
-        },
-        error: function(xhr) {
-            console.error('Erro ao registrar visualização:', xhr.responseText);
-        }
-    });
+                $(`.items-footerLista[data-postid="${postId}"] .post-views-count`).text(viewsCount);
+            })
+            .catch(error => console.error('Erro ao buscar contagem de visualizações:', error));
+
+    // Busca o número atual de visualizações sem registrar uma nova visualização
+    fetch(`/post/${postId}/views-count`) // Nova rota para obter apenas a contagem
+        .then(response => response.json())
+        .then(data => {
+            const viewsCount = data.views_count;
+            $(`#modalViewPost .items-footer .views-count`).text(viewsCount);
+            // Opcional: Sincroniza com a lista, mas não é necessário se a lista já estiver atualizada
+            $(`.items-footerLista[data-postid="${postId}"] .post-views-count`).text(viewsCount);
+        })
+        .catch(error => console.error('Erro ao buscar contagem de visualizações:', error));
 
    // Sincroniza o estado do botão de like no modal com o estado atual na lista
-   const listIcon = $(`.items-footerLista[data-postid="${postId}"] .like-icon`); // Alterado para .items-footerLista
+    const listIcon = $(`.items-footerLista[data-postid="${postId}"] .like-icon`); // Alterado para .items-footerLista
     const modalIcon = $(`.items-footer[data-postid="${postId}"] .like-icon`);
     const listCount = $(`.items-footerLista[data-postid="${postId}"] .like-count`).text();
     const isLiked = listIcon.hasClass('liked');
@@ -1907,6 +1912,39 @@ function openPostPreview(title, content, imageSrc, userName, userAvatar, datasPo
             }
         })
         .catch(error => console.error('Erro ao carregar comentários:', error));
+        // Configuração do hover no modal
+        const modalViewContainer = document.querySelector(`#modalViewPost .items-footer .view-container`);
+        const modalTooltip = modalViewContainer.querySelector('.views-tooltip');
+        let modalLoaded = false;
+
+        modalViewContainer.addEventListener('mouseenter', function() {
+            if (!modalLoaded) {
+                fetch(`/post/${postId}/viewers`)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Visualizadores no modal:', data.viewers);
+                        if (data.success && data.viewers.length > 0) {
+                            const ul = document.createElement('ul');
+                            data.viewers.forEach(viewer => {
+                                const li = document.createElement('li');
+                                li.textContent = viewer;
+                                ul.appendChild(li);
+                            });
+                            modalTooltip.innerHTML = '';
+                            modalTooltip.appendChild(ul);
+                            console.log('Tooltip do modal preenchida');
+                        } else {
+                            modalTooltip.textContent = 'Nenhum visualizador';
+                            console.log('Tooltip do modal: Nenhum visualizador');
+                        }
+                        modalLoaded = true;
+                    })
+                    .catch(error => {
+                        console.error('Erro ao buscar visualizadores no modal:', error);
+                        modalTooltip.textContent = 'Erro ao carregar';
+                    });
+            }
+        });
     
     // Abre o modal
     $('#modalViewPost').modal('show');
@@ -1963,5 +2001,114 @@ function toggleComments(postId) {
                 });
             });
         });
+
+        document.addEventListener('DOMContentLoaded', function() {
+    const posts = document.querySelectorAll('.post-item');
+
+    const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const postId = entry.target.querySelector('.post-views-count').getAttribute('data-postid');
+                
+                // Registra a visualização via AJAX
+                console.log('Post visível:', postId);
+                $.ajax({
+                    url: `/post/${postId}/view`,
+                    method: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            const viewsCount = response.views_count;
+                            $(`.items-footerLista[data-postid="${postId}"] .post-views-count`).text(viewsCount);
+                            console.log(`Visualização registrada para post ${postId}: ${viewsCount}`);
+                        }
+                    },
+                    error: function(xhr) {
+                        console.error('Erro ao registrar visualização:', xhr.responseText);
+                    }
+                });
+
+                // Para de observar o post após ser visto
+                observer.unobserve(entry.target);
+            }
+        });
+    }, {
+        threshold: 0.5 // Registra quando 50% do post está visível
+    });
+
+    posts.forEach(post => {
+        observer.observe(post);
+    });
+});
+document.addEventListener('DOMContentLoaded', function() {
+    // Configuração do IntersectionObserver (já existente)
+    const posts = document.querySelectorAll('.post-item');
+    const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const postId = entry.target.querySelector('.post-views-count').getAttribute('data-postid');
+                $.ajax({
+                    url: `/post/${postId}/view`,
+                    method: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            const viewsCount = response.views_count;
+                            $(`.items-footerLista[data-postid="${postId}"] .post-views-count`).text(viewsCount);
+                            console.log(`Visualização registrada para post ${postId}: ${viewsCount}`);
+                        }
+                    },
+                    error: function(xhr) {
+                        console.error('Erro ao registrar visualização:', xhr.responseText);
+                    }
+                });
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+    posts.forEach(post => observer.observe(post));
+
+    // Configuração do hover para exibir os nomes dos visualizadores
+    const viewContainers = document.querySelectorAll('.view-container');
+    viewContainers.forEach(container => {
+        const postId = container.querySelector('.post-views-count').getAttribute('data-postid');
+        const tooltip = container.querySelector('.views-tooltip');
+        let loaded = false;
+
+        container.addEventListener('mouseenter', function() {
+            if (!loaded) {
+                fetch(`/post/${postId}/viewers`)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Visualizadores:', data.viewers);
+                        if (data.success && data.viewers.length > 0) {
+                            // Cria uma lista HTML com os nomes
+                            const ul = document.createElement('ul');
+                            data.viewers.forEach(viewer => {
+                                const li = document.createElement('li');
+                                li.textContent = viewer;
+                                ul.appendChild(li);
+                            });
+                            tooltip.innerHTML = ''; // Limpa o conteúdo anterior
+                            tooltip.appendChild(ul);
+                            console.log('Tooltip preenchida com lista de visualizadores');
+                        } else {
+                            tooltip.textContent = 'Nenhum visualizador';
+                            console.log('Tooltip preenchida com: Nenhum visualizador');
+                        }
+                        loaded = true;
+                    })
+                    .catch(error => {
+                        console.error('Erro ao buscar visualizadores:', error);
+                        tooltip.textContent = 'Erro ao carregar';
+                    });
+            }
+        });
+    });
+});
     </script>
 @endsection

@@ -397,3 +397,5 @@ Route::post('/upload', [UserController::class, 'importarFerias'])->name('user.up
 
 Route::post('/calcular-ferias', [FeriaController::class, 'calcularFerias']);
 Route::post('/post/{post}/view', [PostController::class, 'registerView'])->name('post.view');
+Route::get('/post/{post}/views-count', [PostController::class, 'getViewsCount'])->name('post.views-count');
+Route::get('/post/{post}/viewers', [PostController::class, 'getViewers'])->name('post.viewers');

@@ -24,25 +24,11 @@ class PostController extends Controller
     {
         $posts = Post::all();
     
-        // Registra a visualização do usuário atual para todos os posts exibidos
-        $userId = Auth::id();
-        if ($userId) {
-            foreach ($posts as $post) {
-                $viewExists = \DB::table('post_views')
-                    ->where('post_id', $post->id)
-                    ->where('user_id', $userId)
-                    ->exists();
-    
-                if (!$viewExists) {
-                    \DB::table('post_views')->insert([
-                        'post_id' => $post->id,
-                        'user_id' => $userId,
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ]);
-                    Log::debug("Visualização registrada para post $post->id por usuário $userId");
-                }
-            }
+        // Calcula a contagem inicial de visualizações para cada post
+        foreach ($posts as $post) {
+            $post->views_count = \DB::table('post_views')
+                ->where('post_id', $post->id)
+                ->count();
         }
     
         return view('public.home', compact('posts'));
@@ -321,4 +307,30 @@ private function registerPostView($postId)
             return redirect()->back();
         }
     }
+
+    public function getViewsCount(Post $post)
+    {
+        $views_count = \DB::table('post_views')
+            ->where('post_id', $post->id)
+            ->count();
+
+        return response()->json([
+            'views_count' => $views_count
+        ]);
+    }
+
+    public function getViewers(Post $post)
+{
+    $viewers = \DB::table('post_views')
+        ->join('users', 'post_views.user_id', '=', 'users.id')
+        ->where('post_views.post_id', $post->id)
+        ->pluck('users.name')
+        ->toArray();
+
+    return response()->json([
+        'success' => true,
+        'viewers' => $viewers
+    ]);
+}
+
 }
