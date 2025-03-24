@@ -59,15 +59,38 @@ class CommentController extends Controller
         return response()->json($comments);
     }
 
-    public function edit(Comment $comment){
-        //
+    public function edit(Comment $comment)
+    {
+        $this->authorize('update', $comment);
+        return response()->json($comment);
     }
 
-    public function update(Request $request, Comment $comment){
-        //
+    public function update(Request $request, Comment $comment)
+    {
+        $this->authorize('update', $comment);
+
+        $request->validate([
+            'comment' => 'required|string|max:1000'
+        ]);
+
+        $comment->body = $request->comment;
+        $comment->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Comentário atualizado com sucesso!',
+            'comment' => $comment
+        ]);
     }
 
-    public function destroy(Comment $comment){
-        //
+    public function destroy(Comment $comment)
+    {
+        $this->authorize('delete', $comment);
+        $comment->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Comentário excluído com sucesso!'
+        ]);
     }
 }

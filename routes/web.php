@@ -187,8 +187,6 @@ Route::get('/teste', 'PostController@summernote')->name('post.note');
 |---------------------------------------------------------------------------------------------------
 | POST      | comments/{post}                             | comment.store        | CommentController@store
 * */
-Route::post('comments/{post}', 'CommentController@store')->name('comment.store');
-Route::get('comments/{post}', 'CommentController@show')->name('comment.show');
 
 //LIKES
 /*
@@ -399,3 +397,10 @@ Route::post('/calcular-ferias', [FeriaController::class, 'calcularFerias']);
 Route::post('/post/{post}/view', [PostController::class, 'registerView'])->name('post.view');
 Route::get('/post/{post}/views-count', [PostController::class, 'getViewsCount'])->name('post.views-count');
 Route::get('/post/{post}/viewers', [PostController::class, 'getViewers'])->name('post.viewers');
+
+Route::middleware('auth')->group(function () {
+    Route::post('comments/{post}', 'CommentController@store')->name('comment.store');
+    Route::get('comments/{post}', 'CommentController@show')->name('comment.show');
+    Route::put('comment/{comment}', 'CommentController@update')->name('comment.update');
+    Route::delete('comment/{comment}', 'CommentController@destroy')->name('comment.destroy');
+});

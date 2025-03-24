@@ -4477,6 +4477,13 @@ input.is-invalid {
     display: flex;
     align-items: center;
     gap: 7px;
+    justify-content: space-between;
+}
+
+.comment-info-header{
+    display: flex;
+    align-items: center;
+    gap: 7px;
 }
 
 .comment-author {
@@ -4598,4 +4605,13 @@ input.is-invalid {
 
 .views-tooltip li {
     margin-bottom: 4px; /* Espaçamento entre os nomes */
+}
+
+.comment-info-container {
+    width: 100%;
+}
+
+
+.btnOptViewPost, .containerBtnOptViewPost{
+    width: 100%;
 }

@@ -340,7 +340,7 @@
                     <div class="post-body">
                         @if($post->arquivo_imagem)
                             <div class="size_img_post">
-                                <img src="{{ asset($post->arquivo_imagem) }}" alt="Imagem de Capa" style="cursor: pointer;" onclick="openPostPreview('{{ addslashes($post->title) }}', '{{ addslashes($post->content) }}', '{{ asset($post->arquivo_imagem) }}', '{{ $post->user->name }}', '{{ URL::to('/') }}/public/avatar_users/{{ $post->user->avatar }}', '{{date('d/m/Y', strtotime($post->created_at))}}', '{{$post->id}}')">
+                                <img src="{{ asset($post->arquivo_imagem) }}" alt="Imagem de Capa" style="cursor: pointer;" onclick="openPostPreview('{{ addslashes($post->title) }}', '{{ addslashes($post->content) }}', '{{ asset($post->arquivo_imagem) }}', '{{ $post->user->name }}', '{{ URL::to('/') }}/public/avatar_users/{{ $post->user->avatar }}', '{{date('d/m/Y', strtotime($post->created_at))}}', '{{$post->id}}', '{{$post->user->cargo->titulo}}')">
                             </div>
                         @endif
                         
@@ -423,16 +423,39 @@
                         </form>
                         <div class="comments-list">
                             @foreach($post->comments()->orderBy('created_at', 'desc')->get() as $comment)
-                                <div class="comment-item">
+                            <div class="comment-item" id="comment-{{ $comment->id }}">
                                     <div class="comment-header">
                                         <img class="comment-avatar" src="{{ url('public/avatar_users/' . $comment->user->avatar) }}" alt="">
                                         <div class="comment-info-container">
                                             <div class="comment-info">
-                                                <span class="comment-author">{{ $comment->user->name }}</span>
-                                                <svg width="4" height="4" viewBox="0 0 4 4" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <circle cx="1.79962" cy="2.20752" r="1.5" fill="#D9D9D9"/>
-                                                </svg>
-                                                <span class="comment-date">{{ date('d/m/Y', strtotime($comment->created_at)) }}</span>
+                                                <div class="comment-info-header">
+                                                    <span class="comment-author">{{ $comment->user->name }}</span>
+                                                    <svg width="4" height="4" viewBox="0 0 4 4" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <circle cx="1.79962" cy="2.20752" r="1.5" fill="#D9D9D9"/>
+                                                    </svg>
+                                                    <span class="comment-date">{{ date('d/m/Y', strtotime($comment->created_at)) }}</span>
+                                                </div>
+                                                @if($comment->user_id == auth()->id())
+                                                <div class="containerOpt">
+                                                    <button class="btnOpt"  data-toggle="modal" data-target=".modalOpt-{{ $comment->id }}" style="margin: 0 !important; padding: 0 !important;"><img src="logo/img/icon/frame26.svg" alt="" ></button>
+                                                    <div class="modal fade modalOpt modalOpt-{{ $comment->id }}" tabindex="-1" aria-labelledby="modalOptLabel" aria-hidden="true" data-backdrop="true" data-keyboard="true">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-body modal-bodyOpt">
+                                                                <div class="containerBtnOpt">
+                                                                    <button type="button" data-toggle="modal" style="border-bottom: none; border-top-left-radius: 5px; border-top-right-radius: 5px;" class="btnPosts editPostButton edit-comment-btn"  data-comment-id="{{ $comment->id }}" data-comment-body="{{ $comment->body }}">
+                                                                        Editar
+                                                                    </button>
+                                                                    <button style="border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;" type="button" class="btnPosts" onclick="deleteComment({{ $comment->id }})">
+                                                                        Eliminar
+                                                                    </button>
+                                                            </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                @endif
                                             </div>
                                             <span class="comment-user-cargo">{{ $comment->user->cargo->titulo }}</span>
                                         </div>
@@ -688,7 +711,7 @@
                                                 </span>
                                             </div>
                                         </div>
-                                        <span>{{$post->user->cargo->titulo}}</span>
+                                        <span id="cargoUser"></span>
                                         <span class="hidden">Todos podem comentar</span>
                                     </div>
                                 
@@ -1796,7 +1819,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function deleteData(postId) {
     Swal.fire({
-       title: 'Descartar',
+       title: 'Eliminar',
         text: "Tem a certeza que queres eliminar esta publicação?",
         showCancelButton: true,
         confirmButtonColor: '#fff',
@@ -1816,7 +1839,7 @@ function deleteData(postId) {
     });
 }
 console.log('Views count inicial na lista:', $('.post-views-count').text());
-function openPostPreview(title, content, imageSrc, userName, userAvatar, datasPosts, postId) {
+function openPostPreview(title, content, imageSrc, userName, userAvatar, datasPosts, postId, cargo) {
     // Atualiza os campos do modal de visualização
     document.getElementById('postTitle').textContent = title;
     document.getElementById('postContent').textContent = content;
@@ -1824,6 +1847,7 @@ function openPostPreview(title, content, imageSrc, userName, userAvatar, datasPo
     document.querySelector('.postUserAvatar').src = userAvatar;
     document.querySelector('.postImage').src = imageSrc;
     document.getElementById('postsDates').textContent = datasPosts;
+    document.getElementById('cargoUser').textContent = cargo;
     
     // Configura o formulário de comentários
     const commentForm = document.getElementById('modalCommentForm');
@@ -1879,11 +1903,37 @@ function openPostPreview(title, content, imageSrc, userName, userAvatar, datasPo
                        
                         <div class="comment-info-container">
                             <div class="comment-info">
-                                <span class="comment-author">${comment.user.name}</span>
-                                <svg width="4" height="4" viewBox="0 0 4 4" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <circle cx="1.79962" cy="2.20752" r="1.5" fill="#D9D9D9"/>
-                                </svg>
-                                <span class="comment-date">${new Date(comment.created_at).toLocaleDateString()}</span>
+                                <div class="comment-info-header">
+                                    <span class="comment-author">${comment.user.name}</span>
+                                    <svg width="4" height="4" viewBox="0 0 4 4" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <circle cx="1.79962" cy="2.20752" r="1.5" fill="#D9D9D9"/>
+                                    </svg>
+                                    <span class="comment-date">${new Date(comment.created_at).toLocaleDateString()}</span>
+                                </div>
+                                 ${comment.user_id == {{ auth()->id() }} ? `
+                                <div class="containerOpt">
+                                    <button class="btnOpt" data-toggle="modal" data-target="#modalOpt-${comment.id}">
+                                        <img src="logo/img/icon/frame26.svg" alt="">
+                                    </button>
+                                    <div class="modal fade modalOpt" id="modalOpt-${comment.id}"  aria-labelledby="modalOptLabel" aria-hidden="true" data-backdrop="true" data-keyboard="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-body modal-bodyOpt">
+                                                    <div class="containerBtnOpt containerBtnOptViewPost">
+                                                        
+                                                        <button class="btnOpt btnOptViewPost edit-comment-btn" data-comment-id="${comment.id}" data-comment-body="${comment.body}" style="margin: 0 !important; padding: 0 !important;">
+                                                            Editar
+                                                        </button>
+                                                        <button class="btnOpt btnOptViewPost" onclick="deleteComment(${comment.id})" style="margin: 0 !important; padding: 0 !important;">
+                                                            Eliminar
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                ` : ''}
                             
                             </div>
                             <span class="comment-user-cargo">{{ $comment->user->cargo->titulo }}</span>
@@ -1895,6 +1945,10 @@ function openPostPreview(title, content, imageSrc, userName, userAvatar, datasPo
                     </div>
                 `;
                 commentsList.appendChild(commentElement);
+                // Inicializa o modal dinamicamente após adicioná-lo ao DOM
+                if (comment.user_id == {{ auth()->id() }}) {
+                    $(`#modalOpt-${comment.id}`).modal({ show: false }); // Inicializa o modal
+                }
             });
             // Atualiza a quantidade de comentários
            // Atualiza a contagem de comentários no modal
@@ -1954,6 +2008,128 @@ function toggleComments(postId) {
     const commentsSection = document.getElementById(`comments-section-${postId}`);
     commentsSection.style.display = commentsSection.style.display === 'none' ? 'block' : 'none';
 }
+
+// Função para excluir comentário via AJAX
+window.deleteComment = function (commentId) {
+        Swal.fire({
+            title: 'Eliminar',
+                    text: "Tem certeza que queres eliminar o comentário?",
+                    showCancelButton: true,
+                    confirmButtonColor: '#fff',
+                    cancelButtonColor: '#fff',
+                    confirmButtonText: 'Sim',
+                    cancelButtonText: 'Não',
+                    customClass: {
+                    confirmButtonColor: 'deleteButton_alert',
+                    cancelButtonColor: 'cancelButton_alert',
+                    title: 'title_delete_alert',
+                    popup: 'popup_delete_alert',
+                    },	
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '/comment/' + commentId,
+                    method: 'DELETE',
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            $('#comment-' + commentId).remove();
+                            window.location.reload();
+                        } else {
+                            Swal.fire('Erro', response.message, 'error');
+                        }
+                    },
+                    error: function (xhr) {
+                        Swal.fire('Erro', 'Ocorreu um erro ao excluir o comentário.', 'error');
+                    }
+                });
+            }
+        });
+    };
+
+    $(document).ready(function () {
+    let originalAction = '';
+    let originalPlaceholder = '';
+
+    // Função para cancelar a edição
+    function cancelEdit() {
+        const form = $('.comment-form');
+        form.attr('action', originalAction);
+        form.find('input[name="comment"]').val('');
+        form.find('input[name="comment"]').attr('placeholder', originalPlaceholder);
+        form.find('.cancel-edit-btn').remove();
+    }
+
+    // Evento de clique no botão de edição de comentário
+    $(document).on('click', '.edit-comment-btn', function () {
+        const commentId = $(this).data('comment-id');
+        const commentBody = $(this).data('comment-body');
+        const form = $('.comment-form');
+        const input = form.find('input[name="comment"]');
+
+        // Salvar a ação original e o placeholder
+        originalAction = form.attr('action');
+        originalPlaceholder = input.attr('placeholder');
+
+        // Alterar a ação do formulário para a rota de atualização do comentário
+        form.attr('action', `/comment/${commentId}`);
+        input.val(commentBody);
+        input.attr('placeholder', 'Edite seu comentário...');
+
+        // Adicionar botão de cancelar edição
+        if (!form.find('.cancel-edit-btn').length) {
+            form.append('<button type="button" class="cancel-edit-btn">Cancelar</button>');
+        }
+    });
+
+    // Evento de clique no botão de cancelar edição
+    $(document).on('click', '.cancel-edit-btn', function () {
+        cancelEdit();
+    });
+
+    // Evento de envio do formulário de comentário
+    $('.comment-form').on('submit', function (e) {
+        e.preventDefault();
+
+        const form = $(this);
+        const action = form.attr('action');
+        const formData = new FormData(this);
+
+        // Verificar se é uma edição de comentário
+        const isEdit = action.includes('/comment/');
+
+        if (isEdit) {
+            formData.append('_method', 'PUT');
+        }
+
+        $.ajax({
+            url: action,
+            method: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                if (response.success) {
+                    // Atualizar o comentário na página ou adicionar um novo comentário
+                    if (isEdit) {
+                        const commentItem = $(`#comment-${response.comment.id}`);
+                        commentItem.find('.comment-content').text(response.comment.body);
+                        cancelEdit();
+                    } else {
+                        window.location.reload();
+                    }
+                } else {
+                    alert(response.message || 'Erro ao adicionar comentário');
+                }
+            },
+            error: function (xhr) {
+                alert('Erro ao adicionar comentário');
+            }
+        });
+    });
+});
 </script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/ajax/libs/jvectormap/2.0.5/jquery-jvectormap.min.js"></script>
@@ -1971,36 +2147,7 @@ function toggleComments(postId) {
 
     <script>
 
-        // Adicionar evento de submit para o formulário de comentários
-        document.querySelectorAll('.comment-form').forEach(form => {
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const formData = new FormData(this);
-                const postId = this.action.split('/').pop();
-                
-                fetch(this.action, {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Recarregar a página para mostrar o novo comentário
-                        window.location.reload();
-                    } else {
-                        alert('Erro ao adicionar comentário');
-                    }
-                })
-                .catch(error => {
-                    console.error('Erro:', error);
-                    alert('Erro ao adicionar comentário');
-                });
-            });
-        });
+        
 
         document.addEventListener('DOMContentLoaded', function() {
     const posts = document.querySelectorAll('.post-item');
