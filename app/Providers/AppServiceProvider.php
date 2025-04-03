@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Blade;
+use App\Ausencia;
 use Illuminate\Support\ServiceProvider;
 use ConsoleTVs\Charts\Classes\Chartjs\Chart; // Importa a classe Chartjs// Importa a classe Chart
 
@@ -20,7 +21,7 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
         // Cria uma instância do gráfico Chartjs
         $chart = new Chart('sampleChart');
-
+        view()->share('ausencias', Ausencia::all());
         // Configura o gráfico
         $chart->labels(['Label 1', 'Label 2', 'Label 3']);
         $chart->dataset('Sample Dataset', 'line', [1, 2, 3]);

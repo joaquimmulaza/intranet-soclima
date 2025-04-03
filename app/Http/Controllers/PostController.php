@@ -23,15 +23,15 @@ class PostController extends Controller
     public function index()
     {
         $posts = Post::all();
-    
+
         // Calcula a contagem inicial de visualizações para cada post
         foreach ($posts as $post) {
             $post->views_count = \DB::table('post_views')
                 ->where('post_id', $post->id)
                 ->count();
         }
-    
-        return view('public.home', compact('posts'));
+
+        return view('public.home', compact('posts',));
     }
 
     public function create(){

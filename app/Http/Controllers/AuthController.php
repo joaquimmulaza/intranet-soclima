@@ -39,7 +39,7 @@ class AuthController extends Controller
     public function index(Request $request){
 
         if(Auth::check() === true && Auth::user()->status == "ativo"){
-    
+            $user = auth()->user();
             // Busca todos os posts
             $posts = Post::all();
             $post = $posts->isNotEmpty() ? collect($posts)->last() : null; // Verifica se há posts
@@ -75,7 +75,7 @@ class AuthController extends Controller
                 ->paginate(10);
     
             // Retorna a view com os dados
-            return view('public.home', compact('posts', 'post', 'questionarios', 'feriasEmCurso'));
+            return view('public.home', compact('posts', 'post', 'questionarios', 'feriasEmCurso', 'user'));
         }
         return redirect()->route('admin.login');
     }

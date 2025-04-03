@@ -15,7 +15,7 @@
 </div>
 <div class="main_container manager_doc">
     <span>Veja os status das suas solicitações</span>
-    <a href="#">Consultar</a>
+    <a href="{{route('documentos-solicitados.index')}}">Consultar</a>
 </div>
 <div class="main_container request_document">
     <form method="POST" action="{{ route('document-request.store') }}">
@@ -41,7 +41,7 @@
                     <label for="tipo_documento" class="form-label">Tipo de documento*</label>
                     <select id="tipo_documento" name="tipo_documento" class="form-select" required>
                         <option value="Declaração de trabalho">Declaração de trabalho</option>
-                        <option value="Comprovativo de residência">Declaração para obtenção de visto</option>
+                        <option value="Declaração para obtenção de visto">Declaração para obtenção de visto</option>
                         <option value="Declaração para obtenção de crédito bancário">Declaração para obtenção de crédito bancário</option>
                         <option value="Declaração para actualização de conta bancária">Declaração para actualização de conta bancária</option>
                         <option value="Outros">Outros</option>

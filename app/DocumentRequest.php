@@ -16,12 +16,20 @@ class DocumentRequest extends Model
         'forma_entrega',
         'prazo_entrega',
         'observacoes',
+        'observacoes_admin',
         'status',
         'documento_path',
+        'admin_id',
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
     }
+
+     // Relação com o administrador que enviou o documento
+     public function admin()
+     {
+         return $this->belongsTo(User::class, 'admin_id');
+     }
 }

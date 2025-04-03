@@ -28,7 +28,7 @@
         </div>
     </div>
     @if($ausencia->user->role_id == 1)
-    <a href="{{ route('documents.show') }}" class="globalBtn_with_border right_side">Voltar</a>
+    <a href="{{ route('documents.index') }}" class="globalBtn_with_border right_side">Voltar</a>
     @else
     <a href="{{ route('documents.index') }}" class="globalBtn_with_border right_side">Voltar em Ausências</a>
     @endif

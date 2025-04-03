@@ -15,6 +15,7 @@ use App\Http\Controllers\DocumentRequestController;
 use App\Http\Controllers\AdminDocumentRequestController;
 use App\Http\Controllers\AusenciaController;
 use Illuminate\Http\Request;
+use App\Http\Controllers\CommentController;
 /*
 |--------------------------------------------------------------------------
 | TESTES UNIDADE - Auth::routes();
@@ -366,6 +367,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/ausencias/view/{id}', [AusenciaController::class, 'showById'])->name('documents.visualizar');
     Route::put('/ausencias/{id}/aprovar-rejeitar', [AusenciaController::class, 'aprovarRejeitar'])->name('ausencias.aprovarRejeitar');
 });
+Route::get('/documents/show', [DocumentController::class, 'showDocuments'])->name('documents.show');
 
 Route::get('/ferias/user/{user_id}', [FeriaController::class, 'showByUser'])->name('ferias.show');
 
@@ -373,19 +375,28 @@ Route::get('/ferias/user/{user_id}', [FeriaController::class, 'showByUser'])->na
 
 Route::get('/ferias/{id}', [FeriaController::class, 'show'])->name('ferias.show');
 
-Route::get('/documents/show', [DocumentController::class, 'showDocuments'])->name('documents.show');
-Route::post('/documents/pedidos', [DocumentRequestController::class, 'store'])->name('document-request.store');
-Route::get('/documents/pedidos', [DocumentRequestController::class, 'create'])->name('document-request.create');
-Route::delete('/documents/{id}', [DocumentController::class, 'destroy'])->name('documents.destroy');
+
+// Route::get('/doc/show', [DocumentController::class, 'showDocuments'])->name('documento-request.showSendDocs');
+Route::post('/doc/pedidos', [DocumentRequestController::class, 'store'])->name('document-request.store');
+Route::get('/doc/pedidos', [DocumentRequestController::class, 'create'])->name('documento-request.create');
+Route::get('/doc/enviar', [DocumentController::class, 'showDocuments2'])->name('documento-request.send');
+Route::post('/doc/enviar', [DocumentController::class, 'store'])->name('documento-request.store');
+Route::get('/doc/enviados', [DocumentController::class, 'index'])->name('documento-request.showSendDocs');
+Route::delete('/doc/{id}', [DocumentController::class, 'destroy'])->name('documento-request.destroy');
+Route::delete('/documento-solicitado/{id}', [DocumentRequestController::class, 'destroy'])->name('documento-solicitado.destroy');
+Route::get('/documento-solicitado/{id}', [DocumentRequestController::class, 'show'])
+     ->name('documento-solicitado.show');
+
+
 
 Route::get('/contas-suspensas', [UserController::class, 'mostrarContasSuspensas'])->name('contas.suspensas');
 
-Route::middleware(['auth'])->group(function () {
-    Route::get('/document-request', [DocumentRequestController::class, 'index'])->name('document-request.index');
-});
+// Route::middleware(['auth'])->group(function () {
+//     Route::get('/document-request', [DocumentRequestController::class, 'index'])->name('document-request.index');
+// });
 
 Route::middleware(['auth',])->group(function () {
-    Route::get('/admin/document-request', [AdminDocumentRequestController::class, 'index'])->name('document-request.index');
+    Route::get('/admin/document-request', [AdminDocumentRequestController::class, 'index'])->name('admin_docs.index');
     Route::post('/admin/document-request/{id}/upload', [AdminDocumentRequestController::class, 'uploadDocument'])->name('admin.document-request.upload');
     Route::post('/admin/document-request/{id}/complete', [AdminDocumentRequestController::class, 'markAsComplete'])->name('document-request.complete');
 });
@@ -403,4 +414,21 @@ Route::middleware('auth')->group(function () {
     Route::get('comments/{post}', 'CommentController@show')->name('comment.show');
     Route::put('comment/{comment}', 'CommentController@update')->name('comment.update');
     Route::delete('comment/{comment}', 'CommentController@destroy')->name('comment.destroy');
+    Route::post('comment/{comment}/like', 'CommentController@like')->name('comment.like');
+    Route::post('comment/{comment}/reply', 'CommentController@reply')->name('comment.reply');
+    Route::post('comment-reply/{commentReply}/like', 'CommentController@likeReply')->name('comment.reply.like');
+});
+
+Route::middleware(['auth'])->group(function () {
+    // List all document requests for the logged-in user
+    Route::get('/documentos-solicitados', 'DocumentRequestController@index')
+         ->name('documentos-solicitados.index');
+
+    Route::get('/documentos-solicitados/{id}/download', 'DocumentRequestController@download')
+    ->name('document-request.download');
+
+    Route::delete('/documentos-solicitados/{id}/anular', 'DocumentRequestController@anular')
+    ->name('document-request.anular');
+    Route::delete('/documentos-solicitados/{id}/anular', 'DocumentRequestController@anular')
+    ->name('document-request.anular');
 });

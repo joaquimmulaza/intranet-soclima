@@ -77,21 +77,28 @@
                     data-vista="{{ $notification_user->vista ? 'true' : 'false' }}">
                    
                     <div class="notification-content">
-                            @php
-                                $imageSrc = ($notification_user->titulo === 'Aniversariantes do dia' || $notification_user->titulo === 'Aniversário')
-                                    ? asset('logo/img/icon/birthday_icon.svg')
-                                    : asset('public/avatar_users/' . ($notification_user->user->avatar ?? 'default.png'));
-                                $imageSrc = ($notification_user->titulo === 'Justificativo Enviado')
-                                    ? asset('logo/img/icon/communication.svg')
-                                    : asset('public/avatar_users/' . ($notification_user->user->avatar ?? 'default.png'));
-                            @endphp
-                            @if($notification_user->titulo === 'Aniversariantes do dia' || $notification_user->titulo === 'Aniversário' || $notification_user->titulo === 'Justificativo Enviado')
-                            <img class="img-notification"  src="{{ $imageSrc }}" alt="Ícone Notificação">
-                            @else
+                        @php
+                            if ($notification_user->titulo === 'Aniversariantes do dia' || $notification_user->titulo === 'Aniversário') {
+                                $imageSrc = asset('logo/img/icon/birthday_icon.svg');
+                            } elseif ($notification_user->titulo === 'Justificativo Enviado') {
+                                $imageSrc = asset('logo/img/icon/communication.svg');
+                            } elseif ($notification_user->titulo === 'Enviar documento') {
+                                $imageSrc = asset('logo/img/icon/doc_send.svg'); // Ícone para "Enviar documento"
+                            } else {
+                                $imageSrc = asset('public/avatar_users/' . ($notification_user->user->avatar ?? 'default.png'));
+                            }
+                        @endphp
+
+                        @if($notification_user->titulo === 'Aniversariantes do dia' || $notification_user->titulo === 'Aniversário' || 
+                            $notification_user->titulo === 'Justificativo Enviado' || $notification_user->titulo === 'Enviar documento')
+                            <img class="img-notification" src="{{ $imageSrc }}" alt="Ícone Notificação">
+                        @else
                             <img class="img-notification" style="border-radius: 50%;" src="{{ $imageSrc }}" alt="Ícone Notificação">
-                            @endif
-                            <p>{!! $notification_user->descricao !!}</p>
+                        @endif
+
+                        <p>{!! $notification_user->descricao !!}</p>
                     </div>
+
                     <div class="time-notification"><small>{{ $notification_user->tempo_decorrido_formatado }}</small></div>
                 </a>
                
@@ -387,7 +394,11 @@
                                 <a href="{{route('documents.show')}}"><img src="logo/img/icon/justificativo-icon.svg" alt="">Justificativos</a>
                                 @endcan
                                 <a class="{{Route::current()->getName() === 'telefones.index' ? 'menu-open' : ''}}" href="{{route('telefones.index')}}"><img src="logo/img/icon/list-phone.svg" alt="">Lista telefônica</a>
-                                <a href="{{route('documents.index')}}"><img src="logo/img/icon/ferias-icon.svg" alt="">Ausências</a>
+                                
+                                <a href="{{route('documents.show')}}"><img src="logo/img/icon/ferias-icon.svg" alt="">Ausências</a>
+                                @can('app.dashboard')
+                                <a href="{{route('admin_docs.index')}}"><img src="{{asset('logo/img/icon/text_snippet.svg')}}" alt="">Documentos Solicitados</a>
+                                @endcan
                             </div>
                         </div>
                 </li>

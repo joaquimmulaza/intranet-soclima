@@ -71,19 +71,27 @@
                 </li>
                 <li>
                     <img src="logo/img/icon/assignment_turned_in.svg" alt="">
-                    <a href="">Envio de documento</a>
+                    <a href="{{route('documento-request.send')}}">Envio de documento</a>
                 </li>
+
+                @if($user->cargo->titulo == 'Gerente')
                 <li>
                     <img src="logo/img/icon/feed.svg" alt="">
-                    <a href="">Pedido de documento</a>
+                    <a href="{{route('admin_docs.index')}}">Documentos Solicitados</a>
                 </li>
+                @else
+                <li>
+                    <img src="logo/img/icon/feed.svg" alt="">
+                    <a href="{{route('documento-request.create')}}">Pedido de documento</a>
+                </li>
+                @endif
                 <li>
                     <img src="logo/img/icon/gmail_groups.svg" alt="">
                     <a class="{{Route::current()->getName() === 'telefones.index' ? 'menu-open' : ''}}" href="{{route('telefones.index')}}">Lista Telefônica</a>
                 </li>
                 <li>
                     <img src="logo/img/icon/Vector.svg" alt="">
-                    <a href="{{route('documents.index')}}">Ausências</a>
+                    <a href="{{route('documents.show')}}">Ausências</a>
                 </li>
             </ul>
         </div>
@@ -388,7 +396,11 @@
                         
 
                         <h3>{{Str::limit($post->title, 80)}}</h3>
-                        <p>{{Str::limit($post->content, 80)}}</p>
+                        <p class="expandir_post">{{Str::limit($post->content, 80)}}</p>
+                        <p class="content-full" style="display: none;">{{ $post->content }}</p>
+                        @if(strlen($post->content) > 80)
+                            <button class="toggle-content-btn">Ver mais</button>
+                        @endif
                     </div>
                     <hr style="width: 460px; margin: 0 auto;">
                     <div class="post-footer">
@@ -435,7 +447,7 @@
                                                     </svg>
                                                     <span class="comment-date">{{ date('d/m/Y', strtotime($comment->created_at)) }}</span>
                                                 </div>
-                                                @if($comment->user_id == auth()->id())
+                                            @if($comment->user_id == auth()->id() || $post->user_id == auth()->id())
                                                 <div class="containerOpt">
                                                     <button class="btnOpt"  data-toggle="modal" data-target=".modalOpt-{{ $comment->id }}" style="margin: 0 !important; padding: 0 !important;"><img src="logo/img/icon/frame26.svg" alt="" ></button>
                                                     <div class="modal fade modalOpt modalOpt-{{ $comment->id }}" tabindex="-1" aria-labelledby="modalOptLabel" aria-hidden="true" data-backdrop="true" data-keyboard="true">
@@ -458,12 +470,97 @@
                                                 @endif
                                             </div>
                                             <span class="comment-user-cargo">{{ $comment->user->cargo->titulo }}</span>
+                                        
                                         </div>
+                                    
                                     </div>
-                                    <div class="comment-content">
-                                        {{ $comment->body }}
+                                <div class="comment-body">{{ $comment->body }}</div>
+                                <div class="comment-actions hidden" id="comment-{{ $comment->id }}">
+                                <span class="like-buttonComment {{ $comment->likes()->where('user_id', auth()->id())->exists() ? 'likedComment' : '' }}" 
+                                        style="cursor: pointer;" 
+                                        onclick="likeComment({{ $comment->id }})">
+                                        <!-- O ícone começa invisível -->
+                                        <img src="logo/img/icon/ThumbsUp_comentario.svg" class="like-iconComment" alt="" style="display: {{ $comment->likes()->where('user_id', auth()->id())->exists() ? 'inline' : 'none' }};">
+                                        <span class="like-countComment">{{ $comment->likes()->count() }}.</span>
+                                        <span>Gosto</span>
+                                        
+                                    </span>
+                                    <span class="reply-button" style="cursor: pointer;" onclick="toggleReplyForm({{ $comment->id }})">
+                                        Responder
+                                    </span>
+                                </div>
+
+
+                               
+
+                                <!-- Lista de Respostas -->
+                                <div class="replies-list">
+                                    
+                                    <!-- Contêiner das respostas, inicialmente oculto -->
+                                    <div class="replies-container" id="replies-{{ $comment->id }}" style="display: none;">
+                                        @foreach($comment->replies()->orderBy('created_at', 'asc')->get() as $reply)
+                                        <div class="reply-item">
+                                            <div class="comment-header">
+                                                <img class="comment-avatar" src="{{ url('public/avatar_users/' . $reply->user->avatar) }}" alt="">
+                                                <div class="comment-info-container">
+                                                    <div class="comment-info">
+                                                        <div class="comment-info-header">
+                                                            <span class="comment-author">{{ $reply->user->name }}</span>
+                                                            <svg width="4" height="4" viewBox="0 0 4 4" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <circle cx="1.79962" cy="2.20752" r="1.5" fill="#D9D9D9"/>
+                                                            </svg>
+                                                            <span class="comment-date">{{ date('d/m/Y', strtotime($reply->created_at)) }}</span>
+                                                        </div>
+                                                    </div>
+                                                    <span class="comment-user-cargo">{{ $comment->user->cargo->titulo }}</span>
+                                                </div>
+                                                
+                                            </div>
+                                            
+                                            <div class="comment-body reply_container_actions" id="reply-{{ $reply->id }}">
+                                                {{ $reply->body }}
+                                                <div class="comment-actions">
+                                                    <!-- Botão de Curtir -->
+                                                    <span class="like-buttonCommentReply {{ $reply->isLikedBy(auth()->user()) ? 'likedReply' : '' }}" 
+                                                        style="cursor: pointer;" 
+                                                        onclick="likeReply({{ $reply->id }})">
+                                                        <span class="like-iconReply" 
+                                                            style="display: {{ $reply->isLikedBy(auth()->user()) ? 'inline' : 'none' }};"> <img src="logo/img/icon/ThumbsUp_comentario.svg" alt=""></span>
+                                                        <span class="like-countReply">{{ $reply->likes()->count()  }}</span>
+                                                        
+                                                        <span>Gosto</span>
+                                                        
+                                                    </span>
+
+                                                    <!-- Botão de Responder -->
+                                                    <span class="reply-button" 
+                                                        style="cursor: pointer;" 
+                                                        onclick="toggleReplyForm({{ $comment->id }})">
+                                                        Responder
+                                                    </span>
+                                                </div>
                                     </div>
                                 </div>
+                            @endforeach
+                        </div>
+                                  <!-- Botão para expandir/recolher, exibido apenas se houver respostas -->
+                                @if($comment->replies()->count() > 0)
+                                <div class="toggle-replies" id="toggle-replies-{{ $comment->id }}" onclick="toggleReplies({{ $comment->id }})">
+                                    <span>Ver mais {{ $comment->replies()->count() }} resposta{{ $comment->replies()->count() > 1 ? 's' : '' }}</span>
+                                </div>
+                                @endif
+                                 <!-- Formulário de Resposta -->
+                                 <div class="reply-form-container" id="reply-form-{{ $comment->id }}" style="display: none;">
+                                    <form action="{{ route('comment.reply', $comment->id) }}" method="POST" class="reply-form">
+                                        @csrf
+                                        <div class="comment-input-container">
+                                            <img class="comment-avatar" src="{{ url('public/avatar_users/' . Auth::user()->avatar) }}" alt="">
+                                            <input type="text" name="reply" class="comment-input" placeholder="Responder ao comentário" required>
+                                        </div>
+                                    </form>
+                                </div>
+                                </div>
+                            </div>
                             @endforeach
                         </div>
                     </div>
@@ -1717,7 +1814,6 @@ document.getElementById("pdfInputEdit").addEventListener("change", function (eve
 });
 
 
-
 // Adicionar evento para "Adicionar Mais" no #modalEdit
 document.addEventListener("click", function (e) {
     const addFileBtnEdit = e.target.closest("#addFileBtnEdit");
@@ -1839,7 +1935,7 @@ function deleteData(postId) {
     });
 }
 console.log('Views count inicial na lista:', $('.post-views-count').text());
-function openPostPreview(title, content, imageSrc, userName, userAvatar, datasPosts, postId, cargo) {
+function openPostPreview(title, content, imageSrc, userName, userAvatar, datasPosts, postId, cargo, authUserId, postUserId) {
     // Atualiza os campos do modal de visualização
     document.getElementById('postTitle').textContent = title;
     document.getElementById('postContent').textContent = content;
@@ -1910,7 +2006,7 @@ function openPostPreview(title, content, imageSrc, userName, userAvatar, datasPo
                                     </svg>
                                     <span class="comment-date">${new Date(comment.created_at).toLocaleDateString()}</span>
                                 </div>
-                                 ${comment.user_id == {{ auth()->id() }} ? `
+                              ${(comment.user_id == authUserId || postUserId == authUserId) ? `
                                 <div class="containerOpt">
                                     <button class="btnOpt" data-toggle="modal" data-target="#modalOpt-${comment.id}">
                                         <img src="logo/img/icon/frame26.svg" alt="">
@@ -1921,9 +2017,11 @@ function openPostPreview(title, content, imageSrc, userName, userAvatar, datasPo
                                                 <div class="modal-body modal-bodyOpt">
                                                     <div class="containerBtnOpt containerBtnOptViewPost">
                                                         
+                                                       ${(comment.user_id == authUserId) ? `
                                                         <button class="btnOpt btnOptViewPost edit-comment-btn" data-comment-id="${comment.id}" data-comment-body="${comment.body}" style="margin: 0 !important; padding: 0 !important;">
                                                             Editar
                                                         </button>
+                                                        ` : ''}
                                                         <button class="btnOpt btnOptViewPost" onclick="deleteComment(${comment.id})" style="margin: 0 !important; padding: 0 !important;">
                                                             Eliminar
                                                         </button>
@@ -1942,6 +2040,10 @@ function openPostPreview(title, content, imageSrc, userName, userAvatar, datasPo
                     </div>
                     <div class="comment-body">
                         ${comment.body}
+                        <div class="comment_content_footer">
+                            <span>Gosto</span>
+                            <span>Responder</span>
+                        </div>
                     </div>
                 `;
                 commentsList.appendChild(commentElement);
@@ -2130,6 +2232,191 @@ window.deleteComment = function (commentId) {
         });
     });
 });
+function likeComment(commentId) {
+    fetch(`/comment/${commentId}/like`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const likeButton = document.querySelector(`#comment-${commentId} .like-buttonComment`);
+            const likeIcon = likeButton.querySelector('.like-iconComment');
+            const likeCount = likeButton.querySelector('.like-countComment');
+            
+            // Atualiza a contagem de likes no frontend
+            likeCount.textContent = data.likes_count;
+            
+            // Verifica se o usuário curtiu ou descurtiu com base em 'liked_by_user'
+            if (data.liked_by_user) {
+                // Quando o like é dado
+                likeIcon.style.display = 'inline';  // Torna o ícone visível
+                likeButton.classList.add('likedComment'); // Adiciona a classe para mudar a cor
+            } else {
+                // Quando o like é removido
+                likeIcon.style.display = 'none';   // Torna o ícone invisível
+                likeButton.classList.remove('likedComment'); // Remove a classe
+            }
+        }
+    })
+    .catch(error => console.error('Erro:', error));
+}
+
+function likeReply(replyId) {
+    const likeButtonReply = document.querySelector(`#reply-${replyId} .like-buttonCommentReply`);
+    const likeIcon = likeButtonReply.querySelector('.like-iconReply');
+    const likeCount = likeButtonReply.querySelector('.like-countReply');
+    const isLiked = likeButtonReply.classList.contains('likedReply');
+
+    // Feedback imediato
+    if (isLiked) {
+        likeIcon.style.display = 'none';
+        likeButtonReply.classList.remove('likedReply');
+        likeCount.textContent = parseInt(likeCount.textContent) - 1;
+    } else {
+        likeIcon.style.display = 'inline';
+        likeButtonReply.classList.add('likedReply');
+        likeCount.textContent = parseInt(likeCount.textContent) + 1;
+    }
+
+    fetch(`/comment-reply/${replyId}/like`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            likeCount.textContent = data.likes_count;
+            if (data.liked_by_user) {
+                likeIcon.style.display = 'inline';
+                likeButtonReply.classList.add('likedReply');
+            } else {
+                likeIcon.style.display = 'none';
+                likeButtonReply.classList.remove('likedReply');
+            }
+        } else {
+            // Reverte em caso de erro
+            if (isLiked) {
+                likeIcon.style.display = 'inline';
+                likeButtonReply.classList.add('likedReply');
+            } else {
+                likeIcon.style.display = 'none';
+                likeButtonReply.classList.remove('likedReply');
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+        // Reverte em caso de falha
+        if (isLiked) {
+            likeIcon.style.display = 'inline';
+            likeButtonReply.classList.add('likedReply');
+        } else {
+            likeIcon.style.display = 'none';
+            likeButtonReply.classList.remove('likedReply');
+        }
+    });
+}
+
+
+function toggleReplyForm(commentId) {
+    const replyForm = document.getElementById(`reply-form-${commentId}`);
+    replyForm.style.display = replyForm.style.display === 'none' ? 'block' : 'none';
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Manipular envio do formulário de resposta
+    document.querySelectorAll('.reply-form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const commentId = this.action.split('/').slice(-2)[0];
+            
+            fetch(this.action, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const repliesList = document.querySelector(`#comment-${commentId} .replies-list`);
+                    const replyHtml = `
+                        <div class="reply-item">
+                            <div class="comment-header">
+                                <img class="comment-avatar" src="{{ url('public/avatar_users/${data.reply.user.avatar}') }}" alt="">
+                                <div class="comment-info-container">
+                                    <div class="comment-info">
+                                        <div class="comment-info-header">
+                                            <span class="comment-author">${data.reply.user.name}</span>
+                                            <svg width="4" height="4" viewBox="0 0 4 4" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <circle cx="1.79962" cy="2.20752" r="1.5" fill="#D9D9D9"/>
+                                            </svg>
+                                            <span class="comment-date">${new Date(data.reply.created_at).toLocaleDateString()}</span>
+                                        </div>
+                                    </div>
+                                    <div class="comment-body">${data.reply.body}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    repliesList.insertAdjacentHTML('beforeend', replyHtml);
+                    this.reset();
+                    document.getElementById(`reply-form-${commentId}`).style.display = 'none';
+                    window.location.reload();
+                }
+            })
+            .catch(error => console.error('Erro:', error));
+        });
+    });
+});
+
+function toggleReplies(commentId) {
+    const repliesContainer = document.getElementById(`replies-${commentId}`);
+    const toggleButton = document.getElementById(`toggle-replies-${commentId}`);
+    const commentItem = document.getElementById(`comment-${commentId}`);
+
+    if (repliesContainer.style.display === "none" || repliesContainer.style.display === "") {
+        repliesContainer.style.display = "block";
+        toggleButton.innerHTML = `<span>Ver menos respostas</span>`;
+        // Adiciona a linha vermelha ao comentário principal
+        commentItem.classList.add('line-active');
+    } else {
+        repliesContainer.style.display = "none";
+        toggleButton.innerHTML = `<span>Ver mais ${repliesContainer.children.length} resposta(s)</span>`;
+        // Remove a linha vermelha do comentário principal
+        commentItem.classList.remove('line-active');
+    }
+}
+document.addEventListener('DOMContentLoaded', function() {
+    const toggleBtn = document.querySelector('.toggle-content-btn');
+    const previewContent = document.querySelector('.expandir_post');
+    const fullContent = document.querySelector('.content-full');
+
+    toggleBtn.addEventListener('click', function() {
+        if (fullContent.style.display === 'none') {
+            fullContent.style.display = 'block';
+            previewContent.style.display = 'none';
+            toggleBtn.textContent = 'Ver menos';
+        } else {
+            fullContent.style.display = 'none';
+            previewContent.style.display = 'block';
+            toggleBtn.textContent = 'Ver mais';
+        }
+    });
+});
+
+
 </script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/ajax/libs/jvectormap/2.0.5/jquery-jvectormap.min.js"></script>
@@ -2156,9 +2443,7 @@ window.deleteComment = function (commentId) {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 const postId = entry.target.querySelector('.post-views-count').getAttribute('data-postid');
-                
-                // Registra a visualização via AJAX
-                console.log('Post visível:', postId);
+                const timeoutId = setTimeout(() => {
                 $.ajax({
                     url: `/post/${postId}/view`,
                     method: 'POST',
@@ -2176,9 +2461,13 @@ window.deleteComment = function (commentId) {
                         console.error('Erro ao registrar visualização:', xhr.responseText);
                     }
                 });
-
-                // Para de observar o post após ser visto
                 observer.unobserve(entry.target);
+                }, 2000); // Espera de 2 segundos
+
+                entry.target.dataset.timeoutId = timeoutId;
+            } else {
+                // Cancela o timeout se o post sair da visualização antes dos 2 segundos
+                clearTimeout(entry.target.dataset.timeoutId);
             }
         });
     }, {
@@ -2188,36 +2477,6 @@ window.deleteComment = function (commentId) {
     posts.forEach(post => {
         observer.observe(post);
     });
-});
-document.addEventListener('DOMContentLoaded', function() {
-    // Configuração do IntersectionObserver (já existente)
-    const posts = document.querySelectorAll('.post-item');
-    const observer = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const postId = entry.target.querySelector('.post-views-count').getAttribute('data-postid');
-                $.ajax({
-                    url: `/post/${postId}/view`,
-                    method: 'POST',
-                    data: {
-                        _token: '{{ csrf_token() }}'
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            const viewsCount = response.views_count;
-                            $(`.items-footerLista[data-postid="${postId}"] .post-views-count`).text(viewsCount);
-                            console.log(`Visualização registrada para post ${postId}: ${viewsCount}`);
-                        }
-                    },
-                    error: function(xhr) {
-                        console.error('Erro ao registrar visualização:', xhr.responseText);
-                    }
-                });
-                observer.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.5 });
-    posts.forEach(post => observer.observe(post));
 
     // Configuração do hover para exibir os nomes dos visualizadores
     const viewContainers = document.querySelectorAll('.view-container');
