@@ -432,3 +432,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/documentos-solicitados/{id}/anular', 'DocumentRequestController@anular')
     ->name('document-request.anular');
 });
+
+Route::get('/meus-pedidos', [FeriaController::class, 'meusPedidos'])->name('ferias.meus-pedidos');
+
+Route::delete('/ferias/{id}', [FeriaController::class, 'destroy'])->name('ferias.destroy');

@@ -28,8 +28,7 @@ class FeriaController extends Controller
       
 
         // Recupera apenas as férias pendentes do responsável logado
-        $ferias = Feria::where('status', 'pendente')
-                    ->where('responsavel_id', $responsavelId)
+        $ferias = Feria::where('responsavel_id', $responsavelId)
                     ->get();
 
         // Recupera as férias de todos os usuários (independente do status)
@@ -49,6 +48,20 @@ class FeriaController extends Controller
        
 
         return view('user.pedidos', compact('ferias', 'diasSolicitados', 'feriasUsuarios', 'user', 'responsavelId', ));
+    }
+
+
+    public function meusPedidos()
+    {
+        $user = Auth::user();
+        $feriasUsuario = Feria::where('user_id', $user->id)->get();
+        
+        $diasSolicitados = [];
+        foreach ($feriasUsuario as $feria) {
+            $diasSolicitados[$feria->id] = $feria->diasSolicitados($feria->data_inicio, $feria->data_fim);
+        }
+        
+        return view('user.meus-pedidos', compact('feriasUsuario', 'diasSolicitados', 'user'));
     }
 
     
@@ -732,4 +745,19 @@ public function getFeriasPorAno($id)
             'data_retorno' => $dataRetorno
         ]);
     }
+
+    public function destroy($id)
+    {
+        $feria = Feria::findOrFail($id);
+        $user = Auth::user();
+
+        if ($feria->status == 'Pendente' && $feria->user_id == $user->id) {
+            // Cancelamento definitivo pelo solicitante
+            $feria->delete();
+            return response()->json(['message' => 'Solicitação cancelada'], 200);
+        }
+
+        return back()->with('error', 'Você não tem permissão para remover este pedido.');
+    }
+
 }

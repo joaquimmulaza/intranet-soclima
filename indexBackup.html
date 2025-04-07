@@ -221,3 +221,19 @@
             
         </div>
     </section>
+
+    <div style="text-align: center; width: 1080px; margin: 0 auto;">
+        <div class="imgEmptyPage">
+            <img src="{{asset('logo/img/icon/holiday_icon.svg')}}" alt="">
+        </div>
+        <div class="textEmptyPage">
+        @if($user->role_id == 2)
+            <h3>De momento não há solicitações de férias</h3>
+            <p>As solicitações de férias que você solicitou serão exibidas aqui assim que forem aprovadas.</p>
+        @else
+        
+            <h3>De momento não há solicitações de férias</h3>
+            <p>As solicitações de férias do departamento que você lidera serão exibidas aqui assim que forem enviadas.</p>
+        @endif
+        </div>
+    </div>

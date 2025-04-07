@@ -8,6 +8,10 @@
     --main-bg: #E7ECEB;
 }
 
+.body{
+    overflow-x: hidden !important;
+}
+
 
 .globalBtn_with_border{
     padding: 9px 43px;
@@ -94,6 +98,7 @@
     display: flex;
     flex-direction: row;
     padding-left: 0 !important;
+    padding-right: 0;
 }
 
 /*STYLES DROPDOWN NOTIFICATION*/
@@ -3842,6 +3847,10 @@ input.is-invalid {
     padding: 24px;
     width: 549px;
     margin: 0 auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
 }
 
 .modalFeriasResumo .modal-dialog{
@@ -4866,4 +4875,16 @@ input.is-invalid {
     width: 100%;
     color: #009AC1;
     font-size: 11px;
+}
+
+.btnGlobalBlue{
+    padding: 8px 20px !important;
+    color: #fff;
+    background-color: #009AC1;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.btnGlobalBlue:hover{
+    color: #fff;
 }
