@@ -307,7 +307,7 @@ Route::get('/ferias/pedidos', 'FeriaController@pedidos')->name('ferias.pedidos')
 Route::get('/ferias/{id}/aprovar', [FeriaController::class, 'aprovar'])->name('ferias.aprovar');
 
 // Rejeitar pedido de férias
-Route::get('/ferias/{id}/rejeitar', [FeriaController::class, 'rejeitar'])->name('ferias.rejeitar');
+Route::post('/ferias/{id}/rejeitar', [FeriaController::class, 'rejeitar'])->name('ferias.rejeitar');
 
 /*ATRIBUIR FERIAS*/
 // Atualizar os dias de férias de um usuário

@@ -29,10 +29,8 @@ class FeriaController extends Controller
 
         // Recupera apenas as férias pendentes do responsável logado
         $ferias = Feria::where('responsavel_id', $responsavelId)
-                    ->get();
-
-        // Recupera as férias de todos os usuários (independente do status)
-        $feriasUsuarios = Feria::where('user_id', Auth::id())->get();
+                ->where('visivel_para_responsavel', true)
+                ->get();
 
         // Recupera os dados do usuário logado (se precisar passá-los para a view)
         $user = Auth::user();
@@ -47,14 +45,16 @@ class FeriaController extends Controller
 
        
 
-        return view('user.pedidos', compact('ferias', 'diasSolicitados', 'feriasUsuarios', 'user', 'responsavelId', ));
+        return view('user.pedidos', compact('ferias', 'diasSolicitados', 'user', 'responsavelId', ));
     }
 
 
     public function meusPedidos()
     {
         $user = Auth::user();
-        $feriasUsuario = Feria::where('user_id', $user->id)->get();
+        $feriasUsuario = Feria::where('user_id', $user->id)
+        ->where('visivel_para_user', true)
+        ->get();
         
         $diasSolicitados = [];
         foreach ($feriasUsuario as $feria) {
@@ -465,18 +465,19 @@ class FeriaController extends Controller
     );
 
     // Redirecionar com sucesso
-    return redirect()->route('user.pedidos')->with('success', 'Férias Aprovadas');
+    return redirect()->route('ferias.pedidos')->with('success', 'Férias Aprovadas');
 }
 
     
 
 
-        public function rejeitar($id)
+public function rejeitar(Request $request, $id)
     {
         $feria = Feria::findOrFail($id);
 
         // Atualiza o status para rejeitado
         $feria->status = 'rejeitado';
+        $feria->observacao = $request->observacao;
         $feria->save();
         $responsavelNome = Auth::user()->name; 
 
@@ -497,7 +498,7 @@ class FeriaController extends Controller
         );
 
 
-        return redirect()->route('user.pedidos')->with('success', 'Ferias Rejeitadas');
+        return redirect()->route('ferias.pedidos')->with('success', 'Ferias Rejeitadas');
     }
 
     public function getEventos()
@@ -755,6 +756,20 @@ public function getFeriasPorAno($id)
             // Cancelamento definitivo pelo solicitante
             $feria->delete();
             return response()->json(['message' => 'Solicitação cancelada'], 200);
+        }
+
+            // Se o solicitante estiver a eliminar
+        if ($feria->user_id == $user->id) {
+            $feria->visivel_para_user = false;
+            $feria->save();
+            return response()->json(['message' => 'Solicitação removida'], 200);
+        }
+
+        // Se o responsável estiver a eliminar
+        if ($feria->responsavel_id == $user->id) {
+            $feria->visivel_para_responsavel = false;
+            $feria->save();
+            return response()->json(['message' => 'Solicitação removida'], 200);
         }
 
         return back()->with('error', 'Você não tem permissão para remover este pedido.');

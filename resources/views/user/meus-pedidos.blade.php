@@ -64,7 +64,40 @@
                                 {{ $feria->diasSolicitados($feria->data_inicio, $feria->data_fim) }} dias
                             @endif
                         </td>
-                        <td class="">{{ $feria->data_retorno_prevista }}</td>
+                        <td class="td_font">{{ $feria->data_retorno_prevista }}</td>
+                 
+                        <td class="data_documents td_tipo_registo_justificativos" style="    padding: 0;
+    margin-left: 0;">  
+                        @if($feria->observacao)
+                        <!-- Exibindo o ícone com fundo piscando se houver observação -->
+                        <div class="observacao-icon-container">
+                            <img src="{{ asset('logo/img/icon/OBS_Icon_true.svg') }}" alt="Ícone Observação" class="observacao-icon blinking">
+                            <div class="tooltip">
+                                    <!-- Exibindo informações do usuário que fez a observação -->
+                                    <div class="tooltip-header">
+                                    @if($feria->responsavel && $feria->responsavel->avatar)
+                                        <!-- Foto do responsavel que enviou o documento -->
+                                        <img src="{{ URL::to('/') }}/public/avatar_users/{{ $feria->responsavel->avatar }}" alt="Foto de perfil" class="tooltip-user-photo">
+                                    @else
+                                        <img src="{{ asset('logo/img/icon/default-avatar.jpg') }}" alt="Foto de perfil" class="tooltip-user-photo">
+                                    @endif
+                                        
+                                        <div class="tooltip-user-info">
+                                            
+                                        <strong>{{ $feria->responsavel->name }}</strong>
+                                            <svg width="4" height="4" viewBox="0 0 4 4" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <circle cx="1.7998" cy="2" r="1.5" fill="#D9D9D9"/>
+                                            </svg>
+
+                                            <span class="tooltip-time">{{ $feria->updated_at->diffForHumans()}}</span>
+                                        </div>
+                                      <!-- Exibindo a observação -->
+                                    </div>
+                                    <p>{{ ucfirst($feria->observacao) }}</p>
+                            </div>
+                            @else
+                            @endif
+                        </td>
                         <td class="OptDocs">
                         <div class="containerOpt containerOptFerias">
                 <button class="more_opt btn-popup" data-toggle="modal" data-target="#modalOptPhone-{{ $feria->id }}" style="margin: 0 !important; padding: 0 !important;">
@@ -75,19 +108,18 @@
                         <div class="modal-content">
                             <div class="modal-body modal-bodyOpt">
                                 <div class="containerBtnOpt_justificativos">
-                                    @if($feria->status === 'Pendente')
-                                    <form id="delete-form-{{$feria->id}}" action="{{route('ferias.destroy', $feria->id)}}" method="POST" style="display: none;" class="btn-popup hidden">
+                                @if($feria->status == 'Pendente' && $user->id == $feria->user_id)
+                                    <form id="delete-form-{{$feria->id}}" action="{{ route('ferias.destroy', $feria->id) }}"  method="POST" style="display: none;" class="btn-popup hidden">
                                     @csrf()
                                     @method('DELETE')
                                     </form>
                                         <button class="btnPosts btnOptFerias btnPostsDelete" type="submit" data-id="{{$feria->id}}">Cancelar pedido</button>
                                     @else
-                                    
-                                        <button style="border-bottom-right-radius: 5px;border-bottom-left-radius: 5px;" type="button" class="btnPosts btn-popup" data-id="{{ $feria->id }}">
-                                            <a href="{{ route('ferias.show', $feria->user_id) }}">
-                                                Remover
-                                            </a>
-                                        </button>
+                                    <form id="delete-form-{{$feria->id}}" action="{{ route('ferias.destroy', $feria->id) }}"  method="POST" style="display: none;" class="btn-popup hidden">
+                                    @csrf()
+                                    @method('DELETE')
+                                    </form>
+                                        <button class="btnPosts btnOptFerias btnPostsDelete" type="submit" data-id="{{$feria->id}}">Eliminar</button>
                                     @endif   
                                 </div>
                             </div>

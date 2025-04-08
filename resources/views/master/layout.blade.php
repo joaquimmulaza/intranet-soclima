@@ -7,7 +7,7 @@
        
     </head>
 @if(Auth::user() != null)
-    <body class="hold-transition sidebar-mini {{Route::current()->getName() == 'post.show' || 'home' ? 'sidebar-collapse' : 'layout-fixed'}}">
+    <body class="hold-transition sidebar-mini {{Route::current()->getName() == 'post.show' || 'home' ? 'sidebar-collapse' : 'layout-fixed'}}" >
 
     <div class="wrapper">
         {{-- NAVBAR BARRA TOPO--}}
