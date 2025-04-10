@@ -2,47 +2,16 @@
 @section('title', 'Listagem de pedidos de férias')
 
 @section('content')
-
 <style>
-/* Overlay Manual */
-.custom-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1050;
-    display: none;
-}
-
-/* Ajustes para o Modal */
-.modalFeriasResumo {
-    height: 100% !important;
-    overflow: hidden !important;
-    z-index: 1500 !important;
-}
-
-.modalRejeitar{
-    z-index: 1500 !important;
-}
-
-.modal-dialog {
-    z-index: 1600 !important;
-}
-
-.modal-content {
-    z-index: 1700 !important;
-}
-
-/* Desativa o bac kdrop padrão do Bootstrap */
-.modal-backdrop {
-    display: none !important;
+.modalMain .modalFeriasResumo{
+   height: 595px !important;
+   overflow: hidden !important;
 }
 
 .modalMain .modalRejeitar{
+   height: 995px !important;
+
    overflow: hidden !important;
-   z-index: 1700 !important;
 }
 
 
@@ -50,7 +19,10 @@
     padding: 24px;
     width: 549px;
     margin: 0 auto;
-    z-index: 999999999 !important;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
 }
 
 .modalRejeitar .modal-header{
@@ -103,13 +75,17 @@
 }
 </style>
 
-{{-- CABEÇALHO BREADCRUMB --}}
+{{-- CABEÇALHO BREADCRUMB--}}
 <div class="content-header header-crumb">
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-12">
                 <ol class="breadcrumb float-sm-right">
+                @if($user->role_id == 2)
+                    <li class="breadcrumb-item active">Suas solicitações de férias</li>
+                @else
                     <li class="breadcrumb-item active">Gerenciar pedidos de férias</li>
+                @endif
                 </ol>
             </div>
         </div>
@@ -117,43 +93,48 @@
     <hr>
 </div>
 
-<div class="main_container docs_container" style="">
-    <hr class="custom_hr_justificativos">
-    @foreach($ferias as $feria) 
-    <div class="view_justificativos view_ferias">
-        <table class="docs_table table_ferias">
-            <thead>
-                <tr>
+<section class="containerPrincipal">
+
+        
+        
+                <div class="main_container docs_container">
+                <hr class="custom_hr_justificativos">
+                @foreach($ferias as $feria) 
+        <div class="view_justificativos view_ferias">
+    
+            <table class="docs_table table_ferias">
+                <thead>
+                    <tr>
                     <th class="">Status</th>
                     <th class="">Nome do trabalhador</th>
                     <th class="">Período solicitado</th>
                     <th class="">Dias úteis a gozar</th>
                     <th class="">Data Retorno Prevista</th>
-                </tr>
-            </thead>
-            <tbody data-toggle="modal" data-target="#modalFeriasResumo-{{ $feria->id }}">
-                <tr>
-                    <td class="">
-                        <span class="{{ $feria->status }}">{{ $feria->status }}</span>
-                    </td>
-                    <td class=""> 
-                        @if ($feria->user)
-                            {{ $feria->user->name }}
-                        @else
-                            Usuário não encontrado
-                        @endif
-                    </td>
-                    <td class="">{{ $feria->data_fim }}</td>
-                    <td class="">
-                        @if($feria->diasSolicitados($feria->data_inicio, $feria->data_fim) == 1)
-                            {{ $feria->diasSolicitados($feria->data_inicio, $feria->data_fim) }} dia
-                        @else
-                            {{ $feria->diasSolicitados($feria->data_inicio, $feria->data_fim) }} dias
-                        @endif
-                    </td>
-                    <td class="td_font">{{ $feria->data_retorno_prevista }}</td>
-                  
-                    <td class="OptDocs">
+                    </tr>
+                </thead>
+                
+                <tbody data-toggle="modal" data-target="#modalFeriasResumo-{{ $feria->id }}">
+                    <tr>
+                        <td class="">
+                            <span class="{{ $feria->status }}">{{ $feria->status }}</span>
+                        </td>
+                        <td class=""> 
+                            @if ($feria->user)
+                                {{ $feria->user->name }}
+                            @else
+                                Usuário não encontrado
+                            @endif
+                        </td>
+                        <td class="td_font">{{ $feria->data_inicio }} a {{ $feria->data_fim }}</td>
+                        <td class="td_font">
+                            @if($feria->diasSolicitados($feria->data_inicio, $feria->data_fim) == 1)
+                                {{ $feria->diasSolicitados($feria->data_inicio, $feria->data_fim) }} dia
+                            @else
+                                {{ $feria->diasSolicitados($feria->data_inicio, $feria->data_fim) }} dias
+                            @endif
+                        </td>
+                        <td class="td_font">{{ $feria->data_retorno_prevista }}</td>
+                        <td class="OptDocs">
                         <div class="containerOpt containerOptFerias">
                 <button class="more_opt btn-popup" data-toggle="modal" data-target="#modalOptPhone-{{ $feria->id }}" style="margin: 0 !important; padding: 0 !important;">
                     <img src="{{asset('logo/img/icon/more_opt.svg')}}" alt="">
@@ -164,12 +145,9 @@
                             <div class="modal-body modal-bodyOpt">
                                 <div class="containerBtnOpt_justificativos">
                                 @if($feria->status == 'Pendente' && $user->id == $feria->user_id)
-                                    <form id="delete-form-{{$feria->id}}" action="{{ route('ferias.destroy', $feria->id) }}"  method="POST" style="display: none;" class="btn-popup hidden">
-                                    @csrf()
-                                    @method('DELETE')
-                                    </form>
-                                        <button class="btnPosts btnOptFerias btnPostsDelete" type="submit" data-id="{{$feria->id}}">Cancelar pedido</button>
+                                
                                     @else
+                                    
                                     <form id="delete-form-{{$feria->id}}" action="{{ route('ferias.destroy', $feria->id) }}"  method="POST" style="display: none;" class="btn-popup hidden">
                                     @csrf()
                                     @method('DELETE')
@@ -183,16 +161,18 @@
                 </div>
             </div>         
                         </td>
-                </tr>
-            </tbody>
-        </table>
-        <div style="margin-bottom: 20px;"></div>
-    </div>
+                    </tr>
+                </tbody>
+                
+            </table>
+
+    <div style="margin-bottom: 20px;"></div>
+
     @endforeach
 </div>
 
-<!-- Modais movidos para fora do main_container -->
-@foreach($ferias as $feria)
+
+@foreach($ferias as $feria) 
 <div class="modalMain">
     
     <!-- Modal para cada item dentro do loop -->
@@ -299,58 +279,13 @@
   </div>
 </div>
 
-   
 @endforeach
-
-<!-- Overlay Manual -->
-<div id="customOverlay2" class="custom-overlay" style="display: none;"></div>
-
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-// Função para mostrar/esconder o overlay
-function toggleOverlay(show) {
-    const overlay = $('#customOverlay');
-    if (show) {
-        overlay.fadeIn(200);
-    } else {
-        overlay.fadeOut(200);
-    }
-}
-// Função para mostrar/esconder o overlay
-function toggleOverlay2(show) {
-    const overlay = $('#customOverlay2');
-    if (show) {
-        overlay.fadeIn(200);
-    } else {
-        overlay.fadeOut(200);
-    }
-}
-
-// Controle dos modais
-$('.modalFeriasResumo').on('show.bs.modal', function () {
-    toggleOverlay(true);
-    $('body').addClass('modal-open');
-});
-
-$('.modalFeriasResumo').on('hidden.bs.modal', function () {
-    toggleOverlay(false);
-    $('body').removeClass('modal-open');
-});
-
-$('.modalRejeitar').on('show.bs.modal', function () {
-    toggleOverlay2(true);
-    $('body').addClass('modal-open');
-});
-
-$('.modalRejeitar').on('hidden.bs.modal', function () {
-    toggleOverlay2(false);
-    $('body').removeClass('modal-open');
-});
-
-$('.modalOpt').on('show.bs.modal', function () {
-    $('body').addClass('modal-open-no-backdrop');
-});
+      $('.modalOpt').on('show.bs.modal', function () {
+        $('body').addClass('modal-open-no-backdrop');
+    });
 
     $('.modalOpt').on('hidden.bs.modalHidden', function () {
         $('body').addClass('modal-open-no-backdrop');
@@ -381,14 +316,7 @@ $('.modalOpt').on('show.bs.modal', function () {
         });
     });
 
-// Fechar modal ao clicar fora
-$(document).on('click', function (event) {
-    const $modal = $('.modal');
-    if ($modal.is(':visible') && !$(event.target).closest('.modal-content').length && !$(event.target).hasClass('more_opt')) {
-        $modal.modal('hide');
-    }
-});
-
+    
 document.addEventListener('DOMContentLoaded', function () {
         // Selecionar todos os botões de exclusão
         const deleteButtons = document.querySelectorAll('.btnPostsDelete');
@@ -475,13 +403,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Aguarda a animação do fechamento e depois abre o modal de rejeição
 
-    $('#modalRejeitar-' + id).modal('show');
+        $('#modalRejeitar-' + id).modal('show');
 
-    // Quando o modal de rejeição for fechado, limpamos o estado do modal principal
-    $('#modalRejeitar-' + id).on('hidden.bs.modal', function () {
-        $('#modalFeriasResumo-' + id).removeClass('hide').removeData('bs.modal');
-    });
+        // Quando o modal de rejeição for fechado, limpamos o estado do modal principal
+        $('#modalRejeitar-' + id).on('hidden.bs.modal', function () {
+            $('#modalFeriasResumo-' + id).removeClass('hide').removeData('bs.modal');
+        });
 }
-</script>
 
+</script>
 @endsection

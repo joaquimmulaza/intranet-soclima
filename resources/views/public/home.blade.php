@@ -867,6 +867,45 @@
     </div>
 </div>
 
+@php
+    use Illuminate\Support\Carbon;
+
+    $user = Auth::user();
+    $dataNascimento = Carbon::parse($user->nascimento);
+    $hoje = Carbon::now();
+
+    $dataAniversarioEsteAno = $dataNascimento->copy()->year($hoje->year);
+
+    $fazAniversarioOuPassou = $hoje->isSameDay($dataAniversarioEsteAno) || $hoje->gt($dataAniversarioEsteAno);
+    $jaViuEsteAno = $user->aniversario_popup_visto_em && Carbon::parse($user->aniversario_popup_visto_em)->year == $hoje->year;
+@endphp
+
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            Swal.fire({
+                html: `
+                    <div style="display: flex; flex-direction: column; align-items: center;">
+                        <img src="{{ asset('logo/img/icon/intranet_congrats.gif') }}" alt="Feliz Aniversário" style="max-width: 50%; height: auto; margin-bottom: 20px;" />
+                        <h2 style="margin: 0; font-size: 20px; text-align: center;">Feliz aniversário, <strong>{{ $user->name }}</strong></h2><br>
+                        <span style="font-size: 15px;">  {{ \Carbon\Carbon::parse($user->nascimento)->translatedFormat('d \d\e F') }}</span>
+                    </div>
+                `,
+                showConfirmButton: false,
+                showCloseButton: true,
+                width: 472,
+                imageWidth: 40,
+              
+                backdrop: `rgba(0,0,0,0.4)`
+            });
+
+            // Marca como visto automaticamente
+            fetch('{{ route('marcar.popup.visto') }}');
+        });
+    </script>
+
+
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="{{ asset('frontend/home/script.js') }}"></script>

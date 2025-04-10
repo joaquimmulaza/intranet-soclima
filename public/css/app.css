@@ -3854,7 +3854,7 @@ input.is-invalid {
     width: 549px;
     margin: 0 auto;
     position: absolute;
-    top: 0;
+    /* top: 0; */
     left: 0;
     right: 0;
 }
@@ -3881,6 +3881,7 @@ input.is-invalid {
     justify-content: center;
     gap: 20px;
 }
+
 .cargo_resumo_ferias{
     display: flex;
     flex-direction: column;
@@ -4894,3 +4895,4 @@ input.is-invalid {
 .btnGlobalBlue:hover{
     color: #fff;
 }
+

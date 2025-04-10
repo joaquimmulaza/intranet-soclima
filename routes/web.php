@@ -16,6 +16,8 @@ use App\Http\Controllers\AdminDocumentRequestController;
 use App\Http\Controllers\AusenciaController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\CommentController;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Carbon;
 /*
 |--------------------------------------------------------------------------
 | TESTES UNIDADE - Auth::routes();
@@ -436,3 +438,12 @@ Route::middleware(['auth'])->group(function () {
 Route::get('/meus-pedidos', [FeriaController::class, 'meusPedidos'])->name('ferias.meus-pedidos');
 
 Route::delete('/ferias/{id}', [FeriaController::class, 'destroy'])->name('ferias.destroy');
+
+
+Route::get('/marcar-popup-visto', function () {
+    $user = Auth::user();
+    $user->aniversario_popup_visto_em = Carbon::now()->toDateString();
+    $user->save();
+
+    return response()->json(['status' => 'ok']);
+})->name('marcar.popup.visto')->middleware('auth');

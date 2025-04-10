@@ -3,6 +3,27 @@
 
 @section('content')
 <style>
+    .custom-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5) !important;
+    z-index: 1050 !important;
+    display: none;
+}
+
+.modalFeriasResumo {
+    z-index: 1500 !important;
+}
+.modal-dialog {
+    z-index: 1600 !important;
+}
+
+.modal-content {
+    z-index: 1700 !important;
+}
     .container_select2_ferias .select2-selection__arrow {
         background-image: url('{{ asset('logo/img/icon/seta_dowm.svg') }}') !important;
         background-size: contain !important;
@@ -38,6 +59,11 @@
 
 .container_set_date {
     gap: 32px ;
+}
+
+/* Desativa o bac kdrop padrão do Bootstrap */
+.modal-backdrop {
+    display: none !important;
 }
 
 </style>
@@ -225,20 +251,16 @@
             
             <div class="modal-footer">
                 <div class="btnResumeFerias">
-                @if($user->role_id == 1)
-                    <a href="#">Consultar férias</a>
-                    <a href="#">Rejeitar</a>
-                    <a href="#">Aprovar</a>
-                @else
                 <button type="submit" id="btnExterno" data-dismiss="modal" aria-label="Fechar">Confirmar</button>
-                @endif
                 </div>
             </div>
         </div>
     </div>
-
+   
 <!-- JAVASCRIPT (AJAX) -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     // Função genérica para inicializar Select2
 function initializeSelect2(selector) {
@@ -247,6 +269,27 @@ function initializeSelect2(selector) {
         minimumResultsForSearch: Infinity,
     });
 }
+
+// Função para mostrar/esconder o overlay
+function toggleOverlay3(show) {
+    const overlay = $('#customOverlay3');
+    if (show) {
+        overlay.fadeIn(200);
+    } else {
+        overlay.fadeOut(200);
+    }
+}
+
+// Controle dos modais
+$('.modalFeriasResumo').on('show.bs.modal', function () {
+    toggleOverlay3(true);
+    $('body').addClass('modal-open');
+});
+
+$('.modalFeriasResumo').on('hidden.bs.modal', function () {
+    toggleOverlay3(false);
+    $('body').removeClass('modal-open');
+});
 
 // Inicializar todos os selects com a classe 'mySelect'
 $(document).ready(function () {
@@ -405,5 +448,12 @@ const formulario = document.getElementById('meuForm');
 botaoExterno.addEventListener('click', function() {
     formulario.submit();
 })
+
+$(document).on('click', function (event) {
+    const $modal = $('.modal');
+    if ($modal.is(':visible') && !$(event.target).closest('.modal-content').length && !$(event.target).hasClass('more_opt')) {
+        $modal.modal('hide');
+    }
+});
 </script>
 @endsection

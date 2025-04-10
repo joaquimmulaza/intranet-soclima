@@ -8,7 +8,8 @@
     </head>
 @if(Auth::user() != null)
     <body class="hold-transition sidebar-mini {{Route::current()->getName() == 'post.show' || 'home' ? 'sidebar-collapse' : 'layout-fixed'}}" >
-
+    <div id="customOverlay" class="custom-overlay" style="display: none;"></div>
+    <div id="customOverlay3" class="custom-overlay" style="display: none;"></div>
     <div class="wrapper">
         {{-- NAVBAR BARRA TOPO--}}
         @include('master.partials_master._nav')
