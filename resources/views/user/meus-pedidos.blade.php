@@ -54,7 +54,7 @@
 
 <div class="main_container docs_container" style="">
     <hr class="custom_hr_justificativos">
-    @foreach($feriasUsuario as $feria) 
+    @forelse($feriasUsuario as $feria) 
     <div class="view_justificativos view_ferias">
         <table class="docs_table table_ferias">
             <thead>
@@ -78,8 +78,8 @@
                             Usuário não encontrado
                         @endif
                     </td>
-                    <td class="">{{ $feria->data_fim }}</td>
-                    <td class="">
+                    <td class="td_font">{{ $feria->data_inicio }} a {{$feria->data_fim}}</td>
+                    <td class="td_font">
                         @if($feria->diasSolicitados($feria->data_inicio, $feria->data_fim) == 1)
                             {{ $feria->diasSolicitados($feria->data_inicio, $feria->data_fim) }} dia
                         @else
@@ -126,13 +126,13 @@
                                     @csrf()
                                     @method('DELETE')
                                     </form>
-                                        <button class="btnPosts btnOptFerias btnPostsDelete" type="submit" data-id="{{$feria->id}}">Cancelar pedido</button>
+                                        <button class="btnPosts btnOptFerias btnPostsDelete" type="button" data-id="{{$feria->id}}"  data-action="cancelar">Cancelar pedido</button>
                                     @else
                                     <form id="delete-form-{{$feria->id}}" action="{{ route('ferias.destroy', $feria->id) }}"  method="POST" style="display: none;" class="btn-popup hidden">
                                     @csrf()
                                     @method('DELETE')
                                     </form>
-                                        <button class="btnPosts btnOptFerias btnPostsDelete" type="submit" data-id="{{$feria->id}}">Eliminar</button>
+                                        <button class="btnPosts btnOptFerias btnPostsDelete" type="button" data-id="{{$feria->id}}" data-action="eliminar">Eliminar</button>
                                     @endif   
                                 </div>
                             </div>
@@ -146,7 +146,21 @@
         </table>
         <div style="margin-bottom: 20px;"></div>
     </div>
-    @endforeach
+    @empty
+    <style>
+        .main_container{
+            background: none !important;
+        }
+        .custom_hr_justificativos{
+            display: none !important;
+        }
+    </style>
+    <div class="text-center containerEmptyPage">
+        <img src="{{asset('logo/img/icon/holiday_icon.svg')}}" alt="">
+        <h1 class="titleEmptyPage">De momento não há solicitações de férias</h1>
+        <p class="sentenceEmptyPage">As solicitações de férias que você solicitou serão exibidas aqui assim que forem aprovadas.</p>
+    </div>
+    @endforelse
 </div>
 
 <!-- Modais movidos para fora do main_container -->
@@ -275,20 +289,39 @@ $(document).on('click', function (event) {
     }
 });
 
-// Botões de exclusão
 document.addEventListener('DOMContentLoaded', function () {
     const deleteButtons = document.querySelectorAll('.btnPostsDelete');
+
     deleteButtons.forEach(button => {
         button.addEventListener('click', function (event) {
             event.stopPropagation();
+
             const documentId = this.getAttribute('data-id');
+            const actionType = this.getAttribute('data-action');
+
+            // Textos dinâmicos
+            const mensagens = {
+                cancelar: {
+                    titulo: 'Cancelar pedido',
+                    texto: 'Podes cancelar este pedido e fazer um novo antes que seja aprovado pelo DRH e o chefe de departamento.',
+                    confirm: 'Sim',
+                },
+                eliminar: {
+                    titulo: 'Eliminar',
+                    texto: 'Tem certeza que queres eliminar este registo da lista?',
+                    confirm: 'Sim',
+                }
+            };
+
+            const msg = mensagens[actionType] || mensagens['eliminar'];
+
             Swal.fire({
-                title: 'Cancelar pedido?',
-                text: "Podes cancelar este pedido e fazer um novo antes que seja aprovado pelo DRH e o chefe de departamento?",
+                title: msg.titulo,
+                text: msg.texto,
                 showCancelButton: true,
                 confirmButtonColor: '#fff',
                 cancelButtonColor: '#fff',
-                confirmButtonText: 'Sim',
+                confirmButtonText: msg.confirm,
                 cancelButtonText: 'Não',
                 customClass: {
                     confirmButtonColor: 'deleteButton_alert',
@@ -321,7 +354,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 title: data.message,
                 timer: 6000,
                 position: "bottom-start",
-                imageUrl: "{{asset('logo/img/icon/verified.gif')}}",
+                imageUrl: "{{ asset('logo/img/icon/verified.gif') }}",
                 imageAlt: "Custom image",
                 imageWidth: 40,
                 showConfirmButton: false,

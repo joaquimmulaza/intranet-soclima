@@ -45,7 +45,7 @@ class FeriaController extends Controller
 
        
 
-        return view('user.pedidos', compact('ferias', 'diasSolicitados', 'user', 'responsavelId', ));
+        return view('user.pedidos', compact('ferias', 'diasSolicitados', 'user', 'responsavelId' ));
     }
 
 
@@ -316,7 +316,8 @@ class FeriaController extends Controller
             'Pedido de Férias',
             '<strong>' . $UserName . '</strong> solicitou férias de ' . $dataInicio->format('d/m/Y') . ' a ' . $dataFim->format('d/m/Y'),
             route('ferias.pedidos'),
-            $feria->responsavel_id
+            $feria->responsavel_id,
+            $user->id // <- quem solicitou
         );
 
         $responsavel = User::find($feria->responsavel_id);
@@ -459,7 +460,7 @@ class FeriaController extends Controller
     $notificationController->criar(
         'aprovacao_pedido',
         'Pedido de Férias Aprovado',
-        'Seu pedido de férias foi aprovado por <strong>' . $responsavelNome . '</strong>.',
+        'O seu pedido de férias foi aceite por <strong>' . $responsavelNome . '</strong>.',
         route('ferias.pedidos'),
         $feria->user_id
     );
@@ -492,7 +493,7 @@ public function rejeitar(Request $request, $id)
         $notificationController->criar(
             'rejeicao_pedido',
             'Pedido de Férias Rejeitado',
-            'Seu pedido de férias foi rejeitado por <strong>'. $responsavelNome . '</strong>.',
+            'O seu pedido de férias foi rejeitado pelo <strong>'. $responsavelNome . '</strong>.',
             route('ferias.pedidos'),
             $feria->user_id // ID do usuário que fez o pedido
         );
@@ -671,7 +672,7 @@ public function rejeitar(Request $request, $id)
     $totalDiasGozados = $historicoFerias->sum('dias_gozados');
 
     // Enviar os dados para a view
-    return view('ferias.show', compact('funcionario', 'feriasAnuais', 'feriasGozadas', 'feriasRestantes', 'historicoFerias', 'totalDiasFerias', 'diasAcumulados', 'id', 'feriasEmCursoEFuturas', 'feriasGozadasHistorico', 'feriasMarcadas', 'anosDisponiveis', 'totalDiasDisponiveis', 'totalDiasGozados', 'totalDiasFeriasEmCursoEFuturas', 'user', 'feriasFixas',));
+    return view('ferias.show', compact('funcionario', 'feriasAnuais', 'feriasGozadas', 'feriasRestantes', 'historicoFerias', 'totalDiasFerias', 'diasAcumulados', 'id', 'feriasEmCursoEFuturas', 'feriasGozadasHistorico', 'feriasMarcadas', 'anosDisponiveis', 'totalDiasDisponiveis', 'totalDiasGozados', 'totalDiasFeriasEmCursoEFuturas', 'user', 'feriasFixas'));
 }
 
 public function showByUser($user_id)

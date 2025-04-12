@@ -34,7 +34,7 @@
                 @method('PUT') <!-- Método PUT para edição -->
             @endif
                 
-                <div class="row justify-content-between contentDatasUser">
+                <div class="contentDatasUser">
                     {{--USUÁRIO --}}
                     <section class="col-sm-12 col-md-3 col-lg-3 col-xl-3 leftSideDataUser">
                         <div class="card testimonial-card cardDataUser">
@@ -42,12 +42,11 @@
                             {{--MOSTRA AVATAR --}}
                             <div id="upload" class="cardAvatar file-upload-wrapper">
                             <img id="output"
-                                src="{{asset('logo/img/icon/Photo-icon.svg')}}"
+                                src="{{asset('logo/img/icon/icone_add_photo.svg')}}"
                                 alt="imagem do usuario"
                                 onclick="document.getElementById('avatar').click()"
                                 style="cursor: pointer; width: 131px; object-fit: cover;">
                                 <input type="file" id="avatar" name="avatar" style="display: none;" accept="image/*" onchange="loadFile(event)">
-                                
                             </div>
 
                             <div class="card-body box-profile">

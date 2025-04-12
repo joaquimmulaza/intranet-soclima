@@ -117,18 +117,16 @@ public function showById($id)
             'Solicitação',
             $user->name . ' Enviou um justificativo',
             route('documents.visualizar', ['id' => $novaAusencia->id]), // Ajuste para a URL da justificativa
-            User::where('role_id', '1')->first()->id // Notificar o admin
+            User::where('role_id', '1')->first()->id, // Notificar o admin
+            $user->id // <- quem solicitou
         );
-
-       
         return redirect()->back()->with('success', 'Justificativo Enviado');
-
-        
     }
 
     public function aprovarRejeitar($id, Request $request)
     {
 
+        $user = Auth::user(); // <- quem está aprovando/rejeitando
         $ausencia = Ausencia::findOrFail($id);
 
         // Validar a entrada do status (aprovada ou rejeitada) e a observação
@@ -173,7 +171,8 @@ public function showById($id)
             $mensagem,
             route('documents.visualizar', ['id' => $ausencia->id]),
             // route('ausencias.show', ['id' => $ausencia->id]),
-            $ausencia->user_id // Notificar o solicitante
+            $ausencia->user_id, // Notificar o solicitante
+            $user->id  // Origem da notificação (quem aprovou/rejeitou)
         );
 
         

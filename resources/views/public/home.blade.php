@@ -679,15 +679,17 @@
         <!-- Veja quem está de férias -->
         <h3>Veja quem está de férias</h3>
         <div class="ferias">
+            <a href="{{route('public.calendar')}}">
             <div class="eventsContainer">
                 <img src="logo/img/icon/GroupF.svg" alt="">
                 <div class="aniversariosBody">
                 
-                    <h2 style="margin: 0 !important; padding: 0 !important;">Alfredo Mário e mais 6 pessoas</h2>
+                    <h2 style="margin: 0 !important; padding: 0 !important;">Norberto Lourenço e mais 6 pessoas</h2>
                     <p style="margin: 0 !important; padding: 0 !important;">Estão desfrutando de merecidas férias.</p>
                 
                 </div>
             </div>
+            </a>
         </div>
         <div class="ferias" style="background: transparent; box-shadow: none;">
             <p>AV. Samora Machel. S/N. Luanda. Talatona</p>
@@ -880,7 +882,7 @@
     $jaViuEsteAno = $user->aniversario_popup_visto_em && Carbon::parse($user->aniversario_popup_visto_em)->year == $hoje->year;
 @endphp
 
-
+@if($fazAniversarioOuPassou && !$jaViuEsteAno)
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -904,7 +906,7 @@
             fetch('{{ route('marcar.popup.visto') }}');
         });
     </script>
-
+@endif
 
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

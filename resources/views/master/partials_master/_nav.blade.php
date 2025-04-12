@@ -83,14 +83,32 @@
                             } elseif ($notification_user->titulo === 'Justificativo Enviado') {
                                 $imageSrc = asset('logo/img/icon/communication.svg');
                             } elseif ($notification_user->titulo === 'Enviar documento') {
-                                $imageSrc = asset('logo/img/icon/doc_send.svg'); // Ícone para "Enviar documento"
+                                $imageSrc = asset('logo/img/icon/doc_send.svg');
+                            } elseif ($notification_user->titulo === 'Pedido de Férias Aprovado') {
+                                $imageSrc = asset('logo/img/icon/fact_check.svg');
+                            } elseif ($notification_user->titulo === 'Pedido de Férias Rejeitado') {
+                                $imageSrc = asset('logo/img/icon/false_check.svg');
+                            } elseif (
+                                $notification_user->titulo === 'Pedido de Férias' ||
+                                $notification_user->titulo === 'Solicitação' ||
+                                $notification_user->titulo === 'Aprovação'
+                            ) {
+                                // Para essas notificações, usamos a imagem do usuário que originou
+                                $imageSrc = asset('public/avatar_users/' . ($notification_user->origem->avatar ?? 'default.png'));
                             } else {
+                                // Para outras, usa a imagem do usuário que recebeu
                                 $imageSrc = asset('public/avatar_users/' . ($notification_user->user->avatar ?? 'default.png'));
                             }
                         @endphp
 
-                        @if($notification_user->titulo === 'Aniversariantes do dia' || $notification_user->titulo === 'Aniversário' || 
-                            $notification_user->titulo === 'Justificativo Enviado' || $notification_user->titulo === 'Enviar documento')
+                        @if(
+                            $notification_user->titulo === 'Aniversariantes do dia' ||
+                            $notification_user->titulo === 'Aniversário' ||
+                            $notification_user->titulo === 'Justificativo Enviado' ||
+                            $notification_user->titulo === 'Enviar documento' ||
+                            $notification_user->titulo === 'Pedido de Férias Aprovado' ||
+                            $notification_user->titulo === 'Pedido de Férias Rejeitado'
+                        )
                             <img class="img-notification" src="{{ $imageSrc }}" alt="Ícone Notificação">
                         @else
                             <img class="img-notification" style="border-radius: 50%;" src="{{ $imageSrc }}" alt="Ícone Notificação">
@@ -98,6 +116,9 @@
 
                         <p>{!! $notification_user->descricao !!}</p>
                     </div>
+
+
+
 
                     <div class="time-notification"><small>{{ $notification_user->tempo_decorrido_formatado }}</small></div>
                 </a>
@@ -115,22 +136,47 @@
                 @forelse($lidas as $notification_user)
                     <a class="text-notification notification-item lida" href="{{ $notification_user->rota ?? '#' }}"
                     data-id="{{ $notification_user->id }}" data-lida="true" data-vista="true">
-                        <div class="notification-content">
-                            @php
-                                $imageSrc = ($notification_user->titulo === 'Aniversariantes do dia' || $notification_user->titulo === 'Aniversário')
-                                    ? asset('logo/img/icon/birthday_icon.svg')
-                                    : asset('public/avatar_users/' . ($notification_user->user->avatar ?? 'default.png'));
-                                $imageSrc = ($notification_user->titulo === 'Justificativo Enviado')
-                                    ? asset('logo/img/icon/communication.svg')
-                                    : asset('public/avatar_users/' . ($notification_user->user->avatar ?? 'default.png'));
-                            @endphp
-                            @if($notification_user->titulo === 'Aniversariantes do dia' || $notification_user->titulo === 'Aniversário' || $notification_user->titulo === 'Justificativo Enviado')
-                            <img class="img-notification"  src="{{ $imageSrc }}" alt="Ícone Notificação">
-                            @else
+                    <div class="notification-content">
+                        @php
+                            if ($notification_user->titulo === 'Aniversariantes do dia' || $notification_user->titulo === 'Aniversário') {
+                                $imageSrc = asset('logo/img/icon/birthday_icon.svg');
+                            } elseif ($notification_user->titulo === 'Justificativo Enviado') {
+                                $imageSrc = asset('logo/img/icon/communication.svg');
+                            } elseif ($notification_user->titulo === 'Enviar documento') {
+                                $imageSrc = asset('logo/img/icon/doc_send.svg');
+                            } elseif ($notification_user->titulo === 'Pedido de Férias Aprovado') {
+                                $imageSrc = asset('logo/img/icon/fact_check.svg');
+                            } elseif ($notification_user->titulo === 'Pedido de Férias Rejeitado') {
+                                $imageSrc = asset('logo/img/icon/false_check.svg');
+                            } elseif (
+                                $notification_user->titulo === 'Pedido de Férias' ||
+                                $notification_user->titulo === 'Solicitação' ||
+                                $notification_user->titulo === 'Aprovação'
+                            ) {
+                                // Para essas notificações, usamos a imagem do usuário que originou
+                                $imageSrc = asset('public/avatar_users/' . ($notification_user->origem->avatar ?? 'default.png'));
+                            } else {
+                                // Para outras, usa a imagem do usuário que recebeu
+                                $imageSrc = asset('public/avatar_users/' . ($notification_user->user->avatar ?? 'default.png'));
+                            }
+                        @endphp
+
+                        @if(
+                            $notification_user->titulo === 'Aniversariantes do dia' ||
+                            $notification_user->titulo === 'Aniversário' ||
+                            $notification_user->titulo === 'Justificativo Enviado' ||
+                            $notification_user->titulo === 'Enviar documento' ||
+                            $notification_user->titulo === 'Pedido de Férias Aprovado' ||
+                            $notification_user->titulo === 'Pedido de Férias Rejeitado'
+                        )
+                            <img class="img-notification" src="{{ $imageSrc }}" alt="Ícone Notificação">
+                        @else
                             <img class="img-notification" style="border-radius: 50%;" src="{{ $imageSrc }}" alt="Ícone Notificação">
-                            @endif
-                            <p>{!! $notification_user->descricao !!}</p>
-                        </div>
+                        @endif
+
+                        <p>{!! $notification_user->descricao !!}</p>
+                    </div>
+
                         <div class="time-notification"><small>{{ $notification_user->tempo_decorrido_formatado }}</small></div>
                     </a>
                 @empty

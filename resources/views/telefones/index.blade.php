@@ -35,7 +35,7 @@
                                         <div class="modal-body modal-bodyOpt">
                                             <div class="containerBtnOpt">
                                                 <h1>Departamento</h1>
-                                                @can('app.dashboard')
+                                          
                                                 <button type="button" class="btnPosts" data-departamento="Comercial">
                                                 Comercial
                                                 </button>
@@ -74,7 +74,7 @@
                                                 </button>
                                                 <button type="button" id="resetFilter" class="btnPosts">Todos os Departamentos</button>
 
-                                                @endcan
+                                       
                                             </div>
                                         </div>
                                     </div>

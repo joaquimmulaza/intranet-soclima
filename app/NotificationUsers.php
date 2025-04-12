@@ -18,6 +18,7 @@ class NotificationUsers extends Model
         'rota',
         'lida',
         'vista',
+        'origem_user_id',
     ];
 
     protected $casts = [
@@ -52,5 +53,11 @@ class NotificationUsers extends Model
     {
         return $this->belongsTo(User::class, 'user_id'); // Relaciona com o usuário responsável pela notificação
     }
+
+    public function origem()
+    {
+        return $this->belongsTo(User::class, 'origem_user_id');
+    }
+
 
 }

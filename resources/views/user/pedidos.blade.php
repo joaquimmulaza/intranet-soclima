@@ -119,7 +119,7 @@
 
 <div class="main_container docs_container" style="">
     <hr class="custom_hr_justificativos">
-    @foreach($ferias as $feria) 
+    @forelse($ferias as $feria) 
     <div class="view_justificativos view_ferias">
         <table class="docs_table table_ferias">
             <thead>
@@ -163,19 +163,23 @@
                         <div class="modal-content">
                             <div class="modal-body modal-bodyOpt">
                                 <div class="containerBtnOpt_justificativos">
-                                @if($feria->status == 'Pendente' && $user->id == $feria->user_id)
-                                    <form id="delete-form-{{$feria->id}}" action="{{ route('ferias.destroy', $feria->id) }}"  method="POST" style="display: none;" class="btn-popup hidden">
-                                    @csrf()
-                                    @method('DELETE')
-                                    </form>
-                                        <button class="btnPosts btnOptFerias btnPostsDelete" type="submit" data-id="{{$feria->id}}">Cancelar pedido</button>
+                                    @if($feria->status == 'Pendente')
+                                  
+                                    <button class="btnPosts btnOptFerias"><a href="{{ route('ferias.aprovar', $feria->id) }}">Aprovar</a></button>
+                                    <button class="btnPosts btnOptFerias">
+                                        <a href="{{ route('ferias.show', $feria->user_id) }}">Consultar férias</a>
+                                    </button>
+                                    <button class="btnPosts btnOptFerias btnRejeitar" type="button" onclick="abrirModalRejeitar('{{ $feria->id }}')">
+                                        Rejeitar
+                                    </button>
                                     @else
                                     <form id="delete-form-{{$feria->id}}" action="{{ route('ferias.destroy', $feria->id) }}"  method="POST" style="display: none;" class="btn-popup hidden">
                                     @csrf()
                                     @method('DELETE')
                                     </form>
                                         <button class="btnPosts btnOptFerias btnPostsDelete" type="submit" data-id="{{$feria->id}}">Eliminar</button>
-                                    @endif   
+                                    @endif
+                                    
                                 </div>
                             </div>
                         </div>
@@ -188,7 +192,21 @@
         </table>
         <div style="margin-bottom: 20px;"></div>
     </div>
-    @endforeach
+    @empty
+    <style>
+        .main_container{
+            background: none !important;
+        }
+        .custom_hr_justificativos{
+            display: none !important;
+        }
+    </style>
+    <div class="text-center containerEmptyPage">
+        <img src="{{asset('logo/img/icon/holiday_icon.svg')}}" alt="">
+        <h1 class="titleEmptyPage">De momento não há solicitações de férias</h1>
+        <p class="sentenceEmptyPage">As solicitações de férias do departamento que você lidera serão exibidas aqui assim que fore m enviadas.</p>
+    </div>
+    @endforelse
 </div>
 
 <!-- Modais movidos para fora do main_container -->
@@ -211,7 +229,7 @@
                     <div class="modal-body">
                        <div class="container_body_resumo_ferias">
                             <div class="content_header_resumo_ferias">
-                                <img src="{{URL::to('/')}}/public/avatar_users/{{$user->avatar}}" alt="">
+                                <img src="{{URL::to('/')}}/public/avatar_users/{{$feria->user->avatar}}" alt="">
                                 <div class="cargo_resumo_ferias">
                                     <h3>{{$feria->user->name ?? null}}</h3>
                                     <span>{{$feria->user->unidade->titulo ?? null}}</span>
@@ -254,7 +272,8 @@
                         @if($feria->status == 'Pendente')
                         <div class="btnResumeFerias">
                     
-                            <a href="#">Consultar férias</a>
+                            <a href="{{ route('ferias.show', $feria->user_id) }}">Consultar férias</a>
+
                             <button type="button"
                                 onclick="fecharAbrirModal('{{ $feria->id }}')">
                                 Rejeitar
@@ -288,11 +307,11 @@
           </button>
         </div>
         <div class="modal-body">
-          <label for="observacao">Poderia esclarecer por que está a rejeitar?</label><br>
-          <textarea name="observacao" required></textarea>
+          <label for="observacao-{{ $feria->id }}">Poderia esclarecer por que está a rejeitar?</label><br>
+          <textarea id="observacao-{{ $feria->id }}" class="globalOutline" name="observacao" required></textarea>
         </div>
         <div class="modal-footer">
-          <button type="submit" class="btnGlobal">Enviar</button>
+          <button id="btnEnviar-{{ $feria->id }}" type="submit" class="btnRejeitarFerias">Enviar</button>
         </div>
       </div>
     </form>
@@ -363,12 +382,24 @@ $('.modalOpt').on('show.bs.modal', function () {
         }
     });
 
-        // Impede a propagação do evento de click no botão "Cancelar pedido" ou "Remover", mas mantém o modal de opções funcional
-        document.querySelectorAll('.btnPostsDelete, .btn-popup').forEach(button => {
-        button.addEventListener('click', function(event) {
+    document.querySelectorAll('.btnPosts').forEach(button => {
+    button.addEventListener('click', function(event) {
+        const target = event.target;
+
+        // Se o clique foi diretamente em um <a>, deixa seguir normalmente
+        if (target.tagName.toLowerCase() === 'a') {
+            return; // Não faz nada, deixa o link funcionar
+        }
+
+        // Se for botão de Rejeitar ou Eliminar, bloqueia a propagação
+        if (button.classList.contains('btnRejeitar') || button.classList.contains('btnPostsDelete')) {
             event.stopPropagation();
-        });
+            event.preventDefault(); // Evita comportamento indesejado
+        }
     });
+});
+
+
 
     // Assegura que o modal `modalOpt` seja aberto
     document.querySelectorAll('.more_opt').forEach(button => {
@@ -482,6 +513,63 @@ document.addEventListener('DOMContentLoaded', function () {
         $('#modalFeriasResumo-' + id).removeClass('hide').removeData('bs.modal');
     });
 }
+
+function abrirModalRejeitar(id) {
+    var modalFeriasResumo = $('#modalFeriasResumo-' + id);
+    var modalRejeitar = $('#modalRejeitar-' + id);
+
+    // Garante que o modalRejeitar não está aberto (evita bugs se já estiver)
+    modalRejeitar.modal('hide');
+
+    if (modalFeriasResumo.hasClass('show')) {
+        // Aguarda o fechamento completo do primeiro modal
+        modalFeriasResumo.on('hidden.bs.modal', function () {
+            modalFeriasResumo.off('hidden.bs.modal'); // remove o listener
+            modalRejeitar.modal('show');
+        });
+
+        modalFeriasResumo.modal('hide');
+    } else {
+        // Se o primeiro já estiver fechado, apenas abre o segundo
+        modalRejeitar.modal('show');
+    }
+}
+
+
+
+document.addEventListener('DOMContentLoaded', function () {
+  const textareas = document.querySelectorAll('textarea[name="observacao"]');
+
+  textareas.forEach(textarea => {
+    const id = textarea.id.split('-')[1]; // pega o ID correspondente ao $feria->id
+    const btn = document.getElementById(`btnEnviar-${id}`);
+
+    textarea.addEventListener('input', () => {
+      if (textarea.value.trim().length > 0) {
+        btn.classList.add('ativo');
+      } else {
+        btn.classList.remove('ativo');
+      }
+    });
+  });
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+  const textareas = document.querySelectorAll('textarea[name="observacao"]');
+
+  textareas.forEach(textarea => {
+    const id = textarea.id.split('-')[1]; // pega o ID correspondente ao $feria->id
+    const btn = document.getElementById(`btnEnviar-${id}`);
+
+    textarea.addEventListener('input', () => {
+      if (textarea.value.trim().length > 0) {
+        btn.classList.add('ativo');
+      } else {
+        btn.classList.remove('ativo');
+      }
+    });
+  });
+});
 </script>
 
 @endsection

@@ -61,7 +61,7 @@ class NotificationController extends Controller
         return response()->json(['success' => false, 'message' => 'Notificação não encontrada.'], 404);
     }
 
-    public static function criar($tipo, $titulo, $descricao, $rota = null, $userId = null)
+    public static function criar($tipo, $titulo, $descricao, $rota = null, $userId = null, $origem_user_id = null)
     {
         NotificationUsers::create([
             'tipo' => $tipo,
@@ -69,6 +69,7 @@ class NotificationController extends Controller
             'descricao' => $descricao,
             'rota' => $rota,
             'user_id' => $userId,
+            'origem_user_id' => $origem_user_id, // quem gerou a notificação
             'vista' => false, // Notificação criada como "não vista"
         ]);
     }
