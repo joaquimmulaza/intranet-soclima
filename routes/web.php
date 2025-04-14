@@ -348,7 +348,6 @@ Route::middleware('auth')->group(function () {
 });
 
 
-
 Route::post('/test-csrf', function () {
     return response()->json(['success' => true, 'message' => 'CSRF válido']);
 });

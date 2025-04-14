@@ -51,7 +51,7 @@
         return hexColor;
     }
 
-    $('#calendar').fullCalendar({
+    $('#calendar').fullCalendar({ 
         locale: 'pt', // Define o idioma como português
         events: '/events',  // URL que retorna os eventos (pedidos de férias)
         editable: false,  // Desabilitar edição
