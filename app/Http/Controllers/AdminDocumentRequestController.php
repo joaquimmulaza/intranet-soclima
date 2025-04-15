@@ -9,7 +9,8 @@ use App\Mail\DocumentoEnviado;
 use Illuminate\Support\Facades\Mail;
 use setasign\Fpdi\Fpdi;
 use setasign\Fpdi\PdfParser\StreamReader;
-use FPDF; // Biblioteca para criar PDFs
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use Carbon\Carbon;
 
 class AdminDocumentRequestController extends Controller
@@ -24,50 +25,62 @@ class AdminDocumentRequestController extends Controller
     {
         $validatedData = $request->validate([
             'observacoes_admin' => 'nullable|string|max:255',
+            'salario_base' => 'required|string|regex:/^\d+(\.\d{1,2})?(,\d{1,2})?$/',
         ]);
 
         $documentRequest = DocumentRequest::findOrFail($id);
         $user = $documentRequest->user;
 
-        // Gerar o PDF com os dados do usuário
-        $pdf = new FPDF('P', 'pt', 'A4'); // P = retrato, pt = pontos, A4 = 595x842 pontos
-        $pdf->AddPage();
-        $pdf->SetFont('Times', 'B', 16);
+        // Formatar as datas em português
+        $dataAdmissao = $this->formatarDataPortugues($user->data_admissao);
+        $dataCriacao = "Luanda, " . $this->formatarDataPortugues($documentRequest->created_at);
 
-        // Cabeçalho
-        $pdf->Cell(0, 20, 'DECLARAÇÃO', 0, 1, 'C');
-        $pdf->Ln(10);
+        // Selecionar a view com base no tipo de documento
+        $viewName = 'documents.declaracao'; // Valor padrão (fallback)
+        switch ($documentRequest->tipo_documento) {
+            case 'Declaração para obtenção de visto':
+                $viewName = 'documents.declaracao';
+                break;
+            case 'Declaração para abertura de conta bancária':
+                $viewName = 'documents.declaracao_abertura_conta';
+                break;
+            case 'Declaração para actualização de conta bancária':
+                $viewName = 'documents.declaracao_abertura_conta';
+                break;
+            case 'Declaração de trabalho':
+                $viewName = 'documents.declaracao';
+                break;
+            case 'Declaração para obtenção de crédito bancário':
+                $viewName = 'documents.declaracao';
+                break;
+            case 'Outros':
+                $viewName = 'documents.declaracao';
+                break;
+            default:
+                $viewName = 'documents.declaracao';
+                break;
+        }
 
-        // Informações da empresa
-        $pdf->SetFont('Times', '', 12);
-        $empresaTexto = "SOCLIMA - Representações e Comercialização de Equipamentos de Ar Condicionados e Ventilação Lda., com sede na Avenida Samora Machel, S/N, Talatona em Luanda, NIF 5410002636:";
-        $pdf->MultiCell(0, 15, utf8_decode($empresaTexto), 0, 'J');
-        $pdf->Ln(10);
+        // Formatar o salário base
+        $salarioBaseNumerico = (float)str_replace(',', '.', $validatedData['salario_base']);
+        $salarioBase = number_format($salarioBaseNumerico, 2, ',', '.'); // Ex.: "500.000,00"
+        $salarioBaseExtenso = $this->numeroPorExtenso($salarioBaseNumerico, true); // Ex.: "Quinhentos Mil Kwanzas"
 
-        // Corpo do documento com dados do usuário
-        $corpoTexto = "Declara que para efeito de solicitação de visto, o Sr. " . utf8_decode($user->name) . ", natural de Portugal Setúbal, estado civil do Cartão de Residente nº 000000T00, emitido aos 00 de Abril de 1900, é funcionário desta Empresa em efectivo serviço, admitido a " . date('d \d\e F \d\e Y', strtotime($user->data_admissao)) . ", com a categoria profissional de Eeeeeeeee e exercendo a função de " . utf8_decode($user->cargo->titulo) . ", auferindo o salário base de 000.000,00 AKZ (Cxxxx e Seeee e Seeee Mile Qaaaaaa e Oeeeee Kwanzas).";
-        $pdf->MultiCell(0, 15, utf8_decode($corpoTexto), 0, 'J');
-        $pdf->Ln(10);
+        // Renderizar o HTML da view, passando o salário base (numérico e extenso)
+        $html = view($viewName, compact('user', 'dataAdmissao', 'dataCriacao', 'documentRequest', 'salarioBase', 'salarioBaseExtenso'))->render();
 
-        $corpoTexto2 = "Por ser verdade e nos ter sido solicitado, para o efeito de concessão de visto de entrada em Portugal para a sua cunhada Jahbsbdjd, de nacionalidade Angolana, portadora do Bilhete de Identidade Nº 00000000LA000 e passaporte Nº 000000000, passou-se a presente declaração que vai devidamente assinada e autenticada com o carimbo a uso na nossa Empresa.";
-        $pdf->MultiCell(0, 15, utf8_decode($corpoTexto2), 0, 'J');
-        $pdf->Ln(20);
-
-        // Rodapé
-        setlocale(LC_TIME, 'pt_BR.UTF-8');
-        $dataTexto = "Luanda, " . Carbon::parse($documentRequest->created_at)->locale('pt_BR')->isoFormat('D [de] MMMM [de] YYYY');
-        $pdf->Cell(0, 15, utf8_decode($dataTexto), 0, 1, 'L');
-        $pdf->Ln(10);
-
-        $pdf->Cell(0, 15, utf8_decode('Direcção dos Recursos Humanos'), 0, 1, 'C');
-        $pdf->Ln(5);
-        $pdf->Cell(0, 15, utf8_decode('_________________________'), 0, 1, 'C');
-        $pdf->Ln(5);
-        $pdf->Cell(0, 15, utf8_decode('Nerika Costa'), 0, 1, 'C');
+        // Configurar o Dompdf
+        $options = new Options();
+        $options->set('isHtml5ParserEnabled', true);
+        $options->set('isRemoteEnabled', true);
+        $dompdf = new Dompdf($options);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
 
         // Salvar o PDF gerado temporariamente
         $tempPath = storage_path('app/public/documents/declaracao_' . $id . '.pdf');
-        $pdf->Output($tempPath, 'F');
+        file_put_contents($tempPath, $dompdf->output());
         Log::info('PDF gerado', ['tempPath' => $tempPath]);
 
         // Caminho do PDF assinado
@@ -86,7 +99,7 @@ class AdminDocumentRequestController extends Controller
 
         // Adicionar a assinatura ao PDF gerado
         try {
-            $this->adicionarAssinaturaAoPDF($tempPath, $fullSignedPath, $assinaturaPath);
+            $this->adicionarAssinaturaAoPDF($tempPath, $fullSignedPath, $assinaturaPath, $documentRequest);
             Log::info('Assinatura adicionada com sucesso ao PDF', ['fullSignedPath' => $fullSignedPath]);
         } catch (\Exception $e) {
             Log::error('Erro ao adicionar assinatura', ['message' => $e->getMessage()]);
@@ -138,14 +151,90 @@ class AdminDocumentRequestController extends Controller
     }
 
     /**
+     * Formata a data em português (ex.: "01 de Agosto de 2021")
+     */
+    private function formatarDataPortugues($data)
+    {
+        $meses = [
+            'January' => 'Janeiro', 'February' => 'Fevereiro', 'March' => 'Março',
+            'April' => 'Abril', 'May' => 'Maio', 'June' => 'Junho',
+            'July' => 'Julho', 'August' => 'Agosto', 'September' => 'Setembro',
+            'October' => 'Outubro', 'November' => 'Novembro', 'December' => 'Dezembro'
+        ];
+        $dataFormatada = date('d \d\e F \d\e Y', strtotime($data));
+        foreach ($meses as $en => $pt) {
+            $dataFormatada = str_replace($en, $pt, $dataFormatada);
+        }
+        return $dataFormatada;
+    }
+
+    /**
+     * Converte um número para o formato por extenso em português (ex.: 500000,00 -> "Quinhentos Mil Kwanzas").
+     *
+     * @param float $valor
+     * @param bool $moeda
+     * @return string
+     */
+    private function numeroPorExtenso($valor, $moeda = true)
+    {
+        $singular = ['Kwanza', 'Mil Kwanzas', 'Milhão de Kwanzas', 'Bilhão de Kwanzas'];
+        $plural = ['Kwanzas', 'Mil Kwanzas', 'Milhões de Kwanzas', 'Bilhões de Kwanzas'];
+
+        $c = ['','Cem','Duzentos','Trezentos','Quatrocentos','Quinhentos','Seiscentos','Setecentos','Oitocentos','Novecentos'];
+        $d = ['','Dez','Vinte','Trinta','Quarenta','Cinquenta','Sessenta','Setenta','Oitenta','Noventa'];
+        $d10 = ['Dez','Onze','Doze','Treze','Quatorze','Quinze','Dezesseis','Dezessete','Dezoito','Dezenove'];
+        $u = ['','Um','Dois','Três','Quatro','Cinco','Seis','Sete','Oito','Nove'];
+
+        $z = 0;
+        $valor = number_format($valor, 2, '.', '');
+        $inteiro = explode('.', $valor);
+        $cont = count($inteiro);
+        $rt = '';
+
+        for ($i = 0; $i < $cont; $i++) {
+            for ($ii = strlen($inteiro[$i]); $ii < 3; $ii++) {
+                $inteiro[$i] = "0" . $inteiro[$i];
+            }
+        }
+
+        $fim = $cont - ($inteiro[$cont - 1] > 0 ? 1 : 2);
+        for ($i = 0; $i < $cont; $i++) {
+            $valor = $inteiro[$i];
+            $rc = (($valor > 100) && ($valor < 200)) ? "Cento" : $c[$valor[0]];
+            $rd = ($valor[1] < 2) ? "" : $d[$valor[1]];
+            $ru = ($valor > 0) ? (($valor[1] == 1) ? $d10[$valor[2]] : $u[$valor[2]]) : "";
+
+            $r = $rc . (($rc && ($rd || $ru)) ? " e " : "") . $rd . (($rd && $ru) ? " e " : "") . $ru;
+            $t = $cont - 1 - $i;
+            $r .= $r ? " " . ($valor > 1 ? $plural[$t] : $singular[$t]) : "";
+            if ($valor == "000") $z++;
+            elseif ($z > 0) $z--;
+
+            if (($t == 1) && ($z > 0) && ($inteiro[0] > 0)) $r .= (($z > 1) ? " de " : "") . $plural[$t];
+            if ($r) $rt = $rt . ((($i > 0) && ($i <= $fim) && ($inteiro[0] > 0) && ($z < 1)) ? (($i < $fim) ? ", " : " e ") : " ") . $r;
+        }
+
+        if ($moeda) {
+            $rt .= ' ';
+            $decimal = $inteiro[$cont - 1];
+            if ($decimal > 0) {
+                $rt .= " e " . $this->numeroPorExtenso($decimal, false) . ($decimal > 1 ? " Centavos" : " Centavo");
+            }
+        }
+
+        return trim(ucfirst(strtolower($rt)));
+    }
+
+    /**
      * Assina um PDF adicionando uma imagem de assinatura na última página
      */
-    private function adicionarAssinaturaAoPDF($inputPath, $outputPath, $assinaturaPath)
+    private function adicionarAssinaturaAoPDF($inputPath, $outputPath, $assinaturaPath, $documentRequest)
     {
         Log::info('Iniciando adicionarAssinaturaAoPDF', [
             'inputPath' => $inputPath,
             'outputPath' => $outputPath,
             'assinaturaPath' => $assinaturaPath,
+            'tipo_documento' => $documentRequest->tipo_documento,
         ]);
 
         $inputPath = str_replace('\\', '/', $inputPath);
@@ -192,7 +281,33 @@ class AdminDocumentRequestController extends Controller
                     $signatureWidth = 60; // ~21 mm
                     $signatureHeight = 30; // ~10 mm
                     $x = ($size['width'] - $signatureWidth) / 2; // Centraliza horizontalmente
-                    $y = $size['height'] - 206; // ~48 mm da borda inferior
+
+                    // Ajustar a posição vertical ($y) com base no tipo de documento
+                    $y = $size['height'] - 106; // Valor padrão (~48 mm da borda inferior)
+                    switch ($documentRequest->tipo_documento) {
+                        case 'Declaração para obtenção de visto':
+                            $y = $size['height'] - 106; // ~48 mm da borda inferior
+                            break;
+                        case 'Declaração para abertura de conta bancária':
+                            $y = $size['height'] - 120; // ~40 mm da borda inferior
+                            break;
+                        case 'Declaração para actualização de conta bancária':
+                            $y = $size['height'] - 120; // ~40 mm da borda inferior
+                            break;
+                        case 'Declaração de trabalho':
+                            $y = $size['height'] - 106; // ~48 mm da borda inferior
+                            break;
+                        case 'Declaração para obtenção de crédito bancário':
+                            $y = $size['height'] - 106; // ~48 mm da borda inferior
+                            break;
+                        case 'Outros':
+                            $y = $size['height'] - 106; // ~48 mm da borda inferior
+                            break;
+                        default:
+                            $y = $size['height'] - 106; // ~48 mm da borda inferior
+                            break;
+                    }
+
                     Log::info('Adicionando assinatura', [
                         'pageNo' => $pageNo,
                         'x' => $x,
@@ -211,6 +326,23 @@ class AdminDocumentRequestController extends Controller
             throw $e;
         }
     }
+
+    public function downloadDocument($id)
+{
+    $documentRequest = DocumentRequest::findOrFail($id);
+
+    if (!$documentRequest->documento_path || $documentRequest->status !== 'concluído') {
+        return back()->with('error', 'Documento não disponível para download.');
+    }
+
+    $filePath = storage_path('app/public/' . $documentRequest->documento_path);
+
+    if (!file_exists($filePath)) {
+        return back()->with('error', 'Arquivo não encontrado.');
+    }
+
+    return response()->download($filePath, 'declaracao_' . $id . '.pdf');
+}
 
     public function markAsComplete($id)
     {

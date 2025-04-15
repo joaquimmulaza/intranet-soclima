@@ -192,7 +192,7 @@
 
             <li class="nav-item">
                 <a style="padding: 0 !important; margin: 0 !important;" class="nav-link myProfile"
-                href="#" class="nav-link"><img src="{{asset('logo/img/icon/user-avatar.svg')}}" alt="" id="profileDropdownToggle">
+                href="#" class="nav-link"><img src="{{URL::to('/')}}/public/avatar_users/{{ Auth::user()->avatar }}" alt="" id="profileDropdownToggle">
                 
             </a>
             <div class="dropdown-content" id="profileDropdown">

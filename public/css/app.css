@@ -744,7 +744,6 @@ body{
 }
 .evento{
 height: 330px;
-    background-color: green;
 }
 
 .swiper {
@@ -755,7 +754,7 @@ height: 330px;
   .swiper-slide {
     text-align: center;
     font-size: 18px;
-    background: #000000;
+
     display: flex;
     justify-content: center;
     align-items: center;
@@ -886,13 +885,7 @@ height: 330px;
     flex-direction: column;
     display: flex;
     text-align: left;
-    /* padding-top: 16.73px;
-    height: 100%; */
-   
-    background-color: red;
-    margin-top: 8px;
-    position: relative;
-    height: 200px;
+    padding-top: 16.73px;
   }
 
   .eventBody h3 {
@@ -4923,5 +4916,11 @@ input.is-invalid {
     padding-right: 20px !important;
     display: flex;
     justify-content: space-between;
+    gap: 20px;
+}
+
+.showDocumentRequest {
+    display: flex;
+    justify-content: center;
     gap: 20px;
 }

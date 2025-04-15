@@ -420,6 +420,8 @@ Route::middleware('auth')->group(function () {
     Route::post('comment-reply/{commentReply}/like', 'CommentController@likeReply')->name('comment.reply.like');
 });
 
+Route::get('document-request/download/{id}', [App\Http\Controllers\AdminDocumentRequestController::class, 'downloadDocument'])->name('downloadDocument');
+
 Route::middleware(['auth'])->group(function () {
     // List all document requests for the logged-in user
     Route::get('/documentos-solicitados', 'DocumentRequestController@index')

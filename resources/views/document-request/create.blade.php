@@ -43,6 +43,7 @@
                         <option value="Declaração de trabalho">Declaração de trabalho</option>
                         <option value="Declaração para obtenção de visto">Declaração para obtenção de visto</option>
                         <option value="Declaração para obtenção de crédito bancário">Declaração para obtenção de crédito bancário</option>
+                        <option value="Declaração para abertura de conta bancária">Declaração para abertura de conta bancária</option>
                         <option value="Declaração para actualização de conta bancária">Declaração para actualização de conta bancária</option>
                         <option value="Outros">Outros</option>
                         <!-- Adicione outros tipos de documentos aqui -->
@@ -50,15 +51,15 @@
                 </div>
                 <div class="mb-3">
                     <label for="finalidade" class="form-label">Finalidade do documento*</label>
-                    <input type="text" id="finalidade" name="finalidade" class="form-control" required>
+                    <input type="text" id="finalidade" name="finalidade" class="form-control" placeholder="" required>
                 </div>
             </div>
             <div class="third_column">
                 <div class="">
-                    <label class="form-label">Forma de entrega</label>
-                    <div class="container_radios">
-                        <div class="radio-docs">
-                            <input type="radio" id="email" name="forma_entrega" value="email" required>
+                    <label class="form-label hidden">Forma de entrega</label>
+                    <div class="container_radios hidden">
+                        <div class="radio-docs hidden">
+                            <input type="radio" id="email" name="forma_entrega" value="email" checked>
                             <label for="email">Envio por E-mail</label>
                         </div>
                         <div class="radio-docs">
@@ -85,4 +86,25 @@
         </div>
     </form>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const tipoDocumento = document.getElementById('tipo_documento');
+    const finalidadeInput = document.getElementById('finalidade');
+
+    tipoDocumento.addEventListener('change', function () {
+        const valorSelecionado = tipoDocumento.value;
+
+        if (
+            valorSelecionado === 'Declaração para abertura de conta bancária' ||
+            valorSelecionado === 'Declaração para actualização de conta bancária'
+        ) {
+            finalidadeInput.placeholder = 'Ex.: Banco BIC';
+        } else {
+            finalidadeInput.placeholder = '';
+        }
+    });
+});
+</script>
+
 @endsection
