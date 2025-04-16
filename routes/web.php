@@ -448,3 +448,6 @@ Route::get('/marcar-popup-visto', function () {
 
     return response()->json(['status' => 'ok']);
 })->name('marcar.popup.visto')->middleware('auth');
+
+Route::post('/notifications/congratulate', [NotificationController::class, 'congratulate'])->middleware('auth');
+Route::post('/notifications/check-congratulation', [NotificationController::class, 'checkCongratulation'])->middleware('auth');

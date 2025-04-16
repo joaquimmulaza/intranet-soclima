@@ -909,6 +909,38 @@
     </script>
 @endif
 
+<div id="popupAniversarios" class="popup-overlay" style="display: none;">
+    <div class="popup-content">
+        <span class="close-btn" onclick="fecharPopup()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z" fill="#555555"/>
+            </svg>
+        </span>
+        <h2>Aniversários</h2>
+        <hr>
+        <p>Veja quem são os aniversariantes do mês</p>
+
+        <div class="slider-wrapper">
+            <button class="slider-btn prev" onclick="slideAniversarios(-1)">❮</button>
+
+            <div class="popup-cards" id="sliderCards">
+                @foreach($aniversariantes as $user)
+                    <div class="cardAniversariantes">
+                        <img class="imgAniversariante" src="{{ URL::to('/') }}/public/avatar_users/{{ $user->avatar }}" alt="avatar" style="width: 100px;">
+                        <h4>{{ $user->name }}</h4>
+                        <p>{{ $user->cargo->titulo }}</p>
+                        <img src="{{ asset('logo/img/icon/confeti_parabenizar.gif') }}" alt="Festa" style="width: 40px;">
+                        <p>{{ \Carbon\Carbon::parse($user->nascimento)->locale('pt')->translatedFormat('d \d\e F') }}</p>
+                        <button class="btnParabens" data-user-id="{{ $user->id }}">Parabéns!</button>
+                    </div>
+                @endforeach
+            </div>
+
+            <button class="slider-btn next" onclick="slideAniversarios(1)">❯</button>
+        </div>
+    </div>
+</div>
+
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="{{ asset('frontend/home/script.js') }}"></script>
@@ -2558,5 +2590,95 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Add event listeners to all "Parabéns!" buttons
+    document.querySelectorAll('.cardAniversariantes button').forEach(button => {
+        button.addEventListener('click', function () {
+            // Get the user ID from a data attribute (to be added in HTML)
+            const userId = this.getAttribute('data-user-id');
+            const button = this;
+
+            // Change button background
+           
+            button.style.color = '#fff'; // White text
+            button.style.position = 'relative';
+
+            // Create and append GIF
+            const gif = document.createElement('img');
+            gif.src = "{{asset('logo/img/icon/parabens_motion.gif')}}";
+            gif.style.width = '40px';
+            gif.style.position = 'absolute';
+            gif.style.top = '50%';
+            gif.style.left = '50%';
+            gif.style.transform = 'translate(-50%, -50%)';
+            button.style.borderColor = '#009AC1';
+            button.style.borderWidth = '1px';
+            button.style.borderStyle = 'solid';
+            button.innerHTML = ''; // Clear button text
+            button.style.backgroundColor = '#fff';
+            button.appendChild(gif);
+
+            // Send AJAX request to create notification
+            fetch('/notifications/congratulate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({ user_id: userId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // After 3 seconds, hide GIF and show "Enviado"
+                    setTimeout(() => {
+                        gif.remove();
+                        button.style.border = 'none'
+                        button.textContent = 'Enviado';
+                        button.style.backgroundColor = '#CDCC00'; // Green background
+                        button.disabled = true; // Disable button to prevent multiple clicks
+                    }, 4000);
+                } else {
+                    alert('Erro ao enviar parabéns.');
+                    button.style.backgroundColor = ''; // Revert background
+                    button.textContent = 'Parabéns!'; // Revert text
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Erro ao enviar parabéns.');
+                button.style.backgroundColor = ''; // Revert background
+                button.textContent = 'Parabéns!'; // Revert text
+            });
+        });
+    });
+});
+
+// Existing functions (unchanged)
+function abrirPopup() {
+    document.getElementById('popupAniversarios').style.display = 'flex';
+}
+
+function fecharPopup() {
+    document.getElementById('popupAniversarios').style.display = 'none';
+}
+
+document.querySelector('.aniversarios').addEventListener('click', function () {
+    abrirPopup();
+});
+
+function slideAniversarios(direction) {
+    const slider = document.getElementById('sliderCards');
+    const cards = slider.querySelectorAll('.cardAniversariantes');
+    const cardWidth = cards[0].offsetWidth + 20; // largura + gap
+    const maxIndex = cards.length - Math.floor(slider.offsetWidth / cardWidth);
+
+    slideIndex += direction;
+    if (slideIndex < 0) slideIndex = 0;
+    if (slideIndex > maxIndex) slideIndex = maxIndex;
+
+    slider.style.transform = `translateX(-${slideIndex * cardWidth}px)`;
+}
     </script>
 @endsection

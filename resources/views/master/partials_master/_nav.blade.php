@@ -2,18 +2,6 @@
 <nav class="main-header navbar navbar-expand navbar-white heightNav justify-content-start" style="margin: 0 !important;">
     <!-- MENU ESQUERDO ADMINISTRATIVO -->
     <ul class="navbar-nav widthNav">
-        <!-- <li class="nav-item">
-            <a class="nav-link" data-widget="pushmenu" href="#"
-               role="button"
-               data-toggle="collapse"
-               data-targ et="#suporteContent"
-               aria-controls="suporteContent"
-               aria-expanded="false"
-               aria-label="Toggle navigation">
-
-                <i class="fas fa-bars"></i>
-            </a>
-        </li> -->
         <div class="contentRight">
             {{-- CLASSES QUE SOME ITEM DA LISTA EM TAMANHO SM: d-none d-sm-inline-block--}}
             <li class="nav-item">
@@ -65,125 +53,149 @@
         <h5>Notificações</h5>
         <hr>
         <div class="notificacoes-nao-lidas">
-            <h6>Não Lidas</h6>
-            <div class="lista-notificacoes" id="naoLidas">
-                @forelse($naoLidas as $notification_user)
-                <a class="text-notification notification-item 
-                    {{ $notification_user->lida ? 'lida' : ($notification_user->vista ? 'vista-nao-lida' : 'nao-lida') }}" 
-                    href="{{ $notification_user->rota ?? '#' }}" 
-                    onclick="markAsRead('{{ $notification_user->id }}', this);"
-                    data-id="{{ $notification_user->id }}" 
-                    data-lida="{{ $notification_user->lida ? 'true' : 'false' }}" 
-                    data-vista="{{ $notification_user->vista ? 'true' : 'false' }}">
-                   
-                    <div class="notification-content">
-                        @php
-                            if ($notification_user->titulo === 'Aniversariantes do dia' || $notification_user->titulo === 'Aniversário') {
-                                $imageSrc = asset('logo/img/icon/birthday_icon.svg');
-                            } elseif ($notification_user->titulo === 'Justificativo Enviado') {
-                                $imageSrc = asset('logo/img/icon/communication.svg');
-                            } elseif ($notification_user->titulo === 'Enviar documento') {
-                                $imageSrc = asset('logo/img/icon/doc_send.svg');
-                            } elseif ($notification_user->titulo === 'Pedido de Férias Aprovado') {
-                                $imageSrc = asset('logo/img/icon/fact_check.svg');
-                            } elseif ($notification_user->titulo === 'Pedido de Férias Rejeitado') {
-                                $imageSrc = asset('logo/img/icon/false_check.svg');
-                            } elseif (
-                                $notification_user->titulo === 'Pedido de Férias' ||
-                                $notification_user->titulo === 'Solicitação' ||
-                                $notification_user->titulo === 'Aprovação'
-                            ) {
-                                // Para essas notificações, usamos a imagem do usuário que originou
-                                $imageSrc = asset('public/avatar_users/' . ($notification_user->origem->avatar ?? 'default.png'));
-                            } else {
-                                // Para outras, usa a imagem do usuário que recebeu
-                                $imageSrc = asset('public/avatar_users/' . ($notification_user->user->avatar ?? 'default.png'));
-                            }
-                        @endphp
+    <h6>Não Lidas</h6>
+    <div class="lista-notificacoes" id="naoLidas">
+        @forelse($naoLidas as $notification_user)
+        <a class="text-notification notification-item 
+            {{ $notification_user->lida ? 'lida' : ($notification_user->vista ? 'vista-nao-lida' : 'nao-lida') }}"
+            href="{{ $notification_user->tipo === 'congratulation' ? 'javascript:void(0)' : ($notification_user->rota ?? '#') }}"
+            @if($notification_user->tipo === 'congratulation')
+                onclick="event.preventDefault(); openCongratsPopup('{{ addslashes($notification_user->titulo) }}', '{{ addslashes($notification_user->congratulators) }}')"
+            @else
+                onclick="markAsRead('{{ $notification_user->id }}', this);"
+            @endif
+            data-id="{{ $notification_user->id }}"
+            data-lida="{{ $notification_user->lida ? 'true' : 'false' }}"
+            data-vista="{{ $notification_user->vista ? 'true' : 'false' }}">
 
-                        @if(
-                            $notification_user->titulo === 'Aniversariantes do dia' ||
-                            $notification_user->titulo === 'Aniversário' ||
-                            $notification_user->titulo === 'Justificativo Enviado' ||
-                            $notification_user->titulo === 'Enviar documento' ||
-                            $notification_user->titulo === 'Pedido de Férias Aprovado' ||
-                            $notification_user->titulo === 'Pedido de Férias Rejeitado'
-                        )
-                            <img class="img-notification" src="{{ $imageSrc }}" alt="Ícone Notificação">
-                        @else
-                            <img class="img-notification" style="border-radius: 50%;" src="{{ $imageSrc }}" alt="Ícone Notificação">
-                        @endif
+            <div class="notification-content">
+                @php
+                    if ($notification_user->titulo === 'Aniversariantes do dia' || $notification_user->titulo === 'Aniversário') {
+                        $imageSrc = asset('logo/img/icon/birthday_icon.svg');
+                    } elseif ($notification_user->titulo === 'Justificativo Enviado') {
+                        $imageSrc = asset('logo/img/icon/communication.svg');
+                    } elseif ($notification_user->titulo === 'Enviar documento') {
+                        $imageSrc = asset('logo/img/icon/doc_send.svg');
+                    } elseif ($notification_user->titulo === 'Pedido de Férias Aprovado') {
+                        $imageSrc = asset('logo/img/icon/fact_check.svg');
+                    } elseif ($notification_user->titulo === 'Pedido de Férias Rejeitado') {
+                        $imageSrc = asset('logo/img/icon/false_check.svg');
+                    } elseif (
+                        $notification_user->titulo === 'Pedido de Férias' ||
+                        $notification_user->titulo === 'Solicitação' ||
+                        $notification_user->titulo === 'Aprovação'
+                    ) {
+                        $imageSrc = asset('public/avatar_users/' . ($notification_user->origem->avatar ?? 'default.png'));
+                    } elseif ($notification_user->tipo === 'congratulation') {
+                        $imageSrc = asset('logo/img/icon/confetti_notification.svg');
+                    } else {
+                        $imageSrc = asset('public/avatar_users/' . ($notification_user->user->avatar ?? 'default.png'));
+                    }
+                @endphp
 
-                        <p>{!! $notification_user->descricao !!}</p>
-                    </div>
+                @if(
+                    $notification_user->titulo === 'Aniversariantes do dia' ||
+                    $notification_user->titulo === 'Aniversário' ||
+                    $notification_user->titulo === 'Justificativo Enviado' ||
+                    $notification_user->titulo === 'Enviar documento' ||
+                    $notification_user->titulo === 'Pedido de Férias Aprovado' ||
+                    $notification_user->titulo === 'Pedido de Férias Rejeitado' ||
+                    $notification_user->tipo === 'congratulation'
+                )
+                    <img class="img-notification" src="{{ $imageSrc }}" alt="Ícone Notificação">
+                @else
+                    <img class="img-notification" style="border-radius: 50%;" src="{{ $imageSrc }}" alt="Ícone Notificação">
+                @endif
 
-
-
-
-                    <div class="time-notification"><small>{{ $notification_user->tempo_decorrido_formatado }}</small></div>
-                </a>
-               
-                @empty
-                    <span>Sem novas notificações</span>
-                @endforelse
+                <p>{!! $notification_user->descricao !!}</p>
             </div>
-        </div>
 
+            <div class="time-notification"><small>{{ $notification_user->tempo_decorrido_formatado }}</small></div>
+        </a>
+        @empty
+            <span>Sem novas notificações</span>
+        @endforelse
+    </div>
+</div>
+
+<hr>
+<div class="notificacoes-lidas">
+    <h6>Lidas</h6>
+    <div class="lista-notificacoes" id="lidas">
+        @forelse($lidas as $notification_user)
+        <a class="text-notification notification-item lida"
+           href="{{ $notification_user->tipo === 'congratulation' ? 'javascript:void(0)' : ($notification_user->rota ?? '#') }}"
+           @if($notification_user->tipo === 'congratulation')
+               onclick="event.preventDefault(); openCongratsPopup('{{ addslashes($notification_user->titulo) }}', '{{ addslashes($notification_user->congratulators) }}')"
+           @endif
+           data-id="{{ $notification_user->id }}"
+           data-lida="true"
+           data-vista="true">
+
+            <div class="notification-content">
+                @php
+                    if ($notification_user->titulo === 'Aniversariantes do dia' || $notification_user->titulo === 'Aniversário') {
+                        $imageSrc = asset('logo/img/icon/birthday_icon.svg');
+                    } elseif ($notification_user->titulo === 'Justificativo Enviado') {
+                        $imageSrc = asset('logo/img/icon/communication.svg');
+                    } elseif ($notification_user->titulo === 'Enviar documento') {
+                        $imageSrc = asset('logo/img/icon/doc_send.svg');
+                    } elseif ($notification_user->titulo === 'Pedido de Férias Aprovado') {
+                        $imageSrc = asset('logo/img/icon/fact_check.svg');
+                    } elseif ($notification_user->titulo === 'Pedido de Férias Rejeitado') {
+                        $imageSrc = asset('logo/img/icon/false_check.svg');
+                    } elseif (
+                        $notification_user->titulo === 'Pedido de Férias' ||
+                        $notification_user->titulo === 'Solicitação' ||
+                        $notification_user->titulo === 'Aprovação'
+                    ) {
+                        $imageSrc = asset('public/avatar_users/' . ($notification_user->origem->avatar ?? 'default.png'));
+                    } elseif ($notification_user->tipo === 'congratulation') {
+                        $imageSrc = asset('logo/img/icon/confetti_notification.svg');
+                    } else {
+                        $imageSrc = asset('public/avatar_users/' . ($notification_user->user->avatar ?? 'default.png'));
+                    }
+                @endphp
+
+                @if(
+                    $notification_user->titulo === 'Aniversariantes do dia' ||
+                    $notification_user->titulo === 'Aniversário' ||
+                    $notification_user->titulo === 'Justificativo Enviado' ||
+                    $notification_user->titulo === 'Enviar documento' ||
+                    $notification_user->titulo === 'Pedido de Férias Aprovado' ||
+                    $notification_user->titulo === 'Pedido de Férias Rejeitado' ||
+                    $notification_user->tipo === 'congratulation'
+                )
+                    <img class="img-notification" src="{{ $imageSrc }}" alt="Ícone Notificação">
+                @else
+                    <img class="img-notification" style="border-radius: 50%;" src="{{ $imageSrc }}" alt="Ícone Notificação">
+                @endif
+
+                <p>{!! $notification_user->descricao !!}</p>
+            </div>
+
+            <div class="time-notification"><small>{{ $notification_user->tempo_decorrido_formatado }}</small></div>
+        </a>
+        @empty
+            <span>Sem notificações lidas</span>
+        @endforelse
+    </div>
+</div>
+
+<!-- Congratulation Popup -->
+<div id="popupCongrats" class="popup-overlay" style="display: none;">
+    <div class="popup-content" style="width: 448px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+        <span class="close-btn" onclick="closeCongratsPopup()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z" fill="#555555"/>
+            </svg>
+        </span>
         <hr>
-        <div class="notificacoes-lidas">
-            <h6>Lidas</h6>
-            <div class="lista-notificacoes" id="lidas">
-                @forelse($lidas as $notification_user)
-                    <a class="text-notification notification-item lida" href="{{ $notification_user->rota ?? '#' }}"
-                    data-id="{{ $notification_user->id }}" data-lida="true" data-vista="true">
-                    <div class="notification-content">
-                        @php
-                            if ($notification_user->titulo === 'Aniversariantes do dia' || $notification_user->titulo === 'Aniversário') {
-                                $imageSrc = asset('logo/img/icon/birthday_icon.svg');
-                            } elseif ($notification_user->titulo === 'Justificativo Enviado') {
-                                $imageSrc = asset('logo/img/icon/communication.svg');
-                            } elseif ($notification_user->titulo === 'Enviar documento') {
-                                $imageSrc = asset('logo/img/icon/doc_send.svg');
-                            } elseif ($notification_user->titulo === 'Pedido de Férias Aprovado') {
-                                $imageSrc = asset('logo/img/icon/fact_check.svg');
-                            } elseif ($notification_user->titulo === 'Pedido de Férias Rejeitado') {
-                                $imageSrc = asset('logo/img/icon/false_check.svg');
-                            } elseif (
-                                $notification_user->titulo === 'Pedido de Férias' ||
-                                $notification_user->titulo === 'Solicitação' ||
-                                $notification_user->titulo === 'Aprovação'
-                            ) {
-                                // Para essas notificações, usamos a imagem do usuário que originou
-                                $imageSrc = asset('public/avatar_users/' . ($notification_user->origem->avatar ?? 'default.png'));
-                            } else {
-                                // Para outras, usa a imagem do usuário que recebeu
-                                $imageSrc = asset('public/avatar_users/' . ($notification_user->user->avatar ?? 'default.png'));
-                            }
-                        @endphp
-
-                        @if(
-                            $notification_user->titulo === 'Aniversariantes do dia' ||
-                            $notification_user->titulo === 'Aniversário' ||
-                            $notification_user->titulo === 'Justificativo Enviado' ||
-                            $notification_user->titulo === 'Enviar documento' ||
-                            $notification_user->titulo === 'Pedido de Férias Aprovado' ||
-                            $notification_user->titulo === 'Pedido de Férias Rejeitado'
-                        )
-                            <img class="img-notification" src="{{ $imageSrc }}" alt="Ícone Notificação">
-                        @else
-                            <img class="img-notification" style="border-radius: 50%;" src="{{ $imageSrc }}" alt="Ícone Notificação">
-                        @endif
-
-                        <p>{!! $notification_user->descricao !!}</p>
-                    </div>
-
-                        <div class="time-notification"><small>{{ $notification_user->tempo_decorrido_formatado }}</small></div>
-                    </a>
-                @empty
-                    <span>Sem notificações lidas</span>
-                @endforelse
-            </div>
-        </div>
+        <p id="congratsDescription" class="tooltip-trigger" style="color: #009AC1"></p>
+        <img src="{{ asset('logo/img/icon/parabens_motion.gif') }}" alt="Festa" style="width: 316px; margin-top: 10px;">
+        <span id="congratsTooltip" class="tooltip"></span>
+    </div>
+</div>
     </div>
 </li>
 
@@ -733,5 +745,47 @@ $(document).ready(function () {
     });
 });
 
+function openCongratsPopup(description, congratulatorsJson) {
+    const popup = document.getElementById('popupCongrats');
+    const descriptionElement = document.getElementById('congratsDescription');
+    const tooltipElement = document.getElementById('congratsTooltip');
+
+    // Set description
+    descriptionElement.textContent = description;
+
+    // Parse congratulators and prepare tooltip text
+    try {
+        const congratulators = JSON.parse(congratulatorsJson);
+        const tooltipText = congratulators.join(', ');
+        descriptionElement.dataset.tooltip = tooltipText;
+
+        // Show tooltip on hover
+        descriptionElement.addEventListener('mouseenter', function() {
+            tooltipElement.textContent = tooltipText;
+            tooltipElement.style.display = 'block';
+            // Position tooltip above the description
+            const rect = descriptionElement.getBoundingClientRect();
+            tooltipElement.style.left = `${rect.left + rect.width / 2}px`;
+            tooltipElement.style.top = `${rect.top - 30}px`;
+        });
+
+        descriptionElement.addEventListener('mouseleave', function() {
+            tooltipElement.style.display = 'none';
+        });
+    } catch (e) {
+        console.error('Error parsing congratulators:', e);
+        descriptionElement.dataset.tooltip = 'Nenhum nome disponível';
+    }
+
+    // Show popup
+    popup.style.display = 'flex';
+}
+
+function closeCongratsPopup() {
+    const popup = document.getElementById('popupCongrats');
+    const tooltipElement = document.getElementById('congratsTooltip');
+    popup.style.display = 'none';
+    tooltipElement.style.display = 'none'; // Hide tooltip when closing
+}
 
 </script>
