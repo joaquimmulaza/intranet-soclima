@@ -191,7 +191,7 @@
             </svg>
         </span>
         <hr>
-        <p id="congratsDescription" class="tooltip-trigger" style="color: #009AC1"></p>
+        <p id="congratsDescription" class="tooltip-trigger" style="color: #009AC1; text-align: center; text-decoration: underline;"></p>
         <img src="{{ asset('logo/img/icon/parabens_motion.gif') }}" alt="Festa" style="width: 316px; margin-top: 10px;">
         <span id="congratsTooltip" class="tooltipCongrats"></span>
     </div>
