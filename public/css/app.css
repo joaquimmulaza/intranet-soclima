@@ -5111,3 +5111,90 @@ input.is-invalid {
     color: #fff;
     border: none;
 }
+
+.containerConfig .card{
+     width: 496px;
+     margin: 0 auto;
+     border: 0.75px solid #ababab;
+     border-radius: 5px !important;
+     box-shadow: none;
+     filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.1));
+     padding-bottom: 20px;
+}
+
+.containerConfig .card svg{
+    margin-right: 20px;
+}
+
+.containerConfig .card h5{
+    color: #555;
+    font-size: 20px !important;
+    font-weight: bold;
+    margin-left: 20px;
+    margin-top: 15px;
+}
+
+.containerConfig .card-header {
+    padding: 0;
+}
+
+.containerConfig .card-body small {
+    color: #ababab;
+    font-size: 10px;
+    margin-left: 20px;
+}
+
+.containerConfig .card span {
+    color: #555;
+    font-size: 14px !important;
+    margin: 12px 20px;
+}
+
+#changePasswordModal .modal-content, #confirmCodeModal .modal-content{
+    border-radius: 5px !important;
+}
+
+#changePasswordModal .modal-header, #confirmCodeModal .modal-header{
+    border-bottom: none;
+}
+
+#changePasswordModal .modal-header h5, #confirmCodeModal .modal-header h5 {
+    font-size: 20px !important;
+    color: #555;
+    font-weight: bold;
+}
+
+#changePasswordModal .modal-body label, #confirmCodeModal .modal-body label {
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    color: #7b7b7b;
+}
+
+#changePasswordModal .modal-footer, #confirmCodeModal .modal-footer{
+    border-top: none;
+}
+
+#changePasswordModal .modal-body a, #confirmCodeModal .modal-body a{
+    color: #009AC1;
+    font-size: 14px;
+}
+
+#changePasswordModal .modal-footer button:nth-of-type(1) {
+    background-color: #ddd;
+    width: 97px;
+    height: 45px;
+    border: none;
+    border-radius: 5px;
+    color: #555;
+    font-size: 14px !important;
+}
+
+#changePasswordModal .modal-footer button:nth-of-type(2),#confirmCodeModal .modal-footer button:nth-of-type(1) {
+    background-color: #009AC1 !important;
+    width: 97px;
+    height: 45px;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    font-size: 14px !important;
+}

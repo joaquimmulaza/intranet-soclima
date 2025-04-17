@@ -12,6 +12,12 @@ class User extends Authenticatable
 
     protected  $guarded = ['id'];
 
+    protected $hidden = [
+        'password',
+        'remember_token',
+        'new_password',
+    ];
+
     public function cargo(){
         return $this->belongsTo(Cargo::class);
     }

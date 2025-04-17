@@ -120,6 +120,16 @@ public function showById($id)
             User::where('role_id', '1')->first()->id, // Notificar o admin
             $user->id // <- quem solicitou
         );
+
+        // Enviar e-mail para o admin
+        $admin = User::where('role_id', '1')->first();
+        \Mail::to($admin->email)->send(new \App\Mail\JustificativoNotification(
+            $novaAusencia,
+            $user,
+            $admin,
+            $user->name . ' enviou um novo justificativo para revisão.',
+            'novo'
+        ));
         return redirect()->back()->with('success', 'Justificativo Enviado');
     }
 
@@ -175,7 +185,14 @@ public function showById($id)
             $user->id  // Origem da notificação (quem aprovou/rejeitou)
         );
 
-        
+        // Enviar e-mail para o solicitante
+        \Mail::to($ausencia->user->email)->send(new \App\Mail\JustificativoNotification(
+            $ausencia,
+            $ausencia->user,
+            null,
+            $mensagem,
+            'aprovacao'
+        ));
       
         if ($request['status'] == 'Rejeitado') {
             return redirect()->route('documents.show')->with([

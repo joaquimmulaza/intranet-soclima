@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\CommentController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
+use App\Http\Controllers\Auth\ChangePasswordController;
 /*
 |--------------------------------------------------------------------------
 | TESTES UNIDADE - Auth::routes();
@@ -364,10 +365,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/documents', [AusenciaController::class, 'store'])->name('documents.store');
     Route::get('/documents/{id}', [AusenciaController::class, 'show'])->name('documents.show');
     Route::delete('/ausencias/{id}', [AusenciaController::class, 'destroy'])->name('ausencias.destroy');
-    Route::get('baixar/{id}', [AusenciaController::class, 'downloadFile'])->name('downloadFile');
+
     Route::get('/ausencias/view/{id}', [AusenciaController::class, 'showById'])->name('documents.visualizar');
     Route::put('/ausencias/{id}/aprovar-rejeitar', [AusenciaController::class, 'aprovarRejeitar'])->name('ausencias.aprovarRejeitar');
 });
+Route::get('baixar/{id}', [AusenciaController::class, 'downloadFile'])->name('downloadFile');
 Route::get('/documents/show', [DocumentController::class, 'showDocuments'])->name('documents.show');
 
 Route::get('/ferias/user/{user_id}', [FeriaController::class, 'showByUser'])->name('ferias.show');
@@ -445,9 +447,23 @@ Route::get('/marcar-popup-visto', function () {
     $user = Auth::user();
     $user->aniversario_popup_visto_em = Carbon::now()->toDateString();
     $user->save();
-
     return response()->json(['status' => 'ok']);
 })->name('marcar.popup.visto')->middleware('auth');
 
 Route::post('/notifications/congratulate', [NotificationController::class, 'congratulate'])->middleware('auth');
 Route::post('/notifications/check-congratulation', [NotificationController::class, 'checkCongratulation'])->middleware('auth');
+
+Route::middleware('auth')->group(function () {
+    Route::post('password/request-code', [ChangePasswordController::class, 'requestCode'])->name('password.request.code');
+    Route::post('password/confirm-code', [ChangePasswordController::class, 'confirmCode'])->name('password.confirm.code');
+    Route::post('password/resend-code', [ChangePasswordController::class, 'resendCode'])->name('password.resend.code');
+    Route::get('config', [ChangePasswordController::class, 'showConfig'])->name('config');
+});
+
+Auth::routes();
+Route::middleware('auth')->group(function () {
+    Route::post('password/request-code', [ChangePasswordController::class, 'requestCode'])->name('password.request.code');
+    Route::post('password/confirm-code', [ChangePasswordController::class, 'confirmCode'])->name('password.confirm.code');
+    Route::post('password/resend-code', [ChangePasswordController::class, 'resendCode'])->name('password.resend.code');
+    Route::get('config', [ChangePasswordController::class, 'showConfig'])->name('config');
+});

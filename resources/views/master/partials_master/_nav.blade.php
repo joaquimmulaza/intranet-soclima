@@ -218,13 +218,13 @@
                 <a href="#" data-toggle="modal" data-target="#cardUserViewNav-{{ Auth::user()->id }}" class="btn-dropdown-pressed">Meu Perfil</a>
                 <hr>
                 <div class="menuOpt">
-                    <a href="">Configurações e privacidade</a>
+                    <a href="{{route('config')}}">Configurações e privacidade</a>
                     <a href="#" data-toggle="modal" data-target="#suspendedAccountsModal">Contas suspensas</a>
                     <a class="{{Route::current()->getName() === 'admin.logout' ? 'active' : ''}}"
                 data-toggle="tooltip" title="Sair do sistema" href="{{route('admin.logout')}}" >Sair</a>
                 </div>
 
-                <div class="modal fade" id="suspendedAccountsModal" tabindex="-1" role="dialog" aria-labelledby="suspendedAccountsModalLabel" aria-hidden="true">
+                <div class="modal fade escurecer" id="suspendedAccountsModal" tabindex="-1" role="dialog" aria-labelledby="suspendedAccountsModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
