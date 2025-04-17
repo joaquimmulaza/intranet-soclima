@@ -193,7 +193,7 @@
         <hr>
         <p id="congratsDescription" class="tooltip-trigger" style="color: #009AC1"></p>
         <img src="{{ asset('logo/img/icon/parabens_motion.gif') }}" alt="Festa" style="width: 316px; margin-top: 10px;">
-        <span id="congratsTooltip" class="tooltip"></span>
+        <span id="congratsTooltip" class="tooltipCongrats"></span>
     </div>
 </div>
     </div>
@@ -756,7 +756,7 @@ function openCongratsPopup(description, congratulatorsJson) {
     // Parse congratulators and prepare tooltip text
     try {
         const congratulators = JSON.parse(congratulatorsJson);
-        const tooltipText = congratulators.join(', ');
+        const tooltipText = congratulators.join('\n');
         descriptionElement.dataset.tooltip = tooltipText;
 
         // Show tooltip on hover
@@ -765,8 +765,7 @@ function openCongratsPopup(description, congratulatorsJson) {
             tooltipElement.style.display = 'block';
             // Position tooltip above the description
             const rect = descriptionElement.getBoundingClientRect();
-            tooltipElement.style.left = `${rect.left + rect.width / 2}px`;
-            tooltipElement.style.top = `${rect.top - 30}px`;
+       
         });
 
         descriptionElement.addEventListener('mouseleave', function() {

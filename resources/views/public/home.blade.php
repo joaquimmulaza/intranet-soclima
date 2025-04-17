@@ -921,22 +921,24 @@
         <p>Veja quem são os aniversariantes do mês</p>
 
         <div class="slider-wrapper">
-            <button class="slider-btn prev" onclick="slideAniversarios(-1)">❮</button>
+            <button class="slider-btn prev" onclick="slideAniversarios(-1)" style="display: none;">❮</button>
 
             <div class="popup-cards" id="sliderCards">
                 @foreach($aniversariantes as $user)
-                    <div class="cardAniversariantes">
-                        <img class="imgAniversariante" src="{{ URL::to('/') }}/public/avatar_users/{{ $user->avatar }}" alt="avatar" style="width: 100px;">
-                        <h4>{{ $user->name }}</h4>
-                        <p>{{ $user->cargo->titulo }}</p>
-                        <img src="{{ asset('logo/img/icon/confeti_parabenizar.gif') }}" alt="Festa" style="width: 40px;">
-                        <p>{{ \Carbon\Carbon::parse($user->nascimento)->locale('pt')->translatedFormat('d \d\e F') }}</p>
-                        <button class="btnParabens" data-user-id="{{ $user->id }}">Parabéns!</button>
-                    </div>
+                    @if($user->id !== Auth::id()) <!-- Exclude logged-in user -->
+                        <div class="cardAniversariantes">
+                            <img class="imgAniversariante" src="{{ URL::to('/') }}/public/avatar_users/{{ $user->avatar }}" alt="avatar" style="width: 100px;">
+                            <h4>{{ $user->name }}</h4>
+                            <p>{{ $user->cargo->titulo }}</p>
+                            <img src="{{ asset('logo/img/icon/confeti_parabenizar.gif') }}" alt="Festa" style="width: 40px;">
+                            <p>{{ \Carbon\Carbon::parse($user->nascimento)->locale('pt')->translatedFormat('d \d\e F') }}</p>
+                            <button class="btnParabens" data-user-id="{{ $user->id }}">Parabéns!</button>
+                        </div>
+                    @endif
                 @endforeach
             </div>
 
-            <button class="slider-btn next" onclick="slideAniversarios(1)">❯</button>
+            <button class="slider-btn next" onclick="slideAniversarios(1)" style="display: none;">❯</button>
         </div>
     </div>
 </div>
@@ -2592,21 +2594,82 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 document.addEventListener('DOMContentLoaded', function () {
-    // Add event listeners to all "Parabéns!" buttons
-    document.querySelectorAll('.cardAniversariantes button').forEach(button => {
-        button.addEventListener('click', function () {
-            // Get the user ID from a data attribute (to be added in HTML)
-            const userId = this.getAttribute('data-user-id');
-            const button = this;
+    const slider = document.getElementById('sliderCards');
+    const cards = slider.querySelectorAll('.cardAniversariantes');
+    const prevBtn = document.querySelector('.slider-btn.prev');
+    const nextBtn = document.querySelector('.slider-btn.next');
+    let slideIndex = 0;
 
-            // Change button background
-           
-            button.style.color = '#fff'; // White text
-            button.style.position = 'relative';
+    // Calculate if all cards fit and update button visibility
+    function updateSliderButtons() {
+        if (cards.length === 1) {
+            prevBtn.style.display = 'none';
+            nextBtn.style.display = 'none';
+            return;
+        }
+
+        const cardWidth = cards[0].offsetWidth + 20; // Width + gap
+        const sliderWidth = slider.offsetWidth;
+        const visibleCards = Math.floor(sliderWidth / cardWidth);
+        const maxIndex = cards.length - visibleCards;
+
+        // Hide both buttons if all cards fit
+        if (cards.length <= visibleCards) {
+            prevBtn.style.display = 'none';
+            nextBtn.style.display = 'none';
+        } else {
+            // Show/hide buttons based on slideIndex
+            prevBtn.style.display = slideIndex === 0 ? 'none' : 'block';
+            nextBtn.style.display = slideIndex >= maxIndex ? 'none' : 'block';
+        }
+    }
+
+    // Initialize slider buttons
+    updateSliderButtons();
+
+    // Function to check and update button state for congratulations
+    function checkCongratulation(button, userId) {
+        fetch('/notifications/check-congratulation', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({ user_id: userId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.hasCongratulated) {
+                button.textContent = 'Enviado';
+                button.style.backgroundColor = '#CDCC00'; // Yellow background
+                button.style.color = '#fff'; // White text
+                button.style.border = 'none';
+                button.disabled = true;
+                button.setAttribute('data-sent', 'true');
+            }
+        })
+        .catch(error => {
+            console.error('Error checking congratulation:', error);
+        });
+    }
+
+    // Check existing congratulations for all buttons
+    document.querySelectorAll('.btnParabens').forEach(button => {
+        const userId = button.getAttribute('data-user-id');
+        checkCongratulation(button, userId);
+    });
+
+    // Add event listeners to all "Parabéns!" buttons
+    document.querySelectorAll('.btnParabens').forEach(button => {
+        button.addEventListener('click', function () {
+            // Skip if button is disabled or already sent
+            if (button.disabled || button.getAttribute('data-sent') === 'true') return;
+
+            const userId = button.getAttribute('data-user-id');
 
             // Create and append GIF
             const gif = document.createElement('img');
-            gif.src = "{{asset('logo/img/icon/parabens_motion.gif')}}";
+            gif.src = "{{ asset('logo/img/icon/parabens_motion.gif') }}";
             gif.style.width = '40px';
             gif.style.position = 'absolute';
             gif.style.top = '50%';
@@ -2617,6 +2680,7 @@ document.addEventListener('DOMContentLoaded', function () {
             button.style.borderStyle = 'solid';
             button.innerHTML = ''; // Clear button text
             button.style.backgroundColor = '#fff';
+            button.style.color = '#fff'; // White text
             button.appendChild(gif);
 
             // Send AJAX request to create notification
@@ -2631,17 +2695,19 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    // After 3 seconds, hide GIF and show "Enviado"
+                    // After 4 seconds, hide GIF and show "Enviado"
                     setTimeout(() => {
                         gif.remove();
-                        button.style.border = 'none'
+                        button.style.border = 'none';
                         button.textContent = 'Enviado';
-                        button.style.backgroundColor = '#CDCC00'; // Green background
-                        button.disabled = true; // Disable button to prevent multiple clicks
+                        button.style.backgroundColor = '#CDCC00'; // Yellow background
+                        button.disabled = true;
+                        button.setAttribute('data-sent', 'true');
                     }, 4000);
                 } else {
-                    alert('Erro ao enviar parabéns.');
+                    alert('Erro ao enviar parabéns: ' + (data.message || 'Erro desconhecido'));
                     button.style.backgroundColor = ''; // Revert background
+                    button.style.border = ''; // Revert border
                     button.textContent = 'Parabéns!'; // Revert text
                 }
             })
@@ -2649,36 +2715,43 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.error('Error:', error);
                 alert('Erro ao enviar parabéns.');
                 button.style.backgroundColor = ''; // Revert background
+                button.style.border = ''; // Revert border
                 button.textContent = 'Parabéns!'; // Revert text
             });
         });
     });
+
+    // Slider navigation
+    window.slideAniversarios = function(direction) {
+        const cardWidth = cards[0].offsetWidth + 20; // Width + gap
+        const sliderWidth = slider.offsetWidth;
+        const visibleCards = Math.floor(sliderWidth / cardWidth);
+        const maxIndex = cards.length - visibleCards;
+
+        slideIndex += direction;
+        if (slideIndex < 0) slideIndex = 0;
+        if (slideIndex > maxIndex) slideIndex = maxIndex;
+
+        slider.style.transform = `translateX(-${slideIndex * cardWidth}px)`;
+        updateSliderButtons();
+    };
+
+    // Update buttons on window resize
+    window.addEventListener('resize', updateSliderButtons);
+
+    // Existing functions
+    window.abrirPopup = function() {
+        document.getElementById('popupAniversarios').style.display = 'flex';
+        updateSliderButtons(); // Ensure buttons are updated when popup opens
+    };
+
+    window.fecharPopup = function() {
+        document.getElementById('popupAniversarios').style.display = 'none';
+    };
+
+    document.querySelector('.aniversarios').addEventListener('click', function () {
+        abrirPopup();
+    });
 });
-
-// Existing functions (unchanged)
-function abrirPopup() {
-    document.getElementById('popupAniversarios').style.display = 'flex';
-}
-
-function fecharPopup() {
-    document.getElementById('popupAniversarios').style.display = 'none';
-}
-
-document.querySelector('.aniversarios').addEventListener('click', function () {
-    abrirPopup();
-});
-
-function slideAniversarios(direction) {
-    const slider = document.getElementById('sliderCards');
-    const cards = slider.querySelectorAll('.cardAniversariantes');
-    const cardWidth = cards[0].offsetWidth + 20; // largura + gap
-    const maxIndex = cards.length - Math.floor(slider.offsetWidth / cardWidth);
-
-    slideIndex += direction;
-    if (slideIndex < 0) slideIndex = 0;
-    if (slideIndex > maxIndex) slideIndex = maxIndex;
-
-    slider.style.transform = `translateX(-${slideIndex * cardWidth}px)`;
-}
     </script>
 @endsection
