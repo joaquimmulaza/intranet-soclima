@@ -60,7 +60,7 @@
             {{ $notification_user->lida ? 'lida' : ($notification_user->vista ? 'vista-nao-lida' : 'nao-lida') }}"
             href="{{ $notification_user->tipo === 'congratulation' ? 'javascript:void(0)' : ($notification_user->rota ?? '#') }}"
             @if($notification_user->tipo === 'congratulation')
-                onclick="event.preventDefault(); openCongratsPopup('{{ addslashes($notification_user->titulo) }}', '{{ addslashes($notification_user->congratulators) }}')"
+                onclick="event.preventDefault(); markAsRead('{{ $notification_user->id }}', this); openCongratsPopup('{{ addslashes($notification_user->titulo) }}', '{{ addslashes($notification_user->congratulators) }}')"
             @else
                 onclick="markAsRead('{{ $notification_user->id }}', this);"
             @endif
