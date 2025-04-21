@@ -165,8 +165,11 @@
                         $('#confirmCodeModal').modal('hide');
                         Swal.fire({
                             title: 'Sua palavra-passe foi alterada!',
-                            icon: 'success',
-                            confirmButtonText: 'Ok'
+                            imageUrl: "{{asset('logo/img/icon/Completed.svg')}}",
+                            confirmButtonText: 'Ok',
+                            customClass:{
+                                popup: 'popupChangePassword',
+                            }
                         });
                     },
                     error: function(xhr) {
@@ -183,13 +186,32 @@
                     method: 'POST',
                     data: { _token: '{{ csrf_token() }}' },
                     success: function(response) {
-                        alert('Código reenviado com sucesso!');
+                        Swal.fire({
+                            position: 'top',
+                            title: 'O código de confirmação foi enviado para {{ auth()->user()->email }}. Recebera em 10 segundos',
+                            showConfirmButton: false,
+                            timer: 5000,
+                            toast: false,
+                            customClass:{
+                                popup: 'popupResendCode',
+                            }
+                        });
                     },
                     error: function(xhr) {
-                        alert('Erro ao reenviar o código.');
+                        Swal.fire({
+                            position: 'top',
+                            title: 'Erro ao reenviar o código.',
+                            showConfirmButton: false,
+                            timer: 5000,
+                            toast: false,
+                            customClass:{
+                                popup: 'popupResendCode',
+                            }
+                        });
                     }
                 });
             });
+
         });
     </script>
 

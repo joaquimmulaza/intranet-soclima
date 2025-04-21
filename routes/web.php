@@ -19,6 +19,7 @@ use App\Http\Controllers\CommentController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
 use App\Http\Controllers\Auth\ChangePasswordController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 /*
 |--------------------------------------------------------------------------
 | TESTES UNIDADE - Auth::routes();
@@ -453,13 +454,6 @@ Route::get('/marcar-popup-visto', function () {
 Route::post('/notifications/congratulate', [NotificationController::class, 'congratulate'])->middleware('auth');
 Route::post('/notifications/check-congratulation', [NotificationController::class, 'checkCongratulation'])->middleware('auth');
 
-Route::middleware('auth')->group(function () {
-    Route::post('password/request-code', [ChangePasswordController::class, 'requestCode'])->name('password.request.code');
-    Route::post('password/confirm-code', [ChangePasswordController::class, 'confirmCode'])->name('password.confirm.code');
-    Route::post('password/resend-code', [ChangePasswordController::class, 'resendCode'])->name('password.resend.code');
-    Route::get('config', [ChangePasswordController::class, 'showConfig'])->name('config');
-});
-
 Auth::routes();
 Route::middleware('auth')->group(function () {
     Route::post('password/request-code', [ChangePasswordController::class, 'requestCode'])->name('password.request.code');
@@ -467,3 +461,8 @@ Route::middleware('auth')->group(function () {
     Route::post('password/resend-code', [ChangePasswordController::class, 'resendCode'])->name('password.resend.code');
     Route::get('config', [ChangePasswordController::class, 'showConfig'])->name('config');
 });
+
+Route::get('/forgot-password', [ForgotPasswordController::class, 'showForgotPasswordForm'])->name('password.request');
+Route::post('/forgot-password/verify', [ForgotPasswordController::class, 'verifyUser'])->name('password.verify.user');
+Route::post('/forgot-password/confirm-code', [ForgotPasswordController::class, 'confirmCode'])->name('password.confirm.code');
+Route::post('/forgot-password/reset', [ForgotPasswordController::class, 'resetPassword'])->name('password.reset');

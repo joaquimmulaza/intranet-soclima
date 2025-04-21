@@ -5198,3 +5198,24 @@ input.is-invalid {
     color: #fff;
     font-size: 14px !important;
 }
+
+.popupChangePassword img{
+    width: 104px;
+}
+
+.popupChangePassword h2{
+    font-size: 20px;;
+}
+
+.popupChangePassword button{
+    border-radius: 5px !important;
+    background-color: #009AC1;
+    width: 109px !important;
+    text-align: center !important;
+    padding: 9px 44px;
+}
+
+.popupResendCode h2{
+    font-size: 14px !important;
+    text-align: left !important;
+}

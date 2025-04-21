@@ -21,7 +21,7 @@ class VerificationCodeMail extends Mailable
 
     public function build()
     {
-        return $this->subject('Seu Código de Verificação')
-                    ->view('emails.verification_code');
+        return $this->subject('Soclima - Intranet')
+                    ->view('mail.verification_code');
     }
 }

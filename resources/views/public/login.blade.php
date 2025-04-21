@@ -46,7 +46,7 @@
                         </div> --}}
                     </div>
                     <div class="divSenha fullContainer">
-                        <a href="#">Esqueceu a sua palavra-passe?</a>
+                        <a href="{{route('password.request')}}">Esqueceu a sua palavra-passe?</a>
                     </div>
                     <div class="row" style="width: 100%;">
                         <div class="" style="width: 100%;">
