@@ -457,7 +457,7 @@ Route::post('/notifications/check-congratulation', [NotificationController::clas
 Auth::routes();
 Route::middleware('auth')->group(function () {
     Route::post('password/request-code', [ChangePasswordController::class, 'requestCode'])->name('password.request.code');
-    Route::post('password/confirm-code', [ChangePasswordController::class, 'confirmCode'])->name('password.confirm.code');
+    Route::post('password/confirm-code', [ChangePasswordController::class, 'confirmCode'])->name('passwordChange.confirm.code');
     Route::post('password/resend-code', [ChangePasswordController::class, 'resendCode'])->name('password.resend.code');
     Route::get('config', [ChangePasswordController::class, 'showConfig'])->name('config');
 });

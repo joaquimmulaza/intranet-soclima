@@ -303,9 +303,14 @@
 
             <div class="AllpostsContainer">
             @php
-                // Ordena os posts pelo campo 'created_at' em ordem decrescente
-                $posts = $posts->sortByDesc('created_at');
-            @endphp
+
+        $posts = $posts->sortByDesc('created_at');
+        
+
+        $postsWithMedia = $posts->filter(function ($post) {
+            return !empty($post->arquivo_imagem) || !empty($post->arquivo_pdf);
+        });
+    @endphp
             @foreach($posts as $post)
              
                 <div class="postOnly post-item">
@@ -575,62 +580,64 @@
         <h3>Anúncios em destaque</h3>
         <div class="eventos-recentes">
             <!-- Swiper -->
+            @if($postsWithMedia->isNotEmpty())
             <div class="swiper mySwiper">
                 <div class="swiper-wrapper">
-                <div class="swiper-slide">
-                    <div class="evento">
-                        <img src="logo/img/imgSlideTeste.svg" alt="">
-                        <div class="eventBody">
-                            <p>30 de Novembro de 2024, 08:00 - 15:00</p>
-                            <h3>33 anos Soclima</h3>
-                            <p class="textDescription">
-                                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Praesentium, expedita blanditiis veritatis.
-                            </p>
-                            <button style="padding: 0 !important; margin: 0 !important;">Ver</button>
+                    @foreach($postsWithMedia as $post)
+                        <div class="swiper-slide">
+                            <div class="evento">
+                                @if($post->arquivo_imagem)
+                                    <!-- Exibir imagem se o post tiver imagem -->
+                                    <img src="{{ asset($post->arquivo_imagem) }}" alt="Imagem do Post">
+                                @elseif($post->arquivo_pdf && !empty($post->arquivo_pdf))
+                                    <!-- Exibir preview do PDF se o post tiver PDF -->
+                                    @php
+                                        $pdfs = json_decode($post->arquivo_pdf, true);
+                                        if (!is_array($pdfs)) {
+                                            $pdfs = [$post->arquivo_pdf];
+                                        }
+                                        $firstPdf = $pdfs[0]; // Pega o primeiro PDF para o preview
+                                        $nomeCompleto = pathinfo($firstPdf, PATHINFO_FILENAME);
+                                        $nomeSemTimestamp = preg_replace('/^\d+_/', '', $nomeCompleto);
+                                    @endphp
+                                    <div class="container_pdf_file" style="margin-bottom: 10px;">
+                                        <a href="{{ asset($firstPdf) }}" target="_blank" class="pdf-item">
+                                            <div class="container_icon_pdf_file">
+                                                <svg width="25" height="32" viewBox="0 0 25 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <!-- SVG content -->
+                                                </svg>
+                                            </div>
+                                            <div class="container_content_file">
+                                                <p class="pdf-title">{{ $nomeSemTimestamp }}</p>
+                                                <span>Toque para abrir o ficheiro</span>
+                                            </div>
+                                            <div class="container_icon_download_file">
+                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <!-- SVG content -->
+                                                </svg>
+                                            </div>
+                                        </a>
+                                    </div>
+                                @endif
+
+                                <div class="eventBody">
+                                    <p>{{ date('d/m/Y, H:i', strtotime($post->created_at)) }}</p>
+                                    <h3>{{ $post->title }}</h3>
+                                    <p class="textDescription">
+                                        {{ Str::limit($post->content, 100) }}
+                                    </p>
+                                    <button style="padding: 0 !important; margin: 0 !important;" onclick="openPostPreview('{{ addslashes($post->title) }}', '{{ addslashes($post->content) }}', '{{ $post->arquivo_imagem ? asset($post->arquivo_imagem) : '' }}', '{{ $post->user->name }}', '{{ URL::to('/') }}/public/avatar_users/{{ $post->user->avatar }}', '{{ date('d/m/Y', strtotime($post->created_at)) }}', '{{ $post->id }}', '{{ $post->user->cargo->titulo }}')">
+                                        Ver
+                                    </button>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="swiper-slide">
-                <div class="evento">
-                        <img src="logo/img/imgSlideTeste.svg" alt="">
-                        <div class="eventBody">
-                            <p>30 de Novembro de 2024, 08:00 - 15:00</p>
-                            <h3>33 anos Soclima</h3>
-                            <p class="textDescription">
-                                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Praesentium, expedita blanditiis veritatis.
-                            </p>
-                            <button style="padding: 0 !important; margin: 0 !important;">Ver</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="swiper-slide">
-                <div class="evento">
-                        <img src="logo/img/imgSlideTeste.svg" alt="">
-                        <div class="eventBody">
-                            <p>30 de Novembro de 2024, 08:00 - 15:00</p>
-                            <h3>33 anos Soclima</h3>
-                            <p class="textDescription">
-                                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Praesentium, expedita blanditiis veritatis.
-                            </p>
-                            <button style="padding: 0 !important; margin: 0 !important;">Ver</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="swiper-slide">
-                <div class="evento">
-                        <img src="logo/img/imgSlideTeste.svg" alt="">
-                        <div class="eventBody">
-                            <p>30 de Novembro de 2024, 08:00 - 15:00</p>
-                            <h3>33 anos Soclima</h3>
-                            <p class="textDescription">
-                                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Praesentium, expedita blanditiis veritatis.
-                            </p>
-                            <button style="padding: 0 !important; margin: 0 !important;">Ver</button>
-                        </div>
-                    </div>
-                </div>
+                    @endforeach
                 </div>
             </div>
+        @endif
+    </div>
+</div>
             
             
         </div>

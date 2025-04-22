@@ -116,7 +116,7 @@
             <div class="modal-header">
                 <h5 class="modal-title" id="confirmCodeModalLabel">Confirmação necessária</h5>
             </div>
-            <form id="confirmCodeForm" method="POST" action="{{ route('password.confirm.code') }}">
+            <form id="confirmCodeForm" method="POST" action="{{ route('passwordChange.confirm.code') }}">
                 @csrf
                 <div class="modal-body">
                     <p>Enviamos um código de confirmação para <span id="userEmail">{{ auth()->user()->email }}</span>. Por favor, digite o código para prosseguir.</p>

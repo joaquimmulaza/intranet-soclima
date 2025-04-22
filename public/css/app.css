@@ -5219,3 +5219,64 @@ input.is-invalid {
     font-size: 14px !important;
     text-align: left !important;
 }
+
+.containerBtnFiltrar{
+    display: flex;
+    justify-content: end;
+    position: relative;
+}
+
+.tooltipFiltros {
+    display: none;
+    position: absolute;
+    top: 40px;
+    right: 0;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+}
+
+.tooltipFiltros.show {
+    display: block;
+}
+
+.filter-options {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.filter-option {
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #555;
+}
+
+.filter-option:hover {
+    background-color: #f0f0f0;
+}
+
+.containerBtnFiltrar {
+    position: relative;
+    top: 28px;
+    z-index: 9999999999999;
+}
+
+.btnFiltrar {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    color: #555;
+}
+
+/* Garantir que o thead permaneça visível */
+.docs_table thead {
+    display: table-header-group !important;
+}
