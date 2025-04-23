@@ -501,4 +501,24 @@ class UserController extends Controller
     return redirect()->back()->with('error', 'Erro ao fazer upload do arquivo!');
 }
 
+public function getUnidades()
+{
+    $unidades = Unidade::all(['id', 'titulo']);
+    return response()->json(['unidades' => $unidades]);
+}
+
+
+public function filterByDepartamento($departamentoId)
+{
+    $users = User::with(['cargo', 'unidade'])
+        ->where('unidade_id', $departamentoId)
+        ->get()
+        ->map(function ($user) {
+            return $user;
+        });
+    return response()->json(['users' => $users]);
+}
+
+
+
 }

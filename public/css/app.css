@@ -1290,7 +1290,7 @@ button:active{
 }
 
 .size-g-icon{
-    width: 28px;
+    width: 28px !important;
 }
 
 .dadosPessoais div{
@@ -5276,7 +5276,61 @@ input.is-invalid {
     color: #555;
 }
 
-/* Garantir que o thead permaneça visível */
-.docs_table thead {
-    display: table-header-group !important;
+.filter-tooltip {
+    position: absolute;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    padding: 0 23px 16px 23px;
+    z-index: 1000;
+    width: 387px;
+    margin-top: 5px;
+    top: 39px;
+    max-height: 500px;
+    overflow: auto;
+}
+
+.filter-tooltip h3{
+    color: #555;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.filter-tooltip ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.filter-tooltip ul li:last-child{
+    margin-bottom: 0 !important;
+}
+
+.filter-tooltip ul li {
+    padding: 16px 20px;
+    cursor: pointer;
+    transition: background 0.2s;
+    border: 1px solid #ababab;
+    border-radius: 5px;
+    margin-bottom: 16px;
+    color: #555;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.filter-tooltip ul li:hover {
+    background: #f0f0f0;
+}
+
+.search-bar {
+    position: relative;
+}
+
+.header_tootipFilter{
+    position: sticky;
+    top: 0;
+    background-color: #fff;
+    width: 100% !important;
+    padding-top: 15px;
 }

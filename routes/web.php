@@ -466,3 +466,6 @@ Route::get('/forgot-password', [ForgotPasswordController::class, 'showForgotPass
 Route::post('/forgot-password/verify', [ForgotPasswordController::class, 'verifyUser'])->name('password.verify.user');
 Route::post('/forgot-password/confirm-code', [ForgotPasswordController::class, 'confirmCode'])->name('password.confirm.code');
 Route::post('/forgot-password/reset', [ForgotPasswordController::class, 'resetPassword'])->name('password.reset');
+
+Route::get('/departamentos', [UserController::class, 'getUnidades'])->name('departamentos.index');
+Route::get('/users/filter-by-departamento/{departamentoId}', [UserController::class, 'filterByDepartamento'])->name('users.filterByDepartamento');
