@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
 use App\Http\Controllers\Auth\ChangePasswordController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\SearchController;
 /*
 |--------------------------------------------------------------------------
 | TESTES UNIDADE - Auth::routes();
@@ -469,3 +470,11 @@ Route::post('/forgot-password/reset', [ForgotPasswordController::class, 'resetPa
 
 Route::get('/departamentos', [UserController::class, 'getUnidades'])->name('departamentos.index');
 Route::get('/users/filter-by-departamento/{departamentoId}', [UserController::class, 'filterByDepartamento'])->name('users.filterByDepartamento');
+Route::get('/search', [SearchController::class, 'search'])->name('search');
+Route::get('/search/results', [SearchController::class, 'results'])->name('search.results');
+
+Route::get('/posts/{id}', function ($id) {
+    return "Post #{$id} - página de detalhes em construção.";
+})->name('posts.show');
+
+Route::get('/user/modal/{id}', [UserController::class, 'modal'])->name('user.modal');

@@ -5334,3 +5334,122 @@ input.is-invalid {
     width: 100% !important;
     padding-top: 15px;
 }
+
+.tooltip-container-search{
+    background-color: #fff;
+    position: absolute;
+    padding: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    border-radius: 5px !important;
+    filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.1));
+    width: 393px;
+    max-height: 389px;
+    top: 32px;
+}
+
+.tooltip-container-search h1{
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.img_on_search{
+    width: 29px;
+    height: 29px;
+    border-radius: 50px;
+    object-fit: cover;
+}
+
+.tooltip_item_search_container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px;
+}
+
+.tooltip-item  span{
+    cursor: pointer;
+}
+
+.user_info_tooltip_item_container{
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+ .tooltip_item_post:hover{
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    width: 100%;
+    cursor: pointer;
+}
+
+.recent-item:hover{
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    width: 100%;
+    cursor: pointer;
+}
+
+.tooltip_item_search_container:hover{
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    width: 100%;
+        cursor: pointer;
+}
+
+.tooltip_item_post p{
+    font-size: 14px;
+    color: #555;
+}
+
+.user_info_tooltip_item_container span:nth-of-type(1){
+    font-size: 14px;
+    color: #555;
+}
+
+.user_info_tooltip_item_container span:nth-of-type(2){
+    font-size: 10px;
+    color: #555;;
+}
+
+.header_tooltip_recent_searches {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 6px;
+}
+
+.header_tooltip_recent_searches span {
+    color: #555;
+    font-size: 14px;
+    padding: 4px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.header_tooltip_recent_searches span:hover{
+    background-color: #f0f0f0;
+}
+
+.view-all{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-top: 1px solid #dbdbdb;
+}
+
+.btn_search_view_all{
+    margin-top: 4px;
+    padding: 6px;
+    color: #555;
+    width: 100%;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.btn_search_view_all:hover{
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    color: #555;
+}

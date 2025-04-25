@@ -8,8 +8,9 @@
                 <a  class="nav-link {{Route::current()->getName() === 'home' ? 'active' : ''}}"
                 href="{{route('home')}}"><img style="position: relative; bottom: 10px;" src="{{asset('logo/img/200x70.svg')}}" alt=""></a>
             </li>
-            <li class="nav-item">
-                <input style="position relative; left: 6.5px;" class="nav-link backgroundInput" placeholder="Pesquisar" type="text">
+            <li class="nav-item" style="position: relative;">
+                <input style="position relative; left: 6.5px;" class="nav-link backgroundInput" id="pesquisaGeral" placeholder="Pesquisar" type="text" autocomplete="off">
+                <div id="search-tooltip" class="tooltip-container tooltip-container-search" style="display: none;"></div>
             </li>
         </div>
         <div class="contentLeft">
@@ -415,7 +416,7 @@
                                 </div>
                             </div>
                         </div>
-            </div>
+                </div>
             <span><img src="{{asset('logo/img/icon/line-1.svg')}}" alt=""></span>
                 @can('app.dashboard')
                 <li class="nav-item btnCadastrar">
@@ -470,6 +471,13 @@
     </ul>
 
     
+    <div class="modal fade" id="genericUserModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" id="genericUserModalContent">
+                <!-- Conteúdo será carregado via JS -->
+            </div>
+        </div>
+</div>
 
 </nav>
 
@@ -786,5 +794,186 @@ function closeCongratsPopup() {
     popup.style.display = 'none';
     tooltipElement.style.display = 'none'; // Hide tooltip when closing
 }
+$(document).ready(function() {
+    const $input = $('#pesquisaGeral');
+    const $tooltip = $('#search-tooltip');
 
+    // Função para renderizar pesquisas recentes
+    function renderRecentSearches($tooltip) {
+        const recentSearches = JSON.parse(localStorage.getItem('recentSearches') || '[]');
+
+        if (recentSearches.length === 0) {
+            $tooltip.html('<div class="tooltip-item">Nenhuma pesquisa recente</div>').show();
+        } else {
+            let html = `
+                <div class="header_tooltip_recent_searches">
+                    <h1>Recente</h1>
+                    <span class="clear-all">Limpar tudo</span>
+                </div>
+            `;
+
+            recentSearches.forEach(itemHtml => {
+                html += itemHtml;
+            });
+
+            $tooltip.html(html).show();
+        }
+    }
+
+    $input.on('input', function() {
+        const query = $(this).val().trim();
+
+        if (query === '') {
+            renderRecentSearches($tooltip);
+            return; // não faz AJAX se estiver vazio
+        }
+
+        $.ajax({
+            url: '/search',
+            data: { query },
+            success: function(data) {
+                let html = '';
+
+                data.results.forEach(item => {
+                    if (item.type === 'user') {
+                        const user = item.data;
+                        html += `<div class="tooltip-item user-item tooltip_item_search_container" data-id="${user.id}">
+                            <div style="display:flex; align-items: center; gap: 10px;">
+                                <img style="width: 26px;" src="{{asset('logo/img/icon/search.svg')}}">
+                                <div class="user_info_tooltip_item_container">
+                                    <span>${user.name}</span>
+                                    <span>${user.cargo?.titulo || 'Sem cargo'}</span>
+                                </div>
+                            </div>
+                            <img class="img_on_search" src="/public/avatar_users/${user.avatar}" alt="${user.name}" />
+                        </div>`;
+                    } else if (item.type === 'post') {
+                        const post = item.data;
+                        const snippet = post.content.length > 30 ? post.content.substring(0, 30) + '...' : post.content;
+                        html += `<div class="tooltip_item_post" style="display:flex; padding: 6px; align-items: center; gap: 10px;">
+                            <img style="width: 26px;" src="{{asset('logo/img/icon/search.svg')}}">
+                            <div class="tooltip-item post-item" data-id="${post.id}">
+                                <p>${snippet}</p>
+                            </div>
+                        </div>`;
+                    }
+                });
+
+                if (data.hasMore) {
+                    html += `<div class="tooltip-item view-all">
+                        <a class="btn_search_view_all" href="/search/results?query=${encodeURIComponent($('#pesquisaGeral').val().trim())}">Ver todos os resultados</a>
+                    </div>`;
+                }
+
+                $tooltip.html(html).show();
+            }
+        });
+    });
+
+    // Clique nos itens de usuário
+    $tooltip.on('click', '.user-item', function() {
+        const userId = $(this).data('id');
+        const itemHtml = $(this).prop('outerHTML');
+
+        let recentSearches = JSON.parse(localStorage.getItem('recentSearches') || '[]');
+
+        // Remove duplicados
+        recentSearches = recentSearches.filter(item => item !== itemHtml);
+
+        // Adiciona no topo
+        recentSearches.unshift(itemHtml);
+
+        // Limita a 7 itens
+        recentSearches = recentSearches.slice(0, 7);
+
+        // Salva no localStorage
+        localStorage.setItem('recentSearches', JSON.stringify(recentSearches));
+
+        // Abre modal
+        $.get(`/user/modal/${userId}`, function(html) {
+            $('#genericUserModalContent').html(html);
+            $('#genericUserModal').modal('show');
+        });
+    });
+
+    // Clique nos itens de post
+    $tooltip.on('click', '.post-item', function() {
+        const postId = $(this).data('id');
+        const $postWrapper = $(this).closest('.tooltip_item_post');
+        const itemHtml = $postWrapper.prop('outerHTML');
+
+        let recentSearches = JSON.parse(localStorage.getItem('recentSearches') || '[]');
+
+        // Remove duplicatas
+        recentSearches = recentSearches.filter(item => item !== itemHtml);
+
+        // Adiciona no topo
+        recentSearches.unshift(itemHtml);
+
+        // Limita a 7 itens
+        recentSearches = recentSearches.slice(0, 7);
+
+        // Salva no localStorage
+        localStorage.setItem('recentSearches', JSON.stringify(recentSearches));
+
+        // Redireciona para os resultados
+        window.location.href = `/search/results?query=${encodeURIComponent($input.val().trim())}`;
+    });
+
+    // Mostrar pesquisas recentes ao focar no input
+    $input.on('focus', function() {
+        renderRecentSearches($tooltip);
+    });
+
+    // Armazenar pesquisa ao pressionar Enter
+    $input.on('keydown', function(e) {
+    if (e.key === 'Enter') {
+        const query = $(this).val().trim();
+        if (query !== '') {
+            // Montar o mesmo HTML usado para pesquisas recentes manuais
+            const itemHtml = `
+                <div class="tooltip-item user-item tooltip_item_search_container" data-id="">
+                    <div style="display:flex; align-items: center; gap: 10px;">
+                        <img style="width: 26px;" src="{{asset('logo/img/icon/search.svg')}}">
+                        <div class="user_info_tooltip_item_container">
+                            <span>${query}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            let recentSearches = JSON.parse(localStorage.getItem('recentSearches') || '[]');
+
+            // Remove duplicatas
+            recentSearches = recentSearches.filter(item => item !== itemHtml);
+
+            // Adiciona no topo
+            recentSearches.unshift(itemHtml);
+
+            // Limita a 7 itens
+            recentSearches = recentSearches.slice(0, 7);
+
+            // Salva no localStorage
+            localStorage.setItem('recentSearches', JSON.stringify(recentSearches));
+
+            // Redireciona para os resultados
+            window.location.href = `/search/results?query=${encodeURIComponent(query)}`;
+        }
+    }
+});
+
+
+    // Limpar pesquisas recentes
+    $tooltip.on('click', '.clear-all', function() {
+        localStorage.removeItem('recentSearches');
+        $tooltip.hide();
+    });
+
+    // Esconder tooltip ao clicar fora
+    $(document).on('click', function(event) {
+        if (!$(event.target).closest('#pesquisaGeral, #search-tooltip').length) {
+            $tooltip.hide();
+        }
+    });
+});
 </script>

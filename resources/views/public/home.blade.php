@@ -636,8 +636,8 @@
                 </div>
             </div>
         @endif
-    </div>
-</div>
+
+
             
             
         </div>
@@ -2067,6 +2067,7 @@ function openPostPreview(title, content, imageSrc, userName, userAvatar, datasPo
     $(`.items-footer[data-postid="${postId}"] .like-count`).text(listCount);
 
     // Carrega os comentários existentes
+    {{-- 
     fetch(`/comments/${postId}`)
         .then(response => response.json())
         .then(data => {
@@ -2187,7 +2188,7 @@ function openPostPreview(title, content, imageSrc, userName, userAvatar, datasPo
     
     // Abre o modal
     $('#modalViewPost').modal('show');
-}
+}--}}
 
 function toggleComments(postId) {
     const commentsSection = document.getElementById(`comments-section-${postId}`);

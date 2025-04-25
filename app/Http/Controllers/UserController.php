@@ -519,6 +519,10 @@ public function filterByDepartamento($departamentoId)
     return response()->json(['users' => $users]);
 }
 
-
+public function modal($id)
+{
+    $user = User::with('cargo')->findOrFail($id);
+    return view('components.user-modal-content', compact('user'));
+}
 
 }
