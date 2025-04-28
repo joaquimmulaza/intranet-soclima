@@ -849,12 +849,12 @@
                                             <span class="views-count"></span>
                                             <div class="views-tooltip"></div>
                                         </span>
-                                        <span class="globalHover">
+                                        <span class="globalHover hidden">
                                             <img src="logo/img/icon/mode_comment2.svg" alt="">
                                             <span class="comment-count"></span>
                                         </span>
                                     </div>
-                                    <form class="comment-form" id="modalCommentForm" action="" method="POST">
+                                    <form class="comment-form hidden" id="modalCommentForm" action="" method="POST">
                                             @csrf
                                             <div class="containerEnterComment">
                                             <img class="img_user_post" src="{{ URL::to('/') }}/public/avatar_users/{{ Auth::user()->avatar }}" alt="">
@@ -2067,128 +2067,10 @@ function openPostPreview(title, content, imageSrc, userName, userAvatar, datasPo
     $(`.items-footer[data-postid="${postId}"] .like-count`).text(listCount);
 
     // Carrega os comentários existentes
-    {{-- 
-    fetch(`/comments/${postId}`)
-        .then(response => response.json())
-        .then(data => {
-            const commentsList = document.getElementById('modalCommentsList');
-            commentsList.innerHTML = '';
-            
-            data.forEach(comment => {
-                const commentElement = document.createElement('div');
-                commentElement.className = 'comment-item';
-                commentElement.innerHTML = `
-                    <div class="comment-header">
-                       <img src="{{ url('public/avatar_users/' . $comment->user->avatar) }}" alt="{{ $comment->user->name }}" class="comment-avatar">
-                       
-                        <div class="comment-info-container">
-                            <div class="comment-info">
-                                <div class="comment-info-header">
-                                    <span class="comment-author">${comment.user.name}</span>
-                                    <svg width="4" height="4" viewBox="0 0 4 4" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <circle cx="1.79962" cy="2.20752" r="1.5" fill="#D9D9D9"/>
-                                    </svg>
-                                    <span class="comment-date">${new Date(comment.created_at).toLocaleDateString()}</span>
-                                </div>
-                              ${(comment.user_id == authUserId || postUserId == authUserId) ? `
-                                <div class="containerOpt">
-                                    <button class="btnOpt" data-toggle="modal" data-target="#modalOpt-${comment.id}">
-                                        <img src="logo/img/icon/frame26.svg" alt="">
-                                    </button>
-                                    <div class="modal fade modalOpt" id="modalOpt-${comment.id}"  aria-labelledby="modalOptLabel" aria-hidden="true" data-backdrop="true" data-keyboard="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-body modal-bodyOpt">
-                                                    <div class="containerBtnOpt containerBtnOptViewPost">
-                                                        
-                                                       ${(comment.user_id == authUserId) ? `
-                                                        <button class="btnOpt btnOptViewPost edit-comment-btn" data-comment-id="${comment.id}" data-comment-body="${comment.body}" style="margin: 0 !important; padding: 0 !important;">
-                                                            Editar
-                                                        </button>
-                                                        ` : ''}
-                                                        <button class="btnOpt btnOptViewPost" onclick="deleteComment(${comment.id})" style="margin: 0 !important; padding: 0 !important;">
-                                                            Eliminar
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                ` : ''}
-                            
-                            </div>
-                            <span class="comment-user-cargo">{{ $comment->user->cargo->titulo }}</span>
-                        </div>
-                        
-                    </div>
-                    <div class="comment-body">
-                        ${comment.body}
-                        <div class="comment_content_footer">
-                            <span>Gosto</span>
-                            <span>Responder</span>
-                        </div>
-                    </div>
-                `;
-                commentsList.appendChild(commentElement);
-                // Inicializa o modal dinamicamente após adicioná-lo ao DOM
-                if (comment.user_id == {{ auth()->id() }}) {
-                    $(`#modalOpt-${comment.id}`).modal({ show: false }); // Inicializa o modal
-                }
-            });
-            // Atualiza a quantidade de comentários
-           // Atualiza a contagem de comentários no modal
-           const commentCountElement = document.querySelector('#modalViewPost .items-footer .comment-count');
-            if (commentCountElement) {
-                commentCountElement.textContent = data.length;
-            } else {
-                console.error('Elemento .comment-count não encontrado no modal!');
-            }
 
-            // Opcional: Atualiza a contagem na lista também, se necessário
-            const listCommentCount = document.querySelector(`.items-footerLista[data-postid="${postId}"] .comment-count`);
-            if (listCommentCount) {
-                listCommentCount.textContent = data.length;
-            }
-        })
-        .catch(error => console.error('Erro ao carregar comentários:', error));
-        // Configuração do hover no modal
-        const modalViewContainer = document.querySelector(`#modalViewPost .items-footer .view-container`);
-        const modalTooltip = modalViewContainer.querySelector('.views-tooltip');
-        let modalLoaded = false;
-
-        modalViewContainer.addEventListener('mouseenter', function() {
-            if (!modalLoaded) {
-                fetch(`/post/${postId}/viewers`)
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Visualizadores no modal:', data.viewers);
-                        if (data.success && data.viewers.length > 0) {
-                            const ul = document.createElement('ul');
-                            data.viewers.forEach(viewer => {
-                                const li = document.createElement('li');
-                                li.textContent = viewer;
-                                ul.appendChild(li);
-                            });
-                            modalTooltip.innerHTML = '';
-                            modalTooltip.appendChild(ul);
-                            console.log('Tooltip do modal preenchida');
-                        } else {
-                            modalTooltip.textContent = 'Nenhum visualizador';
-                            console.log('Tooltip do modal: Nenhum visualizador');
-                        }
-                        modalLoaded = true;
-                    })
-                    .catch(error => {
-                        console.error('Erro ao buscar visualizadores no modal:', error);
-                        modalTooltip.textContent = 'Erro ao carregar';
-                    });
-            }
-        });
-    
     // Abre o modal
     $('#modalViewPost').modal('show');
-}--}}
+}
 
 function toggleComments(postId) {
     const commentsSection = document.getElementById(`comments-section-${postId}`);
@@ -2482,6 +2364,7 @@ function toggleReplies(commentId) {
         commentItem.classList.remove('line-active');
     }
 }
+
 document.addEventListener('DOMContentLoaded', function() {
     const toggleBtn = document.querySelector('.toggle-content-btn');
     const previewContent = document.querySelector('.expandir_post');

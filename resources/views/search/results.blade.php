@@ -2,21 +2,25 @@
 @section('title', 'Pesquisa')
 
 @section('content')
-<div class="search-results p-4">
-    <h2 class="text-xl font-bold mb-4">Resultados para "{{ $query }}"</h2>
+<div class="search-results ">
+    <h2 class="text-xl font-bold mb-4 hidden">Resultados para "{{ $query }}"</h2>
 
-    <div class="tabs mb-4">
+    <div class="tabs">
         <button class="tab-link active" data-tab="all">Tudo</button>
         <button class="tab-link" data-tab="users">Pessoas</button>
         <button class="tab-link" data-tab="posts">Publicações</button>
     </div>
 
     <div class="tab-content" id="all">
-        <h3 class="text-lg font-semibold mb-2">Pessoas</h3>
-        @include('search.partials.users', ['users' => $users])
+        <div class="tabs_container">
+            <h3 class="title_tab_search">Pessoas</h3>
+            @include('search.partials.users', ['users' => $users])
+        </div>
 
-        <h3 class="text-lg font-semibold mt-4 mb-2">Publicações</h3>
-        @include('search.partials.posts', ['posts' => $posts])
+        <div class="tabs_container">
+            <h3 class="title_tab_search">Publicações</h3>
+            @include('search.partials.posts', ['posts' => $posts])
+        </div>
     </div>
 
     <div class="tab-content hidden" id="users">
