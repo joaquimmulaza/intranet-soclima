@@ -2,10 +2,11 @@
 <link href="{{asset('baguettebox/baguetteBox.min.css')}}" type="text/css" rel="stylesheet">
 <script src="{{ asset('js/formMask/jquery.inputmask.min.js') }}"></script>
 <script src="https://cdn.tailwindcss.com"></script>
-@if($posts->isEmpty())
+
+<div class="AllpostsContainer">
+    @if($posts->isEmpty())
     <p>Nenhuma publicação encontrada.</p>
 @else
-<div class="AllpostsContainer">
     @php
 
         $posts = $posts->sortByDesc('created_at');
@@ -117,7 +118,7 @@
                         <div class="items-footerLista" data-postid="{{ $post->id }}">
                             
                             <span class="like-button globalHover" style="cursor: pointer;">
-                                <img src="logo/img/icon/{{ Auth::user()->likes()->where('post_id', $post->id)->exists() && Auth::user()->likes()->where('post_id', $post->id)->first()->like ? 'ThumbsUp_pressed.svg' : 'icon_thumbs.svg' }}" class="like-icon" alt="">
+                            <img src="{{ asset('logo/img/icon/' . (Auth::user()->likes()->where('post_id', $post->id)->exists() && Auth::user()->likes()->where('post_id', $post->id)->first()->like ? 'ThumbsUp_pressed.svg' : 'icon_thumbs.svg')) }}" class="like-icon" alt="">
                                 <span class="like-count">{{ likes_post($post->id) }}</span>
                             </span>
                     
@@ -340,11 +341,12 @@
                                 </div>
                             </div>
                             <div class="containerComments">
-                                
-                                    <div class="items-footer" data-postid="">
+                            
+                                    <div class="items-footer" data-postid"">
                                         <span class="like-button globalHover" style="cursor: pointer;">
-                                            <img src="logo/img/icon/{{ Auth::user()->likes()->where('post_id', $post->id)->exists() && Auth::user()->likes()->where('post_id', $post->id)->first()->like ? 'ThumbsUp_pressed.svg' : 'icon_thumbs.svg' }}" class="like-icon" alt="">
-                                            <span class="like-count">{{ likes_post($post->id) }}</span>
+                                        <img src="{{ asset('logo/img/icon/' . (Auth::user()->likes()->where('post_id', $post->id)->exists() && Auth::user()->likes()->where('post_id', $post->id)->first()->like ? 'ThumbsUp_pressed.svg' : 'icon_thumbs.svg')) }}" class="like-icon" alt="">
+                                        <span class="like-count">{{ likes_post($post->id) }}</span>
+                                            
                                             
                                         </span>
                                 
@@ -488,9 +490,86 @@
                         </div>
                     </div>
                 </div>
+                <div class="modal escurecer" id="modalPreviewImagem" tabindex="-1" aria-labelledby="createPostModal" aria-hidden="true" data-backdrop="false" data-keyboard="true" data-action="">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="bg-white rounded-lg shadow-lg mainContainerPreviewImg">
+                     <div class="containerSidesPreview">
+                         <div class="leftSideContainerPreview">
+                                <!-- Miniaturas -->
+                                <div id="thumbnails" class="flex gap-2 miniaturaContainer overflow-x-auto"></div>
+                                        <!-- Área de Visualização -->
+                                <div class="containerShowPreview relative w-full h-52 border-dashed flex items-center justify-center">
+                                    <input type="file" id="fileInput" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer ">
+                                    <div id="preview" class="text-gray-400 text-sm text-center relative">
+                
+                                    </div>
+                                    <button id="prevBtn" class="absolute left-2 hidden nextPrevBtnPreview">&#10094;</button>
+                                    <button id="nextBtn" class="absolute right-2 hidden nextPrevBtnPreview">&#10095;</button>
+                                    <button id="deleteBtn" class="absolute deleteBtnPreview hidden"><svg width="29" height="29" viewBox="0 0 29 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M22.7363 7.97693L21.0592 6.2998L14.4101 12.9488L7.76111 6.2998L6.08398 7.97693L12.733 14.626L6.08398 21.275L7.76111 22.9521L14.4101 16.3031L21.0592 22.9521L22.7363 21.275L16.0873 14.626L22.7363 7.97693Z" fill="#555555"/>
+                                        </svg>
+                                        </button>
+                                </div>
+                         </div>
+                
+                
+                
+                        <!-- Botões -->
+                        <div class="rightSideContainerPreview">
+                            <div class="closeAndTitleContainerPreview">
+                                <h2>Comunicações gerais</h2>
+                                <span class="close closeModalPreview" aria-label="Close">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z" fill="#555555"/>
+                                </svg>
 
+                                </span>
+                            </div>
+                            <hr>
+                            <div class="headerContainerPreviewRightSide">
+                                <img src="{{ URL::to('/') }}/public/avatar_users/{{ Auth::user()->avatar }}" alt="">
+                
+                                <div class="contentTextHeaderPreviewRightSide">
+                                    <span>{{ Auth::user()->name }}</span>
+                                    <span class="hidden">Todos podem comentar</span>
+                                </div>
+                            </div>
+                            <div class="containerBodyInputs">
+                                <input class="titleInputPost" id="modalTitle" type="text" placeholder="Adiciona um título ao comunicado">
+                                <textarea class="contentTextarea" id="modalContent" placeholder="Comece a escrever aqui!"></textarea>
+                            </div>
+                            <div class="containerBtnPreview">
+                                <button id="addMoreBtn" class="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg"><svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M19 13.5H13V19.5H11V13.5H5V11.5H11V5.5H13V11.5H19V13.5Z" fill="#555555"/>
+                                    </svg>
+                                    </button>
+                                <button id="uploadBtn">Publicar</button>
+                            </div>
+                        </div>
+                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/ajax/libs/jvectormap/2.0.5/jquery-jvectormap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-Knob/1.2.13/jquery.knob.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/3.0.5/daterangepicker.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.9.1/summernote.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="{{ asset('public/plugins/sparklines/sparkline.js') }}"></script>
+    
+    <script src="{{ asset('public/dist/js/pages/dashboard.js') }}"></script>
+    </script>
 <script>
 
+window.thumbsUpIcon = "{{ asset('logo/img/icon/ThumbsUp_pressed.svg') }}";
+window.thumbsIcon = "{{ asset('logo/img/icon/icon_thumbs.svg') }}";
 
 $('.modalOpt').on('show.bs.modal', function () {
             $('body').addClass('modal-open-no-backdrop');
@@ -740,7 +819,7 @@ $('.modalOpt').on('show.bs.modal', function () {
                 $(`.items-footerLista[data-postid="${postId}"] .like-count`).text(newCount);
                 $(`.items-footer[data-postid="${postId}"] .like-count`).text(newCount);
 
-                const newIconSrc = isLiked ? 'logo/img/icon/icon_thumbs.svg' : 'logo/img/icon/ThumbsUp_pressed.svg';
+                const newIconSrc = isLiked ? window.thumbsIcon : window.thumbsUpIcon;
                 const newClassAction = isLiked ? 'removeClass' : 'addClass';
 
                 icon.attr('src', newIconSrc)[newClassAction]('liked');
@@ -816,18 +895,11 @@ $('.modalOpt').on('show.bs.modal', function () {
         }
 
         document.addEventListener("DOMContentLoaded", function () {
-            const label = document.querySelector(".openModalPreview");
+ 
             const previewContainer = document.getElementById("preview");
             const modal = document.getElementById("modalPreviewImagem");
 
-            label.addEventListener("click", function (event) {
-                event.preventDefault(); // Evita a abertura padrão do modal
-                modal.setAttribute("data-action", "create"); // Define como criação
-                images = []; // Reseta as imagens para um novo post
-                preview.innerHTML = ''; // Limpa o preview
-                updateThumbnails(); // Atualiza as miniaturas
-                fileInput.click(); // Simula o clique no input de arquivo
-            });
+
 
             // Para edição (adicione um botão ou evento específico para editar)
             // Exemplo: se houver um botão com classe ".editPostButton" para abrir o modal em modo de edição
@@ -1077,67 +1149,10 @@ document.addEventListener('DOMContentLoaded', function() {
     updateMaxWidth();
 });
 
-const mainContainer = document.querySelector(".mainContainerPDF");
 const mainContainerPDFEdit = document.querySelector(".mainContainerPDFEdit");
 let isDown = false;
 let startX;
 let scrollLeft;
-
-mainContainer.addEventListener("mousedown", (e) => {
-    isDown = true;
-    mainContainer.classList.add("active"); // Opcional: pode usar para mudar o estilo
-    startX = e.pageX - mainContainer.offsetLeft;
-    scrollLeft = mainContainer.scrollLeft;
-});
-
-mainContainer.addEventListener("mouseleave", () => {
-    isDown = false;
-    mainContainer.classList.remove("active");
-});
-
-mainContainer.addEventListener("mouseup", () => {
-    isDown = false;
-    mainContainer.classList.remove("active");
-});
-
-mainContainer.addEventListener("mousemove", (e) => {
-    if (!isDown) return;
-    e.preventDefault();
-    const x = e.pageX - mainContainer.offsetLeft;
-    const walk = (x - startX) * 2; // Ajusta a velocidade do scroll
-    mainContainer.scrollLeft = scrollLeft - walk;
-});
-
-fileContainer.addEventListener("mousedown", (e) => {
-    isDown = true;
-    startX = e.pageX - fileContainer.offsetLeft;
-    scrollLeft = fileContainer.scrollLeft;
-    fileContainer.classList.add("active");
-
-    // Impede a seleção de texto ao arrastar
-    document.body.style.userSelect = "none";
-});
-
-fileContainer.addEventListener("mouseleave", () => {
-    isDown = false;
-    fileContainer.classList.remove("active");
-    document.body.style.userSelect = ""; // Restaura a seleção de texto
-});
-
-fileContainer.addEventListener("mouseup", () => {
-    isDown = false;
-    fileContainer.classList.remove("active");
-    document.body.style.userSelect = ""; // Restaura a seleção de texto
-});
-
-fileContainer.addEventListener("mousemove", (e) => {
-    if (!isDown) return;
-    e.preventDefault(); // Previne ações padrão do navegador
-
-    const x = e.pageX - fileContainer.offsetLeft;
-    const walk = (x - startX) * 2; // Ajuste a velocidade se necessário
-    fileContainer.scrollLeft = scrollLeft - walk;
-});
 
 // Scroll para fileContainerEdit (novo)
 if (fileContainerEdit) {
@@ -1198,9 +1213,6 @@ if (fileContainerEdit) {
     });
 }
 
-document.getElementById("pdfInput").addEventListener("change", function (event) {
-    handleFileUpload(event);
-});
  const btnMore = document.createElement("div");
 function handleFileUpload(event, container = fileContainer, outro = outroContainer, btnContainer = btnContainerPost) {
     const files = event.target.files;
@@ -1301,16 +1313,6 @@ document.addEventListener("click", function (e) {
     }
 });
 
-document.addEventListener("click", function (e) {
-    const addFileBtn = e.target.closest("#addFileBtn"); // Verifica se o clique foi no botão
-    if (addFileBtn) {
-        const testee = document.getElementById("pdfInput");
-        if (testee) {
-            testee.click(); // Simula o clique no input de arquivo
-        }
-    }
-});
-
 document.addEventListener("DOMContentLoaded", function () {
     const createPostModal = document.getElementById("createPostModal");
     const roleForm = document.getElementById("roleForm");
@@ -1323,71 +1325,6 @@ document.addEventListener("DOMContentLoaded", function () {
         contentTextarea.value = "";
         // Opcional: Limpar o input de arquivo, se desejar
         roleForm.querySelector("#arquivo_imagem").value = "";
-    });
-});
-
-document.addEventListener("DOMContentLoaded", function () {
-    // Interceptar envio do roleForm
-    const roleForm = document.getElementById("roleForm");
-    roleForm.addEventListener("submit", function (event) {
-        event.preventDefault();
-
-        const formData = new FormData(roleForm);
-        const input = document.getElementById("pdfInput");
-        // Limpa os arquivos existentes no FormData para evitar duplicatas
-        formData.delete("arquivo_pdf[]");
-        allFiles.forEach(file => {
-            formData.append("arquivo_pdf[]", file);
-        });
-        $.ajax({
-            type: "POST",
-            url: roleForm.action,
-            data: formData,
-            processData: false,
-            contentType: false,
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-            },
-            success: function (response) {
-                if (response.success) {
-                    $("#createPostModal").modal("hide");
-                    Swal.fire({
-                    timer: 2000,
-                    position: "bottom-start",
-                    imageUrl: "{{asset('logo/img/icon/verified.gif')}}",
-                    imageAlt: "Custom image",
-                    imageWidth: 40,
-                    title: 'A sua publicação foi criada.',
-                    showConfirmButton: false,
-                    width: 225,
-                    backdrop: false,
-                    customClass: {
-                        popup: 'container_sweet_justificativos',
-                        icon: 'icon_sweet_justificativos',
-                        title: 'title_sweet_justificativos',
-                        image: 'img_sweet_justificativos'
-                    },
-                    willClose: () => {
-                        window.location.reload();
-                    }
-                })
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Erro',
-                        text: response.message || 'Algo deu errado!',
-                    });
-                }
-            },
-            error: function (xhr, status, error) {
-                console.error("Erro na requisição:", xhr.responseText);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Erro',
-                    text: 'Ocorreu um erro. Por favor, tente novamente.',
-                });
-            }
-        });
     });
 });
 
@@ -1457,9 +1394,9 @@ function openPostPreview(title, content, imageSrc, userName, userAvatar, datasPo
     const modalIcon = $(`.items-footer[data-postid="${postId}"] .like-icon`);
     const listCount = $(`.items-footerLista[data-postid="${postId}"] .like-count`).text();
     const isLiked = listIcon.hasClass('liked');
-    const iconSrc = isLiked ? 'logo/img/icon/ThumbsUp_pressed.svg' : 'logo/img/icon/icon_thumbs.svg';
-
+    const iconSrc = isLiked ? window.thumbsUpIcon : window.thumbsIcon;
     modalIcon.attr('src', iconSrc)[isLiked ? 'addClass' : 'removeClass']('liked');
+    console.log('Sincronizando contador para postId:', postId, 'listCount:', listCount);
     $(`.items-footer[data-postid="${postId}"] .like-count`).text(listCount);
 
     // Carrega os comentários existentes
@@ -1779,27 +1716,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-
-</script>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/ajax/libs/jvectormap/2.0.5/jquery-jvectormap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-Knob/1.2.13/jquery.knob.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/3.0.5/daterangepicker.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.9.1/summernote.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js">
-    <script src="{{ asset('public/plugins/sparklines/sparkline.js') }}"></script>
-    
-    <script src="{{ asset('public/dist/js/pages/dashboard.js') }}"></script>
-    </script>
-
-    <script>
-
-        
-
-        document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
     const posts = document.querySelectorAll('.post-item');
 
     const observer = new IntersectionObserver((entries, observer) => {
@@ -1879,6 +1796,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
-
-
 </script>
+
+   
+

@@ -61,7 +61,7 @@ class SearchController extends Controller
 
         $posts = Post::where('content', 'like', "%{$query}%")
         ->with('user') // <- aqui carrega o relacionamento user
-        ->select('id', 'content', 'title', 'arquivo_imagem', 'arquivo_pdf', 'user_id') // inclua o user_id
+        ->select('id', 'content', 'title', 'arquivo_imagem', 'arquivo_pdf', 'user_id', 'created_at') // inclua o user_id
             ->get();
 
         return view('search.results', compact('query', 'users', 'posts'));

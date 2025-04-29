@@ -1,5 +1,5 @@
 
-<div class="modal fade show cardUserView escurecer" id="cardUserViewNav-{{ $user->id }}" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true" data-dismiss="modal">
+<div class="modal fade show cardUserView escurecer" id="cardUserViewNav-{{ $user->id }}" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true" data-dismiss="modal" style="display: none;">
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -7,7 +7,7 @@
                                         <img src="{{URL::to('/')}}/public/avatar_users/{{$user->avatar}}" alt="Foto do perfil">
                                     </div>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
-                                        <span aria-hidden="true"><img src="logo/img/icon/clear.svg" alt=""></span>
+                                        <span aria-hidden="true"><img src="{{ asset('logo/img/icon/clear.svg') }}" alt=""></span>
                                     </button>
                                 </div>
                                
@@ -23,7 +23,7 @@
                                         </div>
                                         <div class="divBtnEdit">
                                             <a href="{{ route('user.edit', ['user' => $user->id]) }}">
-                                                <img src="logo/img/icon/icon-edit.svg" alt="">
+                                                <img src="{{ asset('logo/img/icon/icon-edit.svg') }}" alt="">
                                             </a>
                                         </div>
                                        
@@ -37,14 +37,14 @@
                                     <div class="info-section">
                                         <div class="dadosPessoais">
                                             <div>
-                                                <img class="size-g-icon"{{ asset('logo/img/icon/cake.svg') }}" alt="">
+                                                <img class="size-g-icon" src="{{ asset('logo/img/icon/cake.svg') }}" alt="">
                                                 <span class="">Data de nascimento:</span>
                                             </div>
                                             <span>{{date('d/m/Y', strtotime($user->nascimento))}}</span>
                                         </div>
                                         <div class="dadosPessoais">
                                             <div>
-                                                <img class="size-g-icon" src="logo/img/icon/gender.svg" alt="">
+                                                <img class="size-g-icon" src="{{asset('logo/img/icon/gender.svg')}}" alt="">
                                                 <span>Gênero:</span>
                                             </div>
                                             <span>{{ $user->genero }}</span>
@@ -58,21 +58,21 @@
                                         </div>
                                         <div class="dadosPessoais">
                                             <div>
-                                                <img class="size-g-icon" src="logo/img/icon/call.svg" alt="">
+                                                <img class="size-g-icon" src="{{asset('logo/img/icon/call.svg')}}" alt="">
                                                 <span>Telemóvel da firma</span>
                                             </div>
                                             <span></span>
                                         </div>
                                         <div class="dadosPessoais">
                                             <div>
-                                                <img class="size-g-icon" src="logo/img/icon/call.svg" alt="">
+                                                <img class="size-g-icon" src="{{asset('logo/img/icon/call.svg')}}" alt="">
                                                 <span>Telemóvel pessoal:</span>
                                             </div>
                                             <span>{{ $user->fone }}</span>
                                         </div>
                                         <div class="dadosPessoais">
                                             <div>
-                                                <img class="size-g-icon" src="logo/img/icon/mail.svg" alt="">
+                                                <img class="size-g-icon" src="{{asset('logo/img/icon/mail.svg')}}" alt="">
                                                 <span>E-mail</span>
                                             </div>
                                             <span>{{ $user->email }}</span>
@@ -80,7 +80,7 @@
                                         
                                         <div class="dadosPessoais">
                                             <div>
-                                                <img class="size-g-icon" src="logo/img/icon/numbers.svg" alt="">
+                                                <img class="size-g-icon" src="{{asset('logo/img/icon/numbers.svg')}}" alt="">
                                                 <span class="">Nº mecanográfico:</span>
                                             </div>
                                             <span>{{ $user->numero_mecanografico }}</span>

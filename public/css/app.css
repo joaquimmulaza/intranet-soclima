@@ -5460,7 +5460,7 @@ input.is-invalid {
     flex-direction: column;
     align-items: center;
     width: 489px;
-    margin: 34px auto;
+    margin: 34px auto auto
 }
 
 .tabs{
@@ -5491,6 +5491,8 @@ input.is-invalid {
 .tab-content{
     width: 489px;
     /* background-color: #fff; */
+    margin: 0 auto;
+    border-radius: 5px;
 }
 .tab-content .title_tab_search{
     padding: 15px 20px;
@@ -5500,14 +5502,26 @@ input.is-invalid {
 }
 
 .tab-content .tabs_container{
-    background-color: #fff;
+
     border-radius: 5px;
     filter: drop-shadow(0px 1px 1px rgba(0, 0, 0, 0.1));
 }
 
+.pessoasContainelAllSearch{
+    background: linear-gradient(to bottom, #fff 50%, transparent 50%);
+    height: 100%;
+}
+
 .component_user_post{
     margin-bottom: 7px !important;
+    padding: 20px 0 20px 0;
+    background-color: #fff;
+    border-radius: 5px;
 }
+.component_user_post p{
+    color: #555;
+    margin-left: 20px;
+  }
 
 .component_user_post li, .component_posts li {
     list-style: none !important;
@@ -5524,8 +5538,13 @@ input.is-invalid {
     display: flex;
     align-items: center;
     gap: 7px;
-    padding-bottom: 7px !important;
     margin-left: 24px;
+    margin-bottom: 20px !important;
+    cursor: pointer;
+}
+
+.component_user_post li:last-of-type{
+    margin-bottom: 0 !important;
 }
 
 .component_user_post strong{
@@ -5536,4 +5555,21 @@ input.is-invalid {
 .component_user_post span{
     font-size: 13px !important;
     color: #7b7b7b;
+}
+
+#users_result_search_container{
+    background-color: #fff !important;
+    margin: 0 auto;
+    border-radius: 5px;
+}
+
+#posts,.postsContainerAllSearch{
+    background: linear-gradient(to bottom, #fff 50%, transparent 50%);
+    height: 200px;
+
+}
+
+.activeBtnSearch{
+    background-color: #009AC1 !important;
+    color: #fff !important;
 }
