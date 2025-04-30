@@ -64,6 +64,9 @@ class SearchController extends Controller
         ->select('id', 'content', 'title', 'arquivo_imagem', 'arquivo_pdf', 'user_id', 'created_at') // inclua o user_id
             ->get();
 
-        return view('search.results', compact('query', 'users', 'posts'));
+        // Defina um $post, por exemplo, o primeiro da coleção (se existir)
+    $post = $posts->first(); // Ou null se não houver posts
+
+        return view('search.results', compact('query', 'users', 'posts', 'post'));
     }
 }

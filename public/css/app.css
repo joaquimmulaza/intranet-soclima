@@ -892,7 +892,6 @@ height: 330px;
     color: #009ac1;
     font-weight: bold;
     font-size: 14px;
-
   }
 
   .eventBody p{
@@ -939,7 +938,6 @@ height: 330px;
 .hidden {
     display: none !important;
 }
-
 
 .pop-up{
     width: 825px !important;
@@ -4063,7 +4061,7 @@ input.is-invalid {
 .headerContainerPreviewRightSide{
     display: flex;
     gap: 7px;
-    /* align-items: center; */
+    align-items: center;
     border-bottom: 1px solid #dbdbdb;
     padding-bottom: 20px;
 }
@@ -4096,13 +4094,18 @@ input.is-invalid {
     width: 100%;
 }
 
-.contentTextHeaderPreviewRightSide .dateAndUserName span:nth-of-type(1){
+#modalViewPost .contentTextHeaderPreviewRightSide .dateAndUserName span:nth-of-type(1) {
     font-size: 16px;
     color: #009AC1;
     font-weight: 700 !important;
 }
 
 .contentTextHeaderPreviewRightSide span:nth-of-type(1){
+    font-size: 16px;
+    color: #009AC1;
+    font-weight: 700 !important;
+}
+#modalViewPost .contentTextHeaderPreviewRightSide span:nth-of-type(1) {
     font-size: 13px;
     color: #7B7B7B;
     font-weight: 400 !important;

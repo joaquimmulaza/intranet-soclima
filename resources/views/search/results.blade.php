@@ -33,6 +33,11 @@
         @include('search.partials.posts', ['posts' => $posts])
     </div>
 </div>
+
+@foreach ($posts as $post)
+    @include('search.partials.modal', ['post' => $post])
+@endforeach
+
 @endsection
 
 
@@ -53,4 +58,3 @@
         });
     });
 </script>
-

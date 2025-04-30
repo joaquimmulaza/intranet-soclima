@@ -3,285 +3,251 @@
 <script src="{{ asset('js/formMask/jquery.inputmask.min.js') }}"></script>
 <script src="https://cdn.tailwindcss.com"></script>
 
-<div class="AllpostsContainer">
-    @if($posts->isEmpty())
-    <p>Nenhuma publicação encontrada.</p>
-    @else
-    @php
-
-        $posts = $posts->sortByDesc('created_at');
-        
-
-        $postsWithMedia = $posts->filter(function ($post) {
-            return !empty($post->arquivo_imagem) || !empty($post->arquivo_pdf);
-        });
-    @endphp
-            @foreach($posts as $post)
-             
-                <div class="postOnly post-item"> 
-                    <div class="post-header">
-                        <div class="postContentHeader">
-                            <img class="img_user_post" src="{{ url('public/avatar_users/' . $post->user->avatar) }}" alt="">
-                            <h3 style="padding: 0; margin: 0;">{{$post->user->name}}</h3>
-                            <img src="{{asset('logo/img/icon/Ellipse3.svg')}}" alt="">
-                            <p style="padding: 0; margin: 0;">{{date('d/m/Y', strtotime($post->created_at))}}</p>
-                        </div>
-                        <div class="containerOpt">
-                            <button class="btnOpt"  data-toggle="modal" data-target="#modalOpt-{{ $post->id }}" style="margin: 0 !important; padding: 0 !important;"><img src="{{asset('logo/img/icon/frame26.svg')}}" alt="" ></button>
-                            <div class="modal fade modalOpt" id="modalOpt-{{ $post->id }}" tabindex="-1" aria-labelledby="modalOptLabel" aria-hidden="true" data-backdrop="true" data-keyboard="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-body modal-bodyOpt">
-                                        <div class="containerBtnOpt">
-                                        @can('app.dashboard')
-                    
-                                            <button type="button" data-toggle="modal" data-target="#modalEdit" style="border-bottom: none; border-top-left-radius: 5px; border-top-right-radius: 5px;" class="btnPosts editPostButton"  data-id="{{$post->id}}" data-title="{{$post->title}}" data-content="{{$post->content}}">
-                                                Editar
-                                            </button>
-                                            <button style="border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;" type="button" class="btnPosts" onClick="deleteData({{ $post->id }})">
-                                                Eliminar
-                                            </button>
-                                            <form id="delete-form-{{ $post->id }}"
-                                                    action="{{ route('post.destroy', ['post' => $post->id]) }}" method="POST" style="display: none;">
-                                                @csrf()
-                                                @method('DELETE')
-                                            </form>
-                                        @endcan
-                                    </div>
-                                        </div>
-                                    </div>
+<div class="modal escurecer" id="modalViewPost" tabindex="-1" aria-labelledby="viewPostModal" aria-hidden="true" data-backdrop="false" data-keyboard="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="bg-white rounded-lg shadow-lg mainContainerPreviewImg">
+                    <div class="containerSidesPreview">
+                        <div class="leftSideContainerPreview">
+                            <!-- Área de Visualização -->
+                            <div class="containerShowPreview relative w-full h-52 border-dashed flex items-center justify-center">
+                                <div id="postPreview" class="text-gray-400 text-sm text-center relative w-full h-full">
+                                    <img src="" alt="Imagem do Post" class="w-full h-full imgMainPreview postImage">
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    
-                    <div class="post-body">
-                        @if($post->arquivo_imagem)
                         
-                            <div class="size_img_post">
-                                <img src="{{ asset($post->arquivo_imagem) }}" alt="Imagem de Capa" style="cursor: pointer;" onclick="openPostPreview('{{ addslashes($post->title) }}', '{{ addslashes($post->content) }}', '{{ asset($post->arquivo_imagem) }}', '{{ $post->user->name }}', '{{ URL::to('/') }}/public/avatar_users/{{ $post->user->avatar }}', '{{date('d/m/Y', strtotime($post->created_at))}}', '{{$post->id}}', '{{$post->user->cargo->titulo}}')">
-                            </div>
-                        @endif
-                        
-                        @if ($post->arquivo_pdf && !empty($post->arquivo_pdf))
-                            @php
-                                // Decodificar o campo arquivo_pdf (caso seja um JSON contendo múltiplos PDFs)
-                                $pdfs = json_decode($post->arquivo_pdf, true); // Convertendo para array associativo
-                                if (!is_array($pdfs)) {
-                                    // Se o JSON não for um array válido, tratamos como um único PDF
-                                    $pdfs = [$post->arquivo_pdf];
-                                }
-                            @endphp
-                            @foreach ($pdfs as $pdf)
-                            <div class="container_pdf_file">
-                            <a href="{{ asset($pdf) }}" target="_blank" class="pdf-item">
-                                <div class="container_icon_pdf_file">
-                                    <svg width="25" height="32" viewBox="0 0 25 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M24.6944 6.71812L24.2661 6.29275L18.6578 0.72309L18.2294 0.297711C18.0356 0.105159 17.7667 -0.0057373 17.4917 -0.0057373H1.36833C0.709445 -0.0057373 0 0.499642 0 1.60861V21.5115V30.6354V30.8908C0 31.3526 0.467778 31.8028 1.02111 31.9446C1.04889 31.9518 1.07556 31.9623 1.10444 31.9678C1.19111 31.9849 1.27944 31.9943 1.36833 31.9943H23.6317C23.7206 31.9943 23.8089 31.9849 23.8956 31.9678C23.9244 31.9623 23.9511 31.9518 23.9789 31.9446C24.5322 31.8028 25 31.3526 25 30.8908V30.6354V21.5115V7.70626C25 7.28309 24.9489 6.97081 24.6944 6.71812ZM23.0194 6.61495H18.3333V1.96116L23.0194 6.61495ZM1.36833 30.8908C1.32889 30.8908 1.29333 30.8765 1.25833 30.8638C1.17167 30.823 1.11111 30.7369 1.11111 30.6354V22.615H23.8889V30.6354C23.8889 30.7369 23.8283 30.8224 23.7417 30.8638C23.7067 30.8765 23.6711 30.8908 23.6317 30.8908H1.36833ZM1.11111 21.5115V1.60861C1.11111 1.48888 1.12944 1.09771 1.36833 1.09771H17.2544C17.2361 1.16723 17.2222 1.23895 17.2222 1.31344V7.7184H23.6717C23.7467 7.7184 23.8183 7.70461 23.8883 7.6864C23.8883 7.69468 23.8889 7.69799 23.8889 7.70626V21.5115H1.11111Z" fill="#555555"/>
-                                    <path d="M8.63443 24.6806C8.44943 24.5299 8.24054 24.4163 8.00776 24.3413C7.77498 24.2657 7.53943 24.2281 7.30165 24.2281H5.69165V29.7873H6.60332V27.7807H7.27943C7.57276 27.7807 7.84165 27.7382 8.08443 27.6527C8.32721 27.5672 8.53498 27.4464 8.70721 27.2908C8.87943 27.1352 9.01332 26.9426 9.10998 26.7137C9.20609 26.4847 9.25443 26.2298 9.25443 25.9479C9.25443 25.6814 9.19721 25.4414 9.08332 25.2273C8.96943 25.0133 8.81943 24.8317 8.63443 24.6806ZM8.28887 26.5173C8.23276 26.6706 8.15998 26.7898 8.06887 26.8753C7.97776 26.9608 7.87776 27.0226 7.76887 27.0601C7.65998 27.0977 7.54943 27.117 7.43832 27.117H6.60276V24.9145H7.28609C7.51887 24.9145 7.70609 24.9509 7.84832 25.0237C7.98998 25.0966 8.09998 25.187 8.17887 25.2952C8.25721 25.4033 8.30887 25.5164 8.33443 25.6345C8.35943 25.7526 8.37221 25.8568 8.37221 25.9473C8.37221 26.1741 8.34443 26.3639 8.28887 26.5173Z" fill="#555555"/>
-                                    <path d="M14.1411 25.0425C13.9055 24.7964 13.6094 24.5984 13.2522 24.4505C12.895 24.3026 12.4811 24.2281 12.0105 24.2281H10.3244V29.7873H12.4433C12.5139 29.7873 12.6228 29.7785 12.77 29.7608C12.9167 29.7432 13.0789 29.7035 13.2561 29.64C13.4333 29.5771 13.6167 29.4828 13.8067 29.357C13.9967 29.2312 14.1672 29.059 14.3194 28.84C14.4717 28.621 14.5967 28.3495 14.6955 28.0251C14.7944 27.7007 14.8439 27.3095 14.8439 26.8521C14.8439 26.52 14.7855 26.1967 14.6694 25.8828C14.5522 25.5694 14.3767 25.2891 14.1411 25.0425ZM13.4767 28.5349C13.2033 28.9272 12.7578 29.123 12.14 29.123H11.2361V24.9139H11.7678C12.2033 24.9139 12.5578 24.9708 12.8311 25.0839C13.1044 25.197 13.3211 25.3454 13.4805 25.5291C13.64 25.7128 13.7472 25.9175 13.8033 26.1437C13.8589 26.3699 13.8867 26.5989 13.8867 26.8301C13.8867 27.5744 13.75 28.1432 13.4767 28.5349Z" fill="#555555"/>
-                                    <path d="M16.1656 29.7873H17.0922V27.283H19.4317V26.6646H17.0922V24.9145H19.6667V24.2281H16.1656V29.7873Z" fill="#555555"/>
-                                    <path d="M17.7378 12.6625C17.2272 12.6625 16.6006 12.7287 15.8722 12.86C14.8556 11.7886 13.7945 10.2239 13.0456 8.68791C13.7883 5.58225 13.4167 5.14253 13.2528 4.93508C13.0783 4.71439 12.8322 4.35632 12.5522 4.35632C12.435 4.35632 12.115 4.40929 11.9878 4.45122C11.6678 4.55715 11.4956 4.80212 11.3578 5.12156C10.965 6.03356 11.5039 7.58832 12.0583 8.78667C11.5845 10.6587 10.7895 12.8992 9.9539 14.7177C7.84834 15.6755 6.73001 16.6162 6.6289 17.5138C6.59223 17.8405 6.67001 18.3199 7.24834 18.7508C7.40667 18.8683 7.59223 18.9307 7.78556 18.9307C8.27167 18.9307 8.76279 18.561 9.33112 17.7682C9.74556 17.19 10.1906 16.4016 10.655 15.4228C12.1428 14.7767 13.9833 14.193 15.5595 13.8658C16.4372 14.7028 17.2233 15.1265 17.8989 15.1265C18.3967 15.1265 18.8233 14.8992 19.1322 14.4694C19.4539 14.022 19.5272 13.6214 19.3489 13.2777C19.135 12.8645 18.6078 12.6625 17.7378 12.6625ZM7.79779 17.9994C7.53779 17.8013 7.55279 17.6678 7.55834 17.6176C7.59279 17.3108 8.07667 16.7663 9.2639 16.1036C8.3639 17.7544 7.88056 17.9734 7.79779 17.9994ZM12.3533 5.35274C12.3772 5.34501 12.9339 5.96019 12.4067 7.12708C11.6145 6.32212 12.2989 5.37094 12.3533 5.35274ZM11.205 14.1947C11.7689 12.86 12.2933 11.3864 12.6906 10.0214C13.3145 11.1348 14.0639 12.2151 14.8139 13.0802C13.6283 13.3566 12.3661 13.7467 11.205 14.1947ZM18.3722 13.9304C18.2011 14.1682 17.83 14.1737 17.7 14.1737C17.4039 14.1737 17.2933 13.9988 16.8406 13.6529C17.2139 13.6054 17.5661 13.5933 17.8467 13.5933C18.3406 13.5933 18.4311 13.6656 18.4995 13.702C18.4872 13.7411 18.455 13.8151 18.3722 13.9304Z" fill="#555555"/>
-                                    </svg>
-                                </div>
-                                <div class="container_content_file">
-                                    
-                                @php
-                                    $nomeCompleto = pathinfo($pdf, PATHINFO_FILENAME); // Usa $pdf, não $post->arquivo_pdf
-                                    $nomeSemTimestamp = preg_replace('/^\d+_/', '', $nomeCompleto);
-                                @endphp
-                                <p class="pdf-title">{{ $nomeSemTimestamp }}</p>
-                                    <span>Toque para abrir o ficheiro</span>
-                                    
-                                </div>
-                                <div class="container_icon_download_file">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M12 15.9943L7 10.9943L8.4 9.54426L11 12.1443V3.99426H13V12.1443L15.6 9.54426L17 10.9943L12 15.9943ZM6 19.9943C5.45 19.9943 4.97917 19.7984 4.5875 19.4068C4.19583 19.0151 4 18.5443 4 17.9943V14.9943H6V17.9943H18V14.9943H20V17.9943C20 18.5443 19.8042 19.0151 19.4125 19.4068C19.0208 19.7984 18.55 19.9943 18 19.9943H6Z" fill="#1D1B20"/>
-                                    </svg>
-                                </div>
-                            </a>
-                            </div>
-                            @endforeach
-                            @else
-                            @endif
-                        
-
-                        <h3>{{Str::limit($post->title, 80)}}</h3>
-                        <p class="expandir_post">{{Str::limit($post->content, 80)}}</p>
-                        <p class="content-full" style="display: none;">{{ $post->content }}</p>
-                        @if(strlen($post->content) > 80)
-                            <button class="toggle-content-btn">Ver mais</button>
-                        @endif
-                    </div>
-                    <hr style="width: 460px; margin: 0 auto;">
-                    <div class="post-footer">
-                        <div class="items-footerLista" data-postid="{{ $post->id }}">
+                        <!-- Conteúdo do Post -->
+                        <div class="rightSideContainerPreview">
                             
-                            <span class="like-button globalHover" style="cursor: pointer;">
-                            <img src="{{ asset('logo/img/icon/' . (Auth::user()->likes()->where('post_id', $post->id)->exists() && Auth::user()->likes()->where('post_id', $post->id)->first()->like ? 'ThumbsUp_pressed.svg' : 'icon_thumbs.svg')) }}" class="like-icon" alt="">
-                                <span class="like-count">{{ likes_post($post->id) }}</span>
-                            </span>
-                    
-                            <span class="globalHover view-container">
-                                <img src="{{asset('logo/img/icon/Eye-icon.svg')}}" alt="">
-                                <span class="post-views-count" data-postid="{{ $post->id }}">{{ $post->views_count }}</span>
-                                <div class="views-tooltip"></div>
-                            </span>
-                            <span class="comment-button globalHover hidden" style="cursor: pointer;" onclick="toggleComments({{ $post->id }})">
-                                <img src="logo/img/icon/mode_comment2.svg" alt="">
-                                {{ $post->comments()->count() }}
-                            </span>
-                        </div>
-                    </div>
-
-                    <!-- Seção de Comentários -->
-                    <div class="comments-section" id="comments-section-{{ $post->id }}" style="display: none;">
-                        <!-- Formulário de Comentário -->
-                        <form action="{{ route('comment.store', $post->id) }}" method="POST" class="comment-form">
-                            @csrf
-                            <div class="comment-input-container">
-                                <img class="comment-avatar" src="{{ url('public/avatar_users/' . Auth::user()->avatar) }}" alt="">
-                                <input type="text" name="comment" class="comment-input" placeholder="Adicionar um comentário" required>
-                            </div>
-                        </form>
-                        <div class="comments-list">
-                            @foreach($post->comments()->orderBy('created_at', 'desc')->get() as $comment)
-                            <div class="comment-item" id="comment-{{ $comment->id }}">
-                                    <div class="comment-header">
-                                        <img class="comment-avatar" src="{{ url('public/avatar_users/' . $comment->user->avatar) }}" alt="">
-                                        <div class="comment-info-container">
-                                            <div class="comment-info">
-                                                <div class="comment-info-header">
-                                                    <span class="comment-author">{{ $comment->user->name }}</span>
-                                                    <svg width="4" height="4" viewBox="0 0 4 4" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <circle cx="1.79962" cy="2.20752" r="1.5" fill="#D9D9D9"/>
+                            <div class="topHeaderSideContainerPreview">
+                                <div class="headerContainerPreviewRightSide">
+                                    <img class="postUserAvatar" src="" alt="Avatar do Usuário">
+                                    <div class="contentTextHeaderPreviewRightSide">
+                                        <div class="containerHeaderPostView">
+                                            <div class="dateAndUserName">
+                                                <span id="postUserName"></span>
+                                                <svg width="4" height="4" viewBox="0 0 4 4" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <circle cx="1.79962" cy="2.20752" r="1.5" fill="#D9D9D9"/>
+                                                </svg>
+                                                <span id="postsDates"></span>
+                                            </div>
+                                            <div class="optAndCloseBtn">
+                                                <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                </svg>
+                                                <span class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true"><svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M19.2996 6.41049L17.8896 5.00049L12.2996 10.5905L6.70962 5.00049L5.29962 6.41049L10.8896 12.0005L5.29962 17.5905L6.70962 19.0005L12.2996 13.4105L17.8896 19.0005L19.2996 17.5905L13.7096 12.0005L19.2996 6.41049Z" fill="#555555"/>
                                                     </svg>
-                                                    <span class="comment-date">{{ date('d/m/Y', strtotime($comment->created_at)) }}</span>
-                                                </div>
-                                            @if($comment->user_id == auth()->id() || $post->user_id == auth()->id())
-                                                <div class="containerOpt">
-                                                    <button class="btnOpt"  data-toggle="modal" data-target=".modalOpt-{{ $comment->id }}" style="margin: 0 !important; padding: 0 !important;"><img src="logo/img/icon/frame26.svg" alt="" ></button>
-                                                    <div class="modal fade modalOpt modalOpt-{{ $comment->id }}" tabindex="-1" aria-labelledby="modalOptLabel" aria-hidden="true" data-backdrop="true" data-keyboard="true">
-                                                        <div class="modal-dialog">
-                                                            <div class="modal-content">
-                                                                <div class="modal-body modal-bodyOpt">
-                                                                <div class="containerBtnOpt">
-                                                                    <button type="button" data-toggle="modal" style="border-bottom: none; border-top-left-radius: 5px; border-top-right-radius: 5px;" class="btnPosts editPostButton edit-comment-btn"  data-comment-id="{{ $comment->id }}" data-comment-body="{{ $comment->body }}">
-                                                                        Editar
-                                                                    </button>
-                                                                    <button style="border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;" type="button" class="btnPosts" onclick="deleteComment({{ $comment->id }})">
-                                                                        Eliminar
-                                                                    </button>
-                                                            </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                @endif
-                                            </div>
-                                            <span class="comment-user-cargo">{{ $comment->user->cargo->titulo }}</span>
-                                        
-                                        </div>
-                                    
-                                    </div>
-                                <div class="comment-body">{{ $comment->body }}</div>
-                                <div class="comment-actions hidden" id="comment-{{ $comment->id }}">
-                                <span class="like-buttonComment {{ $comment->likes()->where('user_id', auth()->id())->exists() ? 'likedComment' : '' }}" 
-                                        style="cursor: pointer;" 
-                                        onclick="likeComment({{ $comment->id }})">
-                                        <!-- O ícone começa invisível -->
-                                        <img src="logo/img/icon/ThumbsUp_comentario.svg" class="like-iconComment" alt="" style="display: {{ $comment->likes()->where('user_id', auth()->id())->exists() ? 'inline' : 'none' }};">
-                                        <span class="like-countComment">{{ $comment->likes()->count() }}.</span>
-                                        <span>Gosto</span>
-                                        
-                                    </span>
-                                    <span class="reply-button" style="cursor: pointer;" onclick="toggleReplyForm({{ $comment->id }})">
-                                        Responder
-                                    </span>
-                                </div>
-
-
-                               
-
-                                <!-- Lista de Respostas -->
-                                <div class="replies-list">
-                                    
-                                    <!-- Contêiner das respostas, inicialmente oculto -->
-                                    <div class="replies-container" id="replies-{{ $comment->id }}" style="display: none;">
-                                        @foreach($comment->replies()->orderBy('created_at', 'asc')->get() as $reply)
-                                        <div class="reply-item">
-                                            <div class="comment-header">
-                                                <img class="comment-avatar" src="{{ url('public/avatar_users/' . $reply->user->avatar) }}" alt="">
-                                                <div class="comment-info-container">
-                                                    <div class="comment-info">
-                                                        <div class="comment-info-header">
-                                                            <span class="comment-author">{{ $reply->user->name }}</span>
-                                                            <svg width="4" height="4" viewBox="0 0 4 4" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                            <circle cx="1.79962" cy="2.20752" r="1.5" fill="#D9D9D9"/>
-                                                            </svg>
-                                                            <span class="comment-date">{{ date('d/m/Y', strtotime($reply->created_at)) }}</span>
-                                                        </div>
-                                                    </div>
-                                                    <span class="comment-user-cargo">{{ $comment->user->cargo->titulo }}</span>
-                                                </div>
-                                                
-                                            </div>
-                                            
-                                            <div class="comment-body reply_container_actions" id="reply-{{ $reply->id }}">
-                                                {{ $reply->body }}
-                                                <div class="comment-actions">
-                                                    <!-- Botão de Curtir -->
-                                                    <span class="like-buttonCommentReply {{ $reply->isLikedBy(auth()->user()) ? 'likedReply' : '' }}" 
-                                                        style="cursor: pointer;" 
-                                                        onclick="likeReply({{ $reply->id }})">
-                                                        <span class="like-iconReply" 
-                                                            style="display: {{ $reply->isLikedBy(auth()->user()) ? 'inline' : 'none' }};"> <img src="logo/img/icon/ThumbsUp_comentario.svg" alt=""></span>
-                                                        <span class="like-countReply">{{ $reply->likes()->count()  }}</span>
-                                                        
-                                                        <span>Gosto</span>
-                                                        
                                                     </span>
-
-                                                    <!-- Botão de Responder -->
-                                                    <span class="reply-button" 
-                                                        style="cursor: pointer;" 
-                                                        onclick="toggleReplyForm({{ $comment->id }})">
-                                                        Responder
-                                                    </span>
-                                                </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                                  <!-- Botão para expandir/recolher, exibido apenas se houver respostas -->
-                                @if($comment->replies()->count() > 0)
-                                <div class="toggle-replies" id="toggle-replies-{{ $comment->id }}" onclick="toggleReplies({{ $comment->id }})">
-                                    <span>Ver mais {{ $comment->replies()->count() }} resposta{{ $comment->replies()->count() > 1 ? 's' : '' }}</span>
-                                </div>
-                                @endif
-                                 <!-- Formulário de Resposta -->
-                                 <div class="reply-form-container" id="reply-form-{{ $comment->id }}" style="display: none;">
-                                    <form action="{{ route('comment.reply', $comment->id) }}" method="POST" class="reply-form">
-                                        @csrf
-                                        <div class="comment-input-container">
-                                            <img class="comment-avatar" src="{{ url('public/avatar_users/' . Auth::user()->avatar) }}" alt="">
-                                            <input type="text" name="reply" class="comment-input" placeholder="Responder ao comentário" required>
+                                                </span>
+                                            </div>
                                         </div>
-                                    </form>
+                                        <span id="cargoUser"></span>
+                                        <span class="hidden">Todos podem comentar</span>
+                                    </div>
+                                
+                                
+                                
                                 </div>
+                                <div class="containerGeralComments">
+                                    <div class="containerBodyInputs">
+                                        <h4 class="titleInputPost" id="postTitle"></h4>
+                                        <p class="contentTextarea" id="postContent"></p>
+                                    </div>
+                                
+                                
+                                
                                 </div>
                             </div>
-                            @endforeach
+                            <div class="containerComments">
+                            
+                                    <div class="items-footer" data-postid"">
+                                        <span class="like-button globalHover" style="cursor: pointer;">
+                                        <img src="{{ asset('logo/img/icon/' . (Auth::user()->likes()->where('post_id', $post->id)->exists() && Auth::user()->likes()->where('post_id', $post->id)->first()->like ? 'ThumbsUp_pressed.svg' : 'icon_thumbs.svg')) }}" class="like-icon" alt="">
+                                        <span class="like-count">{{ likes_post($post->id) }}</span>
+                                            
+                                            
+                                        </span>
+                                
+                                        <span class="globalHover view-container">
+                                            <img src="{{asset('logo/img/icon/Eye-icon.svg')}}" alt="">
+                                            <span class="views-count"></span>
+                                            <div class="views-tooltip"></div>
+                                        </span>
+                                        <span class="globalHover hidden">
+                                            <img src="logo/img/icon/mode_comment2.svg" alt="">
+                                            <span class="comment-count"></span>
+                                        </span>
+                                    </div>
+                                    <form class="comment-form hidden" id="modalCommentForm" action="" method="POST">
+                                            @csrf
+                                            <div class="containerEnterComment">
+                                            <img class="img_user_post" src="{{ URL::to('/') }}/public/avatar_users/{{ Auth::user()->avatar }}" alt="">
+                                                <input type="text" name="comment" placeholder="Adicione um comentário..." required>
+                                            </div>
+                                    </form>
+                                <!-- Seção de Comentários -->
+                                <div class="comments-section" id="modalCommentsSection">
+                                    <div class="comments-list" id="modalCommentsList">
+                                        <!-- Os comentários serão carregados dinamicamente aqui -->
+                                    </div>
+                                </div>
+                            </div>
+                            
                         </div>
                     </div>
                 </div>
-            @endforeach
             </div>
         </div>
-@endif
+    </div>
+</div>
 
+<div class="modal escurecer fade popUpContainer " id="modalEdit" tabindex="-1" aria-labelledby="modalEditLabel" aria-hidden="true" data-backdrop="true" data-keyboard="true">
+                <div class="modal-dialog  modal-dialog-centered popUpContainer">
+                        <div class="modal-content pop-up">
+                            
+                            <div class="modal-header">
+                                <div class="containerTitleWithClose">
+                                    <h2>Comunicações Gerais</h2>
+                                    <span class="close closeModalPreview" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </span>
+                                    
+                                </div>
+                                
+                                <div class="elementsHeader">
+                                    <img src="{{ URL::to('/') }}/public/avatar_users/{{ Auth::user()->avatar }}" alt="">
+                                    <div class="contentHeaderPost">
+                                        <h3 class="modal-title" id="createEventModalLabel">
+                                            {{ Auth::user()->name }}
+                                        </h3>
+                                    
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        <div class="modal-body pop-up">
+                            
 
+                            <form id="editForm" action="{{ route('post.update',  $post->id) }}" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                @method('PUT')
+                                <!-- Título do Evento -->
+                                
+                                <div class="containerInputPost">
+                                
+                                    <input id="title" name="title" type="text" class="titleClear" placeholder="Adiciona um titulo" required autofocus maxlength="130" max="130" required>
+                                    @error('title')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{$message}}</strong>
+                                        </span>
+                                    @enderror
+                                
+                                    <textarea id="content" name="content" class="contentClear" required="required" placeholder="Comece a escrever aqui"></textarea>
+                                </div>
+
+                              
+                                <div class="btnContainerPost">
+                                
+                                      
+                                        <label class="custom-file-button">
+                                        <input type="file" id="pdfInputEdit" name="arquivo_pdf[]" accept="application/pdf" class="hidden" multiple>
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M20 2H8C6.9 2 6 2.9 6 4V16C6 17.1 6.9 18 8 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2ZM20 16H8V4H20V16ZM4 6H2V20C2 21.1 2.9 22 4 22H18V20H4V6ZM16 12V9C16 8.45 15.55 8 15 8H13V13H15C15.55 13 16 12.55 16 12ZM14 9H15V12H14V9ZM18 11H19V10H18V9H19V8H17V13H18V11ZM10 11H11C11.55 11 12 10.55 12 10V9C12 8.45 11.55 8 11 8H9V13H10V11ZM10 9H11V10H10V9Z" fill="#E75845"/>
+                                            </svg>
+                                        </label>
+
+                                        <label for="arquivo_imagem" class="custom-file-button" data-toggle="modal" data-target="#modalPreviewImagem">
+
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M17.5 20.5H3.5V6.5H12.5V4.5H3.5C2.4 4.5 1.5 5.4 1.5 6.5V20.5C1.5 21.6 2.4 22.5 3.5 22.5H17.5C18.6 22.5 19.5 21.6 19.5 20.5V11.5H17.5V20.5ZM9.71 17.33L7.75 14.97L5 18.5H16L12.46 13.79L9.71 17.33ZM19.5 4.5V1.5H17.5V4.5H14.5C14.51 4.51 14.5 6.5 14.5 6.5H17.5V9.49C17.51 9.5 19.5 9.49 19.5 9.49V6.5H22.5V4.5H19.5Z" fill="#CDCC00"/>
+                                            </svg>
+
+                                        </label>
+                            
+                                </div>
+                                <div class="outroContainer" style="display: none;">
+                                    <div class="mainContainerPDF mainContainerPDFEdit">
+                                        <div class="innerContainer">
+                                            <div id="fileContainerEdit" class="scroll-container flex"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                               
+
+                                <!-- Botão para Submeter o Formulário -->
+                                <button type="submit" class="btnPublicar">Publicar</button>
+                            </form>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal escurecer" id="modalPreviewImagem" tabindex="-1" aria-labelledby="createPostModal" aria-hidden="true" data-backdrop="false" data-keyboard="true" data-action="">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="bg-white rounded-lg shadow-lg mainContainerPreviewImg">
+                     <div class="containerSidesPreview">
+                         <div class="leftSideContainerPreview">
+                                <!-- Miniaturas -->
+                                <div id="thumbnails" class="flex gap-2 miniaturaContainer overflow-x-auto"></div>
+                                        <!-- Área de Visualização -->
+                                <div class="containerShowPreview relative w-full h-52 border-dashed flex items-center justify-center">
+                                    <input type="file" id="fileInput" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer ">
+                                    <div id="preview" class="text-gray-400 text-sm text-center relative">
+                
+                                    </div>
+                                    <button id="prevBtn" class="absolute left-2 hidden nextPrevBtnPreview">&#10094;</button>
+                                    <button id="nextBtn" class="absolute right-2 hidden nextPrevBtnPreview">&#10095;</button>
+                                    <button id="deleteBtn" class="absolute deleteBtnPreview hidden"><svg width="29" height="29" viewBox="0 0 29 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M22.7363 7.97693L21.0592 6.2998L14.4101 12.9488L7.76111 6.2998L6.08398 7.97693L12.733 14.626L6.08398 21.275L7.76111 22.9521L14.4101 16.3031L21.0592 22.9521L22.7363 21.275L16.0873 14.626L22.7363 7.97693Z" fill="#555555"/>
+                                        </svg>
+                                        </button>
+                                </div>
+                         </div>
+                
+                
+                
+                        <!-- Botões -->
+                        <div class="rightSideContainerPreview">
+                            <div class="closeAndTitleContainerPreview">
+                                <h2>Comunicações gerais</h2>
+                                <span class="close closeModalPreview" aria-label="Close">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z" fill="#555555"/>
+                                </svg>
+
+                                </span>
+                            </div>
+                            <hr>
+                            <div class="headerContainerPreviewRightSide">
+                                <img src="{{ URL::to('/') }}/public/avatar_users/{{ Auth::user()->avatar }}" alt="">
+                
+                                <div class="contentTextHeaderPreviewRightSide">
+                                    <span>{{ Auth::user()->name }}</span>
+                                    <span class="hidden">Todos podem comentar</span>
+                                </div>
+                            </div>
+                            <div class="containerBodyInputs">
+                                <input class="titleInputPost" id="modalTitle" type="text" placeholder="Adiciona um título ao comunicado">
+                                <textarea class="contentTextarea" id="modalContent" placeholder="Comece a escrever aqui!"></textarea>
+                            </div>
+                            <div class="containerBtnPreview">
+                                <button id="addMoreBtn" class="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg"><svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M19 13.5H13V19.5H11V13.5H5V11.5H11V5.5H13V11.5H19V13.5Z" fill="#555555"/>
+                                    </svg>
+                                    </button>
+                                <button id="uploadBtn">Publicar</button>
+                            </div>
+                        </div>
+                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/ajax/libs/jvectormap/2.0.5/jquery-jvectormap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-Knob/1.2.13/jquery.knob.min.js"></script>
