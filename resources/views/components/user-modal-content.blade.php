@@ -1,5 +1,5 @@
 
-<div class="modal fade show cardUserView escurecer" id="cardUserViewNav-{{ $user->id }}" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true" data-dismiss="modal" style="display: none;">
+<div class="modal show fade cardUserView escurecer" id="cardUserViewNav-{{ $user->id }}" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true" data-dismiss="modal" style="display: none;">
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -51,7 +51,7 @@
                                         </div>
                                         <div class="dadosPessoais">
                                             <div>
-                                                <img class="size-g-icon" src="logo/img/icon/eventIcon.svg" alt="">
+                                                <img class="size-g-icon" src="{{asset('logo/img/icon/eventIcon.svg')}}" alt="">
                                                 <span>Data de admissão:</span>
                                             </div>
                                             <span>{{date('d/m/Y', strtotime($user->data_admissao))}}</span>

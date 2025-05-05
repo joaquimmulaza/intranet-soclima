@@ -1379,6 +1379,11 @@ button:active{
     right: 0;
 }
 
+.divBtnEdit a {
+    position: relative;
+    z-index: 99999;
+}
+
 .cardUserView .modal-body{
     padding-top: 1px !important;
 }
@@ -5479,7 +5484,7 @@ input.is-invalid {
     margin-bottom: 7px;
 }
 
-.tabs button {
+.tabs a {
     padding: 8px 20px;
     font-size: 14px;
     color: #009AC1;
@@ -5488,6 +5493,11 @@ input.is-invalid {
     background: none;
     border-radius: 5px;
     width: 100%;
+    text-align: center;
+}
+
+.tabs a:hover{
+    color: #009AC1;
 }
 
 
@@ -5521,7 +5531,7 @@ input.is-invalid {
     background-color: #fff;
     border-radius: 5px;
 }
-.component_user_post p{
+.component_user_post p, .withoutPostSearch{
     color: #555;
     margin-left: 20px;
   }
@@ -5530,7 +5540,7 @@ input.is-invalid {
     list-style: none !important;
 }
 
-.component_user_post img{
+.component_user_post .imgUserOnSearchResults{
     width: 46px;
     height: 46px;
     border-radius: 50px;
@@ -5564,15 +5574,25 @@ input.is-invalid {
     background-color: #fff !important;
     margin: 0 auto;
     border-radius: 5px;
+    margin-bottom: 7px;
 }
 
 #posts,.postsContainerAllSearch{
     background: linear-gradient(to bottom, #fff 50%, transparent 50%);
     height: 200px;
-
 }
 
 .activeBtnSearch{
     background-color: #009AC1 !important;
     color: #fff !important;
+}
+
+#genericUserModalContent .show{
+    display: block !important;
+}
+
+#genericUserModalContent {
+    background-color: red !important;
+    position: relative;
+    z-index: -777;
 }

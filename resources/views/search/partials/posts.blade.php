@@ -5,7 +5,7 @@
 
 <div class="AllpostsContainer">
     @if($posts->isEmpty())
-    <p>Nenhuma publicação encontrada.</p>
+    <p class="withoutPostSearch">Nenhuma publicação encontrada.</p>
     @else
     @php
 
@@ -280,9 +280,254 @@
             </div>
         </div>
 @endif
+@if($posts->isEmpty())
+@else
+<div class="modal escurecer" id="modalViewPost" tabindex="-1" aria-labelledby="viewPostModal" aria-hidden="true" data-backdrop="false" data-keyboard="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="bg-white rounded-lg shadow-lg mainContainerPreviewImg">
+                    <div class="containerSidesPreview">
+                        <div class="leftSideContainerPreview">
+                            <!-- Área de Visualização -->
+                            <div class="containerShowPreview relative w-full h-52 border-dashed flex items-center justify-center">
+                                <div id="postPreview" class="text-gray-400 text-sm text-center relative w-full h-full">
+                                    <img src="" alt="Imagem do Post" class="w-full h-full imgMainPreview postImage">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Conteúdo do Post -->
+                        <div class="rightSideContainerPreview">
+                            
+                            <div class="topHeaderSideContainerPreview">
+                                <div class="headerContainerPreviewRightSide">
+                                    <img class="postUserAvatar" src="" alt="Avatar do Usuário">
+                                    <div class="contentTextHeaderPreviewRightSide">
+                                        <div class="containerHeaderPostView">
+                                            <div class="dateAndUserName">
+                                                <span id="postUserName"></span>
+                                                <svg width="4" height="4" viewBox="0 0 4 4" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <circle cx="1.79962" cy="2.20752" r="1.5" fill="#D9D9D9"/>
+                                                </svg>
+                                                <span id="postsDates"></span>
+                                            </div>
+                                            <div class="optAndCloseBtn">
+                                                <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                </svg>
+                                                <span class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true"><svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M19.2996 6.41049L17.8896 5.00049L12.2996 10.5905L6.70962 5.00049L5.29962 6.41049L10.8896 12.0005L5.29962 17.5905L6.70962 19.0005L12.2996 13.4105L17.8896 19.0005L19.2996 17.5905L13.7096 12.0005L19.2996 6.41049Z" fill="#555555"/>
+                                                    </svg>
+                                                    </span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <span id="cargoUser"></span>
+                                        <span class="hidden">Todos podem comentar</span>
+                                    </div>
+                                
+                                
+                                
+                                </div>
+                                <div class="containerGeralComments">
+                                    <div class="containerBodyInputs">
+                                        <h4 class="titleInputPost" id="postTitle"></h4>
+                                        <p class="contentTextarea" id="postContent"></p>
+                                    </div>
+                                
+                                
+                                
+                                </div>
+                            </div>
+                            <div class="containerComments">
+                            
+                                    <div class="items-footer" data-postid"">
+                                        <span class="like-button globalHover" style="cursor: pointer;">
+                                        <img src="{{ asset('logo/img/icon/' . (Auth::user()->likes()->where('post_id', $post->id)->exists() && Auth::user()->likes()->where('post_id', $post->id)->first()->like ? 'ThumbsUp_pressed.svg' : 'icon_thumbs.svg')) }}" class="like-icon" alt="">
+                                        <span class="like-count">{{ likes_post($post->id) }}</span>
+                                            
+                                            
+                                        </span>
+                                
+                                        <span class="globalHover view-container">
+                                            <img src="{{asset('logo/img/icon/Eye-icon.svg')}}" alt="">
+                                            <span class="views-count"></span>
+                                            <div class="views-tooltip"></div>
+                                        </span>
+                                        <span class="globalHover hidden">
+                                            <img src="logo/img/icon/mode_comment2.svg" alt="">
+                                            <span class="comment-count"></span>
+                                        </span>
+                                    </div>
+                                    <form class="comment-form hidden" id="modalCommentForm" action="" method="POST">
+                                            @csrf
+                                            <div class="containerEnterComment">
+                                            <img class="img_user_post" src="{{ URL::to('/') }}/public/avatar_users/{{ Auth::user()->avatar }}" alt="">
+                                                <input type="text" name="comment" placeholder="Adicione um comentário..." required>
+                                            </div>
+                                    </form>
+                                <!-- Seção de Comentários -->
+                                <div class="comments-section" id="modalCommentsSection">
+                                    <div class="comments-list" id="modalCommentsList">
+                                        <!-- Os comentários serão carregados dinamicamente aqui -->
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
+<div class="modal escurecer fade popUpContainer " id="modalEdit" tabindex="-1" aria-labelledby="modalEditLabel" aria-hidden="true" data-backdrop="true" data-keyboard="true">
+                <div class="modal-dialog  modal-dialog-centered popUpContainer">
+                        <div class="modal-content pop-up">
+                            
+                            <div class="modal-header">
+                                <div class="containerTitleWithClose">
+                                    <h2>Comunicações Gerais</h2>
+                                    <span class="close closeModalPreview" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </span>
+                                    
+                                </div>
+                                
+                                <div class="elementsHeader">
+                                    <img src="{{ URL::to('/') }}/public/avatar_users/{{ Auth::user()->avatar }}" alt="">
+                                    <div class="contentHeaderPost">
+                                        <h3 class="modal-title" id="createEventModalLabel">
+                                            {{ Auth::user()->name }}
+                                        </h3>
+                                    
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        <div class="modal-body pop-up">
+                            
 
+                            <form id="editForm" action="{{ route('post.update',  $post->id) }}" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                @method('PUT')
+                                <!-- Título do Evento -->
+                                
+                                <div class="containerInputPost">
+                                
+                                    <input id="title" name="title" type="text" class="titleClear" placeholder="Adiciona um titulo" required autofocus maxlength="130" max="130" required>
+                                    @error('title')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{$message}}</strong>
+                                        </span>
+                                    @enderror
+                                
+                                    <textarea id="content" name="content" class="contentClear" required="required" placeholder="Comece a escrever aqui"></textarea>
+                                </div>
 
+                              
+                                <div class="btnContainerPost">
+                                
+                                      
+                                        <label class="custom-file-button">
+                                        <input type="file" id="pdfInputEdit" name="arquivo_pdf[]" accept="application/pdf" class="hidden" multiple>
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M20 2H8C6.9 2 6 2.9 6 4V16C6 17.1 6.9 18 8 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2ZM20 16H8V4H20V16ZM4 6H2V20C2 21.1 2.9 22 4 22H18V20H4V6ZM16 12V9C16 8.45 15.55 8 15 8H13V13H15C15.55 13 16 12.55 16 12ZM14 9H15V12H14V9ZM18 11H19V10H18V9H19V8H17V13H18V11ZM10 11H11C11.55 11 12 10.55 12 10V9C12 8.45 11.55 8 11 8H9V13H10V11ZM10 9H11V10H10V9Z" fill="#E75845"/>
+                                            </svg>
+                                        </label>
+
+                                        <label for="arquivo_imagem" class="custom-file-button" data-toggle="modal" data-target="#modalPreviewImagem">
+
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M17.5 20.5H3.5V6.5H12.5V4.5H3.5C2.4 4.5 1.5 5.4 1.5 6.5V20.5C1.5 21.6 2.4 22.5 3.5 22.5H17.5C18.6 22.5 19.5 21.6 19.5 20.5V11.5H17.5V20.5ZM9.71 17.33L7.75 14.97L5 18.5H16L12.46 13.79L9.71 17.33ZM19.5 4.5V1.5H17.5V4.5H14.5C14.51 4.51 14.5 6.5 14.5 6.5H17.5V9.49C17.51 9.5 19.5 9.49 19.5 9.49V6.5H22.5V4.5H19.5Z" fill="#CDCC00"/>
+                                            </svg>
+
+                                        </label>
+                            
+                                </div>
+                                <div class="outroContainer" style="display: none;">
+                                    <div class="mainContainerPDF mainContainerPDFEdit">
+                                        <div class="innerContainer">
+                                            <div id="fileContainerEdit" class="scroll-container flex"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                               
+
+                                <!-- Botão para Submeter o Formulário -->
+                                <button type="submit" class="btnPublicar">Publicar</button>
+                            </form>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal escurecer" id="modalPreviewImagem" tabindex="-1" aria-labelledby="createPostModal" aria-hidden="true" data-backdrop="false" data-keyboard="true" data-action="">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="bg-white rounded-lg shadow-lg mainContainerPreviewImg">
+                     <div class="containerSidesPreview">
+                         <div class="leftSideContainerPreview">
+                                <!-- Miniaturas -->
+                                <div id="thumbnails" class="flex gap-2 miniaturaContainer overflow-x-auto"></div>
+                                        <!-- Área de Visualização -->
+                                <div class="containerShowPreview relative w-full h-52 border-dashed flex items-center justify-center">
+                                    <input type="file" id="fileInput" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer ">
+                                    <div id="preview" class="text-gray-400 text-sm text-center relative">
+                
+                                    </div>
+                                    <button id="prevBtn" class="absolute left-2 hidden nextPrevBtnPreview">&#10094;</button>
+                                    <button id="nextBtn" class="absolute right-2 hidden nextPrevBtnPreview">&#10095;</button>
+                                    <button id="deleteBtn" class="absolute deleteBtnPreview hidden"><svg width="29" height="29" viewBox="0 0 29 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M22.7363 7.97693L21.0592 6.2998L14.4101 12.9488L7.76111 6.2998L6.08398 7.97693L12.733 14.626L6.08398 21.275L7.76111 22.9521L14.4101 16.3031L21.0592 22.9521L22.7363 21.275L16.0873 14.626L22.7363 7.97693Z" fill="#555555"/>
+                                        </svg>
+                                        </button>
+                                </div>
+                         </div>
+                
+                
+                
+                        <!-- Botões -->
+                        <div class="rightSideContainerPreview">
+                            <div class="closeAndTitleContainerPreview">
+                                <h2>Comunicações gerais</h2>
+                                <span class="close closeModalPreview" aria-label="Close">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z" fill="#555555"/>
+                                </svg>
+
+                                </span>
+                            </div>
+                            <hr>
+                            <div class="headerContainerPreviewRightSide">
+                                <img src="{{ URL::to('/') }}/public/avatar_users/{{ Auth::user()->avatar }}" alt="">
+                
+                                <div class="contentTextHeaderPreviewRightSide">
+                                    <span>{{ Auth::user()->name }}</span>
+                                    <span class="hidden">Todos podem comentar</span>
+                                </div>
+                            </div>
+                            <div class="containerBodyInputs">
+                                <input class="titleInputPost" id="modalTitle" type="text" placeholder="Adiciona um título ao comunicado">
+                                <textarea class="contentTextarea" id="modalContent" placeholder="Comece a escrever aqui!"></textarea>
+                            </div>
+                            <div class="containerBtnPreview">
+                                <button id="addMoreBtn" class="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg"><svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M19 13.5H13V19.5H11V13.5H5V11.5H11V5.5H13V11.5H19V13.5Z" fill="#555555"/>
+                                    </svg>
+                                    </button>
+                                <button id="uploadBtn">Publicar</button>
+                            </div>
+                        </div>
+                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
 <script src="https://cdnjs.cloudflare.com/ajax/ajax/libs/jvectormap/2.0.5/jquery-jvectormap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-Knob/1.2.13/jquery.knob.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>

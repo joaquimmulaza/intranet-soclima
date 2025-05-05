@@ -472,6 +472,7 @@ Route::get('/departamentos', [UserController::class, 'getUnidades'])->name('depa
 Route::get('/users/filter-by-departamento/{departamentoId}', [UserController::class, 'filterByDepartamento'])->name('users.filterByDepartamento');
 Route::get('/search', [SearchController::class, 'search'])->name('search');
 Route::get('/search/results', [SearchController::class, 'results'])->name('search.results');
+Route::get('/search/results/{tab}', [SearchController::class, 'results'])->name('search.results.tab');
 
 Route::get('/posts/{id}', function ($id) {
     return "Post #{$id} - página de detalhes em construção.";

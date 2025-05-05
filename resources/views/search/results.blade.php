@@ -6,37 +6,30 @@
     <h2 class="text-xl font-bold mb-4 hidden">Resultados para "{{ $query }}"</h2>
 
     <div class="tabs">
-        <button class="tab-link activeBtnSearch" data-tab="all">Tudo</button>
-        <button class="tab-link" data-tab="users_result_search_container">Pessoas</button>
-        <button class="tab-link" data-tab="posts">Publicações</button>
+        <a href="{{ route('search.results.tab', ['tab' => 'all', 'query' => $query]) }}"
+        class="tab-link {{ $tab === 'all' ? 'activeBtnSearch' : '' }}">Tudo</a>
+
+        <a href="{{ route('search.results.tab', ['tab' => 'users', 'query' => $query]) }}"
+        class="tab-link {{ $tab === 'users' ? 'activeBtnSearch' : '' }}">Pessoas</a>
+
+        <a href="{{ route('search.results.tab', ['tab' => 'posts', 'query' => $query]) }}"
+        class="tab-link {{ $tab === 'posts' ? 'activeBtnSearch' : '' }}">Publicações</a>
     </div>
 
-    <div class="tab-content" id="all">
-        <div class="tabs_container pessoasContainelAllSearch">
+    @if($tab === 'all' || $tab === 'users')
+        <div class="tab-content" id="users_result_search_container">
             <h3 class="title_tab_search">Pessoas</h3>
             @include('search.partials.users', ['users' => $users])
         </div>
+    @endif
 
-        <div class="tabs_container postsContainerAllSearch">
+    @if($tab === 'all' || $tab === 'posts')
+        <div class="tab-content" id="posts">
             <h3 class="title_tab_search">Publicações</h3>
             @include('search.partials.posts', ['posts' => $posts])
         </div>
-    </div>
-
-    <div class="tab-content hidden " id="users_result_search_container">
-        <h3 class="title_tab_search">Pessoas</h3>
-        @include('search.partials.users', ['users' => $users])
-    </div>
-
-    <div class="tab-content hidden" id="posts">
-        <h3 class="title_tab_search">Publicações</h3>
-        @include('search.partials.posts', ['posts' => $posts])
-    </div>
+    @endif
 </div>
-
-@foreach ($posts as $post)
-    @include('search.partials.modal', ['post' => $post])
-@endforeach
 
 @endsection
 

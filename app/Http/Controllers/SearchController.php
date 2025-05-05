@@ -51,22 +51,32 @@ class SearchController extends Controller
     }
     
 
-    public function results(Request $request)
+    public function results(Request $request, $tab = 'all')
     {
         $query = $request->get('query', '');
-
-        $users = User::where('name', 'like', "%{$query}%")
-            ->select('id', 'name', 'cargo_id', 'avatar')
-            ->get();
-
-        $posts = Post::where('content', 'like', "%{$query}%")
-        ->with('user') // <- aqui carrega o relacionamento user
-        ->select('id', 'content', 'title', 'arquivo_imagem', 'arquivo_pdf', 'user_id', 'created_at') // inclua o user_id
-            ->get();
-
-        // Defina um $post, por exemplo, o primeiro da coleção (se existir)
-    $post = $posts->first(); // Ou null se não houver posts
-
-        return view('search.results', compact('query', 'users', 'posts', 'post'));
+    
+        $users = collect();
+        $posts = collect();
+    
+        if ($tab === 'users' || $tab === 'all') {
+            $users = User::where('name', 'like', "%{$query}%")
+                ->select('id', 'name', 'cargo_id', 'avatar','numero_mecanografico', 'numero_bi', 'numero_beneficiario', 'numero_contribuinte', 'data_admissao', 'data_emissao_bi', 'data_validade_bi', 'role_id', 'cargo_id', 'unidade_id', 'email', 'status', 
+                'nascimento', 'state_civil', 'fone', 'genero')
+                ->with('cargo:id,titulo')
+                ->get();
+        }
+    
+        if ($tab === 'posts' || $tab === 'all') {
+            $posts = Post::where('content', 'like', "%{$query}%")
+                ->orWhereHas('user', function ($q) use ($query) {
+                    $q->where('name', 'like', "%{$query}%");
+                })
+                ->with('user')
+                ->select('id', 'content', 'title', 'arquivo_imagem', 'arquivo_pdf', 'user_id', 'created_at')
+                ->get();
+        }
+    
+        return view('search.results', compact('query', 'users', 'posts', 'tab'));
     }
+    
 }

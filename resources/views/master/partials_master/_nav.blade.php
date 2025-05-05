@@ -302,7 +302,7 @@
                                         <img src="{{URL::to('/')}}/public/avatar_users/{{Auth::user()->avatar}}" alt="Foto do perfil">
                                     </div>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
-                                        <span aria-hidden="true"><img src="logo/img/icon/clear.svg" alt=""></span>
+                                        <span aria-hidden="true"><img src="{{asset('logo/img/icon/clear.svg')}}" alt=""></span>
                                     </button>
                                 </div>
                                
@@ -318,7 +318,7 @@
                                         </div>
                                         <div class="divBtnEdit">
                                             <a href="{{ route('user.edit', ['user' => Auth::user()->id]) }}">
-                                                <img src="logo/img/icon/icon-edit.svg" alt="">
+                                                <img src="{{asset('logo/img/icon/icon-edit.svg')}}" alt="">
                                             </a>
                                         </div>
                                        
@@ -332,42 +332,42 @@
                                     <div class="info-section">
                                         <div class="dadosPessoais">
                                             <div>
-                                                <img class="size-g-icon"{{ asset('logo/img/icon/cake.svg') }}" alt="">
+                                                <img class="size-g-icon" src="{{ asset('logo/img/icon/cake.svg') }}" alt="">
                                                 <span class="">Data de nascimento:</span>
                                             </div>
                                             <span>{{date('d/m/Y', strtotime(Auth::user()->nascimento))}}</span>
                                         </div>
                                         <div class="dadosPessoais">
                                             <div>
-                                                <img class="size-g-icon" src="logo/img/icon/gender.svg" alt="">
+                                                <img class="size-g-icon" src="{{asset('logo/img/icon/gender.svg')}}" alt="">
                                                 <span>Gênero:</span>
                                             </div>
                                             <span>{{ Auth::user()->genero }}</span>
                                         </div>
                                         <div class="dadosPessoais">
                                             <div>
-                                                <img class="size-g-icon" src="logo/img/icon/eventIcon.svg" alt="">
+                                                <img class="size-g-icon" src="{{asset('logo/img/icon/eventIcon.svg')}}" alt="">
                                                 <span>Data de admissão:</span>
                                             </div>
                                             <span>{{date('d/m/Y', strtotime(Auth::user()->data_admissao))}}</span>
                                         </div>
                                         <div class="dadosPessoais">
                                             <div>
-                                                <img class="size-g-icon" src="logo/img/icon/call.svg" alt="">
+                                                <img class="size-g-icon" src="{{asset('logo/img/icon/call.svg')}}" alt="">
                                                 <span>Telemóvel da firma</span>
                                             </div>
                                             <span></span>
                                         </div>
                                         <div class="dadosPessoais">
                                             <div>
-                                                <img class="size-g-icon" src="logo/img/icon/call.svg" alt="">
+                                                <img class="size-g-icon" src="{{asset('logo/img/icon/call.svg')}}" alt="">
                                                 <span>Telemóvel pessoal:</span>
                                             </div>
                                             <span>{{ Auth::user()->fone }}</span>
                                         </div>
                                         <div class="dadosPessoais">
                                             <div>
-                                                <img class="size-g-icon" src="logo/img/icon/mail.svg" alt="">
+                                                <img class="size-g-icon" src="{{asset('logo/img/icon/mail.svg')}}" alt="">
                                                 <span>E-mail</span>
                                             </div>
                                             <span>{{ Auth::user()->email }}</span>
@@ -375,7 +375,7 @@
                                         
                                         <div class="dadosPessoais">
                                             <div>
-                                                <img class="size-g-icon" src="logo/img/icon/numbers.svg" alt="">
+                                                <img class="size-g-icon" src="{{asset('logo/img/icon/numbers.svg')}}" alt="">
                                                 <span class="">Nº mecanográfico:</span>
                                             </div>
                                             <span>{{ Auth::user()->numero_mecanografico }}</span>
@@ -471,16 +471,16 @@
     </ul>
 
     
-    <div class="modal fade" id="genericUserModal" tabindex="-1" aria-hidden="true">
+
+
+</nav>
+<div class="modal fade" id="genericUserModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content" id="genericUserModalContent">
                 <!-- Conteúdo será carregado via JS -->
             </div>
         </div>
 </div>
-
-</nav>
-
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
