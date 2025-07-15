@@ -67,7 +67,7 @@
                 @endcan
                 <li>
                     <img src="logo/img/icon/article.svg" alt="">
-                    <a href="#">Recibos</a>
+                    <a href="{{ route('recibos') }}">Recibos</a>
                 </li>
                 <li>
                     <img src="logo/img/icon/assignment_turned_in.svg" alt="">
@@ -600,21 +600,19 @@
                                         $nomeCompleto = pathinfo($firstPdf, PATHINFO_FILENAME);
                                         $nomeSemTimestamp = preg_replace('/^\d+_/', '', $nomeCompleto);
                                     @endphp
-                                    <div class="container_pdf_file" style="margin-bottom: 10px;">
+                                    <div class="container_pdf_file container_pdf_file_slide" style="margin-bottom: 10px;">
                                         <a href="{{ asset($firstPdf) }}" target="_blank" class="pdf-item">
                                             <div class="container_icon_pdf_file">
-                                                <svg width="25" height="32" viewBox="0 0 25 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <!-- SVG content -->
-                                                </svg>
+                                                
+                                                <img style="width: 25px; height: 32px;" src="{{asset('logo/img/icon/PDF_ICON.svg')}}" alt="">
+
                                             </div>
-                                            <div class="container_content_file">
+                                            <div class="container_content_file container_content_file_slide">
                                                 <p class="pdf-title">{{ $nomeSemTimestamp }}</p>
                                                 <span>Toque para abrir o ficheiro</span>
                                             </div>
                                             <div class="container_icon_download_file">
-                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <!-- SVG content -->
-                                                </svg>
+                                                <img style="width: 24px; height: 24px;" src="{{asset('logo/img/icon/download-icon.svg')}}" alt="">
                                             </div>
                                         </a>
                                     </div>
@@ -626,7 +624,7 @@
                                     <p class="textDescription">
                                         {{ Str::limit($post->content, 100) }}
                                     </p>
-                                    <button style="padding: 0 !important; margin: 0 !important;" onclick="openPostPreview('{{ addslashes($post->title) }}', '{{ addslashes($post->content) }}', '{{ $post->arquivo_imagem ? asset($post->arquivo_imagem) : '' }}', '{{ $post->user->name }}', '{{ URL::to('/') }}/public/avatar_users/{{ $post->user->avatar }}', '{{ date('d/m/Y', strtotime($post->created_at)) }}', '{{ $post->id }}', '{{ $post->user->cargo->titulo }}')">
+                                    <button style="padding: 0 !important;" onclick="openPostPreview('{{ addslashes($post->title) }}', '{{ addslashes($post->content) }}', '{{ $post->arquivo_imagem ? asset($post->arquivo_imagem) : '' }}', '{{ $post->user->name }}', '{{ URL::to('/') }}/public/avatar_users/{{ $post->user->avatar }}', '{{ date('d/m/Y', strtotime($post->created_at)) }}', '{{ $post->id }}', '{{ $post->user->cargo->titulo }}')">
                                         Ver
                                     </button>
                                 </div>

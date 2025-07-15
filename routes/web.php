@@ -479,3 +479,5 @@ Route::get('/posts/{id}', function ($id) {
 })->name('posts.show');
 
 Route::get('/user/modal/{id}', [UserController::class, 'modal'])->name('user.modal');
+
+Route::get('/recibos', [App\Http\Controllers\ReciboController::class, 'index'])->name('recibos');

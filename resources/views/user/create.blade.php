@@ -36,7 +36,7 @@
                 
                 <div class="contentDatasUser">
                     {{--USUÁRIO --}}
-                    <section class="col-sm-12 col-md-3 col-lg-3 col-xl-3 leftSideDataUser">
+                    <section class="leftSideDataUser">
                         <div class="card testimonial-card cardDataUser">
 
                             {{--MOSTRA AVATAR --}}
@@ -52,7 +52,7 @@
                             <div class="card-body box-profile">
                                 {{-- NAME--}}
                                 <div class="cardUserInputs">
-                                    <label for="titulo">Nome*</label>
+                                    <label for="titulo">Nome completo*</label>
                                     <input id="titulo" name="name" type="text" class="form-control form-control-sm campotext @error('name') is-invalid @enderror"
                                            value="{{$user->name ?? old('name')}}" autofocus required/>
                                     
@@ -88,18 +88,22 @@
                                 
 
                                 {{-- Data de Emissão e Validade do BI --}}
-                                <div class="cardUserInputs paddingTop">
-                                    <label for="data_emissao_bi">Data de Emissão do BI*</label>
-                                    <input id="data_emissao_bi" name="data_emissao_bi" type="date"
-                                        class="form-control form-control-sm @error('data_emissao_bi') is-invalid @enderror"
-                                        value="{{ $user->data_emissao_bi ?? old('data_emissao_bi') }}" />
-                                </div>
 
-                                <div class="cardUserInputs paddingTop">
-                                    <label for="data_validade_bi">Data de Validade do BI*</label>
-                                    <input id="data_validade_bi" name="data_validade_bi" type="date"
-                                        class="form-control form-control-sm @error('data_validade_bi') is-invalid @enderror"
-                                        value="{{ $user->data_validade_bi ?? old('data_validade_bi') }}" required/>
+
+                                <div class="doubleInput">
+                                    <div class="cardUserInputs paddingTop">
+                                        <label for="data_emissao_bi">Data de Emissão do BI*</label>
+                                        <input id="data_emissao_bi" name="data_emissao_bi" type="date"
+                                            class="form-control form-control-sm @error('data_emissao_bi') is-invalid @enderror"
+                                            value="{{ $user->data_emissao_bi ?? old('data_emissao_bi') }}" />
+                                    </div>
+                                    <div class="cardUserInputs paddingTop">
+                                        <label for="data_validade_bi">Data de Validade do BI*</label>
+                                        <input style="width: 283.72px;
+    height: 38px;" id="data_validade_bi" name="data_validade_bi" type="date"
+                                            class="form-control form-control-sm @error('data_validade_bi') is-invalid @enderror"
+                                            value="{{ $user->data_validade_bi ?? old('data_validade_bi') }}" required/>
+                                    </div>
                                 </div>
 
                                 
@@ -121,22 +125,23 @@
 
 
                                     {{-- GÊNERO --}}
-                                <div class="containerGender paddingTop">
+                                <div class="containerGender paddingTop" style="margin-top: 9px;">
                                     <label class="">Gênero*</label>
 
                                     <div class="containerRadios">
                                         <!-- Rádio Masculino -->
                                         <div class="radiosElement">
-                                            <label style="margin: 0 !important; padding: 0 !important;" for="genero_masculino">Masculino</label>
-                                            <input type="radio" id="genero_masculino" name="genero" value="masculino"
+                                            
+                                            <input type="radio" checked id="genero_masculino" name="genero" value="masculino"
                                                 @if(isset($user) && $user->genero == 'masculino') checked="checked" @endif>
-                                        
+                                        <label style="margin: 0 !important; padding: 0 !important;" for="genero_masculino">Masculino</label>
                                         </div>
                                         <!-- Rádio Feminino -->
                                         <div class="radiosElement">
-                                            <label style="margin: 0 !important; padding: 0 !important;" for="genero_feminino">Feminino</label>
+                                            
                                             <input type="radio" id="genero_feminino" name="genero" value="feminino"
                                                 @if(isset($user) && $user->genero == 'feminino') checked="checked" @endif>
+                                                <label style="margin: 0 !important; padding: 0 !important;" for="genero_feminino">Feminino</label>
                                         </div>
                                     </div>
                                     @error('genero')
@@ -169,7 +174,7 @@
                     </section>
 
                     {{-- CAMPOS ADICIONAIS --}}
-                    <section class="col-sm-12 col-md-6 col-lg-6 col-xl-6 rightSideDataUser">
+                    <section class="rightSideDataUser">
                         <div class="card-body box-profile">
                         {{-- EMAIL--}}
                             <div class="cardUserInputs">
@@ -197,23 +202,31 @@
                             </div> -->
                       
 
-                                {{-- Número Mecanográfico --}}
-                                <div class="cardUserInputs paddingTop">
-                                    <label for="numero_mecanografico">Número Mecanográfico</label>
-                                    <input id="numero_mecanografico" name="numero_mecanografico" type="text"
-                                        class="form-control form-control-sm @error('numero_mecanografico') is-invalid @enderror"
-                                        value="{{ $user->numero_mecanografico ?? old('numero_mecanografico') }}" />
-                                    
-                                </div>
-
                                 
+                                <div class="doubleInput">
 
                                 {{-- Nº de Telefone --}}
-                                <div class="cardUserInputs paddingTop">
-                                    <label for="fone">Nº de Telefone*</label>
-                                    <input id="fone" name="fone" type="text"
-                                        class="form-control form-control-sm @error('fone') is-invalid @enderror"
-                                        value="{{ $user->fone ?? old('fone') }}" required/>
+                               <div class="cardUserInputs paddingTop">
+                                <label for="fone">Nº de Telefone*</label>
+                                <div class="input-group input-group-sm" style="height: 38px;">
+                                    <div class="input-group-prepend" style="height: 38px;">
+                                        <span class="input-group-text">+244</span>
+                                    </div>
+                                        <input style="height: 38px;" id="fone" name="fone" type="text"
+                                            class="form-control @error('fone') is-invalid @enderror"
+                                            value="{{ $user->fone ?? old('fone') }}" required />
+                                    </div>
+                                </div>
+
+                                    {{-- Número Mecanográfico --}}
+                                    <div class="cardUserInputs paddingTop">
+                                        <label for="numero_mecanografico">Número Mecanográfico</label>
+                                        <input id="numero_mecanografico" name="numero_mecanografico" type="text"
+                                            class="form-control form-control-sm @error('numero_mecanografico') is-invalid @enderror"
+                                            value="{{ $user->numero_mecanografico ?? old('numero_mecanografico') }}" />
+                                    
+                                    </div>
+                                    
                                     
                                 </div>
                                 {{-- Data de Admissão --}}
@@ -236,7 +249,7 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    <hr>
+                                  
                                     {{-- CARGO--}}
                                     <div class="cardUserInputs paddingTop">
                                         <label for="cargo">Cargo*</label>
@@ -289,10 +302,8 @@
                                                 </span>
                                                 Atualizar usuário
                                             @else
-                                                <span class="btn-icon-wrapper pr-2 opacity-7">
-                                                    <i class="far fa-save fa-w-20"></i>
-                                                </span>
-                                                Salvar novo usuário
+                                                
+                                                Cadastrar
                                             @endisset
                                         </button>
 
@@ -304,12 +315,7 @@
                                                 Cancelar
                                             </a>
                                         @else
-                                            <button type="reset" class="btn rounded">
-                                                <span class="btn-icon-wrapper pr-2 opacity-7">
-                                                    <i class="fas fa-eraser fa-w-20"></i>
-                                                </span>
-                                                Limpar
-                                            </button>
+                                            
                                         @endisset
                                     </div>
                                 </div>
